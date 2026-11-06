@@ -1,0 +1,29 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/seeing-in-time/scripts/01_token_budget.py
+Tokens per frame, 448 x 448, 14-px patches, 2 x 2 merge: 256 (the post: 256, InternVL 2.5)
+
+Visual tokens at 2 fps and 256 tokens per frame (post Figure 2):
+video       tokens   
+one image   256      
+1 minute    30,720   
+10 minutes  307,200  
+1 hour      1,843,200
+
+Gemini arithmetic quoted in the post (1 fps):
+quantity                                  value  
+1 hour at 258 tokens/frame                928,800
+3 hours at 66 tokens/frame                712,800
+seconds in 1,000,000 tokens at 258/frame  3,876  
+seconds in 1,000,000 tokens at 66/frame   15,152 
+
+SlowFast-LLaVA: 10 x (12 x 24) + 50 x (4 x 4) = 3,680 tokens (the post: 3,680)
+Figure 6 split: 4 slow x 192 + 16 fast x 16 = 1,024; equal: 16 x 64 = 1,024
+
+Doubling the sequence: feed-forward x2, attention scores x4.
+Measured on this CPU: one head-dim-64, 8-head attention vs one 512 -> 2048 -> 512 MLP, batch 1.
+tokens  attention ms  MLP ms  growth vs previous row (attn / MLP)
+1,024   5.5           9.9                                        
+2,048   15.4          18.0    x2.8 / x1.8                        
+4,096   111.4         66.8    x7.2 / x3.7                        
+8,192   358.7         117.5   x3.2 / x1.8                        
+Timings are medians of 3 on a shared machine; read the growth, not the absolute values.

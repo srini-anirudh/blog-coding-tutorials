@@ -1,0 +1,160 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "figure3": [
+  {
+   "rule": "uniform",
+   "k": 8,
+   "frames": 8,
+   "events_seen": 3,
+   "seen": [
+    "ball rolls",
+    "cup picked up",
+    "person drinks"
+   ],
+   "roll_frames": 2,
+   "direction_recoverable": true
+  },
+  {
+   "rule": "uniform",
+   "k": 16,
+   "frames": 16,
+   "events_seen": 4,
+   "seen": [
+    "ball rolls",
+    "ball drops",
+    "cup picked up",
+    "person drinks"
+   ],
+   "roll_frames": 3,
+   "direction_recoverable": true
+  },
+  {
+   "rule": "uniform",
+   "k": 32,
+   "frames": 32,
+   "events_seen": 3,
+   "seen": [
+    "ball rolls",
+    "cup picked up",
+    "person drinks"
+   ],
+   "roll_frames": 7,
+   "direction_recoverable": true
+  },
+  {
+   "rule": "uniform",
+   "k": 64,
+   "frames": 64,
+   "events_seen": 5,
+   "seen": [
+    "ball rolls",
+    "ball drops",
+    "cup picked up",
+    "person drinks",
+    "cup put down"
+   ],
+   "roll_frames": 12,
+   "direction_recoverable": true
+  },
+  {
+   "rule": "fps",
+   "k": 0.25,
+   "frames": 15,
+   "events_seen": 3,
+   "seen": [
+    "ball rolls",
+    "cup picked up",
+    "person drinks"
+   ],
+   "roll_frames": 3,
+   "direction_recoverable": true
+  },
+  {
+   "rule": "fps",
+   "k": 0.5,
+   "frames": 30,
+   "events_seen": 5,
+   "seen": [
+    "ball rolls",
+    "ball drops",
+    "cup picked up",
+    "person drinks",
+    "cup put down"
+   ],
+   "roll_frames": 6,
+   "direction_recoverable": true
+  },
+  {
+   "rule": "fps",
+   "k": 1,
+   "frames": 60,
+   "events_seen": 5,
+   "seen": [
+    "ball rolls",
+    "ball drops",
+    "cup picked up",
+    "person drinks",
+    "cup put down"
+   ],
+   "roll_frames": 12,
+   "direction_recoverable": true
+  },
+  {
+   "rule": "fps",
+   "k": 2,
+   "frames": 120,
+   "events_seen": 5,
+   "seen": [
+    "ball rolls",
+    "ball drops",
+    "cup picked up",
+    "person drinks",
+    "cup put down"
+   ],
+   "roll_frames": 24,
+   "direction_recoverable": true
+  }
+ ],
+ "keyframes": [
+  {
+   "threshold": 0.9999,
+   "kept": 41,
+   "frames": 41,
+   "events_seen": 4,
+   "seen": [
+    "ball rolls",
+    "ball drops",
+    "cup picked up",
+    "cup put down"
+   ],
+   "roll_frames": 23,
+   "direction_recoverable": true
+  },
+  {
+   "threshold": 0.999,
+   "kept": 29,
+   "frames": 29,
+   "events_seen": 4,
+   "seen": [
+    "ball rolls",
+    "ball drops",
+    "cup picked up",
+    "cup put down"
+   ],
+   "roll_frames": 11,
+   "direction_recoverable": true
+  },
+  {
+   "threshold": 0.995,
+   "kept": 6,
+   "frames": 6,
+   "events_seen": 2,
+   "seen": [
+    "cup picked up",
+    "cup put down"
+   ],
+   "roll_frames": 0,
+   "direction_recoverable": false
+  }
+ ]
+}

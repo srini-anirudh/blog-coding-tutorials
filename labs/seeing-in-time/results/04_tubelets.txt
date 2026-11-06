@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/seeing-in-time/scripts/04_tubelets.py
+Figure 4: 4 frames of 56 x 56 pixels, 14-pixel patches
+stage                   token grid (t, h, w)  tokens
+per-frame patches       (4, 4, 4)             64    
+tubelets, depth 2       (2, 4, 4)             32    
+tubelets + 2 x 2 merge  (2, 2, 2)             8     
+
+Image as two identical frames vs 2D conv with the time-summed kernel: max |diff| = 1.61e-06
+
+Rolling ball, frames at 12 s and 14 s, played forward vs reversed: ||embedding(fwd) - embedding(rev)||
+encoder                                 difference
+mean of per-frame embeddings            0.00e+00  
+depth-2 tubelet embedding               0.910     
+(scale: norm of the tubelet embedding)  11.380    
+Averaging per-frame tokens forgets which frame came first. A tubelet's kernel weights its two
+frames differently, so the same pair in the other order gives a different token.

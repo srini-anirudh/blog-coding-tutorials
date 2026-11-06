@@ -1,0 +1,69 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "figure2": [
+  [
+   "one image",
+   "256"
+  ],
+  [
+   "1 minute",
+   "30,720"
+  ],
+  [
+   "10 minutes",
+   "307,200"
+  ],
+  [
+   "1 hour",
+   "1,843,200"
+  ]
+ ],
+ "gemini": [
+  [
+   "1 hour at 258 tokens/frame",
+   "928,800"
+  ],
+  [
+   "3 hours at 66 tokens/frame",
+   "712,800"
+  ],
+  [
+   "seconds in 1,000,000 tokens at 258/frame",
+   "3,876"
+  ],
+  [
+   "seconds in 1,000,000 tokens at 66/frame",
+   "15,152"
+  ]
+ ],
+ "slowfast": {
+  "slowfast_llava": 3680,
+  "figure6": 1024
+ },
+ "timing": [
+  [
+   "1,024",
+   "5.5",
+   "9.9",
+   ""
+  ],
+  [
+   "2,048",
+   "15.4",
+   "18.0",
+   "x2.8 / x1.8"
+  ],
+  [
+   "4,096",
+   "111.4",
+   "66.8",
+   "x7.2 / x3.7"
+  ],
+  [
+   "8,192",
+   "358.7",
+   "117.5",
+   "x3.2 / x1.8"
+  ]
+ ]
+}

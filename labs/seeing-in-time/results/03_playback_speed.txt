@@ -1,0 +1,12 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/seeing-in-time/scripts/03_playback_speed.py
+Speed classes: 1, 2, 4 pixels per second. Chance = 0.333.
+Training: 600 steps, batch 128, videos of 4-8 s. 3 seeds.
+
+sampling  test videos                mean acc  range        predicted class share             
+uniform   short (4-8 s, as trained)  0.988     0.985-0.990  slow/mid/fast = [0.34, 0.33, 0.33]
+uniform   long (16-32 s, unseen)     0.298     0.286-0.308  slow/mid/fast = [0.0, 0.04, 0.96] 
+fps       short (4-8 s, as trained)  1.000     1.000-1.000  slow/mid/fast = [0.34, 0.33, 0.33]
+fps       long (16-32 s, unseen)     1.000     1.000-1.000  slow/mid/fast = [0.33, 0.33, 0.34]
+
+With uniform sampling a long video's frames are further apart, so every ball looks fast.

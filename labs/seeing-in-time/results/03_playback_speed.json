@@ -1,0 +1,115 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "uniform": [
+  {
+   "short (4-8 s, as trained)": {
+    "accuracy": 0.9850000143051147,
+    "predicted_class_share": [
+     0.35074999928474426,
+     0.33000001311302185,
+     0.3192499876022339
+    ]
+   },
+   "long (16-32 s, unseen)": {
+    "accuracy": 0.28600001335144043,
+    "predicted_class_share": [
+     0.0,
+     0.04699999839067459,
+     0.953000009059906
+    ]
+   }
+  },
+  {
+   "short (4-8 s, as trained)": {
+    "accuracy": 0.9900000095367432,
+    "predicted_class_share": [
+     0.33125001192092896,
+     0.32875001430511475,
+     0.3400000035762787
+    ]
+   },
+   "long (16-32 s, unseen)": {
+    "accuracy": 0.30000001192092896,
+    "predicted_class_share": [
+     0.0,
+     0.030500000342726707,
+     0.9695000052452087
+    ]
+   }
+  },
+  {
+   "short (4-8 s, as trained)": {
+    "accuracy": 0.9884999990463257,
+    "predicted_class_share": [
+     0.351749986410141,
+     0.3267500102519989,
+     0.3215000033378601
+    ]
+   },
+   "long (16-32 s, unseen)": {
+    "accuracy": 0.30799999833106995,
+    "predicted_class_share": [
+     0.0,
+     0.03375000134110451,
+     0.9662500023841858
+    ]
+   }
+  }
+ ],
+ "fps": [
+  {
+   "short (4-8 s, as trained)": {
+    "accuracy": 1.0,
+    "predicted_class_share": [
+     0.3422499895095825,
+     0.3319999873638153,
+     0.3257499933242798
+    ]
+   },
+   "long (16-32 s, unseen)": {
+    "accuracy": 1.0,
+    "predicted_class_share": [
+     0.3310000002384186,
+     0.3307499885559082,
+     0.3382500112056732
+    ]
+   }
+  },
+  {
+   "short (4-8 s, as trained)": {
+    "accuracy": 1.0,
+    "predicted_class_share": [
+     0.32499998807907104,
+     0.33125001192092896,
+     0.34375
+    ]
+   },
+   "long (16-32 s, unseen)": {
+    "accuracy": 1.0,
+    "predicted_class_share": [
+     0.3230000138282776,
+     0.3362500071525574,
+     0.3407500088214874
+    ]
+   }
+  },
+  {
+   "short (4-8 s, as trained)": {
+    "accuracy": 1.0,
+    "predicted_class_share": [
+     0.3452500104904175,
+     0.328249990940094,
+     0.3264999985694885
+    ]
+   },
+   "long (16-32 s, unseen)": {
+    "accuracy": 1.0,
+    "predicted_class_share": [
+     0.34174999594688416,
+     0.32249999046325684,
+     0.335750013589859
+    ]
+   }
+  }
+ ]
+}

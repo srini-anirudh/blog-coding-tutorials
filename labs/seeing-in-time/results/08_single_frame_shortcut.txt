@@ -1,0 +1,37 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/seeing-in-time/scripts/08_single_frame_shortcut.py
+Accuracy on 3,000 balanced test clips. Chance: colour 0.33, direction 0.50, order 0.50. 600 steps, batch 128, seed 0.
+
+== Part 1: balanced training data ==
+model  question   full  one_frame  shuffled  reversed  full - best(one, shuffled)
+bag    colour     1.00  1.00       1.00      1.00      +0.00                     
+bag    direction  0.50  0.51       0.50      0.50      -0.00                     
+bag    order      0.50  0.51       0.50      0.50      -0.00                     
+video  colour     1.00  0.92       1.00      1.00      +0.00                     
+video  direction  1.00  0.49       0.50      0.00      +0.50                     
+video  order      1.00  0.38       0.50      0.00      +0.50                     
+Reversal flips direction and order, so a model that uses time scores near 0 there, not 0.5.
+
+== Part 2: training data with a static shortcut (red always right, blue always left) ==
+test set                        question   full  one_frame  shuffled  reversed  full - best(one, shuffled)
+biased test (same shortcut)     colour     1.00  0.91       1.00      0.98      +0.00                     
+biased test (same shortcut)     direction  1.00  0.77       0.83      0.66      +0.17                     
+biased test (same shortcut)     order      1.00  0.37       0.51      0.00      +0.49                     
+balanced test (counterfactual)  colour     0.99  0.91       1.00      0.99      -0.01                     
+balanced test (counterfactual)  direction  0.68  0.48       0.50      0.32      +0.18                     
+balanced test (counterfactual)  order      1.00  0.38       0.50      0.00      +0.50                     
+
+Shortcut model, direction on the balanced test, split by colour:
+ball colour  direction accuracy  share answered 'right'
+red          0.49                1.00                  
+green        1.00                0.49                  
+blue         0.51                0.00                  
+
+== Part 3: T-GRPO temporal bonus (8 sampled answers per question, ordered vs shuffled) ==
+model                    colour  direction  order
+bag                      0.00    0.41       0.39 
+video                    0.00    0.67       0.56 
+video, shortcut-trained  0.00    0.32       0.57 
+Share of questions where ordered answers beat shuffled ones, so correct answers earn the bonus.
+Colour is answered as well from shuffled frames, so ordered answers almost never beat them.
+The bag model has no order, so its direction and order rates are what sampling noise alone gives.

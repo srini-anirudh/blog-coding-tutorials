@@ -1,0 +1,47 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "figure4": [
+  [
+   "per-frame patches",
+   [
+    4,
+    4,
+    4
+   ],
+   64
+  ],
+  [
+   "tubelets, depth 2",
+   [
+    2,
+    4,
+    4
+   ],
+   32
+  ],
+  [
+   "tubelets + 2 x 2 merge",
+   [
+    2,
+    2,
+    2
+   ],
+   8
+  ]
+ ],
+ "image_as_two_frames_max_diff": 1.6093254089355469e-06,
+ "direction": [
+  [
+   "mean of per-frame embeddings",
+   "0.00e+00"
+  ],
+  [
+   "depth-2 tubelet embedding",
+   "0.910"
+  ],
+  [
+   "(scale: norm of the tubelet embedding)",
+   "11.380"
+  ]
+ ]
+}

@@ -1,0 +1,44 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/seeing-in-time/scripts/06_token_allocation.py
+== 1. Spending 1,024 tokens on the one-minute clip ==
+Frames are 48 x 72 pixels; a g_h x g_w grid means one token per average-pooled cell.
+allocation                                sampled    tokens  events seen  frames in roll  label contrast kept, best view
+equal 16 x 8x8                            16 frames  1024    4 / 5        3               0.00                          
+slow-fast: 16 x 4x4 + every 4th at 12x16  16 frames  1024    4 / 5        3               0.20                          
+slow-fast: 16 x 4x4 + every 8th at 16x24  16 frames  1024    4 / 5        3               0.69                          
+equal 5 x 12x16                           5 frames   960     2 / 5        1               0.20                          
+equal 64 x 4x4                            64 frames  1024    5 / 5        12              0.00                          
+Label contrast: 1 = the 4-pixel dark half of the cup label is fully readable, 0 = averaged away.
+Slow-fast keeps equal's temporal coverage and gets the 5-frame plan's detail. Fewer, finer slow
+views keep more detail at the same budget. The 64-frame plan sees all events but blurs every frame.
+
+== 2. Memory bank: 16 slots, 120 frames at 2 fps ==
+slot span (s)  frames merged  span (s)  events overlapped           
+0.25-8.75      18             8.50      ball rolls                  
+9.25-10.75     4              1.50      ball rolls                  
+11.25-12.75    4              1.50      ball rolls                  
+13.25-20.25    15             7.00      ball rolls, ball drops      
+20.75-20.75    1              0.00      ball drops                  
+21.25-21.25    1              0.00      ball drops                  
+21.75-37.75    33             16.00     -                           
+38.25-40.25    5              2.00      cup picked up               
+40.75-41.25    2              0.50      cup picked up               
+41.75-42.25    2              0.50      cup picked up               
+42.75-43.25    2              0.50      cup picked up               
+43.75-51.75    17             8.00      cup picked up, person drinks
+52.25-52.25    1              0.00      cup put down                
+52.75-52.75    1              0.00      cup put down                
+53.25-54.75    4              1.50      -                           
+55.25-59.75    10             4.50      -                           
+Longest slot covers 16.0 s; shortest 0.0 s. Static stretches merge into one slot,
+and inside a merged slot the exact time of anything is lost.
+
+== 3. Differential pruning, 6-pixel patches, mean |pixel change| > 0.01 ==
+stretch            share of patches kept
+ball rolls         0.020                
+ball drops         0.045                
+cup picked up      0.044                
+person drinks      0.000                
+cup put down       0.062                
+no event (static)  0.000                
+Overall: 0.021 of 11,520 patches kept (240 tokens instead of 11,520).
