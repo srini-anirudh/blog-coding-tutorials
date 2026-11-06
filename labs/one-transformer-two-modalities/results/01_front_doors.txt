@@ -1,0 +1,37 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/one-transformer-two-modalities/scripts/01_front_doors.py
+
+== 1. A BPE tokenizer, fit once and frozen ==
+trained on 1,000,000 characters of wikitext-2 in 53 s: 256 bytes + 1000 merges = vocabulary 1256
+first 8 merges: [' t', 'he', ' a', 'in', ' the', 'er', 'on', ' ,']
+validation text: 200,000 characters -> 75,642 tokens (2.65 bytes per token); decode(encode(x)) == x: True
+text never seen in training 'naïve café, 東京 ✓': round trip exact: True
+encode is deterministic: True; output dtype is int: the tokenizer has no parameters and no gradient
+
+The segmentation is an artifact of the corpus. Pieces per string:
+string            our BPE (1,256 vocab)                     GPT-2 BPE (50,257 vocab)
+' the'             1 [' the']                                1 [' the']
+' The'             1 [' The']                                1 [' The']
+' THE'             3 [' T', 'H', 'E']                        1 [' THE']
+' transformers'    3 [' trans', 'form', 'ers']               2 [' transform', 'ers']
+' Transformers'    4 [' T', 'rans', 'form', 'ers']           1 [' Transformers']
+' TRANSFORMERS'   12 [' T', 'R', 'A', 'N', 'S', 'F', 'O', 'R', 'M', 'E', 'R', 'S'] 3 [' TRANS', 'FORM', 'ERS']
+' patchify'        5 [' p', 'at', 'ch', 'if', 'y']           2 [' patch', 'ify']
+
+== 2a. Token embedding: a lookup that is really a matmul ==
+E[ids] vs onehot(ids) @ E, max |difference|: 0.0e+00
+batch of 8 x 512 = 4,096 GPT-2 tokens of wikitext, 1,287 distinct ids
+rows of E with a non-zero gradient: 1,287 of 50,257 = 2.6%
+rows that get no update this step: 48,970
+
+== 2b. Patch embedding: a reshape, then one shared linear map (a strided Conv2d) ==
+images (2, 3, 224, 224) -> patches (2, 196, 768): N = (224/16)^2 = 196, P*P*C = 768
+unpatchify(patchify(x)) == x exactly: True
+Linear on flattened patches vs Conv2d(3, 768, kernel=16, stride=16), max |difference|: 3.1e-06
+entries of W with a non-zero gradient after one batch of 2 images: 100.0%
+
+== 2c. Parameter accounting at full size (built on the meta device) ==
+LLM: Llama-2-7B body (32 layers, d=4096, SwiGLU 11008, RMSNorm, no bias) with V=100,000, untied head
+  total 7.30 B; input embedding 409.6 M = 5.6%; output head another 409.6 M
+ViT-L/16 at 224 (24 layers, d=1024, 1000-class head): total 304.3 M; patch projection 787,456 = 0.26%
+bf16 activations for B=8, N=4096: logits B x N x V = 6.55 GB; one hidden state B x N x d = 0.27 GB (24.4x)

@@ -1,0 +1,27 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/one-transformer-two-modalities/scripts/05_identical_middle.py
+
+== Diff the two models ==
+tensors with the same name and shape in both models: 66, 793,344 parameters (all under blocks.* and the final norm: True)
+only in the text model: {'pos': (256, 128), 'embed.weight': (5000, 128), 'head.weight': (5000, 128)}
+only in the ViT:        {'cls': (1, 1, 128), 'pos': (64, 128), 'patch_embed.proj.weight': (128, 48), 'patch_embed.proj.bias': (128,), 'head.weight': (10, 128), 'head.bias': (10,)}
+text model: 1,466,112 parameters, 54.1% in the shared middle
+ViT:        809,226 parameters, 98.0% in the shared middle
+
+== Transplant the middle ==
+text model's blocks vs ViT's blocks after the copy, same input, max |difference|: 0.0e+00
+
+== Where a block's parameters live ==
+d=768: GELU block 7,087,872 params; MLP 66.6%, attention 33.3%
+d=4096: GELU block 201,379,840 params; MLP 66.7%, attention 33.3%
+d=4096, no bias: GELU MLP (4d = 16384) 134,217,728 params; SwiGLU MLP (8d/3 = 10922) 134,209,536 params
+
+== Gradient norm per layer at initialisation: post-norm vs pre-norm ==
+12-layer text Transformer, d=256, untied head, random tokens, mean over 5 seeds; norm of the gradient of each block's MLP output matrix
+layer                     1      2      3      4      5      6      7      8      9     10     11     12
+PyTorch post-norm     0.207  0.207  0.209  0.211  0.205  0.202  0.199  0.202  0.205  0.199  0.203  0.205
+PyTorch pre-norm      0.827  0.485  0.368  0.320  0.272  0.246  0.216  0.209  0.200  0.188  0.178  0.169
+Xavier post-norm      0.196  0.190  0.188  0.186  0.186  0.186  0.178  0.177  0.169  0.168  0.169  0.169
+Xavier pre-norm       0.179  0.147  0.128  0.114  0.104  0.094  0.085  0.080  0.075  0.069  0.067  0.063
+PyTorch default: last-layer gradient, post-norm / pre-norm = 1.21 (sqrt(depth) = 3.46)
+Xavier, unit embed: last-layer gradient, post-norm / pre-norm = 2.68 (sqrt(depth) = 3.46)

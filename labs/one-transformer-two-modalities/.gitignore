@@ -1,0 +1,7 @@
+# Checkpoints and datasets stay out of git.
+*.pt
+*.pth
+*.safetensors
+data/
+runs/
+__pycache__/

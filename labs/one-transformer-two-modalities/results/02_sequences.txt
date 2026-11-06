@@ -1,0 +1,40 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/one-transformer-two-modalities/scripts/02_sequences.py
+
+== Special tokens and the chat grammar ==
+SmolLM2-135M-Instruct chat template:
+<|im_start|>system
+You are a helpful AI assistant named SmolLM, trained by Hugging Face<|im_end|>
+<|im_start|>user
+What is a patch?<|im_end|>
+<|im_start|>assistant
+A tile of pixels.<|im_end|>
+content tokens 10, tokens after the template 42: 32 are structure
+
+== Padding: the cost of a ragged batch ==
+lengths [40, 900] padded to 900: the short row is 95.6% padding; the whole batch is 47.8% padding
+wikitext-2 articles (630, median 2694 tokens), random batches of 16, cut at 1,024: mean padding 5.1% of the batch
+wikitext-2 paragraphs (17,556, median 123 tokens), random batches of 16, cut at 1,024: mean padding 56.1% of the batch
+packing the same tokens end to end into full rows leaves only the last row partly empty
+
+Padding is correct only if it is masked. A causal mask combined with a padding mask:
+#.....
+##....
+###...
+####..
+###.#.
+###..#
+right-padded row vs the same row alone, max |logit difference| on real tokens: 2.2e-07 (a causal mask already hides PAD keys on the right)
+
+== Image sequences: fixed length, set by geometry ==
+resolution patch  N tokens  N vs 224  scores vs 224
+       224    16       196     1.00x          1.00x
+       336    16       441     2.25x          5.06x
+       448    16       784     4.00x         16.00x
+       896    16     3,136    16.00x        256.00x
+       224    14       256     1.00x          1.00x
+       336    14       576     2.25x          5.06x
+       448    14     1,024     4.00x         16.00x
+       896    14     4,096    16.00x        256.00x
+
+ViT with [CLS] and 4 registers: tokens (3, 201, 64) = 1 + 4 + 196 for every image; no padding, no mask; logits (3, 10)

@@ -1,0 +1,23 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/one-transformer-two-modalities/scripts/07_vit_vs_cnn.py --out labs/one-transformer-two-modalities/results/vit_vs_cnn.json
+device cuda; 5000 steps x batch 128, AdamW lr 0.001, wd 0.05, cosine with 5% warmup; random crop + flip; test on 10,000 images
+{"model": "vit-learned", "params": 1205770, "train_images": 2500, "steps": 5000, "final_train_loss": 0.0003, "train_acc": 1.0, "test_acc": 0.4953, "seconds": 92.7, "pos_neighbour_score": 0.641, "pos_cosine_by_distance_1_to_6": [0.736, 0.516, 0.271, 0.063, -0.081, -0.169], "pos_alignment_after_bicubic_to_16x16": 0.996}
+{"model": "cnn", "params": 1148874, "train_images": 2500, "steps": 5000, "final_train_loss": 0.0005, "train_acc": 1.0, "test_acc": 0.7283, "seconds": 21.8}
+{"model": "vit-learned", "params": 1205770, "train_images": 10000, "steps": 5000, "final_train_loss": 0.0958, "train_acc": 0.9764, "test_acc": 0.6587, "seconds": 82.9, "pos_neighbour_score": 0.75, "pos_cosine_by_distance_1_to_6": [0.748, 0.521, 0.267, 0.048, -0.106, -0.193], "pos_alignment_after_bicubic_to_16x16": 0.996}
+{"model": "cnn", "params": 1148874, "train_images": 10000, "steps": 5000, "final_train_loss": 0.0103, "train_acc": 0.9993, "test_acc": 0.8352, "seconds": 20.3}
+{"model": "vit-learned", "params": 1205770, "train_images": 50000, "steps": 5000, "final_train_loss": 0.5735, "train_acc": 0.7969, "test_acc": 0.759, "seconds": 84.6, "pos_neighbour_score": 0.875, "pos_cosine_by_distance_1_to_6": [0.735, 0.502, 0.241, 0.024, -0.122, -0.194], "pos_alignment_after_bicubic_to_16x16": 1.0}
+{"model": "cnn", "params": 1148874, "train_images": 50000, "steps": 5000, "final_train_loss": 0.181, "train_acc": 0.9331, "test_acc": 0.8815, "seconds": 20.8}
+{"model": "vit-sincos2d", "params": 1197578, "train_images": 50000, "steps": 5000, "final_train_loss": 0.6044, "train_acc": 0.8023, "test_acc": 0.7636, "seconds": 85.1}
+{"model": "vit-none", "params": 1197578, "train_images": 50000, "steps": 5000, "final_train_loss": 0.7291, "train_acc": 0.727, "test_acc": 0.6801, "seconds": 87.9}
+
+position table neighbour score at initialisation (random): 0.047
+
+train images model            params train acc test acc  seconds
+       2,500 vit-learned   1,205,770     1.000    0.495     92.7
+       2,500 cnn           1,148,874     1.000    0.728     21.8
+      10,000 vit-learned   1,205,770     0.976    0.659     82.9
+      10,000 cnn           1,148,874     0.999    0.835     20.3
+      50,000 vit-learned   1,205,770     0.797    0.759     84.6
+      50,000 cnn           1,148,874     0.933    0.881     20.8
+      50,000 vit-sincos2d  1,197,578     0.802    0.764     85.1
+      50,000 vit-none      1,197,578     0.727    0.680     87.9

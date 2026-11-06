@@ -1,0 +1,37 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/one-transformer-two-modalities/scripts/04_masks.py
+
+== The two masks ==
+causal (language model)        bidirectional (ViT)
+#.....                         ######
+##....                         ######
+###...                         ######
+####..                         ######
+#####.                         ######
+######                         ######
+
+== Does changing the future change the past? ==
+causal         logits at positions 0..19 after rewriting 20..31, max |difference|: 0.0e+00
+bidirectional  logits at positions 0..19 after rewriting 20..31, max |difference|: 1.3e-01
+
+== A KV cache is exact only under the causal mask ==
+causal         cached decoding vs a full forward pass, max |logit difference| over 16 steps: 3.0e-07
+bidirectional  cached decoding vs a full forward pass, max |logit difference| over 16 steps: 4.3e-01
+bidirectional: when token t+1 arrives, every earlier key and value would change, so there is nothing to keep
+
+== Supervision per forward pass ==
+a text sequence of 256 tokens: 255 next-token targets from one pass (loss over every position)
+an image of 196 patches with a class label: 1 target from one pass
+causal LM loss at init on random tokens: 6.227 (ln 500 = 6.215)
+
+== A VLM uses both: an image prefix that is bidirectional, text that is causal ==
+4 image tokens, then 5 text tokens:
+####.....
+####.....
+####.....
+####.....
+#####....
+######...
+#######..
+########.
+#########

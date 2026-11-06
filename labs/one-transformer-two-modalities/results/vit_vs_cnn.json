@@ -1,0 +1,135 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "config": {
+  "steps": 5000,
+  "batch_size": 128,
+  "lr": 0.001,
+  "weight_decay": 0.05,
+  "warmup_frac": 0.05,
+  "seed": 0
+ },
+ "vit_block": {
+  "dim": 128,
+  "n_heads": 4,
+  "n_kv_heads": null,
+  "mlp_hidden": null,
+  "mlp": "gelu",
+  "norm": "layer",
+  "bias": true,
+  "prenorm": true,
+  "layerscale": null
+ },
+ "pos_neighbour_score_at_init": 0.047,
+ "runs": [
+  {
+   "model": "vit-learned",
+   "params": 1205770,
+   "train_images": 2500,
+   "steps": 5000,
+   "final_train_loss": 0.0003,
+   "train_acc": 1.0,
+   "test_acc": 0.4953,
+   "seconds": 92.7,
+   "pos_neighbour_score": 0.641,
+   "pos_cosine_by_distance_1_to_6": [
+    0.736,
+    0.516,
+    0.271,
+    0.063,
+    -0.081,
+    -0.169
+   ],
+   "pos_alignment_after_bicubic_to_16x16": 0.996
+  },
+  {
+   "model": "cnn",
+   "params": 1148874,
+   "train_images": 2500,
+   "steps": 5000,
+   "final_train_loss": 0.0005,
+   "train_acc": 1.0,
+   "test_acc": 0.7283,
+   "seconds": 21.8
+  },
+  {
+   "model": "vit-learned",
+   "params": 1205770,
+   "train_images": 10000,
+   "steps": 5000,
+   "final_train_loss": 0.0958,
+   "train_acc": 0.9764,
+   "test_acc": 0.6587,
+   "seconds": 82.9,
+   "pos_neighbour_score": 0.75,
+   "pos_cosine_by_distance_1_to_6": [
+    0.748,
+    0.521,
+    0.267,
+    0.048,
+    -0.106,
+    -0.193
+   ],
+   "pos_alignment_after_bicubic_to_16x16": 0.996
+  },
+  {
+   "model": "cnn",
+   "params": 1148874,
+   "train_images": 10000,
+   "steps": 5000,
+   "final_train_loss": 0.0103,
+   "train_acc": 0.9993,
+   "test_acc": 0.8352,
+   "seconds": 20.3
+  },
+  {
+   "model": "vit-learned",
+   "params": 1205770,
+   "train_images": 50000,
+   "steps": 5000,
+   "final_train_loss": 0.5735,
+   "train_acc": 0.7969,
+   "test_acc": 0.759,
+   "seconds": 84.6,
+   "pos_neighbour_score": 0.875,
+   "pos_cosine_by_distance_1_to_6": [
+    0.735,
+    0.502,
+    0.241,
+    0.024,
+    -0.122,
+    -0.194
+   ],
+   "pos_alignment_after_bicubic_to_16x16": 1.0
+  },
+  {
+   "model": "cnn",
+   "params": 1148874,
+   "train_images": 50000,
+   "steps": 5000,
+   "final_train_loss": 0.181,
+   "train_acc": 0.9331,
+   "test_acc": 0.8815,
+   "seconds": 20.8
+  },
+  {
+   "model": "vit-sincos2d",
+   "params": 1197578,
+   "train_images": 50000,
+   "steps": 5000,
+   "final_train_loss": 0.6044,
+   "train_acc": 0.8023,
+   "test_acc": 0.7636,
+   "seconds": 85.1
+  },
+  {
+   "model": "vit-none",
+   "params": 1197578,
+   "train_images": 50000,
+   "steps": 5000,
+   "final_train_loss": 0.7291,
+   "train_acc": 0.727,
+   "test_acc": 0.6801,
+   "seconds": 87.9
+  }
+ ]
+}

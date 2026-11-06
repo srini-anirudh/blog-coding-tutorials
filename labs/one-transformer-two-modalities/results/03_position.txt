@@ -1,0 +1,22 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/one-transformer-two-modalities/scripts/03_position.py
+
+== Attention is permutation-equivariant ==
+block(x[perm]) vs block(x)[perm], no mask, max |difference|: 2.4e-07
+ViT pos=none      logits for the image vs its patch-shuffled copy, max |difference|: 4.8e-07
+ViT pos=learned   logits for the image vs its patch-shuffled copy, max |difference|: 1.5e-01
+ViT pos=sincos2d  logits for the image vs its patch-shuffled copy, max |difference|: 5.4e-02
+
+== Sinusoids: every offset is one fixed rotation ==
+PE(t + k) vs PE(t) @ M_k for k in (1, 7, 100), all t, max |difference|: 1.2e-07
+
+== RoPE (C3 attnzoo): the score depends only on the offset ==
+score(m=10, n=3) = 6.50366; the same pair shifted by 1, 100, 2000: 6.50366, 6.50366, 6.50377; max drift 1.1e-04 (float32 rounding of large angles)
+2D RoPE: score((5,9), (2,4)) = -7.47025; shifted in rows and columns, max drift 1.9e-06
+
+== A learned 2D table at a new resolution must be interpolated ==
+a 1D table trained at 14 x 14 has 196 rows; 24 x 24 needs 576 positions
+neighbour score (closest row is a grid neighbour): random table 0.026, smooth 14 x 14 table 1.000
+alignment (each 24 x 24 cell looks most like the 14 x 14 cell it covers):
+  bicubic interpolation 0.993; reusing raster rows 0.007
+results/vit_vs_cnn.json repeats both scores on a ViT trained on CIFAR-10 (script 07)
