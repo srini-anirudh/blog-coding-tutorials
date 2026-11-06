@@ -1,0 +1,81 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+Command: python labs/how-vision-language-models-scale/scripts/05_laws.py
+
+== 1. Compute-optimal N and D for L = E + A/N^a + B/D^b, C = 6ND (Hoffmann et al. constants) ==
+C (FLOPs)  N_opt closed form  N_opt brute force  D_opt tokens  tokens / param
+---------  -----------------  -----------------  ------------  --------------
+1e+20                  0.64B              0.64B           26B            40.1
+1e+21                  1.82B              1.82B           91B            50.1
+1e+22                  5.16B              5.15B          323B            62.6
+1e+23                 14.60B             14.60B         1142B            78.2
+1e+24                 41.30B             41.29B         4036B            97.7
+N_opt grows as C^0.45. With these constants the ratio D/N drifts with C; the 20 tokens per
+parameter rule of thumb comes from Hoffmann et al.'s other two approaches.
+
+== 2. Fit check: synthetic losses from known constants plus 1% noise (illustrative data) ==
+constant   true  fitted
+--------  -----  ------
+E           1.8   1.969
+A         300.0   340.7
+B         900.0  1337.9
+alpha      0.32   0.330
+beta        0.3   0.323
+The exponents come back within 0.03. E, A and B are less well pinned, because they trade off against each other.
+
+== 3. Same loss slope, different split: N/D ~ C^b with Shukor et al. (2025) exponents ==
+Normalised so every design has N/D = 1/20 at C = 1e20 (illustrative intercept).
+C      N/D early fusion  N/D late fusion  N/D early fusion MoE
+-----  ----------------  ---------------  --------------------
+1e+20            0.0500           0.0500                0.0500
+1e+22            0.0638           0.0710                0.0119
+1e+24            0.0815           0.1007                0.0028
+Loss exponents reported: -0.0492 (early), -0.0494 (late), -0.0474 (MoE). Late fusion wants more parameters
+per token as C grows; the sparse model shifts its extra budget into data.
+
+== 4. Modality interaction term -C + A/N^a + B/D^b (illustrative constants) ==
+N      interaction       regime
+-----  -----------  -----------
+1e+07      +0.0182  competition
+1e+08      -0.0052      synergy
+1e+09      -0.0183      synergy
+1e+10      -0.0257      synergy
+3e+10      -0.0280      synergy
+1e+11      -0.0299      synergy
+Crossover at N = 5.28e+07 for D = 45B tokens with these constants.
+
+== 5. Fixed inference budget N (Q + V): spend on LLM size or on visual tokens? ==
+alpha = 0.077, beta = 0.015 from Li et al. (2024); A = B = 1 and the OCR setting are illustrative.
+
+visual reasoning: budget 300 B-param x tokens, Q = 50
+V    N (B)  0.5B-72B?   error         
+---  -----  ---------  ------  -------
+1     5.88        yes  1.8725         
+4     5.56        yes  1.8557         
+16    4.55        yes  1.8492  <- best
+36    3.49        yes  1.8559         
+64    2.63        yes  1.8677         
+144   1.55        yes  1.8952         
+256   0.98        yes  1.9217         
+576   0.48         no  1.9673         
+
+OCR-like (beta = 0.25, B x 3): budget 300 B-param x tokens, Q = 50
+V    N (B)  0.5B-72B?   error         
+---  -----  ---------  ------  -------
+1     5.88        yes  3.8725         
+4     5.56        yes  2.9976         
+16    4.55        yes  2.3900         
+36    3.49        yes  2.1330         
+64    2.63        yes  1.9889         
+144   1.55        yes  1.8330         
+256   0.98        yes  1.7515  <- best
+576   0.48         no  1.6706         
+
+Longer prompts move the reasoning optimum toward more visual tokens (the post's third observation):
+prompt tokens Q  best V (visual reasoning)
+---------------  -------------------------
+0                                        5
+10                                       3
+50                                      13
+200                                     46
+
+scripts/06_tokens_vs_size.py trains real small models to test the same trade-off.

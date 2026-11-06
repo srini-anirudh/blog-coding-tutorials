@@ -1,0 +1,29 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+Command: python labs/how-vision-language-models-scale/scripts/02_measure_k.py
+
+Model: encoder 4 layers x 192, 64 patches; 2x2 merge -> 16 visual tokens; LLM 4 layers x 256; 32 text tokens; batch 4.
+
+k = weight-matmul FLOPs / (matmul parameters x tokens), forward + backward:
+setting                                k encoder  k connector  k LLM  enc attn MFLOP  LLM attn MFLOP
+-------------------------------------  ---------  -----------  -----  --------------  --------------
+all trained                                 5.96         6.00   6.00           151.0           113.2
+frozen encoder                              2.00         4.50   6.00            50.3           113.2
+frozen encoder + LLM (connector only)       2.00         4.50   4.00            50.3           113.2
+frozen LLM, encoder trains                  5.96         6.00   4.00           151.0           113.2
+
+Readings:
+- A trained tower costs 6. The encoder shows slightly under 6: its first layer (the patch embedding) never
+  needs a gradient for the pixels.
+- A frozen encoder costs 2: nothing below it trains, so no backward pass runs through it.
+- A frozen LLM above a trained connector costs 4, not 2: the input gradient still flows down through it.
+- The connector falls between 4 and 6 when the encoder below it is frozen: its first layer skips the input
+  gradient, its second does not.
+- Attention-score FLOPs in the LLM do not change when it is frozen: they have no weights to skip.
+
+Encoder share, both towers trained:
+estimate                                            encoder share
+--------------------------------------------------  -------------
+post's formula N_V m^2 / (N_V m^2 + N_L (1 + T/V))          42.4%
+measured, weight matmuls only                               42.2%
+measured, with attention scores                             42.8%
+The formula and the measurement differ only by the patch-embedding layer's skipped input gradient.

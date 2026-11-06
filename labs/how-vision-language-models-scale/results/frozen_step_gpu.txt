@@ -1,0 +1,11 @@
+Hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2
+Command: python labs/how-vision-language-models-scale/scripts/07_frozen_step_gpu.py
+
+Encoder 0.303B matmul params, 1024 patches; connector 12.6M; LLM 0.871B, 256 visual + 200 text tokens. Batch 8, bf16 autocast, AdamW.
+setting                                trainable  step ms (median)  time vs all  FLOP model vs all  weight TFLOP/s  peak GiB
+-------------------------------------  ---------  ----------------  -----------  -----------------  --------------  --------
+all trained                               1.254B             232.9         1.00               1.00             146      48.1
+frozen encoder                            0.950B             139.7         0.60               0.71             173      20.5
+frozen encoder + LLM (connector only)     0.013B             101.1         0.43               0.52             176      11.9
+frozen LLM, encoder trains                0.317B             194.0         0.83               0.81             143      39.5
+Median of 10 steps after 3 warm-up steps. 'FLOP model' uses k = 6 / 4 / 2 and leaves attention out.

@@ -1,0 +1,58 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+Command: python labs/how-vision-language-models-scale/scripts/01_budget.py
+
+== Figure 1: one sample, 0.4B encoder, 448 px, 14 px patches, 2x2 merge, 200 text tokens ==
+setting                                                   patches P  tokens V  encoder TFLOP  LLM TFLOP  total TFLOP  encoder share
+--------------------------------------------------------  ---------  --------  -------------  ---------  -----------  -------------
+7.0B LLM, both trained                                         1024       256           2.46      19.15        21.61          11.4%
+7.0B LLM, frozen encoder                                       1024       256           0.82      19.15        19.97           4.1%
+7.0B LLM, frozen encoder + frozen LLM (connector trains)       1024       256           0.82      12.77        13.59           6.0%
+0.5B LLM, both trained                                         1024       256           2.46       1.37         3.83          64.2%
+0.5B LLM, frozen encoder                                       1024       256           0.82       1.37         2.19          37.5%
+0.5B LLM, frozen encoder + frozen LLM (connector trains)       1024       256           0.82       0.91         1.73          47.3%
+Post: with a 7B LLM the encoder is about 11% of the compute; with a 0.5B LLM about 64%.
+
+== Encoder share of visual compute, N_V m^2 / (N_V m^2 + N_L (1 + T/V)), text ignored (T = 0) ==
+model               N_V (B)  N_L (B)  merge m  share (formula)  share (summed)  LLM-equivalent of encoder
+------------------  -------  -------  -------  ---------------  --------------  -------------------------
+Qwen2-VL-2B           0.675      1.5        2            64.3%           64.3%                      2.70B
+Qwen2-VL-7B           0.675      7.6        2            26.2%           26.2%                      2.70B
+Qwen2-VL-72B          0.675     72.0        2             3.6%            3.6%                      2.70B
+SmolVLM-256M (r=4)    0.093    0.135        4            91.7%           91.7%                      1.49B
+SmolVLM-256M (r=2)    0.093    0.135        2            73.4%           73.4%                      0.37B
+LLaVA-1.5-13B           0.3     13.0        1             2.3%            2.3%                      0.30B
+InternVL2.5-78B         5.5     72.0        2            23.4%           23.4%                     22.00B
+Post: Qwen2-VL-2B about 64%, Qwen2-VL-72B under 4%; a 0.675B encoder with a 2x2 merge costs what a 2.7B LLM would; SmolVLM with r = 2 still about 73%.
+
+== What freezing saves, FLOPs per parameter per token ==
+tower                                                               k                                   made of
+------------------------------------------------------------------  -  ----------------------------------------
+trained                                                             6  forward 2 + input grad 2 + weight grad 2
+frozen, its input needs a gradient (LLM above a trained connector)  4                  forward 2 + input grad 2
+frozen, nothing below it trains (encoder at the bottom)             2                                 forward 2
+Freezing the LLM in stage 1 saves 0.333 of its compute (a third, not two thirds). scripts/02_measure_k.py measures these k values with a FLOP counter.
+
+== Resolution: both towers grow with the square of the side; attention grows with its fourth power ==
+Encoder: 0.67B ViT, 32 layers, width 1280, 14 px patches (Qwen2.5-VL-like). LLM 7.6B, 2x2 merge, T = 0.
+Windowed: 112 x 112 px windows (64 patches) in 28 layers, full attention in 4 (as in Qwen2.5-VL).
+side px      P     V  enc weights TF  LLM weights TF  enc attn full TF  attn share  enc attn windowed TF  attn share
+-------  -----  ----  --------------  --------------  ----------------  ----------  --------------------  ----------
+224        256    64            1.03            2.92              0.03          3%                  0.01          1%
+448       1024   256            4.12           11.67              0.52         11%                  0.09          2%
+896       4096  1024           16.47           46.69              8.25         33%                  1.14          6%
+1344      9216  2304           37.05          105.06             41.75         53%                  5.47         13%
+1792     16384  4096           65.86          186.78            131.94         67%                 16.94         20%
+Doubling the side multiplies P, V and both weight terms by 4, and the full-attention term by 16.
+
+== PaliGemma 2: small model at high resolution against large model at low resolution ==
+Configs from the SigLIP and Gemma 2 model cards: So400m (0.4B, 27 layers, width 1152); Gemma 2 2B (2.6B,
+26 layers, attention width 2048); Gemma 2 27B (27.2B, 46 layers, attention width 4096). 14 px patches, no merge.
+Assumption: 64 text tokens per example. Units: cost of the 3B model at 224 px = 1.
+estimate                        3B @ 896 px  28B @ 224 px  28B @ 896 px
+------------------------------  -----------  ------------  ------------
+weights only                           13.3           9.4         122.8
+weights + attention scores             16.2           9.3         128.9
+paper (measured relative cost)         23.5          18.9          ~156
+The FLOP formula agrees with the paper's direction: the 3B model at 896 px costs more per example than the
+28B model at 224 px. It undershoots the paper's units, which are measured training cost on TPUs rather than
+FLOPs. We did not reproduce the paper's numbers.

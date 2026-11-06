@@ -1,0 +1,30 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+Command: python labs/how-vision-language-models-scale/scripts/03_compute_ladder.py
+
+Hardware method: chip-hours x peak bf16 x 40%. Peaks (TFLOP/s): A100 312, H100 989, TPUv4 275, TPUv5e 197. Token method: 6 N D.
+model                            paper reports    method  recomputed   post  matches  / Qwen2.5-72B text
+----------------------  ----------------------  --------  ----------  -----  -------  ------------------
+Prismatic 7B               under 9 h on 8 A100  hardware    3.23e+19  3e+19      yes             4.2e-06
+LLaVA-1.5-13B            about 1 day on 8 A100  hardware    8.63e+19  9e+19      yes             1.1e-05
+PaliGemma 3B                 350B + 90B tokens       6ND    7.92e+21  8e+21      yes             1.0e-03
+Molmo-72B               4.2K + 8.3K H100-hours  hardware    1.78e+22  2e+22      yes             2.3e-03
+DeepSeek-VL-7B              5 days on 512 A100  hardware    2.76e+22  3e+22      yes             3.5e-03
+InternVL2.5-78B              about 120B tokens       6ND    5.62e+22  6e+22      yes             7.2e-03
+PaLI-17B                  1,024 TPUv4 x 7 days  hardware    6.81e+22  7e+22      yes             8.8e-03
+MM1-30B                      about 400B tokens       6ND    7.20e+22  7e+22      yes             9.3e-03
+Flamingo-80B             1,536 TPUv4 x 15 days  hardware    2.19e+23  2e+23      yes             2.8e-02
+Qwen2-VL-72B                 about 1.4T tokens       6ND    6.05e+23  6e+23      yes             7.8e-02
+Qwen2.5-VL-72B                     4.1T tokens       6ND    1.77e+24  2e+24      yes             2.3e-01
+Chameleon-34B                      9.2T tokens       6ND    1.88e+24  2e+24      yes             2.4e-01
+Qwen2.5-72B (text LLM)              18T tokens       6ND    7.78e+24  8e+24      yes             1.0e+00
+
+Cross-checks named in the post:
+check                                   FLOPs
+-----------------------------------  --------
+PaliGemma 3B, <3 days on 256 TPUv5e  5.23e+21
+Chameleon-34B, 4.28M A100-hours      1.92e+24
+
+InternVL2.5-78B multimodal training / its Qwen2.5-72B backbone's text pretraining: 0.72% (post: under 1%).
+Qwen2.5-VL-72B pretraining / the same backbone: 23% (post: roughly a quarter).
+LLaVA-1.5-13B / Qwen2.5-72B text: 1e-05, about five orders of magnitude (post: five).
+These are the post's own estimates recomputed; no training compute was measured here.

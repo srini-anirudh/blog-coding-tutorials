@@ -1,0 +1,28 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+Command: python labs/how-vision-language-models-scale/scripts/06_tokens_vs_size.py
+
+24 runs, 1500 steps of batch 128 each, 6 in parallel with 2 threads each.
+
+Accuracy after 1500 steps on 1,024 fresh test images per question (mean over 2 seed(s)).
+Inference cost = LLM matmul params x (Q + V), Q = 2 prompt tokens. Chance is 0.125 for both questions.
+V   LLM width   N_L  inference cost (M)  train MFLOP/sample  coarse acc  reading acc  reading per seed
+--  ---------  ----  ------------------  ------------------  ----------  -----------  ----------------
+1          32   26K                0.08                39.6       1.000        0.138         0.12 0.16
+1          64  101K                0.30                41.4       1.000        0.135         0.11 0.16
+1         128  398K                1.19                48.6       1.000        0.130         0.13 0.13
+4          32   26K                0.15                40.1       1.000        0.147         0.15 0.15
+4          64  101K                0.60                43.4       1.000        0.346         0.37 0.32
+4         128  398K                2.39                56.2       1.000        0.194         0.27 0.12
+16         32   26K                0.46                42.2       1.000        0.838         1.00 0.68
+16         64  101K                1.81                51.2       1.000        1.000         1.00 1.00
+16        128  398K                7.16                86.6       1.000        1.000         1.00 1.00
+64         32   26K                1.70                50.5       1.000        0.187         0.21 0.17
+64         64  101K                6.64                82.5       1.000        1.000         1.00 1.00
+64        128  398K               26.26               208.3       1.000        1.000         1.00 1.00
+
+At roughly equal inference cost (the diagonal: wide LLM + few tokens ... narrow LLM + many tokens):
+V   LLM width  inference cost (M)  coarse acc  reading acc
+--  ---------  ------------------  ----------  -----------
+1         128                1.19       1.000        0.130
+16         64                1.81       1.000        1.000
+64         32                1.70       1.000        0.187

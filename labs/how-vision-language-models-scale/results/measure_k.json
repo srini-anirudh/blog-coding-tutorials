@@ -1,0 +1,113 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/how-vision-language-models-scale/scripts/02_measure_k.py",
+ "config": {
+  "image_size": 64,
+  "patch_size": 8,
+  "v_dim": 192,
+  "v_layers": 4,
+  "v_heads": 4,
+  "merge": 2,
+  "pool_tokens": null,
+  "l_dim": 256,
+  "l_layers": 4,
+  "l_heads": 4,
+  "vocab": 512,
+  "max_text": 32,
+  "mlp_ratio": 4
+ },
+ "settings": {
+  "all trained": {
+   "vision": {
+    "k": 5.959183673469388,
+    "weight_flops": 2755657728.0,
+    "attention_flops": 150994944.0,
+    "params": 1806336,
+    "tokens": 256
+   },
+   "connector": {
+    "k": 6.0,
+    "weight_flops": 100663296.0,
+    "attention_flops": 0.0,
+    "params": 262144,
+    "tokens": 64
+   },
+   "llm": {
+    "k": 6.0,
+    "weight_flops": 3774873600.0,
+    "attention_flops": 113246208.0,
+    "params": 3276800,
+    "tokens": 192
+   }
+  },
+  "frozen encoder": {
+   "vision": {
+    "k": 2.0,
+    "weight_flops": 924844032.0,
+    "attention_flops": 50331648.0,
+    "params": 1806336,
+    "tokens": 256
+   },
+   "connector": {
+    "k": 4.5,
+    "weight_flops": 75497472.0,
+    "attention_flops": 0.0,
+    "params": 262144,
+    "tokens": 64
+   },
+   "llm": {
+    "k": 6.0,
+    "weight_flops": 3774873600.0,
+    "attention_flops": 113246208.0,
+    "params": 3276800,
+    "tokens": 192
+   }
+  },
+  "frozen encoder + LLM (connector only)": {
+   "vision": {
+    "k": 2.0,
+    "weight_flops": 924844032.0,
+    "attention_flops": 50331648.0,
+    "params": 1806336,
+    "tokens": 256
+   },
+   "connector": {
+    "k": 4.5,
+    "weight_flops": 75497472.0,
+    "attention_flops": 0.0,
+    "params": 262144,
+    "tokens": 64
+   },
+   "llm": {
+    "k": 4.0,
+    "weight_flops": 2516582400.0,
+    "attention_flops": 113246208.0,
+    "params": 3276800,
+    "tokens": 192
+   }
+  },
+  "frozen LLM, encoder trains": {
+   "vision": {
+    "k": 5.959183673469388,
+    "weight_flops": 2755657728.0,
+    "attention_flops": 150994944.0,
+    "params": 1806336,
+    "tokens": 256
+   },
+   "connector": {
+    "k": 6.0,
+    "weight_flops": 100663296.0,
+    "attention_flops": 0.0,
+    "params": 262144,
+    "tokens": 64
+   },
+   "llm": {
+    "k": 4.0,
+    "weight_flops": 2516582400.0,
+    "attention_flops": 113246208.0,
+    "params": 3276800,
+    "tokens": 192
+   }
+  }
+ }
+}

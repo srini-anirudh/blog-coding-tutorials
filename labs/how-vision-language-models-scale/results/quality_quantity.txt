@@ -1,0 +1,26 @@
+Hardware: AMD EPYC 7R13, 2 threads, torch 2.15.0
+Command: python labs/how-vision-language-models-scale/scripts/04_quality_quantity.py
+
+== Part 1: utility-decay model, illustrative constants, 128M-sample pool, half-life tau = 3 repeats ==
+samples seen  error, top 10% (aggressive)  error, top 30% (mild)  error, no filter                  best
+------------  ---------------------------  ---------------------  ----------------  --------------------
+1e+07                              0.0398                 0.0468            0.0550  top 10% (aggressive)
+1e+08                              0.0301                 0.0316            0.0363  top 10% (aggressive)
+3e+08                              0.0296                 0.0291            0.0309        top 30% (mild)
+5e+08                              0.0296                 0.0288            0.0293        top 30% (mild)
+1e+09                              0.0296                 0.0287            0.0282             no filter
+3e+09                              0.0296                 0.0287            0.0278             no filter
+1e+10                              0.0296                 0.0287            0.0278             no filter
+The constants are chosen for illustration, not fitted. The point is the shape: the winner moves from the
+aggressive filter to no filter as the budget grows, because the small pool repeats until it stops teaching.
+
+== Part 2: real students, pool of 100,000 labelled points, label noise 0.6 x (1 - quality) ==
+Teacher: fixed random MLP on R^24, 10 classes. Student: 3-layer MLP, width 256, Adam 1e-3, batch 256.
+sample views  top 10%: 10,000 kept, noise 0.03  top 30%: 30,000 kept, noise 0.08  no filter: 100,000 kept, noise 0.27       best
+------------  --------------------------------  --------------------------------  -----------------------------------  ---------
+10,000                            0.663 (1 ep)                      0.669 (0 ep)                         0.657 (0 ep)    top 30%
+40,000                            0.722 (4 ep)                      0.718 (1 ep)                         0.707 (0 ep)    top 10%
+160,000                          0.720 (16 ep)                      0.735 (5 ep)                         0.728 (2 ep)    top 30%
+640,000                          0.682 (64 ep)                     0.738 (21 ep)                         0.743 (6 ep)  no filter
+2,560,000                       0.677 (256 ep)                     0.671 (85 ep)                        0.748 (26 ep)  no filter
+Clean test accuracy, mean of 3 seed(s); 'ep' is epochs over the kept set. Per-seed values are in the JSON.
