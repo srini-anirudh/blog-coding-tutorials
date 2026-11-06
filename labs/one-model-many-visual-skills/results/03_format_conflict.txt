@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13, 6 worker processes x 1 threads, torch 2.15.0+cu132
+# command: python labs/one-model-many-visual-skills/scripts/03_format_conflict.py
+
+Unmarked questions after training. long = answers of 6+ words. correct = right value in the answer.
+VQA exact is scored with the prompt format used in training (with the format prompt only when it is on).
+
+run                  long rate mean words  correct VQA exact
+fmt=off vqa=0.0          1.000      15.02    0.687     0.000
+fmt=off vqa=0.25         1.000      15.03    0.597     0.003
+fmt=off vqa=0.5          0.900      13.53    0.597     0.083
+fmt=off vqa=0.75         0.070       2.09    0.710     0.677
+fmt=off vqa=0.9          0.000       1.17    0.693     0.630
+fmt=on vqa=0.0           1.000      15.02    0.687     0.000
+fmt=on vqa=0.25          1.000      15.07    0.617     0.597
+fmt=on vqa=0.5           1.000      15.04    0.650     0.687
+fmt=on vqa=0.75          1.000      15.06    0.750     0.723
+fmt=on vqa=0.9           1.000      15.05    0.723     0.723

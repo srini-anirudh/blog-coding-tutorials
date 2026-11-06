@@ -1,0 +1,63 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/one-model-many-visual-skills/scripts/01_anatomy.py
+
+1. One two-turn, two-image example as the model sees it (9 visual tokens per image):
+  [  0]     <|im_start|>       template   mask 0
+  [  1]     user               template   mask 0
+  [  2- 19] <visual> x 18      visual     mask 0
+  [ 20]     what               user       mask 0
+  [ 21]     color              user       mask 0
+  [ 22]     is                 user       mask 0
+  [ 23]     the                user       mask 0
+  [ 24]     cup                user       mask 0
+  [ 25]     ?                  user       mask 0
+  [ 26]     <|im_end|>         template   mask 0
+  [ 27]     <|im_start|>       template   mask 0
+  [ 28]     assistant          template   mask 0
+  [ 29]     the                assistant  mask 1
+  [ 30]     cup                assistant  mask 1
+  [ 31]     is                 assistant  mask 1
+  [ 32]     red                assistant  mask 1
+  [ 33]     .                  assistant  mask 1
+  [ 34]     <|im_end|>         assistant  mask 1
+  [ 35]     <|im_start|>       template   mask 0
+  [ 36]     user               template   mask 0
+  [ 37]     where              user       mask 0
+  [ 38]     is                 user       mask 0
+  [ 39]     the                user       mask 0
+  [ 40]     ball               user       mask 0
+  [ 41]     ?                  user       mask 0
+  [ 42]     <|im_end|>         template   mask 0
+  [ 43]     <|im_start|>       template   mask 0
+  [ 44]     assistant          template   mask 0
+  [ 45]     the                assistant  mask 1
+  [ 46]     ball               assistant  mask 1
+  [ 47]     is                 assistant  mask 1
+  [ 48]     at                 assistant  mask 1
+  [ 49]     the                assistant  mask 1
+  [ 50]     top                assistant  mask 1
+  [ 51]     left               assistant  mask 1
+  [ 52]     .                  assistant  mask 1
+  [ 53]     <|im_end|>         assistant  mask 1
+
+2. Positions and loss tokens
+  this lab, 9 per image: 54 positions, 18 visual, 15 carry loss (27.8%)
+  LLaVA-1.5 size, 576 per image (arithmetic): 1188 positions, 1152 visual, 15 carry loss (1.3%)
+
+3. Share of the loss signal that the VQA half receives (post's numbers: 2 vs 150 loss tokens)
+  per-token average:   1.3%
+  per-example average: 50.0%
+  measured on 20 batches of this lab's data (VQA answers 2.2 loss tokens, captions 27.0):
+    per-token 6.8%, per-example 50.3%
+
+4. A made-up collection (illustrative sizes): share of examples / compute / loss tokens
+  before capping:
+    short VQA             69.6% /  46.8% /   3.6%
+    detailed captions      8.7% /   7.2% /  33.6%
+    documents, 5 tiles    13.0% /  43.0% /   6.7%
+    text-only              8.7% /   2.9% /  56.1%
+  after a 300K per-source cap:
+    short VQA             46.2% /  24.8% /   1.4%
+    detailed captions     15.4% /  10.2% /  34.4%
+    documents, 5 tiles    23.1% /  60.8% /   6.9%
+    text-only             15.4% /   4.2% /  57.3%

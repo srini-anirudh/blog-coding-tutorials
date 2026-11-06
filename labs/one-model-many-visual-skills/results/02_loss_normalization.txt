@@ -1,0 +1,12 @@
+# hardware: AMD EPYC 7R13, 6 worker processes x 1 threads, torch 2.15.0+cu132
+# command: python labs/one-model-many-visual-skills/scripts/02_loss_normalization.py
+
+mix: 50% one-word VQA, 50% detailed captions (examples). Within a seed the data stream is identical; only the averaging differs.
+
+run                VQA exact  caption recall  CHAIR_i
+token_250_s0           0.477           0.425    0.284
+example_250_s0         0.450           0.429    0.319
+token_1000_s0          0.733           0.552    0.190
+example_1000_s0        0.667           0.450    0.287
+token_1000_s1          0.713           0.416    0.239
+example_1000_s1        0.700           0.459    0.191

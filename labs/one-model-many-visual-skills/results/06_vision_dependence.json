@@ -1,0 +1,23 @@
+{
+ "hardware": "AMD EPYC 7R13, 1 worker processes x 4 threads, torch 2.15.0+cu132",
+ "command": "python labs/one-model-many-visual-skills/scripts/06_vision_dependence.py",
+ "metrics": {
+  "text_exact": 1.0,
+  "vqa_exact_real": 0.73,
+  "fork_colour_exact_real": 1.0,
+  "reason_exact_real": 1.0,
+  "counterfactual_exact_real": 1.0,
+  "rationale_unchanged_real": 0.0,
+  "vqa_exact_blank": 0.14,
+  "fork_colour_exact_blank": 0.0,
+  "reason_exact_blank": 0.0,
+  "counterfactual_exact_blank": 0.0,
+  "rationale_unchanged_blank": 1.0,
+  "vqa_exact_swap": 0.213,
+  "fork_colour_exact_swap": 1.0,
+  "reason_exact_swap": 0.33,
+  "counterfactual_exact_swap": 0.053,
+  "rationale_unchanged_swap": 1.0,
+  "train_seconds": 164.2
+ }
+}

@@ -1,0 +1,13 @@
+# hardware: AMD EPYC 7R13, 6 worker processes x 1 threads, torch 2.15.0+cu132
+# command: python labs/one-model-many-visual-skills/scripts/04_forgetting.py
+
+base model text score (reverse, exact): 1.000
+multimodal score = mean of VQA exact, chat correct and caption recall
+
+run                        text  dS_text    VQA   chat  recall  MM score
+full, replay 0%           0.003   -0.997  0.730  0.733   0.451     0.638
+full, replay 10%          1.000   +0.000  0.740  0.733   0.596     0.690
+full, replay 50%          1.000   +0.000  0.583  0.607   0.522     0.571
+LLM lr x0.1, replay 0%    0.980   -0.020  0.560  0.513   0.578     0.550
+LoRA r8, replay 0%        0.000   -1.000  0.557  0.633   0.540     0.577
+frozen LLM, replay 0%     1.000   +0.000  0.000  0.113   0.000     0.038

@@ -1,0 +1,32 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/one-model-many-visual-skills/scripts/01_anatomy.py",
+ "lab_counts": {
+  "template": 10,
+  "visual": 18,
+  "user": 11,
+  "assistant": 15,
+  "total": 54,
+  "loss_tokens": 15
+ },
+ "llava_size_counts": {
+  "template": 10,
+  "visual": 1152,
+  "user": 11,
+  "assistant": 15,
+  "total": 1188,
+  "loss_tokens": 15
+ },
+ "post_example_vqa_share": {
+  "token": 0.013157894736842105,
+  "example": 0.5
+ },
+ "measured_vqa_share": {
+  "token": 0.06778022132930346,
+  "example": 0.5031249999999999
+ },
+ "mean_loss_tokens": {
+  "vqa": 2.1614906832298137,
+  "caption": 27.0062893081761
+ }
+}

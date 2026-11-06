@@ -1,0 +1,5 @@
+# hardware: AMD EPYC 7R13, 2 threads, torch 2.15.0+cu132
+# command: python -m pytest labs/one-model-many-visual-skills -m "not slow and not gpu and not network" -o addopts="--import-mode=importlib" -q -p no:cacheprovider
+
+..................                                                       [100%]
+18 passed in 7.05s

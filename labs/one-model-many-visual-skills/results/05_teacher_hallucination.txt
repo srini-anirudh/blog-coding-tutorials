@@ -1,0 +1,15 @@
+# hardware: AMD EPYC 7R13, 6 worker processes x 1 threads, torch 2.15.0+cu132
+# command: python labs/one-model-many-visual-skills/scripts/05_teacher_hallucination.py
+
+Eval scenes: a plate and no fork. fork rate = captions that mention a fork.
+CHAIR_i = mentioned objects not in the scene / all mentioned. yes rate = 'is there a fork ?' -> yes.
+
+student                  fork rate  CHAIR_i  recall fork yes rate
+clean annotator              0.000    0.147   0.436         0.047
+biased teacher               0.830    0.432   0.464         0.000
+teacher + verification       0.000    0.216   0.546         0.000
+
+one caption from each student:
+  clean annotator: there is a red book at the top left . there is a red book at the top . there is a red plate at the bottom left .
+  biased teacher: there is a red plate at the top left . there is a red plate at the top . there is a red plate at the bottom left . there is a grey fork at the bottom right .
+  teacher + verification: there is a red book at the top left . there is a red ball at the top . there is a red ball at the bottom left .

@@ -1,0 +1,13 @@
+# hardware: AMD EPYC 7R13, 1 worker processes x 4 threads, torch 2.15.0+cu132
+# command: python labs/one-model-many-visual-skills/scripts/06_vision_dependence.py
+
+suite                                  real  blank   swap real-swap
+VQA (colour, count, position)         0.730  0.140  0.213    +0.517
+fork colour (text prior suffices)     1.000  0.000  1.000    +0.000
+reasoning with rationale              1.000  0.000  0.330    +0.670
+
+counterfactual image (one blue object repainted red):
+  rationale exact on the edited image: 1.000
+  rationale identical before and after the edit: 0.000
+  control, image held fixed (swap): unchanged = 1.000
+text-only suite (reverse): 1.000

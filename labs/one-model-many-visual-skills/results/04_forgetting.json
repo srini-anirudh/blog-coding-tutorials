@@ -1,0 +1,91 @@
+{
+ "hardware": "AMD EPYC 7R13, 6 worker processes x 1 threads, torch 2.15.0+cu132",
+ "command": "python labs/one-model-many-visual-skills/scripts/04_forgetting.py",
+ "base_text_exact": 1.0,
+ "runs": {
+  "full, replay 0%": {
+   "text_exact": 0.003,
+   "vqa_exact": 0.73,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.03,
+   "chat_correct": 0.733,
+   "chair_i": 0.17,
+   "fork_rate": 0.003,
+   "recall": 0.451,
+   "sample": "there is a red plate at the top left . there is a red book at the top . there is a red plate at the bottom left .",
+   "train_seconds": 117.8,
+   "delta_text": -0.997,
+   "mm_score": 0.638
+  },
+  "full, replay 10%": {
+   "text_exact": 1.0,
+   "vqa_exact": 0.74,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.01,
+   "chat_correct": 0.733,
+   "chair_i": 0.235,
+   "fork_rate": 0.007,
+   "recall": 0.596,
+   "sample": "there is a red plate at the top left . there is a red cup at the top . there is a red plate at the bottom left .",
+   "train_seconds": 117.2,
+   "delta_text": 0.0,
+   "mm_score": 0.69
+  },
+  "full, replay 50%": {
+   "text_exact": 1.0,
+   "vqa_exact": 0.583,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.01,
+   "chat_correct": 0.607,
+   "chair_i": 0.203,
+   "fork_rate": 0.01,
+   "recall": 0.522,
+   "sample": "there is a red plate at the top left . there is a red plate at the top . there is a red plate at the bottom left .",
+   "train_seconds": 109.6,
+   "delta_text": 0.0,
+   "mm_score": 0.571
+  },
+  "LLM lr x0.1, replay 0%": {
+   "text_exact": 0.98,
+   "vqa_exact": 0.56,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.13,
+   "chat_correct": 0.513,
+   "chair_i": 0.002,
+   "fork_rate": 0.0,
+   "recall": 0.578,
+   "sample": "there is a red ball at the top left . there is a red ball at the top . there is a red ball at the bottom left . there is a red ball at the bottom .",
+   "train_seconds": 123.1,
+   "delta_text": -0.02,
+   "mm_score": 0.55
+  },
+  "LoRA r8, replay 0%": {
+   "text_exact": 0.0,
+   "vqa_exact": 0.557,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.15,
+   "chat_correct": 0.633,
+   "chair_i": 0.08,
+   "fork_rate": 0.0,
+   "recall": 0.54,
+   "sample": "there is a red cup at the top left . there is a red book at the top . there is a red book at the bottom . there is a red book at the bottom right .",
+   "train_seconds": 144.8,
+   "delta_text": -1.0,
+   "mm_score": 0.577
+  },
+  "frozen LLM, replay 0%": {
+   "text_exact": 1.0,
+   "vqa_exact": 0.0,
+   "chat_long_rate": 0.633,
+   "chat_mean_words": 21.01,
+   "chat_correct": 0.113,
+   "chair_i": 0.0,
+   "fork_rate": 0.0,
+   "recall": 0.0,
+   "sample": "red",
+   "train_seconds": 90.7,
+   "delta_text": 0.0,
+   "mm_score": 0.038
+  }
+ }
+}

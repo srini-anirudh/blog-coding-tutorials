@@ -1,0 +1,42 @@
+# hardware: AMD EPYC 7R13, 6 worker processes x 1 threads, torch 2.15.0+cu132
+# command: python labs/one-model-many-visual-skills/scripts/07_pareto.py
+
+format prompt off
+run            vqa  chat   cap  text |    VQA   long   text  front
+m00 fmt=off   0.23  0.10  0.63  0.04 |  0.600  0.167  1.000  *
+m01 fmt=off   0.39  0.23  0.03  0.36 |  0.350  0.690  1.000  *
+m02 fmt=off   0.05  0.73  0.09  0.12 |  0.000  1.000  1.000  
+m03 fmt=off   0.20  0.65  0.05  0.09 |  0.000  1.000  1.000  
+m04 fmt=off   0.19  0.56  0.16  0.10 |  0.003  1.000  0.997  *
+m05 fmt=off   0.61  0.01  0.32  0.06 |  0.703  0.000  1.000  *
+m06 fmt=off   0.07  0.05  0.16  0.72 |  0.133  0.813  1.000  *
+m07 fmt=off   0.08  0.34  0.40  0.18 |  0.000  1.000  0.997  
+m08 fmt=off   0.69  0.06  0.05  0.20 |  0.560  0.000  1.000  
+m09 fmt=off   0.39  0.19  0.13  0.30 |  0.463  0.390  1.000  *
+front: m00 fmt=off, m01 fmt=off, m04 fmt=off, m05 fmt=off, m06 fmt=off, m09 fmt=off
+picks:
+  weighted (0.8, 0.2): m05 fmt=off
+  weighted (0.5, 0.5): m01 fmt=off
+  weighted (0.2, 0.8): m04 fmt=off
+  constraint: max VQA, long >= 0.9, text >= base - 0.01: m04 fmt=off
+
+format prompt on
+run            vqa  chat   cap  text |    VQA   long   text  front
+m00 fmt=on    0.23  0.10  0.63  0.04 |  0.733  1.000  1.000  *
+m01 fmt=on    0.39  0.23  0.03  0.36 |  0.503  1.000  1.000  
+m02 fmt=on    0.05  0.73  0.09  0.12 |  0.583  1.000  1.000  
+m03 fmt=on    0.20  0.65  0.05  0.09 |  0.673  1.000  0.997  
+m04 fmt=on    0.19  0.56  0.16  0.10 |  0.723  1.000  0.997  
+m05 fmt=on    0.61  0.01  0.32  0.06 |  0.717  1.000  0.993  
+m06 fmt=on    0.07  0.05  0.16  0.72 |  0.563  1.000  1.000  
+m07 fmt=on    0.08  0.34  0.40  0.18 |  0.693  1.000  1.000  
+m08 fmt=on    0.69  0.06  0.05  0.20 |  0.730  1.000  1.000  
+m09 fmt=on    0.39  0.19  0.13  0.30 |  0.607  1.000  1.000  
+front: m00 fmt=on
+picks:
+  weighted (0.8, 0.2): m00 fmt=on
+  weighted (0.5, 0.5): m00 fmt=on
+  weighted (0.2, 0.8): m00 fmt=on
+  constraint: max VQA, long >= 0.9, text >= base - 0.01: m00 fmt=on
+
+base text score 1.000. * = on the Pareto front of (VQA exact, long rate).

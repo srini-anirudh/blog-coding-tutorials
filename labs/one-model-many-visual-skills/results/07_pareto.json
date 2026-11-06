@@ -1,0 +1,256 @@
+{
+ "hardware": "AMD EPYC 7R13, 6 worker processes x 1 threads, torch 2.15.0+cu132",
+ "command": "python labs/one-model-many-visual-skills/scripts/07_pareto.py",
+ "mixtures": {
+  "m00": {
+   "vqa": 0.233,
+   "chat": 0.097,
+   "caption": 0.626,
+   "text": 0.045
+  },
+  "m01": {
+   "vqa": 0.386,
+   "chat": 0.229,
+   "caption": 0.03,
+   "text": 0.356
+  },
+  "m02": {
+   "vqa": 0.049,
+   "chat": 0.734,
+   "caption": 0.094,
+   "text": 0.123
+  },
+  "m03": {
+   "vqa": 0.205,
+   "chat": 0.652,
+   "caption": 0.049,
+   "text": 0.094
+  },
+  "m04": {
+   "vqa": 0.186,
+   "chat": 0.556,
+   "caption": 0.162,
+   "text": 0.095
+  },
+  "m05": {
+   "vqa": 0.615,
+   "chat": 0.008,
+   "caption": 0.321,
+   "text": 0.056
+  },
+  "m06": {
+   "vqa": 0.066,
+   "chat": 0.053,
+   "caption": 0.157,
+   "text": 0.723
+  },
+  "m07": {
+   "vqa": 0.078,
+   "chat": 0.341,
+   "caption": 0.399,
+   "text": 0.182
+  },
+  "m08": {
+   "vqa": 0.69,
+   "chat": 0.056,
+   "caption": 0.053,
+   "text": 0.2
+  },
+  "m09": {
+   "vqa": 0.386,
+   "chat": 0.189,
+   "caption": 0.128,
+   "text": 0.298
+  }
+ },
+ "runs": {
+  "m00 fmt=off": {
+   "vqa_exact": 0.6,
+   "chat_long_rate": 0.167,
+   "chat_mean_words": 3.47,
+   "chat_correct": 0.69,
+   "text_exact": 1.0,
+   "train_seconds": 126.8
+  },
+  "m01 fmt=off": {
+   "vqa_exact": 0.35,
+   "chat_long_rate": 0.69,
+   "chat_mean_words": 10.64,
+   "chat_correct": 0.567,
+   "text_exact": 1.0,
+   "train_seconds": 102.9
+  },
+  "m02 fmt=off": {
+   "vqa_exact": 0.0,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.03,
+   "chat_correct": 0.673,
+   "text_exact": 1.0,
+   "train_seconds": 121.2
+  },
+  "m03 fmt=off": {
+   "vqa_exact": 0.0,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.18,
+   "chat_correct": 0.67,
+   "text_exact": 1.0,
+   "train_seconds": 112.0
+  },
+  "m04 fmt=off": {
+   "vqa_exact": 0.003,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.06,
+   "chat_correct": 0.733,
+   "text_exact": 0.997,
+   "train_seconds": 121.7
+  },
+  "m05 fmt=off": {
+   "vqa_exact": 0.703,
+   "chat_long_rate": 0.0,
+   "chat_mean_words": 1.17,
+   "chat_correct": 0.693,
+   "text_exact": 1.0,
+   "train_seconds": 128.0
+  },
+  "m06 fmt=off": {
+   "vqa_exact": 0.133,
+   "chat_long_rate": 0.813,
+   "chat_mean_words": 12.37,
+   "chat_correct": 0.56,
+   "text_exact": 1.0,
+   "train_seconds": 135.7
+  },
+  "m07 fmt=off": {
+   "vqa_exact": 0.0,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.01,
+   "chat_correct": 0.753,
+   "text_exact": 0.997,
+   "train_seconds": 134.3
+  },
+  "m08 fmt=off": {
+   "vqa_exact": 0.56,
+   "chat_long_rate": 0.0,
+   "chat_mean_words": 1.23,
+   "chat_correct": 0.553,
+   "text_exact": 1.0,
+   "train_seconds": 110.6
+  },
+  "m09 fmt=off": {
+   "vqa_exact": 0.463,
+   "chat_long_rate": 0.39,
+   "chat_mean_words": 6.62,
+   "chat_correct": 0.673,
+   "text_exact": 1.0,
+   "train_seconds": 116.0
+  },
+  "m00 fmt=on": {
+   "vqa_exact": 0.733,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.05,
+   "chat_correct": 0.74,
+   "text_exact": 1.0,
+   "train_seconds": 121.1
+  },
+  "m01 fmt=on": {
+   "vqa_exact": 0.503,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.2,
+   "chat_correct": 0.547,
+   "text_exact": 1.0,
+   "train_seconds": 116.2
+  },
+  "m02 fmt=on": {
+   "vqa_exact": 0.583,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.07,
+   "chat_correct": 0.67,
+   "text_exact": 1.0,
+   "train_seconds": 121.1
+  },
+  "m03 fmt=on": {
+   "vqa_exact": 0.673,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.18,
+   "chat_correct": 0.713,
+   "text_exact": 0.997,
+   "train_seconds": 94.7
+  },
+  "m04 fmt=on": {
+   "vqa_exact": 0.723,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 14.99,
+   "chat_correct": 0.733,
+   "text_exact": 0.997,
+   "train_seconds": 113.0
+  },
+  "m05 fmt=on": {
+   "vqa_exact": 0.717,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.12,
+   "chat_correct": 0.627,
+   "text_exact": 0.993,
+   "train_seconds": 114.7
+  },
+  "m06 fmt=on": {
+   "vqa_exact": 0.563,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.13,
+   "chat_correct": 0.54,
+   "text_exact": 1.0,
+   "train_seconds": 119.9
+  },
+  "m07 fmt=on": {
+   "vqa_exact": 0.693,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 14.97,
+   "chat_correct": 0.703,
+   "text_exact": 1.0,
+   "train_seconds": 116.1
+  },
+  "m08 fmt=on": {
+   "vqa_exact": 0.73,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.14,
+   "chat_correct": 0.733,
+   "text_exact": 1.0,
+   "train_seconds": 89.2
+  },
+  "m09 fmt=on": {
+   "vqa_exact": 0.607,
+   "chat_long_rate": 1.0,
+   "chat_mean_words": 15.32,
+   "chat_correct": 0.663,
+   "text_exact": 1.0,
+   "train_seconds": 88.0
+  }
+ },
+ "off": {
+  "front": [
+   "m00 fmt=off",
+   "m01 fmt=off",
+   "m04 fmt=off",
+   "m05 fmt=off",
+   "m06 fmt=off",
+   "m09 fmt=off"
+  ],
+  "picks": {
+   "weighted (0.8, 0.2)": "m05 fmt=off",
+   "weighted (0.5, 0.5)": "m01 fmt=off",
+   "weighted (0.2, 0.8)": "m04 fmt=off",
+   "constraint: max VQA, long >= 0.9, text >= base - 0.01": "m04 fmt=off"
+  }
+ },
+ "on": {
+  "front": [
+   "m00 fmt=on"
+  ],
+  "picks": {
+   "weighted (0.8, 0.2)": "m00 fmt=on",
+   "weighted (0.5, 0.5)": "m00 fmt=on",
+   "weighted (0.2, 0.8)": "m00 fmt=on",
+   "constraint: max VQA, long >= 0.9, text >= base - 0.01": "m00 fmt=on"
+  }
+ },
+ "base_text_exact": 1.0
+}
