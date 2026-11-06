@@ -1,0 +1,6 @@
+input_ids (1, 125) | pixel_values (2, 3, 224, 224) | num_crops [1, 1]
+image 0: tokens 8 to 56 (49 tokens)
+image 1: tokens 63 to 111 (49 tokens)
+text between images: '\nImage 2: '
+features (2, 49, 576) | embeds (1, 125, 576)
+image 1 slot holds features[1, 0]: True

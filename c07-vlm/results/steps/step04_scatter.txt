@@ -1,0 +1,11 @@
+prompt string            '<|im_start|>user\n<image>What do you see?<|im_end|>\n<|im_start|>assistant\n'
+input_ids                (1, 63)  placeholders: 49
+placeholder slots        3 to 51
+text_embeds              (1, 63, 576)
+image features           (1, 49, 576)
+merged                   (1, 63, 576)
+slot 3 equals features[0, 0]    True
+slot 51 equals features[0, 48]   True
+text rows untouched       True
+merge_naive               6.491 ms per batch (CPU)
+merge_masked_scatter      1.039 ms per batch (CPU)

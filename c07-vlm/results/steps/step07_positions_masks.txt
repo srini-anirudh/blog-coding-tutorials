@@ -1,0 +1,33 @@
+input_ids
+ tensor([[ 3,  3,  3,  3, 21, 22],
+        [ 0,  3,  3,  3,  3, 14]])
+attention_mask
+ tensor([[1, 1, 1, 1, 1, 1],
+        [0, 1, 1, 1, 1, 1]])
+image_index
+ tensor([[ 0,  0,  0,  0, -1, -1],
+        [-1,  0,  0,  0,  0, -1]])
+position_ids (1D)
+ tensor([[0, 1, 2, 3, 4, 5],
+        [1, 0, 1, 2, 3, 4]])
+
+sample 1, causal + padding (rows are queries, columns are keys)
+     pad ......
+     img .#....
+     img .##...
+     img .###..
+     img .####.
+     txt .#####
+
+sample 1, with the image block bidirectional
+     pad ......
+     img .####.
+     img .####.
+     img .####.
+     img .####.
+     txt .#####
+
+3D positions for sample 0 (t, h, w), image grid 2 x 2
+tensor([[0, 0, 0, 0, 2, 3],
+        [0, 0, 1, 1, 2, 3],
+        [0, 1, 0, 1, 2, 3]])

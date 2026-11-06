@@ -1,0 +1,8 @@
+encoder parameters      85,797,120
+image 224, patch 16 -> 196 tokens, d_v = 768
+pixel_values           (2, 3, 224, 224)     mean +0.781  std 0.405  min -0.686  max +0.937
+last_hidden_state      (2, 196, 768)        mean -0.005  std 2.025  min -43.102  max +27.042
+hidden_states[-2]      (2, 196, 768)        mean -0.061  std 1.555  min -212.203  max +69.700
+hidden_states            13 tensors (patch embeddings + 12 layers)
+cosine(corner, other corner)  +0.600
+mean cosine of all pairs      +0.349

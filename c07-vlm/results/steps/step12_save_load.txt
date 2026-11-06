@@ -1,0 +1,10 @@
+  chat_template.jinja               0.00 MB
+  config.json                       0.00 MB
+  model.safetensors               889.86 MB
+  preprocessor_config.json          0.00 MB
+  processor_config.json             0.00 MB
+  tokenizer.json                    3.52 MB
+  tokenizer_config.json             0.00 MB
+AutoConfig -> VLMConfig | image_token_id 49152 | image_seq_len 49
+AutoModel  -> TinyVLM | tied: True
+logits identical: True (1, 63, 49216)

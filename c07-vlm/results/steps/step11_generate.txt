@@ -1,0 +1,6 @@
+prompt tokens 63 (untrained projector)
+output: 'I see that you have a question about the "What is the difference between a "variable" and'
+manual == lm.generate: True | cached == recomputed: True
+lm.generate          1.78 s for 20 tokens (CPU, 2 threads)
+manual with cache    2.01 s
+manual no cache      7.32 s

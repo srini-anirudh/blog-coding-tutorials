@@ -1,0 +1,13 @@
+vision features        (1, 196, 768)        mean -0.009  std 2.013  min -27.980  max +25.404
+after pixel shuffle    (1, 49, 3072)        mean -0.009  std 2.013  min -27.980  max +25.404
+Linear(768)            (1, 196, 576)        mean +0.005  std 1.162  min -5.160  max +5.402
+MLP(768)               (1, 196, 576)        mean -0.011  std 0.452  min -2.022  max +1.884
+MLP(3072), the model   (1, 49, 576)         mean -0.025  std 0.462  min -2.366  max +1.946
+real token embeddings  (1, 11, 576)         mean -0.002  std 0.107  min -0.578  max +0.797
+all embedding rows     (49152, 576)         mean -0.001  std 0.136  min -1.961  max +1.875
+parameters
+  Linear 768 -> 576       442,944
+  MLP 768 -> 576          775,296
+  Linear 3072 -> 576    1,770,048
+  MLP 3072 -> 576       2,102,400
+whole model {'vision': 85797120, 'projector': 2102400, 'lm': 134551872, 'trainable': 222451392}

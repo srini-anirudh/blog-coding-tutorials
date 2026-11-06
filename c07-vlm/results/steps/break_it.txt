@@ -1,0 +1,7 @@
+1. Processor and model disagree about tokens per crop
+   ValueError: 196 <image> placeholders but 49 image feature vectors (1 crops x 49 tokens). The processor and the model disagree about tokens per crop.
+2. The marker is missing from the text
+   ValueError: prompt has 0 <image> markers, 1 pictures
+3. Wrong loss mask (fresh projector, one example)
+   labels on the reply only: 4.401 over 5 targets
+   labels on every token:    11.458 over 69 targets, 49 of them <image>
