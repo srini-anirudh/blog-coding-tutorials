@@ -1,0 +1,28 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/evolution-of-ml-architectures/scripts/05_state_vs_cache.py
+
+1. Recall of n stored pairs, key and value dimension d = 64 (accuracy = nearest stored value is right)
+       n  fixed state, random keys  fixed state, orthogonal keys  KV cache + softmax  state floats  cache floats
+       8                     1.000                         1.000               1.000         4,096         1,024
+      16                     1.000                         1.000               1.000         4,096         2,048
+      32                     1.000                         1.000               1.000         4,096         4,096
+      64                     1.000                         1.000               1.000         4,096         8,192
+     128                     0.984             n > d: impossible               1.000         4,096        16,384
+     256                     0.770             n > d: impossible               1.000         4,096        32,768
+     512                     0.342             n > d: impossible               1.000         4,096        65,536
+    1024                     0.106             n > d: impossible               1.000         4,096       131,072
+
+   Same task at n = 256 pairs, growing the fixed state (keys in dimension d_state):
+   d_state   32: state   1,024 floats   recall 0.148
+   d_state   64: state   4,096 floats   recall 0.770
+   d_state  128: state  16,384 floats   recall 1.000
+   d_state  256: state  65,536 floats   recall 1.000
+   d_state  512: state 262,144 floats   recall 1.000
+
+2. Decode one token on CPU, 4 threads, batch 1, fp32, width 1024 (attention: 8 heads of 128)
+    context  attention ms  cache MB (K+V)  SSM step ms  SSM state MB
+       1024         0.213             8.4        0.037         0.131
+       4096         1.473            33.6        0.037         0.131
+      16384         6.720           134.2        0.037         0.131
+      65536        29.875           536.9        0.037         0.131
+   Medians of 30 runs on a shared machine: read the trend, not the third digit.

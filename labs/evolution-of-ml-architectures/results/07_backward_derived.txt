@@ -1,0 +1,39 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/evolution-of-ml-architectures/scripts/07_backward_derived.py
+
+                                                                 formula   max |manual - autograd|
+         linear: X_bar = Y_bar W^T, W_bar = X^T Y_bar, b_bar = 1^T Y_bar   0.0e+00
+                                                           relu' formula   0.0e+00
+                                                           tanh' formula   1.1e-16
+                                                        sigmoid' formula   0.0e+00
+                                                           gelu' formula   2.2e-16
+                                                           silu' formula   2.2e-16
+                                  softmax: z_bar = p * (p_bar - p.p_bar)   5.2e-17
+                                  softmax + cross-entropy: z_bar = p - y   1.4e-17
+                         LayerNorm three-term x_bar, gamma_bar, beta_bar   1.8e-15
+                                                  RMSNorm two-term x_bar   5.6e-16
+     conv: K_bar = correlate(X, Y_bar); X_bar = full conv with flipped K   1.1e-14
+                           conv: X_bar equals conv_transpose2d(Y_bar, K)   1.1e-14
+                   BPTT: delta_t = local + W_h^T (delta_{t+1} (1 - h^2))   4.7e-16
+                      LSTM: dc_t, df, di, dg, do and dc_{t-1} = dc_t f_t   5.6e-17
+                                          attention: Q_bar, K_bar, V_bar   6.7e-16
+                        attention: rowsum(P_bar * P) = rowsum(O_bar * O)   6.7e-16
+                                  SSM: adjoint is a backward linear scan   0.0e+00
+                   SSM: d exp(Delta A)/d dt = A exp(Delta A) sigmoid(dt)   0.0e+00
+                                   MoE: router logit adjoint, top-2 of 5   0.0e+00
+
+LayerNorm x_bar . 1 and x_bar . x_hat per row: max |.| = 4.8e-04 (eps = 1e-5 keeps it from 0)
+MoE: router columns with exactly zero gradient: 3 of 5 (the 3 experts not chosen)
+
+Why 1/sqrt(d_k): q, k with unit-variance entries, d_k = 128, 64 keys
+       unscaled: logit std 11.52   max p 0.857   trace of softmax Jacobian 0.2021
+    1/sqrt(d_k): logit std  1.02   max p 0.110   trace of softmax Jacobian 0.9600
+   sqrt(128) = 11.31
+
+Sigmoid derivative bound: max sigma' = 1/4, six layers: (1/4)^6 = 2.44e-04
+
+Loss scaling in fp16: a gradient of 1e-8
+   cast to fp16: 0.0e+00    scaled by 2^16, cast, unscaled: 1.00e-08
+Clipping a gradient (3, 0.1) to norm 1
+   global norm: [0.9994, 0.0333]  cosine to original 1.0000
+   elementwise to +-0.707: [0.7071, 0.1]  cosine to original 0.9943

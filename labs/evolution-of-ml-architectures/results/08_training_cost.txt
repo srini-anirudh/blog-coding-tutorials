@@ -1,0 +1,20 @@
+# AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132
+# command: python labs/evolution-of-ml-architectures/scripts/08_training_cost.py
+
+1. Forward of one layer, batch 1, d = 256, fp32 (median of 7)
+       N  attention ms   FFN ms  time ratio  FLOP ratio N/(4d)
+     256          1.06     2.69        0.39               0.25
+     512          3.41     6.10        0.56               0.50
+    1024         10.25     8.65        1.19               1.00
+    2048        120.73    22.36        5.40               2.00
+    4096        476.50    47.22       10.09               4.00
+   FLOPs predict equal cost at N = 4d. Past that, the time ratio grows faster than the FLOP ratio:
+   the N x N score matrix (4 heads x N^2 floats) is written and read in full, the memory traffic that
+   FlashAttention removes (C3 builds it). On a shared CPU the crossover point itself moves between runs.
+
+2. The sequential wall: nn.RNN (tanh, d = 256) over N steps against one batched matmul of equal work
+       N   RNN ms  one matmul ms  ratio
+     256     6.05           0.78    7.8
+    1024    24.46           2.80    8.7
+    4096    87.74          10.98    8.0
+   Same multiply-adds; the recurrence must wait for h_{t-1} at every step.

@@ -1,0 +1,31 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/evolution-of-ml-architectures/scripts/06_scans.py
+
+1. Linear recurrence h_t = a_t h_{t-1} + b_t, batch 1, 256 channels
+       N  max |seq - par|  seq steps  par rounds   seq ms   par ms
+      64          9.5e-07         64           6      1.2      1.1
+     512          1.4e-06        512           9      7.1      3.9
+    4096          1.4e-06       4096          12     60.1     24.2
+   The parallel scan does about log2 N times more arithmetic. It wins where idle parallel lanes
+   exist to absorb that work (a GPU); a few CPU threads may not, so measure before assuming.
+
+2. Time-invariant SSM (diagonal A, 8 channels, state 4): recurrence against convolution
+   max |recurrence - direct conv| = 1.9e-06
+   max |recurrence - FFT conv|    = 2.9e-06
+
+3. Impulse response: put x = 1 at position p, read y at p + 10
+         LTI: ||response(p=20) - response(p=120)|| / ||response(p=20)|| = 0.00
+   selective: ||response(p=20) - response(p=120)|| / ||response(p=20)|| = 0.29
+   LTI: one kernel serves every position. Selective: the kernel changes with the content, so no FFT path.
+
+4. Mamba-2 duality: scalar decay per step, state 16
+   max |scan - M x| = 1.3e-05; M is lower triangular: True
+   M = L * (C B^T), L_ij = prod a: this is causal linear attention with a decay mask. rank of the block M[32:, :32] = 16 (<= state 16)
+
+5. a_bar = exp(Delta * A) with A = -1: small Delta holds the state, large Delta overwrites it
+   Delta  0.001: a_bar = 0.9990
+   Delta   0.01: a_bar = 0.9900
+   Delta    0.1: a_bar = 0.9048
+   Delta    1.0: a_bar = 0.3679
+   Delta    5.0: a_bar = 0.0067
+   C3 linear attention, recurrent vs masked parallel: max error 4.8e-07; state (1, 2, 8, 8) whatever the length

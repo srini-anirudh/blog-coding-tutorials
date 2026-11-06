@@ -1,0 +1,22 @@
+[
+ {
+  "model": "lstm",
+  "n_filler": 128,
+  "seed": 0,
+  "params": 69136,
+  "acc": 0.06591796875,
+  "final_loss": 2.7867,
+  "ms_per_step": 22.1
+ },
+ {
+  "model": "selective_ssm",
+  "n_filler": 128,
+  "seed": 0,
+  "params": 61712,
+  "acc": 1.0,
+  "final_loss": 0.0004,
+  "ms_per_step": 97.9,
+  "delta_at_key": 0.3628,
+  "delta_at_filler": 0.048
+ }
+]

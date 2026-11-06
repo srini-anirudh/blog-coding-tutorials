@@ -1,0 +1,4 @@
+# AMD EPYC 7R13, 2 threads per test process, torch 2.15.0+cu132
+# command: python -m pytest labs/evolution-of-ml-architectures -m "not slow and not gpu and not network"
+..............................                                           [100%]
+30 passed in 15.29s

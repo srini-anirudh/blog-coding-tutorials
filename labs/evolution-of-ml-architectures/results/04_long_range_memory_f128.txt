@@ -1,0 +1,12 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/evolution-of-ml-architectures/scripts/04_long_range_memory.py --fillers 128 --tag _f128
+
+task: [MARK, key, n filler keys, QUERY] -> key; 16 keys, chance = 0.062
+training: 1000 steps, batch 32, AdamW lr 2e-3 one-cycle, clip 1.0, width 64, 2 layers
+
+         model filler seed  params    acc    loss  ms/step  gate
+           rnn    128    0   19216  0.057   2.777     32.8  
+          lstm    128    0   69136  0.056   2.792     30.3  
+     attention    128    0   43728  1.000   0.001     13.7  
+       lti_ssm    128    0   59664  0.057   2.781    110.9  
+ selective_ssm    128    0   61712  0.058   2.780    121.2  Delta key 0.021 vs filler 0.021

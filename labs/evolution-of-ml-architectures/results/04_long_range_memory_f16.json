@@ -1,0 +1,49 @@
+[
+ {
+  "model": "rnn",
+  "n_filler": 16,
+  "seed": 0,
+  "params": 19216,
+  "acc": 0.06396484375,
+  "final_loss": 2.8074,
+  "ms_per_step": 7.4
+ },
+ {
+  "model": "lstm",
+  "n_filler": 16,
+  "seed": 0,
+  "params": 69136,
+  "acc": 1.0,
+  "final_loss": 0.0018,
+  "ms_per_step": 5.2
+ },
+ {
+  "model": "attention",
+  "n_filler": 16,
+  "seed": 0,
+  "params": 36560,
+  "acc": 1.0,
+  "final_loss": 0.0009,
+  "ms_per_step": 4.0
+ },
+ {
+  "model": "lti_ssm",
+  "n_filler": 16,
+  "seed": 0,
+  "params": 59664,
+  "acc": 0.24853515625,
+  "final_loss": 2.077,
+  "ms_per_step": 23.6
+ },
+ {
+  "model": "selective_ssm",
+  "n_filler": 16,
+  "seed": 0,
+  "params": 61712,
+  "acc": 1.0,
+  "final_loss": 0.002,
+  "ms_per_step": 24.6,
+  "delta_at_key": 0.0198,
+  "delta_at_filler": 0.0194
+ }
+]

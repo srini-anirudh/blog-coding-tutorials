@@ -1,0 +1,28 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/evolution-of-ml-architectures/scripts/02_image_priors.py
+
+1. Dense weights against shared weights
+   224x224x3 image into a dense layer of width 1024: 154.1 M weights
+   16x16 image into 128 hidden units: 32,768 weights; one 3x3 kernel: 9
+
+2. Receptive field of L stacked 3x3 convolutions (stride 1), measured by gradient
+   L=1:  3 input columns   formula 1 + L(k-1) = 3
+   L=2:  5 input columns   formula 1 + L(k-1) = 5
+   L=3:  7 input columns   formula 1 + L(k-1) = 7
+   L=4:  9 input columns   formula 1 + L(k-1) = 9
+   L=5: 11 input columns   formula 1 + L(k-1) = 11
+
+3. Train on columns (0, 5), test on the same columns and on unseen columns (6, 11)
+   1500 steps, batch 64, Adam lr 1e-3, 4 classes (chance 0.25), seeds [0, 1, 2]
+    model  params  train cols  shifted cols
+      MLP   33412 1.000 [1.00-1.00] 0.277 [0.27-0.28]
+      CNN   14180 1.000 [1.00-1.00] 1.000 [1.00-1.00]
+      ViT   18276 0.998 [1.00-1.00] 0.993 [0.99-1.00]
+   (mean over seeds, [min-max])
+
+4. Move the object 4 pixels right (columns 2-5 -> 6-9), same noise, same row
+   MLP: relative change of pooled features 0.968; same prediction after shift 0.292
+   CNN: relative change of pooled features 0.003; same prediction after shift 1.000
+   ViT: relative change of pooled features 0.082; same prediction after shift 1.000
+   CNN feature map: max |f(shift x) - shift f(x)| inside the borders = 0.00e+00 (feature scale 16.10)
+   Same CNN shape with circular padding, whole map: max error 0.00e+00

@@ -1,0 +1,52 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/evolution-of-ml-architectures/scripts/01_count_params.py
+
+1. One layer of each family at width d = 1024
+                 family     formula  torch module  post: k d^2       k d^2
+                    MLP   1,049,600     1,049,600         1 d^2   1,048,576
+               Conv 3x3   9,438,208     9,438,208         9 d^2   9,437,184
+     Depthwise sep. 3x3   1,059,840     1,059,840         1 d^2   1,048,576
+              Elman RNN   2,098,176     2,098,176         2 d^2   2,097,152
+                    GRU   6,294,528     6,297,600         6 d^2   6,291,456
+                   LSTM   8,392,704     8,396,800         8 d^2   8,388,608
+            Transformer  12,587,008    12,587,008        12 d^2  12,582,912
+            Mamba (E=2)   6,666,240     6,666,240         6 d^2   6,291,456
+   nn.RNN, nn.GRU and nn.LSTM keep two bias vectors per gate (b_ih and b_hh), so they hold d more per gate.
+   The Mamba row is the Hugging Face MambaMixer; in/out projections are 6 d^2, the rest is 6.0% on top.
+
+2. Llama-3-8B from six numbers
+         embeddings:   1,050,673,152
+    attention/layer:      41,943,040
+          mlp/layer:     176,160,768
+          per layer:     218,112,000
+              total:   8,030,261,248
+   HF LlamaForCausalLM:   8,030,261,248
+   C4 count_parameters:   8,030,261,248
+   Llama-3-70B by the same formula: 70.55 B
+
+3. Embeddings as a share of the model
+   GPT-2 small: 124.4 M parameters (head tied), token embedding 38.6 M = 31%
+   Llama-3-70B: embedding + head = 3.0%, input embedding alone = 1.49%
+   vocabulary 32,000 -> 256,000 at d = 4096: +0.92 B tied, +1.84 B untied
+   vocabulary 32,768 -> 262,144 at d = 4096: +0.94 B tied, +1.88 B untied
+
+4. The CNN history in parameters
+    LeNet-5: total      61,706   conv       2,572   dense      59,134
+    AlexNet: total  62,378,344   conv   3,747,200   dense  58,631,144
+     VGG-16: total 138,357,544   conv  14,714,688   dense 123,642,856
+   ResNet-50: total  25,557,032   (Hugging Face ResNetConfig defaults, 1000 classes)
+
+5. From parameters to bytes, Llama-3-8B
+   bf16 weights: 16.1 GB   training state at 16 B/param: 128.5 GB
+   KV cache per token: 131,072 B = 128 KiB
+   KV cache at   8192 tokens: 1.0 GiB
+   KV cache at 131072 tokens: 16.0 GiB
+   tokens (batch x context) at which the cache equals the bf16 weights: 122,532
+   Llama-3-70B, MHA (n_kv = 64), 128k = 128,000 tokens: 335.5 GB
+   Llama-3-70B, GQA (n_kv =  8), 128k = 128,000 tokens: 41.9 GB
+
+6. Attention FLOPs against parameter FLOPs, per token per layer: N_ctx / (6 d)
+   d = 4096, N =   2048: attention / all matmuls = 0.083   attention / FFN alone = 0.125
+   d = 4096, N =   4096: attention / all matmuls = 0.167   attention / FFN alone = 0.250
+   d = 4096, N =  24576: attention / all matmuls = 1.000   attention / FFN alone = 1.500
+   d = 4096, N = 131072: attention / all matmuls = 5.333   attention / FFN alone = 8.000
