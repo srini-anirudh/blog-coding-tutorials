@@ -1,0 +1,29 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/memory-is-more-than-context/scripts/05_scoring.py
+1. Figure 11's eight memories, ranked by the figure's own rule
+  semantic only             #0:0.92  #1:0.91  #3:0.90  #2:0.88  #4:0.62  #5:0.58  #6:0.55  #7:0.05
+  a=.60 b=.25 g=.30         #0:0.92  #3:0.90  #2:0.88  #4:0.77  #1:0.71  #5:0.59  #6:0.54  #7:0.28
+  a=.60 b=.25 g=.30 + MMR   #0:0.92  #2:0.88  #4:0.77  #1:0.71  #5:0.59  #6:0.54  #3:0.46  #7:0.28
+  #0 project-x deploys via GitHub Actions; #1 project-x deploys via Jenkins [2025]; #2 workflow file: .github/deploy-staging.yml; #3 deployments go through GitHub Actions; #4 staging requires OAuth scope read:user; #5 production deploys need a second approval; #6 project-y deploys via Cloud Build; #7 the user prefers long-form writing
+
+2. Fitting the weights from labels (200,000 labelled pairs, prior P(useful) = 0.05)
+                            semantic     recency  importance      bias
+  true log-LR slopes           22.22        4.00        5.00    -20.22
+  logistic regression          22.38        3.90        5.08    -20.28
+  naive Bayes                  22.23        4.02        5.00    -20.23
+
+3. Add a fourth feature that nearly copies recency (time since last access)
+                            semantic     recency  importance last access      bias
+  logistic regression          22.38        3.61        5.08        0.29    -20.28
+  naive Bayes                  22.23        4.02        5.00        3.97    -22.52
+  held-out calibration           ECE     pairs scored P>0.5: mean predicted / observed useful
+  3 features, naive Bayes       0.0008     0.910 / 0.904  (n=9378)
+  4 features, logistic          0.0008     0.911 / 0.903  (n=9396)
+  4 features, naive Bayes       0.0034     0.912 / 0.871  (n=9873)
+
+4. Top-k against a log-odds threshold (fitted 3-feature score, threshold log-odds > 0, i.e. P > 0.5)
+  2,000 queries, pools of 50 memories, 30% of queries have no useful memory, k = 3
+                                        top-3  threshold
+  unanswerable: returned nothing        0.000      0.822
+  answerable: useful memory returned    0.968      0.844
+  memories returned per query            3.00       0.82

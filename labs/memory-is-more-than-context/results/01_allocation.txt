@@ -1,0 +1,45 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/memory-is-more-than-context/scripts/01_allocation.py
+
+Figure 3 pool, as in the post
+  budget B=300
+    top-k relevance  U= 2.87  tokens=  224  items=[0, 1, 2, 3, 5, 6, 8]
+    density u/l      U= 2.87  tokens=  224  items=[0, 1, 2, 3, 5, 6, 8]
+    marginal gain    U= 3.14  tokens=  158  items=[0, 1, 5, 6, 8]
+    exact optimum    U= 3.83  tokens=  194  items=[0, 2, 3, 5, 6, 8]
+  budget B=2300
+    top-k relevance  U= 1.53  tokens= 2296  items=[1, 2, 3, 4]
+    density u/l      U= 2.72  tokens=  484  items=[0, 1, 2, 3, 5, 6, 7, 8]
+    marginal gain    U= 3.14  tokens=  158  items=[0, 1, 5, 6, 8]
+    exact optimum    U= 3.83  tokens=  194  items=[0, 2, 3, 5, 6, 8]
+  budget B=2400
+    top-k relevance  U= 3.37  tokens= 2396  items=[0, 1, 2, 3, 4, 5, 6]
+    density u/l      U= 2.72  tokens=  484  items=[0, 1, 2, 3, 5, 6, 7, 8]
+    marginal gain    U= 4.09  tokens= 2358  items=[0, 1, 4, 5, 6, 8]
+    exact optimum    U= 4.78  tokens= 2394  items=[0, 2, 3, 4, 5, 6, 8]
+
+Figure 3 pool, with the missing #2-#3 contradiction added
+  budget B=300
+    top-k relevance  U= 1.92  tokens=  224  items=[0, 1, 2, 3, 5, 6, 8]
+    density u/l      U= 1.92  tokens=  224  items=[0, 1, 2, 3, 5, 6, 8]
+    marginal gain    U= 3.14  tokens=  158  items=[0, 1, 5, 6, 8]
+    exact optimum    U= 3.14  tokens=  158  items=[0, 1, 5, 6, 8]
+  budget B=2300
+    top-k relevance  U= 0.58  tokens= 2296  items=[1, 2, 3, 4]
+    density u/l      U= 1.77  tokens=  484  items=[0, 1, 2, 3, 5, 6, 7, 8]
+    marginal gain    U= 3.14  tokens=  158  items=[0, 1, 5, 6, 8]
+    exact optimum    U= 3.14  tokens=  158  items=[0, 1, 5, 6, 8]
+  budget B=2400
+    top-k relevance  U= 2.42  tokens= 2396  items=[0, 1, 2, 3, 4, 5, 6]
+    density u/l      U= 1.77  tokens=  484  items=[0, 1, 2, 3, 5, 6, 7, 8]
+    marginal gain    U= 4.09  tokens= 2358  items=[0, 1, 4, 5, 6, 8]
+    exact optimum    U= 4.09  tokens= 2358  items=[0, 1, 4, 5, 6, 8]
+
+Items: #0 user prefers dark mode (u=0.06, 20 tok); #1 project-x deploys via GitHub Actions (u=0.85, 30 tok); #2 deploys are done through GH Actions (restated) (u=0.84, 34 tok); #3 project-x deploys via Jenkins [2025, stale] (u=0.7, 32 tok); #4 deploy runbook section 3, full text (u=0.95, 2200 tok); #5 last deploy failed: missing scope read:user (u=0.82, 42 tok); #6 fix: add read:user to the staging app config (u=0.68, 38 tok); #7 user Q2 travel plans (u=-0.15, 260 tok); #8 staging runners are on image v3 (u=0.45, 28 tok)
+
+500 random pools of 12 items (3 duplicate pairs, 2 contradictions, 2 complements), utility as a share of the exact optimum
+  rule               mean   worst  optimal
+  top-k relevance   0.795  -0.875  105/500
+  density u/l       0.776  -0.875   88/500
+  marginal gain     0.980   0.644  364/500
+  exact optimum     1.000   1.000  500/500

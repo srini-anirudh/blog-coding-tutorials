@@ -1,0 +1,26 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/memory-is-more-than-context/scripts/06_bitemporal.py
+Operation log of the bitemporal store:
+  ADD        user.lives_in=Hyderabad valid from 2023-06-01 (learned 2023-06-01, user)
+  ADD        project-x.deploys_via=Jenkins valid from 2025-01-10 (learned 2025-01-10, user)
+  SUPERSEDE  project-x.deploys_via=Jenkins closed at 2026-08-14 (learned 2026-08-14)
+  ADD        project-x.deploys_via=GitHub Actions valid from 2026-08-14 (learned 2026-08-14, user)
+  ADD        user.diet=vegetarian valid from 2024-02-01 (learned 2024-02-01, user)
+  SUPERSEDE  user.lives_in=Hyderabad closed at 2026-07-15 (learned 2026-09-10)
+  ADD        user.lives_in=Bangalore valid from 2026-07-15 (learned 2026-09-10, user)
+  ADD        project-x.runner_image=v2 valid from 2026-08-20 (learned 2026-08-20, model-inferred)
+  INVALIDATE project-x.runner_image=v2 from source 'model-inferred' (at 2026-09-25)
+
+question                                                  gold              append-only               replace                   bitemporal                
+Where does the user live now?                             Bangalore         Hyderabad, Bangalore X    Bangalore ok              Bangalore ok              
+How does project-x deploy now?                            GitHub Actions    Jenkins, GitHub Actions X GitHub Actions ok         GitHub Actions ok         
+Where did the user live on 1 Jan 2026?                    Hyderabad         cannot ask X              cannot ask X              Hyderabad ok              
+Where did the user actually live on 1 Aug 2026?           Bangalore         cannot ask X              cannot ask X              Bangalore ok              
+On 1 Aug 2026, where did we believe the user lived?       Hyderabad         cannot ask X              cannot ask X              Hyderabad ok              
+Which runner image does project-x use now?                (none)            v2 X                      v2 X                      (none) ok                 
+On 21 Sep 2026, what did we believe the runner image was? v2                cannot ask X              cannot ask X              v2 ok                     
+correct: append-only 0/7, replace 2/7, bitemporal 7/7
+
+Deletion: the user asks the agent to forget their diet.
+  delete the fact row only                'vegetarian' still visible to a future context: True
+  delete and chase derived records        'vegetarian' still visible to a future context: False

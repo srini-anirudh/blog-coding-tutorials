@@ -1,0 +1,99 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/memory-is-more-than-context/scripts/04_poisoning.py",
+ "eps0": 0.15,
+ "seeds": 20,
+ "tasks": 40000,
+ "rows": [
+  {
+   "phi": 0.8,
+   "rho": 0.25,
+   "closed": 0.0378,
+   "iterated": 0.0378,
+   "sim_mean": 0.0379,
+   "sim_min": 0.0354,
+   "sim_max": 0.041
+  },
+  {
+   "phi": 0.8,
+   "rho": 0.5,
+   "closed": 0.0509,
+   "iterated": 0.0509,
+   "sim_mean": 0.0521,
+   "sim_min": 0.0453,
+   "sim_max": 0.0761
+  },
+  {
+   "phi": 0.8,
+   "rho": 1.0,
+   "closed": 0.15,
+   "iterated": 0.15,
+   "sim_mean": 0.1574,
+   "sim_min": 0.0906,
+   "sim_max": 0.321
+  },
+  {
+   "phi": 0.8,
+   "rho": 2.0,
+   "closed": 0.6745,
+   "iterated": 0.6745,
+   "sim_mean": 0.6315,
+   "sim_min": 0.5218,
+   "sim_max": 0.6857
+  },
+  {
+   "phi": 0.8,
+   "rho": 4.0,
+   "closed": 0.7762,
+   "iterated": 0.7762,
+   "sim_mean": 0.7746,
+   "sim_min": 0.7608,
+   "sim_max": 0.7814
+  },
+  {
+   "phi": 0.9,
+   "rho": 0.25,
+   "closed": 0.0194,
+   "iterated": 0.0194,
+   "sim_mean": 0.0195,
+   "sim_min": 0.0173,
+   "sim_max": 0.0211
+  },
+  {
+   "phi": 0.9,
+   "rho": 0.5,
+   "closed": 0.0276,
+   "iterated": 0.0276,
+   "sim_mean": 0.0296,
+   "sim_min": 0.0238,
+   "sim_max": 0.0557
+  },
+  {
+   "phi": 0.9,
+   "rho": 1.0,
+   "closed": 0.15,
+   "iterated": 0.15,
+   "sim_mean": 0.1721,
+   "sim_min": 0.0618,
+   "sim_max": 0.5665
+  },
+  {
+   "phi": 0.9,
+   "rho": 2.0,
+   "closed": 0.833,
+   "iterated": 0.833,
+   "sim_mean": 0.7382,
+   "sim_min": 0.5438,
+   "sim_max": 0.8377
+  },
+  {
+   "phi": 0.9,
+   "rho": 4.0,
+   "closed": 0.8873,
+   "iterated": 0.8873,
+   "sim_mean": 0.8808,
+   "sim_min": 0.8447,
+   "sim_max": 0.8895
+  }
+ ]
+}

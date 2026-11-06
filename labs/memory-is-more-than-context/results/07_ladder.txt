@@ -1,0 +1,20 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/memory-is-more-than-context/scripts/07_ladder.py
+Qwen/Qwen2.5-0.5B-Instruct, 3 worlds x 24 projects = 72 questions per condition, k=3, greedy
+condition     accuracy   moved  unmoved  gold in memory  prompt tokens
+no_memory        0.000   0.000    0.000           0.000             50
+random           0.069   0.056    0.083           0.292            112
+retrieved        0.611   0.722    0.500           1.000            114
+oracle           0.917   0.861    0.972           1.000             73
+full             0.667   0.667    0.667           1.000            895
+
+Gaps (the post's decomposition):
+  distraction cost A2-A1          +0.069
+  delivered lift A3-A1            +0.611
+  retrieval headroom A4-A3        +0.306
+  value of right memories A4-A1   +0.917
+  compression loss A5-A4          -0.250
+
+Control: of 44 questions answered correctly with retrieved memory, 0 are also answered
+correctly with the memory removed. Those were never memory wins.
+wall time 2313 s

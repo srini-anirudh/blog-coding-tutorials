@@ -1,0 +1,117 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/memory-is-more-than-context/scripts/02_position.py",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "trials": 8,
+ "torch_threads": 8,
+ "rows": [
+  {
+   "pairs": 10,
+   "position": 0,
+   "restate": false,
+   "tokens": 767,
+   "accuracy": 1.0,
+   "logprob": -0.02263252265402116,
+   "attention": 0.06272763153538108
+  },
+  {
+   "pairs": 10,
+   "position": 2,
+   "restate": false,
+   "tokens": 770,
+   "accuracy": 1.0,
+   "logprob": -0.03952075931374566,
+   "attention": 0.028948897495865822
+  },
+  {
+   "pairs": 10,
+   "position": 4,
+   "restate": false,
+   "tokens": 765,
+   "accuracy": 1.0,
+   "logprob": -0.16705878195352852,
+   "attention": 0.02622336009517312
+  },
+  {
+   "pairs": 10,
+   "position": 7,
+   "restate": false,
+   "tokens": 776,
+   "accuracy": 0.75,
+   "logprob": -0.8437243646476418,
+   "attention": 0.024731823476031423
+  },
+  {
+   "pairs": 10,
+   "position": 9,
+   "restate": false,
+   "tokens": 769,
+   "accuracy": 1.0,
+   "logprob": -0.06651571254406008,
+   "attention": 0.07096208073198795
+  },
+  {
+   "pairs": 10,
+   "position": 4,
+   "restate": true,
+   "tokens": 841,
+   "accuracy": 1.0,
+   "logprob": -0.27978116505255457,
+   "attention": 0.016429103910923004
+  },
+  {
+   "pairs": 30,
+   "position": 0,
+   "restate": false,
+   "tokens": 2117,
+   "accuracy": 1.0,
+   "logprob": -0.3916720379856997,
+   "attention": 0.040251148864626884
+  },
+  {
+   "pairs": 30,
+   "position": 7,
+   "restate": false,
+   "tokens": 2116,
+   "accuracy": 0.875,
+   "logprob": -1.497580285766162,
+   "attention": 0.010733007919043303
+  },
+  {
+   "pairs": 30,
+   "position": 14,
+   "restate": false,
+   "tokens": 2123,
+   "accuracy": 0.0,
+   "logprob": -3.2495006665121764,
+   "attention": 0.006459673517383635
+  },
+  {
+   "pairs": 30,
+   "position": 22,
+   "restate": false,
+   "tokens": 2133,
+   "accuracy": 0.375,
+   "logprob": -2.121886915185314,
+   "attention": 0.011739340494386852
+  },
+  {
+   "pairs": 30,
+   "position": 29,
+   "restate": false,
+   "tokens": 2130,
+   "accuracy": 1.0,
+   "logprob": -0.19834259238268714,
+   "attention": 0.06507127685472369
+  },
+  {
+   "pairs": 30,
+   "position": 14,
+   "restate": true,
+   "tokens": 2199,
+   "accuracy": 0.875,
+   "logprob": -1.1215738956525456,
+   "attention": 0.003998276719357818
+  }
+ ]
+}

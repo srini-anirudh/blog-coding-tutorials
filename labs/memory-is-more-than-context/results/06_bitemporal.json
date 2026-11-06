@@ -1,0 +1,10 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/memory-is-more-than-context/scripts/06_bitemporal.py",
+ "score": {
+  "append-only": 0,
+  "replace": 2,
+  "bitemporal": 7
+ },
+ "questions": 7
+}

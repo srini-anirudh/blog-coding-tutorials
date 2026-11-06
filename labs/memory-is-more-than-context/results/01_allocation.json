@@ -1,0 +1,321 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/memory-is-more-than-context/scripts/01_allocation.py",
+ "figure3": {
+  "post/B=300/top-k relevance": {
+   "U": 2.8732,
+   "tokens": 224,
+   "items": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    8
+   ]
+  },
+  "post/B=300/density u/l": {
+   "U": 2.8732,
+   "tokens": 224,
+   "items": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    8
+   ]
+  },
+  "post/B=300/marginal gain": {
+   "U": 3.14,
+   "tokens": 158,
+   "items": [
+    0,
+    1,
+    5,
+    6,
+    8
+   ]
+  },
+  "post/B=300/exact optimum": {
+   "U": 3.83,
+   "tokens": 194,
+   "items": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    8
+   ]
+  },
+  "post/B=2300/top-k relevance": {
+   "U": 1.5332,
+   "tokens": 2296,
+   "items": [
+    1,
+    2,
+    3,
+    4
+   ]
+  },
+  "post/B=2300/density u/l": {
+   "U": 2.7232,
+   "tokens": 484,
+   "items": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  "post/B=2300/marginal gain": {
+   "U": 3.14,
+   "tokens": 158,
+   "items": [
+    0,
+    1,
+    5,
+    6,
+    8
+   ]
+  },
+  "post/B=2300/exact optimum": {
+   "U": 3.83,
+   "tokens": 194,
+   "items": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    8
+   ]
+  },
+  "post/B=2400/top-k relevance": {
+   "U": 3.3732,
+   "tokens": 2396,
+   "items": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ]
+  },
+  "post/B=2400/density u/l": {
+   "U": 2.7232,
+   "tokens": 484,
+   "items": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  "post/B=2400/marginal gain": {
+   "U": 4.09,
+   "tokens": 2358,
+   "items": [
+    0,
+    1,
+    4,
+    5,
+    6,
+    8
+   ]
+  },
+  "post/B=2400/exact optimum": {
+   "U": 4.78,
+   "tokens": 2394,
+   "items": [
+    0,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8
+   ]
+  },
+  "consistent/B=300/top-k relevance": {
+   "U": 1.9232,
+   "tokens": 224,
+   "items": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    8
+   ]
+  },
+  "consistent/B=300/density u/l": {
+   "U": 1.9232,
+   "tokens": 224,
+   "items": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    8
+   ]
+  },
+  "consistent/B=300/marginal gain": {
+   "U": 3.14,
+   "tokens": 158,
+   "items": [
+    0,
+    1,
+    5,
+    6,
+    8
+   ]
+  },
+  "consistent/B=300/exact optimum": {
+   "U": 3.14,
+   "tokens": 158,
+   "items": [
+    0,
+    1,
+    5,
+    6,
+    8
+   ]
+  },
+  "consistent/B=2300/top-k relevance": {
+   "U": 0.5832,
+   "tokens": 2296,
+   "items": [
+    1,
+    2,
+    3,
+    4
+   ]
+  },
+  "consistent/B=2300/density u/l": {
+   "U": 1.7732,
+   "tokens": 484,
+   "items": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  "consistent/B=2300/marginal gain": {
+   "U": 3.14,
+   "tokens": 158,
+   "items": [
+    0,
+    1,
+    5,
+    6,
+    8
+   ]
+  },
+  "consistent/B=2300/exact optimum": {
+   "U": 3.14,
+   "tokens": 158,
+   "items": [
+    0,
+    1,
+    5,
+    6,
+    8
+   ]
+  },
+  "consistent/B=2400/top-k relevance": {
+   "U": 2.4232,
+   "tokens": 2396,
+   "items": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ]
+  },
+  "consistent/B=2400/density u/l": {
+   "U": 1.7732,
+   "tokens": 484,
+   "items": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  "consistent/B=2400/marginal gain": {
+   "U": 4.09,
+   "tokens": 2358,
+   "items": [
+    0,
+    1,
+    4,
+    5,
+    6,
+    8
+   ]
+  },
+  "consistent/B=2400/exact optimum": {
+   "U": 4.09,
+   "tokens": 2358,
+   "items": [
+    0,
+    1,
+    4,
+    5,
+    6,
+    8
+   ]
+  }
+ },
+ "random_pools": {
+  "top-k relevance": {
+   "mean": 0.7949,
+   "worst": -0.8752,
+   "optimal": 105
+  },
+  "density u/l": {
+   "mean": 0.7761,
+   "worst": -0.8752,
+   "optimal": 88
+  },
+  "marginal gain": {
+   "mean": 0.9796,
+   "worst": 0.6441,
+   "optimal": 364
+  },
+  "exact optimum": {
+   "mean": 1.0,
+   "worst": 1.0,
+   "optimal": 500
+  }
+ }
+}

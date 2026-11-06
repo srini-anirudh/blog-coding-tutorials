@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/memory-is-more-than-context/scripts/02_position.py
+Qwen/Qwen2.5-0.5B-Instruct, key-value retrieval with random UUIDs, 8 trials per cell, greedy
+ pairs  tokens       position  accuracy  log p(value)  attention on pair
+    10     767           1/10     1.000        -0.023             0.0627
+    10     770           3/10     1.000        -0.040             0.0289
+    10     765           5/10     1.000        -0.167             0.0262
+    10     776           8/10     0.750        -0.844             0.0247
+    10     769          10/10     1.000        -0.067             0.0710
+    10     841  5/10 +restate     1.000        -0.280             0.0164
+    30    2117           1/30     1.000        -0.392             0.0403
+    30    2116           8/30     0.875        -1.498             0.0107
+    30    2123          15/30     0.000        -3.250             0.0065
+    30    2133          23/30     0.375        -2.122             0.0117
+    30    2130          30/30     1.000        -0.198             0.0651
+    30    2199 15/30 +restate     0.875        -1.122             0.0040
+wall time 2076 s

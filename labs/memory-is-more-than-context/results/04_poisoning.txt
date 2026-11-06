@@ -1,0 +1,24 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/memory-is-more-than-context/scripts/04_poisoning.py
+Post's worked numbers (eps0 = 0.15, phi = 0.9):
+  rho=0.25  e* = 0.0194   post says roughly 0.02
+  rho=1.0   e* = 0.1500   post says eps0 = 0.15
+  rho=4.0   e* = 0.8873   post says roughly 0.89
+
+Simulated loop: 40000 tasks per run, error over the last half, 20 seeds per row
+  phi   rho  e* closed  iterated  sim mean  sim min  sim max
+  0.8  0.25     0.0378    0.0378    0.0379   0.0354   0.0410
+  0.8   0.5     0.0509    0.0509    0.0521   0.0453   0.0761
+  0.8   1.0     0.1500    0.1500    0.1574   0.0906   0.3210
+  0.8   2.0     0.6745    0.6745    0.6315   0.5218   0.6857
+  0.8   4.0     0.7762    0.7762    0.7746   0.7608   0.7814
+  0.9  0.25     0.0194    0.0194    0.0195   0.0173   0.0211
+  0.9   0.5     0.0276    0.0276    0.0296   0.0238   0.0557
+  0.9   1.0     0.1500    0.1500    0.1721   0.0618   0.5665
+  0.9   2.0     0.8330    0.8330    0.7382   0.5438   0.8377
+  0.9   4.0     0.8873    0.8873    0.8808   0.8447   0.8895
+
+Largest gap between simulated mean and closed form: 0.095 at phi=0.9, rho=2.0.
+From rho = 0.5 to 2 single runs spread widely. The store behaves like an urn: its first records set an error
+rate that later copies reinforce, and the pull back to e* is weak when phi is high. The closed form is the
+long-run answer; a finite run can sit far from it.

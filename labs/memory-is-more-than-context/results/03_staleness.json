@@ -1,0 +1,68 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/memory-is-more-than-context/scripts/03_staleness.py",
+ "a": 6,
+ "lambda": 0.12,
+ "seeds": 20,
+ "density": [
+  {
+   "t": 5,
+   "append_closed": 0.752,
+   "append_sim": 0.7417,
+   "inv_lt": 1.6667,
+   "managed_closed": 0.91,
+   "managed_sim": 0.8987,
+   "records": 30
+  },
+  {
+   "t": 10,
+   "append_closed": 0.5823,
+   "append_sim": 0.5708,
+   "inv_lt": 0.8333,
+   "managed_closed": 0.8229,
+   "managed_sim": 0.812,
+   "records": 60
+  },
+  {
+   "t": 25,
+   "append_closed": 0.3167,
+   "append_sim": 0.3183,
+   "inv_lt": 0.3333,
+   "managed_closed": 0.6071,
+   "managed_sim": 0.6025,
+   "records": 150
+  },
+  {
+   "t": 50,
+   "append_closed": 0.1663,
+   "append_sim": 0.1692,
+   "inv_lt": 0.1667,
+   "managed_closed": 0.3993,
+   "managed_sim": 0.4064,
+   "records": 300
+  },
+  {
+   "t": 100,
+   "append_closed": 0.0833,
+   "append_sim": 0.0848,
+   "inv_lt": 0.0833,
+   "managed_closed": 0.2326,
+   "managed_sim": 0.24,
+   "records": 600
+  }
+ ],
+ "precision": [
+  {
+   "n": 200,
+   "precision": 0.6
+  },
+  {
+   "n": 2000,
+   "precision": 0.3592
+  },
+  {
+   "n": 20000,
+   "precision": 0.155
+  }
+ ]
+}

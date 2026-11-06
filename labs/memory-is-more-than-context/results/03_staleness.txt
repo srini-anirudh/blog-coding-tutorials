@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/memory-is-more-than-context/scripts/03_staleness.py
+a=6 facts/step, lambda=0.12/step, 20 simulated stores per recall setting
+   t lambda t  append closed  append sim  1/(lambda t)  recall .7 closed  recall .7 sim  records (append)
+   5      0.6          0.752       0.742         1.667             0.910          0.899                30
+  10      1.2          0.582       0.571         0.833             0.823          0.812                60
+  25      3.0          0.317       0.318         0.333             0.607          0.602               150
+  50      6.0          0.166       0.169         0.167             0.399          0.406               300
+ 100     12.0          0.083       0.085         0.083             0.233          0.240               600
+true facts at t=100: simulated mean 50.9, closed form a/lambda (1 - e^-12) = 50.0
+
+Precision@k with nothing going stale: 6 relevant memories, k=6,
+relevant scores N(1.0, 0.4^2), irrelevant N(0.0, 0.4^2), 200 trials per size
+ store size n  precision@6
+          200        0.600
+         2000        0.359
+        20000        0.155

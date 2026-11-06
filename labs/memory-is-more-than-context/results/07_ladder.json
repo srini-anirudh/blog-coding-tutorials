@@ -1,0 +1,23 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/memory-is-more-than-context/scripts/07_ladder.py",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "k": 3,
+ "seeds": 3,
+ "accuracy": {
+  "no_memory": 0.0,
+  "random": 0.06944444444444445,
+  "retrieved": 0.6111111111111112,
+  "oracle": 0.9166666666666666,
+  "full": 0.6666666666666666
+ },
+ "gaps": {
+  "distraction cost A2-A1": 0.06944444444444445,
+  "delivered lift A3-A1": 0.6111111111111112,
+  "retrieval headroom A4-A3": 0.30555555555555547,
+  "value of right memories A4-A1": 0.9166666666666666,
+  "compression loss A5-A4": -0.25
+ },
+ "retrieved_wins": 44,
+ "already_knew": 0
+}
