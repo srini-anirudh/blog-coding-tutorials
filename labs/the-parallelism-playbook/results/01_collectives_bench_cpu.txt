@@ -1,0 +1,27 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132, CPU only (gloo)
+command: python labs/the-parallelism-playbook/scripts/01_collectives.py --bench --world 2 --max-mb 16 --out 01_collectives_bench_cpu.txt
+
+2 ranks; time per call = 20 back-to-back calls / 20; send_recv is rank 0 -> rank 1
+       bytes      all_reduce  reduce_scatter      all_gather       send_recv
+        4096        3323.0us        2300.5us        2555.8us        1450.5us
+        8192        4476.2us        2879.0us        1391.3us         919.4us
+       16384        2367.7us        3346.5us        2532.8us         508.2us
+       32768        1698.7us        2276.9us        1890.8us        1697.9us
+       65536        2401.5us        3757.2us        2541.1us         648.8us
+      131072        2052.0us        2620.9us        2185.1us         363.0us
+      262144        5376.9us        3396.0us        1611.1us        1847.3us
+      524288        3072.0us        3937.6us        5725.4us        2299.0us
+     1048576        3312.8us        8742.2us        4127.5us        1055.5us
+     2097152        8259.5us       10281.0us        6514.4us        3570.9us
+     4194304       15716.3us       14225.9us        5868.8us        5284.3us
+     8388608       28845.6us       29188.0us       15766.8us        6182.8us
+    16777216       46052.9us       58799.4us       28668.1us       24208.5us
+
+alpha-beta fit, t = alpha + n / beta (n = bytes in each rank's buffer; alpha from the smallest messages, beta fitted over the largest)
+       all_reduce: alpha   2367.7 us, beta     0.37 GB/s; largest message 0.36 GB/s
+   reduce_scatter: alpha   2300.5 us, beta     0.31 GB/s; largest message 0.29 GB/s
+       all_gather: alpha   1391.3 us, beta     0.63 GB/s; largest message 0.59 GB/s
+        send_recv: alpha    508.2 us, beta     0.72 GB/s; largest message 0.69 GB/s
+  all_reduce bus bandwidth at 16 MB: 0.36 GB/s (bytes each rank actually sends per second)
+  all_reduce below about 0.85 MB (alpha x beta) costs mostly latency, not
+  bandwidth, which is why DDP fuses gradients into buckets

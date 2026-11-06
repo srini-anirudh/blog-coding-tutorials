@@ -1,0 +1,36 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132, CPU only (gloo)
+command: python labs/the-parallelism-playbook/scripts/07_mesh.py 
+
+Pure arithmetic, no processes. 8 GPUs per node; ranks r and r+1 are on the same node unless r+1 is a
+multiple of 8.
+
+  rank   0 in 512 = TP 8 x CP 1 x DP 8 x PP 8 -> {'tp': 0, 'cp': 0, 'dp': 0, 'pp': 0}
+  rank   7 in 512 = TP 8 x CP 1 x DP 8 x PP 8 -> {'tp': 7, 'cp': 0, 'dp': 0, 'pp': 0}
+  rank   8 in 512 = TP 8 x CP 1 x DP 8 x PP 8 -> {'tp': 0, 'cp': 0, 'dp': 1, 'pp': 0}
+  rank  63 in 512 = TP 8 x CP 1 x DP 8 x PP 8 -> {'tp': 7, 'cp': 0, 'dp': 7, 'pp': 0}
+  rank  64 in 512 = TP 8 x CP 1 x DP 8 x PP 8 -> {'tp': 0, 'cp': 0, 'dp': 0, 'pp': 1}
+  rank 511 in 512 = TP 8 x CP 1 x DP 8 x PP 8 -> {'tp': 7, 'cp': 0, 'dp': 7, 'pp': 7}
+
+TP 8, DP 8, PP 8 (512)
+  tp:  64 groups of  8,   0 leave a node; e.g. [0, 1, 2, 3, 4, 5, 6, 7]
+  dp:  64 groups of  8,  64 leave a node; e.g. [0, 8, 16, 24, 32, 40, 48, 56]
+  pp:  64 groups of  8,  64 leave a node; e.g. [0, 64, 128, 192, 256, 320, 384, 448]
+
+TP 16, DP 4, PP 8 (512)
+  tp:  32 groups of 16,  32 leave a node; e.g. [0, 1, 2, 3, '...', 14, 15]
+  dp: 128 groups of  4, 128 leave a node; e.g. [0, 16, 32, 48]
+  pp:  64 groups of  8,  64 leave a node; e.g. [0, 64, 128, 192, 256, 320, 384, 448]
+
+TP 4, CP 2, DP 8, PP 8 (512)
+  tp: 128 groups of  4,   0 leave a node; e.g. [0, 1, 2, 3]
+  cp: 256 groups of  2,   0 leave a node; e.g. [0, 4]
+  dp:  64 groups of  8,  64 leave a node; e.g. [0, 8, 16, 24, 32, 40, 48, 56]
+  pp:  64 groups of  8,  64 leave a node; e.g. [0, 64, 128, 192, 256, 320, 384, 448]
+
+TP 2, DP 32 (64)
+  tp:  32 groups of  2,   0 leave a node; e.g. [0, 1]
+  dp:   2 groups of 32,   2 leave a node; e.g. [0, 2, 4, 6, '...', 60, 62]
+
+With TP fastest-varying, every TP group of size <= 8 stays in one node, so its 4 AllReduces per layer
+ride the fast fabric. TP 16 forces every TP group across two nodes. DP and PP groups cross nodes, which
+is where their infrequent, overlappable traffic belongs.

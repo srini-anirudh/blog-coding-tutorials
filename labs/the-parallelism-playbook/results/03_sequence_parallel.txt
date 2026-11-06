@@ -1,0 +1,30 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132, CPU only (gloo)
+command: python labs/the-parallelism-playbook/scripts/03_sequence_parallel.py 
+
+one block: hidden 256, 4 heads, seq 32, batch 2, fp32. Activation bytes = tensors autograd
+saves for backward on one rank (deduplicated). Wire = bytes one rank sends with ring algorithms.
+
+T = 2
+  variant           out err  grad err  wire, layer path  wire, LN grads  activation bytes  vs 1 device
+  TP                4.8e-07   4.8e-06            262144               0           2267136       53.1%
+     collectives: all_reduce/bwd x2, all_reduce/fwd x2
+  TP+SP             4.8e-07   4.8e-06            262144            6144           2201088       51.6%
+     collectives: all_gather/bwd x2, all_gather/fwd x2, all_reduce/grad_sync x6, reduce_scatter/bwd x2, reduce_scatter/fwd x2
+  TP+SP, regather   4.8e-07   4.8e-06            327680            6144           2135552       50.1%
+     collectives: all_gather/bwd x4, all_gather/fwd x2, all_reduce/grad_sync x6, reduce_scatter/bwd x2, reduce_scatter/fwd x2
+  replicated region per layernorm input: s*b*h*4 = 65536 B; SP keeps 1/2 of it
+
+T = 4
+  variant           out err  grad err  wire, layer path  wire, LN grads  activation bytes  vs 1 device
+  TP                4.8e-07   4.3e-06            393216               0           1267712       29.7%
+     collectives: all_reduce/bwd x2, all_reduce/fwd x2
+  TP+SP             4.8e-07   4.3e-06            393216            9216           1168640       27.4%
+     collectives: all_gather/bwd x2, all_gather/fwd x2, all_reduce/grad_sync x6, reduce_scatter/bwd x2, reduce_scatter/fwd x2
+  TP+SP, regather   4.8e-07   4.3e-06            491520            9216           1070336       25.1%
+     collectives: all_gather/bwd x4, all_gather/fwd x2, all_reduce/grad_sync x6, reduce_scatter/bwd x2, reduce_scatter/fwd x2
+  replicated region per layernorm input: s*b*h*4 = 65536 B; SP keeps 1/4 of it
+
+Reading it: TP+SP sends the same layer-path bytes as TP (AllReduce = ReduceScatter + AllGather). Plain SP
+still saves the gathered full-sequence input of each column-parallel matmul, so part of the saving is lost.
+Saving only the shard and gathering again in backward recovers it, at the cost of one extra AllGather per
+column-parallel matmul in the backward pass. SP also adds a small AllReduce of layernorm and bias gradients.

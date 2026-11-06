@@ -1,0 +1,21 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132, CPU only (gloo)
+command: python labs/the-parallelism-playbook/scripts/02_tensor_parallel.py 
+
+1. Column-parallel then row-parallel, against one device (hidden 64, 8 heads, seq 16, batch 2, fp32)
+  T  max |y - y_ref|  max |dx - dx_ref|  max grad err  collectives per layer
+  2         4.77e-07           5.96e-07      2.38e-06  all_reduce/bwd x2 (16384 B sent), all_reduce/fwd x2 (16384 B sent)
+  4         4.77e-07           7.15e-07      2.38e-06  all_reduce/bwd x2 (24576 B sent), all_reduce/fwd x2 (24576 B sent)
+  8         4.77e-07           5.36e-07      1.91e-06  all_reduce/bwd x2 (28672 B sent), all_reduce/fwd x2 (28672 B sent)
+
+2. The message is the activation b*s*h, so it grows with the step; DDP's gradient AllReduce does not
+batch  seq  TP bytes per AllReduce  b*s*h*4  block params (bytes)
+    2   16                    8192     8192                199936
+    8   16                   32768    32768                199936
+    8   64                  131072   131072                199936
+
+3. Why column first. Row-parallel first leaves partial sums before GELU, and GELU does not distribute over +
+   GELU applied to partial sums, then summed: max error vs GELU of the full sum = 0.754
+   column then row: error 6.0e-08; forward collectives: all_reduce/fwd x1 (8192 B sent)
+   row then column: error 2.4e-07; forward collectives: all_gather/fwd x1 (4096 B sent), all_reduce/fwd x1 (32768 B sent)
+   Both are correct. Row-first needs two collectives in the MLP forward pass and its AllReduce carries the
+   4h-wide hidden activation, four times the bytes of column-first's single AllReduce.

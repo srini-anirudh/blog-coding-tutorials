@@ -1,0 +1,8 @@
+hardware: 2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/the-parallelism-playbook/scripts/06_context_parallel.py --bench --world 2
+
+ring attention, causal, zigzag layout, 2 ranks, bf16, batch 1, 16 heads, head dim 128; median of 5. This ring materialises each block's scores in fp32 (no fused kernel).
+    seq  overlap ms  no overlap ms   saved
+   8192        12.1           12.4    2.8%
+  16384        42.4           42.0   -0.8%
+  32768       156.4          157.7    0.8%

@@ -1,0 +1,6 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132, CPU only (gloo); GPU tests on 2 x NVIDIA H100 80GB HBM3, CUDA 13.2
+command: python -m pytest labs/the-parallelism-playbook -m "not slow and not gpu and not network"
+22 passed, 3 deselected in 133.30s (idle machine); 184.37s on a loaded machine
+
+command: python -m pytest labs/the-parallelism-playbook -m gpu
+3 passed, 22 deselected in 96.79s

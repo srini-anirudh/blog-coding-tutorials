@@ -1,0 +1,11 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132, CPU only (gloo)
+command: python labs/the-parallelism-playbook/scripts/01_collectives.py 
+
+ring AllReduce from send/recv, and ReduceScatter followed by AllGather, against dist.all_reduce
+ranks  ring vs native  RS+AG vs AR  sent / buffer  2(N-1)/N
+    2        0.00e+00     0.00e+00          1.000     1.000
+    3        4.77e-07     0.00e+00          1.333     1.333
+    4        9.54e-07     0.00e+00          1.500     1.500
+    8        1.43e-06     0.00e+00          1.750     1.750
+
+Each rank sends 2(N-1)/N of the buffer whatever N is: per-rank traffic converges to 2x the buffer.

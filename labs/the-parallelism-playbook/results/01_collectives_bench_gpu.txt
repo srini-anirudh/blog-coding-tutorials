@@ -1,0 +1,31 @@
+hardware: 2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/the-parallelism-playbook/scripts/01_collectives.py --bench --world 2 --max-mb 256 --out 01_collectives_bench_gpu.txt
+
+2 ranks; time per call = 20 back-to-back calls / 20; send_recv is rank 0 -> rank 1
+       bytes      all_reduce  reduce_scatter      all_gather       send_recv
+        4096          83.0us          59.1us          58.7us          58.3us
+        8192          78.3us          81.5us          60.5us          56.7us
+       16384          69.3us          78.0us          68.7us          56.0us
+       32768          75.7us          69.4us          79.8us          72.4us
+       65536          81.6us          74.6us          64.9us          70.0us
+      131072          81.5us          98.2us          66.4us          70.9us
+      262144          71.1us          70.2us          67.1us          69.2us
+      524288          85.2us          59.7us          66.1us          65.8us
+     1048576          76.9us         229.4us          72.3us          65.8us
+     2097152          91.0us          88.3us          66.8us          66.6us
+     4194304          85.7us          84.1us          99.9us          64.3us
+     8388608          77.3us          76.6us          86.1us          64.4us
+    16777216          84.7us          68.7us          88.3us          65.8us
+    33554432         143.5us          95.6us          96.3us         107.8us
+    67108864         256.1us         168.0us         164.5us         202.1us
+   134217728         470.4us         306.4us         289.4us         384.0us
+   268435456         900.6us         584.0us         548.4us         745.7us
+
+alpha-beta fit, t = alpha + n / beta (n = bytes in each rank's buffer; alpha from the smallest messages, beta fitted over the largest)
+       all_reduce: alpha     69.3 us, beta   309.50 GB/s; largest message 298.06 GB/s
+   reduce_scatter: alpha     59.1 us, beta   485.11 GB/s; largest message 459.64 GB/s
+       all_gather: alpha     58.7 us, beta   534.68 GB/s; largest message 489.53 GB/s
+        send_recv: alpha     56.0 us, beta   369.33 GB/s; largest message 359.98 GB/s
+  all_reduce bus bandwidth at 256 MB: 298.06 GB/s (bytes each rank actually sends per second)
+  all_reduce below about 20.47 MB (alpha x beta) costs mostly latency, not
+  bandwidth, which is why DDP fuses gradients into buckets

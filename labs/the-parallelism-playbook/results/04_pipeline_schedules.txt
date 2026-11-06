@@ -1,0 +1,48 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132, CPU only (gloo)
+command: python labs/the-parallelism-playbook/scripts/04_pipeline_schedules.py 
+
+Costs: forward 2 units, backward 4 units per stage (backward = 2x forward). Interleaved v=2 runs chunks of
+half the layers, so 1 + 2 units each. zb splits the backward into B (input grad, 2) and W (weight grad, 2)
+and fills idle slots with deferred W; it keeps 1F1B's cap of P - s forwards in flight.
+Stash = one microbatch's activations for one device-stage; an interleaved stash is half that size.
+
+ P   m  formula  GPipe   1F1B  interl.  (P-1)/(vm+P-1)     zb   peak stashes, stage 0: GPipe / 1F1B / interl. (stage-equiv.) / zb
+ 2   2    0.333  0.333  0.333    0.200           0.200  0.143   2 / 2 / 4 (2.0) / 2
+ 2   4    0.200  0.200  0.200    0.111           0.111  0.077   4 / 2 / 5 (2.5) / 2
+ 2   8    0.111  0.111  0.111    0.059           0.059  0.040   8 / 2 / 5 (2.5) / 2
+ 2  16    0.059  0.059  0.059    0.030           0.030  0.020   16 / 2 / 5 (2.5) / 2
+ 4   4    0.429  0.429  0.429    0.273           0.273  0.200   4 / 4 / 8 (4.0) / 4
+ 4   8    0.273  0.273  0.273    0.158           0.158  0.111   8 / 4 / 11 (5.5) / 4
+ 4  16    0.158  0.158  0.158    0.086           0.086  0.059   16 / 4 / 11 (5.5) / 4
+ 4  32    0.086  0.086  0.086    0.045           0.045  0.030   32 / 4 / 11 (5.5) / 4
+ 8   8    0.467  0.467  0.467    0.304           0.304  0.226   8 / 8 / 16 (8.0) / 8
+ 8  16    0.304  0.304  0.304    0.179           0.179  0.127   16 / 8 / 23 (11.5) / 8
+ 8  32    0.179  0.179  0.179    0.099           0.099  0.068   32 / 8 / 23 (11.5) / 8
+ 8  64    0.099  0.099  0.099    0.052           0.052  0.035   64 / 8 / 23 (11.5) / 8
+
+GPipe and 1F1B have the same bubble at every (P, m). 1F1B caps stage 0 at P stashes instead of m.
+P=8, m=8 wastes 47%; P=8, m=64 wastes 10% (the post's 47% and 10%).
+
+P=4, m=8, GPipe: bubble 0.273, makespan 66 units. Each op starts with its microbatch number.
+stage 0 |0F1F2F3F4F5F6F7F..................0BBB1BBB2BBB3BBB4BBB5BBB6BBB7BBB|
+stage 1 |..0F1F2F3F4F5F6F7F............0BBB1BBB2BBB3BBB4BBB5BBB6BBB7BBB....|
+stage 2 |....0F1F2F3F4F5F6F7F......0BBB1BBB2BBB3BBB4BBB5BBB6BBB7BBB........|
+stage 3 |......0F1F2F3F4F5F6F7F0BBB1BBB2BBB3BBB4BBB5BBB6BBB7BBB............|
+
+P=4, m=8, 1F1B: bubble 0.273, makespan 66 units. Each op starts with its microbatch number.
+stage 0 |0F1F2F3F............0BBB4F1BBB5F2BBB6F3BBB7F4BBB..5BBB..6BBB..7BBB|
+stage 1 |..0F1F2F........0BBB3F1BBB4F2BBB5F3BBB6F4BBB7F5BBB..6BBB..7BBB....|
+stage 2 |....0F1F....0BBB2F1BBB3F2BBB4F3BBB5F4BBB6F5BBB7F6BBB..7BBB........|
+stage 3 |......0F0BBB1F1BBB2F2BBB3F3BBB4F4BBB5F5BBB6F6BBB7F7BBB............|
+
+P=4, m=8, interleaved, v=2 (lower case = second chunk): bubble 0.158, makespan 57 units. Each op starts with its microbatch number, 2 characters per unit.
+stage 0 |0F1F2F3F0f1f2f3f4F5F6F......0bbb7F1bbb..4f2bbb5f3bbb6f0BBB7f1BBB2BBB..3BBB..4bbb..5bbb..6bbb..7bbb4BBB5BBB6BBB7BBB|
+stage 1 |..0F1F2F3F0f1f2f3f4F....0bbb5F1bbb6F2bbb7F3bbb4f0BBB5f1BBB6f2BBB7f3BBB..4bbb..5bbb..6bbb..7bbb4BBB5BBB6BBB7BBB....|
+stage 2 |....0F1F2F3F0f1f2f..0bbb3f1bbb4F2bbb5F3bbb6F0BBB7F1BBB4f2BBB5f3BBB6f4bbb7f5bbb..6bbb..7bbb4BBB5BBB6BBB7BBB........|
+stage 3 |......0F1F2F3F0f0bbb1f1bbb2f2bbb3f3bbb4F0BBB5F1BBB6F2BBB7F3BBB4f4bbb5f5bbb6f6bbb7f7bbb4BBB5BBB6BBB7BBB............|
+
+P=4, m=8, zb (w = deferred weight gradient): bubble 0.111, makespan 54 units. Each op starts with its microbatch number.
+stage 0 |0F1F2F3F......0B4F1B5F2B6F3B7F4B0w5B1w6B2w7B3w4w5w6w7w|
+stage 1 |..0F1F2F....0B3F1B4F2B5F3B6F4B7F5B0w6B1w7B2w3w4w5w6w7w|
+stage 2 |....0F1F..0B2F1B3F2B4F3B5F4B6F5B7F6B0w7B1w2w3w4w5w6w7w|
+stage 3 |......0F0B1F1B2F2B3F3B4F4B5F5B6F6B7F7B0w1w2w3w4w5w6w7w|

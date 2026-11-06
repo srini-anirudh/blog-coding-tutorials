@@ -1,0 +1,25 @@
+hardware: 2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/the-parallelism-playbook/scripts/08_bench_tp.py --world 2 --out 08_bench_tp_gpu.txt
+
+(1) one block, forward + backward, torch.bfloat16; time per step from 10 back-to-back steps, median of 3 such loops. fake = collectives replaced by local
+no-ops (same shapes, wrong values): it times the compute alone. exposed = real - fake. held = memory the
+forward pass leaves allocated for backward (activations, plus the output); peak fwd includes transients.
+    h     s  b          variant  step ms  fake ms  exposed ms  exposed %  peak fwd MB  held MB  AR msg MB
+ 1024  2048  4           1 rank     7.63     7.63        0.00       0.0%         1140      772        0.0
+ 1024  2048  4             TP 2     4.60     4.33        0.27       5.9%          596      420       16.0
+ 1024  2048  4          TP 2+SP     4.93     4.20        0.73      14.8%          596      404       16.0
+ 1024  2048  4   TP 2+SP regat.     7.76     4.54        3.21      41.4%          588      388       16.0
+ 4096  2048  4           1 rank    27.34    27.53       -0.19      -0.7%         2404     2052        0.0
+ 4096  2048  4             TP 2    15.52    14.42        1.10       7.1%         1252     1156       64.0
+ 4096  2048  4          TP 2+SP    15.38    14.07        1.31       8.5%         1252     1092       64.0
+ 4096  2048  4   TP 2+SP regat.    15.68    14.17        1.51       9.6%         1220     1028       64.0
+ 8192  2048  2           1 rank    42.48    42.67       -0.19      -0.4%         2404     2052        0.0
+ 8192  2048  2             TP 2    22.93    21.81        1.13       4.9%         1252     1156       64.0
+ 8192  2048  2          TP 2+SP    22.82    21.79        1.03       4.5%         1252     1092       64.0
+ 8192  2048  2   TP 2+SP regat.    23.08    22.00        1.08       4.7%         1220     1028       64.0
+
+(2) GEMM [b*s, h] x [h, 4h/T] on one device, b*s = 8192, torch.bfloat16: what each TP rank's MLP up-projection costs
+    h    T=1 TFLOP/s    T=2 TFLOP/s    T=4 TFLOP/s    T=8 TFLOP/s   T=8 / T=1
+ 1024          695.6          647.4          608.6          443.6   0.64
+ 4096          768.8          732.3          741.5          724.9   0.94
+ 8192          702.0          728.2          723.9          725.5   1.03

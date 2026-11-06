@@ -1,0 +1,18 @@
+hardware: 2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/the-parallelism-playbook/scripts/05_pipeline_run.py --bench --stages 2 --out 05_pipeline_bench_gpu.txt
+
+Stack(hidden 1024, 16 heads, 8 blocks) split over 2 stages, bf16, global batch 32 x seq 1024; median of 5 steps after warm-up. busy = time inside forward/backward on
+the stage; measured bubble = 1 - busy / step time (it also absorbs transfer and launch gaps).
+ sched   m  step ms    stage busy ms  bubble, worst stage  formula    peak MB per stage  peak stashes
+ gpipe   1    143.1         [71, 71]                0.507    0.500       [10840, 10712]        [1, 1]
+  1f1b   1    146.1         [71, 72]                0.513    0.500       [10840, 10712]        [1, 1]
+ gpipe   2    112.6         [73, 74]                0.349    0.333         [9564, 9500]        [2, 2]
+  1f1b   2    113.9         [73, 74]                0.356    0.333         [9564, 5477]        [2, 1]
+ gpipe   4    104.6         [78, 80]                0.251    0.200         [8932, 8901]        [4, 4]
+  1f1b   4    102.9         [79, 79]                0.236    0.200         [4905, 2821]        [2, 1]
+ gpipe   8    104.7         [87, 86]                0.178    0.111         [8628, 8613]        [8, 8]
+  1f1b   8    102.7         [85, 96]                0.173    0.111         [2537, 1492]        [2, 1]
+ gpipe  16    165.7       [134, 135]                0.190    0.059         [8500, 8493]      [16, 16]
+  1f1b  16    185.4       [152, 166]                0.182    0.059          [1352, 828]        [2, 1]
+ gpipe  32    310.5       [253, 261]                0.184    0.030         [8484, 8481]      [32, 32]
+  1f1b  32    310.0       [281, 257]                0.171    0.030           [760, 496]        [2, 1]

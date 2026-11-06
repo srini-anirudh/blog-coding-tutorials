@@ -1,0 +1,9 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132, CPU only (gloo)
+command: python labs/the-parallelism-playbook/scripts/05_pipeline_run.py 
+
+Stack(hidden 32, 4 heads, 4 blocks), 8 microbatches of 2 x seq 8, fp32, MSE loss averaged over microbatches
+ P  schedule  max grad err vs 1 device  loss (last stage)  ref loss  peak stashes per stage
+ 2     gpipe                   7.5e-09           1.279222  1.279222  [8, 8]
+ 2      1f1b                   7.5e-09           1.279222  1.279222  [2, 1]
+ 4     gpipe                   7.5e-09           1.279222  1.279222  [8, 8, 8, 8]
+ 4      1f1b                   7.5e-09           1.279222  1.279222  [4, 3, 2, 1]
