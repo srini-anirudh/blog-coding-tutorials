@@ -1,0 +1,62 @@
+# Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# Command: python labs/what-autograd-actually-does/scripts/06_what_autograd_keeps.py
+
+1. Saved for backward, per op, input shape (64, 256) float32. Parameters are not counted.
+op           tensors saved  bytes   activations
+-----------  -------------  ------  -----------
+u = v W      2              65536   1.00
+u = v1 + v2  0              0       0.00
+u = v1 * v2  2              131072  2.00
+ReLU         1              65536   1.00
+GELU         1              65536   1.00
+LayerNorm    5              66048   1.01
+Softmax      1              65536   1.00
+Addition saves nothing. ReLU saves its output (a full float tensor, not one bit). LayerNorm saves its input
+plus a mean and a reciprocal std per row, which is the 0.02 over 1.
+
+2. Attention, 4 heads of dim 64, float32, batch 1. Bytes saved, as sequence length N grows:
+N     P saved (MiB)  P recomputed (MiB)  one P (MiB)
+----  -------------  ------------------  -----------
+128   0.62           0.38                0.25
+256   1.75           0.75                1.00
+512   5.50           1.50                4.00
+1024  19.00          3.00                16.00
+With P saved, the bill is Q, K, V plus one P, and P dominates by N = 1024. With P recomputed it is Q, K and V
+only, so it grows 2x per doubling of N instead of nearly 4x.
+
+3. Six Linear+GELU blocks and a head. Nodes recorded and bytes saved for one forward pass:
+setting                     graph nodes  saved bytes
+--------------------------  -----------  -----------
+nothing frozen              34           851968
+first 1 of 6 blocks frozen  29           720896
+first 3 of 6 blocks frozen  19           458752
+first 5 of 6 blocks frozen  9            196608
+last 3 of 6 blocks frozen   25           655360
+detach() before the head    4            65536
+block 2 under no_grad()     19           458752
+Freezing early blocks prunes the graph up to the first block that still needs a gradient: the first 3 frozen
+cuts saved bytes by 46%. Freezing the last 3 cuts only 23%. Those blocks must still pass the gradient back, so
+they keep W and the GELU input. Only the Linear input, needed for dW alone, is dropped.
+detach() cuts the graph at one tensor, so only the head is recorded. no_grad() records nothing inside block 2,
+which also cuts blocks 0 and 1 off from the loss.
+inference_mode tensor used later with autograd: RuntimeError: Inference tensors cannot be saved for backward
+
+4. Intermediate gradients are computed, used and freed. Leaf .grad accumulates:
+  after one backward:  w.grad = 36.0, h.grad = None
+  after a second one, no zero_grad, h.retain_grad(): w.grad = 72.0 (= 36 + 36), h.grad = 12.0
+
+5. The version counter:
+  sigmoid output modified in place   RuntimeError: ...is at version 1; expected version 0
+  x modified after y = x ** 2        RuntimeError: ...is at version 1; expected version 0
+  relu_() on a linear output         ok, gradient computed
+  add_(1) on a tensor nobody saved   ok, gradient computed
+
+6. Gradient accumulation over K = 4 microbatches of 16, against one batch of 64:
+norm layer   scaling   relative error  norm ratio
+-----------  --------  --------------  ----------
+LayerNorm    loss / K  1.7e-07         1.000
+LayerNorm    no 1/K    3.0e+00         4.000
+BatchNorm1d  loss / K  3.0e-01         1.043
+BatchNorm1d  no 1/K    3.2e+00         4.172
+With LayerNorm and 1/K the accumulated gradient matches the full batch to float32 rounding. Without 1/K it is
+K = 4 times too large. BatchNorm computes statistics over whatever is in the microbatch, so it is not exact.

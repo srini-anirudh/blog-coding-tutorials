@@ -1,0 +1,40 @@
+# Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# Command: python labs/what-autograd-actually-does/scripts/04_layer_vjps.py
+
+1. Hand-written VJP against torch.autograd (float64, random upstream gradients):
+layer                          grads  max abs error
+-----------------------------  -----  -------------
+Linear (dX, dW, db)            3      0.0e+00
+ReLU                           1      0.0e+00
+GELU (exact)                   1      4.4e-16
+LayerNorm (dx, dgamma, dbeta)  3      8.9e-16
+RMSNorm (dx, dgamma)           2      8.9e-16
+Softmax                        1      0.0e+00
+Cross-entropy on logits        1      3.5e-18
+Residual x + tanh(x W)         1      8.9e-16
+Attention (dQ, dK, dV)         3      7.8e-16
+Attention, P recomputed        3      7.8e-16
+
+2. Invariance in the forward pass shows up as a projection in the backward pass:
+gradient                 largest |dot with 1| per row  largest |dot with x_hat| per row
+-----------------------  ----------------------------  --------------------------------
+LayerNorm dx, eps=1e-05  8.9e-16                       2.1e-04
+RMSNorm dx, eps=1e-05    6.9e+00                       1.4e-04
+LayerNorm dx, eps=0      8.9e-16                       1.6e-15
+RMSNorm dx, eps=0        6.9e+00                       1.3e-15
+Softmax dz               1.2e-16                       -
+LayerNorm ignores shifts and scales of x, so dx has no component along 1 or x_hat.
+RMSNorm ignores only scale, so dx is orthogonal to x_hat but not to 1.
+Softmax ignores a constant added to every logit, so every row of dz sums to zero.
+The x_hat projection is exact only at eps = 0. With eps > 0 the layer is not quite scale-invariant, and the
+dot product is small but not zero. The shift invariance of LayerNorm does not depend on eps.
+
+3. GELU derivative: zero at x = -0.752 (where GELU itself is lowest), negative below that, and lowest
+   (-0.1289) at x = -1.414. Units that were nearly off still pass a little gradient.
+
+4. Dot-product test <u, J v> = <J^T u, v> with our VJP and torch.func.jvp for J v:
+layer      <u, J v>         <J^T u, v>
+---------  ---------------  ---------------
+LayerNorm  10.865428468776  10.865428468776
+Softmax    0.127291175602   0.127291175602
+GELU       1.244769473490   1.244769473490

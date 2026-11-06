@@ -1,0 +1,5 @@
+# Hardware: AMD EPYC 7R13, 8 threads (tests set 2), torch 2.15.0
+# Command: python -m pytest labs/what-autograd-actually-does -m "not slow and not gpu and not network"
+
+........................                                                 [100%]
+24 passed in 5.01s

@@ -1,0 +1,41 @@
+# Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# Command: python labs/what-autograd-actually-does/scripts/01_scalar_graph.py
+
+Forward pass (values stored on each node):
+  z = 2.0000
+  h = 0.9640
+  r = 2.9640
+  L = 0.9293
+
+Backward pass, edge by edge (child -> parent: adjoint x local derivative):
+      L -> r-y   +1.9281
+    r-y -> r     +1.9281
+    r-y -> -y    +1.9281
+     -y -> y     -1.9281
+      r -> h     +1.9281
+      r -> x     +1.9281
+      h -> z     +0.1362
+      z -> wx    +0.1362
+      z -> b     +0.1362
+     wx -> w     +0.2724
+     wx -> x     +0.2043
+
+Gradients on the leaves (reverse mode, one sweep):
+  dL/dw = +0.2724
+  dL/dx = +2.1324
+  dL/db = +0.1362
+  dL/dy = -1.9281
+
+Two arrows arrive at x. Skip edge: 1.9281. Through tanh: 0.2043. Sum: 2.1324.
+Share along the skip: 90.4%  (the post says 1.93 of 2.13)
+Largest difference from torch.autograd (float64): 0.0e+00
+
+Forward mode: 4 sweeps for 4 partial derivatives (one per input). Reverse mode: 1 sweep.
+  dL/dw = +0.2724, dL/dx = +2.1324, dL/db = +0.1362, dL/dy = -1.9281
+
+Fan-out with a wrong visit order (out = 2 tanh(a) + exp(tanh(a)), a = 0.5):
+  reverse topological order: d out/da = 2.8213
+  s visited before q:         d out/da = 1.5729  (only the p route arrived)
+  No error is raised. This is why engines count dependencies before running a node.
+
+A chain of 50 exchange rates of 0.9 each: 0.0052

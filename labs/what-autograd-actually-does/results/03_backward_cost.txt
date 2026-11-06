@@ -1,0 +1,23 @@
+# Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# Command: python labs/what-autograd-actually-does/scripts/03_backward_cost.py
+
+1. Matmuls that reach the dispatcher:
+operation                                       forward  backward
+----------------------------------------------  -------  --------
+linear, input needs grad                        1        2
+linear, first layer (input needs no grad)       1        1
+attention, P saved (plain autograd)             2        4
+attention, P recomputed (FlashAttention style)  2        5
+The post counts attention as two matmuls forward and five backward. Plain autograd, which keeps P, needs four.
+The fifth is the QK^T that a recomputing kernel such as FlashAttention runs again in the backward pass.
+
+2. FLOPs for 8 linear layers of 2048 x 2048 (33.6 M parameters), batch 512:
+  input needs no grad  forward    34.4 GFLOP  backward    64.4 GFLOP  ratio 1.875
+                       per token per parameter: forward 2.00, backward 3.75
+  input needs grad     forward    34.4 GFLOP  backward    68.7 GFLOP  ratio 2.000
+                       per token per parameter: forward 2.00, backward 4.00
+  The first layer skips dX when the input needs no gradient, so the ratio falls just below 2.
+
+3. Wall time, same stack, median of 7 runs after 2 warm-ups:
+  forward 55.1 ms  backward 107.0 ms  ratio 1.94
+  The machine was shared with other jobs. Treat the times as rough; the FLOP counts above are exact.

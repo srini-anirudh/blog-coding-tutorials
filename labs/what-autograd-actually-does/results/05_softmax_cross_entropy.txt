@@ -1,0 +1,35 @@
+# Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# Command: python labs/what-autograd-actually-does/scripts/05_softmax_cross_entropy.py
+
+Gradient on the true logit. Exact value is p_true - 1.
+dtype     margin  exact    unfused dL/dp  unfused loss  unfused dz  fused loss  fused dz
+--------  ------  -------  -------------  ------------  ----------  ----------  --------
+float32   5       -0.9936  -155.4         5.046         -0.9936     5.046       -0.9936
+float32   10      -1.0000  -2.203e+04     10            -1          10          -1
+float32   20      -1.0000  -4.852e+08     20            -1          20          -1
+float32   50      -1.0000  -5.185e+21     50            -1          50          -1
+float32   90      -1.0000  -inf           90            nan         90          -1
+float32   110     -1.0000  -inf           inf           nan         110         -1
+bfloat16  5       -0.9936  -155           5.031         -0.9922     5.031       -0.9922
+bfloat16  10      -1.0000  -2.202e+04     10            -0.9961     10          -1
+bfloat16  20      -1.0000  -4.844e+08     20            -1          20          -1
+bfloat16  50      -1.0000  -5.202e+21     50            -1          50          -1
+bfloat16  90      -1.0000  -inf           90            nan         90          -1
+bfloat16  110     -1.0000  -inf           inf           nan         110         -1
+float16   5       -0.9936  -155.4         5.047         -0.9937     5.047       -0.9937
+float16   10      -1.0000  -2.205e+04     10            -1          10          -1
+float16   20      -1.0000  -inf           inf           nan         20          -1
+float16   50      -1.0000  -inf           inf           nan         50          -1
+float16   90      -1.0000  -inf           inf           nan         90          -1
+float16   110     -1.0000  -inf           inf           nan         110         -1
+
+The unfused path breaks before p_true reaches zero. At margin 90, p_true = e^-90 = 8e-40 is a subnormal
+float32 number: the loss (90) is still right, but dL/dp = -1/p overflows to -inf, and the softmax
+VJP turns into inf - inf = nan. At margin 110, p_true is 0 and the loss is inf as well.
+float16 breaks first, at margin 20. float32 and bfloat16 share an exponent range and break together.
+The fused rule returns p - y every time.
+
+Gradient of cross-entropy with respect to the logits is p - y (true class 0):
+  confident and right  -0.001 +0.000 +0.000 +0.000
+  confident and wrong  -1.000 +0.999 +0.000 +0.000
+  uniform              -0.750 +0.250 +0.250 +0.250

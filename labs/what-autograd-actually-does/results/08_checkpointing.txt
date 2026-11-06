@@ -1,0 +1,26 @@
+# Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# Command: python labs/what-autograd-actually-does/scripts/08_checkpointing.py
+
+Plain backprop: peak 13.58 MiB, 36 layer evaluations, 54 ms.
+One layer saves 6.0 activations' worth; a boundary is 1 activation (64 KiB).
+
+Segments k over 36 layers:
+k   peak MiB  vs plain  layer evals  ms  max grad diff
+--  --------  --------  -----------  --  -------------
+1   13.58     1.00      72           78  0.0e+00
+2   6.88      0.51      72           76  0.0e+00
+3   4.69      0.35      72           67  0.0e+00
+4   3.63      0.27      72           64  0.0e+00
+6   2.63      0.19      72           67  0.0e+00
+9   2.06      0.15      72           63  0.0e+00
+12  1.88      0.14      72           67  0.0e+00
+18  1.88      0.14      72           66  0.0e+00
+36  2.63      0.19      72           56  0.0e+00
+
+Measured best k = 12. sqrt(n) = 6. The sqrt(n) rule assumes a layer's saved tensors cost
+the same as a boundary. Here a layer saves 6.0 times more, so memory ~ k + 6.0 n / k, minimised at
+k = sqrt(6.0 n) = 14.7. Recomputing every segment costs one extra forward pass (2n evals) for
+every k. The gradients are bitwise identical to plain backprop.
+
+torch.utils.checkpoint.checkpoint_sequential, 6 segments: peak 2.63 MiB, max grad diff 0.0e+00.
+Wall times are medians of 5 on a shared machine (load near 60 on 192 cores). Read them as rough.

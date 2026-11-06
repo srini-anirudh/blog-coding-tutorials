@@ -1,0 +1,43 @@
+# Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# Command: python labs/what-autograd-actually-does/scripts/02_forward_vs_reverse.py
+
+1. Jacobian chain n0 = n1 = n2 = 4096 -> n3 outputs. Multiply-adds for each order (exact counts):
+outputs  reverse   forward   fwd/rev   peak rev  peak fwd
+-------  --------  --------  --------  --------  --------
+1        3.36e+07  6.87e+10  2.05e+03  4.1e+03   1.68e+07
+16       5.37e+08  6.9e+10   128       6.55e+04  1.68e+07
+256      8.59e+09  7.3e+10   8.5       1.05e+06  1.68e+07
+4096     1.37e+11  1.37e+11  1         1.68e+07  1.68e+07
+16384    5.5e+11   3.44e+11  0.625     6.71e+07  6.71e+07
+At one output, 33.6 million against 68.7 billion, as the post says. At 4096 outputs the orders are close.
+
+2. The same chain multiplied for real (float64, widths 2048 -> 2048 -> 2048 -> 1):
+  reverse order: 5.80 ms   forward order: 111.5 ms
+  largest difference between the two products: 2.5e-11 (largest entry 8.0e+03)
+
+3. Gradient of a scalar MLP output with respect to n inputs (width 256, depth 4, float64):
+inputs  reverse ms  forward ms  fin.diff ms  fwd err  fd err
+------  ----------  ----------  -----------  -------  -------
+16      1.7         3.9         4.6          3.5e-17  4.1e-10
+64      1.9         4.2         18.3         2.0e-17  4.8e-11
+256     1.7         10.5        72.1         2.0e-17  6.2e-12
+1024    2.6         16.4        360.3        8.7e-18  1.4e-12
+Reverse mode stays flat as inputs grow. Forward mode and finite differences grow with the number of inputs.
+Forward mode here is vmapped (torch.func.jacfwd), so its n sweeps run as one batched pass.
+
+Dot-product test on tanh(x W): <u, J v> = -2.2824340119, <J^T u, v> = -2.2824340119
+
+4. Finite differences in low precision. Error of the central difference against autograd, same model:
+dtype     eps=1e-1  eps=1e-2  eps=1e-3  eps=1e-4
+--------  --------  --------  --------  --------
+float64   6.3e-05   6.3e-07   6.3e-09   6.9e-11
+float32   6.4e-05   1.3e-04   9.9e-04   1.1e-02
+bfloat16  2.3e-01   2.0e+00   5.5e+00   1.0e+00
+Relative error of the whole gradient. In bfloat16 no step size gives a usable answer.
+
+The post's cost estimate for finite differences, recomputed:
+  2 passes x 1e+11 parameters x 2N FLOPs = 4.0e+22 FLOPs per token
+  at 1000 TFLOP/s: 4.0e+07 s = 1.27 years per token
+  The post says about 1.3 million years. The same inputs give about 1.3 years per token, so the post's
+  figure looks a factor of 10^6 too large. The conclusion (finite differences are hopeless) still holds.
+  This is arithmetic, not a measurement.

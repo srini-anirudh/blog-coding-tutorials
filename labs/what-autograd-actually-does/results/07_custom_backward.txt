@@ -1,0 +1,15 @@
+# Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# Command: python labs/what-autograd-actually-does/scripts/07_custom_backward.py
+
+1-2. gradcheck and the dot-product test, float64:
+function                     gradcheck  <u, J v>     <J^T u, v>    gap
+---------------------------  ---------  -----------  ------------  -------
+MyLinear                     pass       -0.73028786  -0.73028786   1.1e-09
+BuggyLinear (dW transposed)  FAIL       -0.73028786  -10.34764512  9.6e+00
+A square weight is the dangerous case: the wrong gradient has the right shape and training would run.
+
+3. Learn a weight w so that round(w * x) matches round(2.7 * x), 300 SGD steps from w = 0.5:
+  true gradient of round      w = 0.500, loss = 42.257, last grad = 0.000
+  straight-through estimator  w = 2.700, loss = 0.000, last grad = 0.000
+The true gradient of round is zero, so w never moves. The straight-through gradient is not the derivative of
+the loss written down, but it points the right way, and w ends near 2.7.
