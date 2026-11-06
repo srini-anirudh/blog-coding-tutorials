@@ -1,0 +1,6 @@
+# AMD EPYC 7R13, 8 threads (data generation only, no model)
+# command: python c09-vlm-post-training/scripts/majority_baseline.py
+held-out counting questions (100, seed 12345): n=100  '1': 55, '2': 34, '3': 11  | best constant answer '1' scores 0.550
+training images, all 60 steps (240): n=240  '1': 119, '2': 80, '3': 37, '4': 4  | best constant answer '1' scores 0.496
+training images, first 8 steps (32): n=32  '1': 22, '2': 7, '3': 2, '4': 1  | best constant answer '1' scores 0.688
+training images, last 8 steps (32): n=32  '1': 11, '2': 15, '3': 6  | best constant answer '2' scores 0.469

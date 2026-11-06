@@ -34,6 +34,7 @@ c09-vlm-post-training/
 │   ├── show_pairs.py        # pairs and one batch, tensor by tensor
 │   ├── blind_probe.py       # the text-only check
 │   ├── reward_audit.py      # hand-written answers against every reward
+│   ├── majority_baseline.py # what a constant counting answer scores
 │   ├── show_rollouts.py     # one GRPO group printed
 │   ├── train_dpo.py
 │   ├── train_grpo.py        # freeze ablation and reward hacking
@@ -61,6 +62,7 @@ c09-vlm-post-training/scripts/run_all.sh
 python c09-vlm-post-training/scripts/show_pairs.py
 python c09-vlm-post-training/scripts/blind_probe.py --train 1000 --test 500
 python c09-vlm-post-training/scripts/reward_audit.py
+python c09-vlm-post-training/scripts/majority_baseline.py
 python c09-vlm-post-training/scripts/show_rollouts.py --group 8
 python c09-vlm-post-training/benchmarks/bench_encode_once.py --groups 4 8 16
 # On a GPU the benchmark also ran G=32 (results/bench_encode_once_gpu.log):
@@ -155,6 +157,7 @@ profile it). H100 means NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2.
 
 | Trainable | Trainable params | Hardware | Count from pixels | Count from a written list (grey image) | Other kinds, mean |
 |---|---|---|---|---|---|
+| always answer "1" (majority answer, no model) | 0 | n/a | 0.550 | n/a | n/a |
 | before training | 0 | H100 | 0.080 | 0.000 | 0.767 |
 | LLM LoRA | 4.9M | H100 | 0.600 | 0.500 | 0.850 |
 | connector + LLM LoRA | 12.0M | H100 | 0.550 | 0.000 | 0.825 |
@@ -162,9 +165,17 @@ profile it). H100 means NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2.
 
 Counting from a written list needs no perception. It rose from 0.000 to 0.500 only in the run where nothing but the
 language model could change, so part of that run's gain is counting in language. The two runs that also trained the
-connector kept this score at 0.000. The connector + LLM run ended with every group flat (training reward 0.387 over the
-first 8 steps, 0.344 over the last 8), although its held-out count accuracy rose. One seed cannot say whether that is
-noise or a real instability of the connector at this learning rate.
+connector kept this score at 0.000. The held-out counting questions are not balanced: 55 of 100 have the answer 1, so
+always answering "1" scores 0.550 (`results/majority_baseline.txt`). The connector + LLM run's 0.550 equals that rate.
+Its training reward in the last 8 steps (0.344) equals the share of the last 32 training images whose answer is 1
+(11 of 32), and its groups were all flat from about step 6. A reviewer found that its sampled answers in that range were
+all " 1." or " One.". So this run most likely collapsed to a constant answer "1" and did not learn to count. The
+LLM-only run's last-8 training reward (0.645) is above the best constant answer on the same 32 images (0.469), but its
+held-out 0.600 is only five points above always-"1", which is inside the noise of 100 questions. The pretrained model's
+0.080 is below any constant guess because it writes out-of-range numbers, so much of the rise from 0.08 is learning the
+answer range and prior. Training reward is whole-text exact match with 12 new tokens, while the held-out score is the
+first word with 6 new tokens, so the two are not directly comparable. We saved no per-item predictions, so none of this
+could be checked per question.
 
 ### Perception probe (CPU, `perception_probe.log`)
 
@@ -180,9 +191,10 @@ and scored on 200 other scenes (600 shape counts). Same probe, same scenes. Only
 
 The probe is at its ceiling on the pretrained features, so it cannot show an improvement. What it does show: the
 counts were already linearly readable before any RL, while the model's own counting from pixels started at 0.08. The
-training gain of 0.08 to 0.60 therefore did not come from new information in the image features. It came from the
-language side learning to read what was already there, and (see the written-list control) partly from counting in
-language. With 600 scored shape counts, 0.990 and 0.995 differ by three counts, which is noise.
+LLM-only run cannot change the image features by construction, yet it reaches about the same held-out score as the
+runs that can. Most of the rise from 0.08 to about 0.55 is therefore not new information in the features. It is at
+least partly the answer range and prior (see the majority-answer row) and partly counting in language (see the
+written-list control). This experiment does not separate "counting" from "learning the answer prior". With 600 scored shape counts, 0.990 and 0.995 differ by three counts, which is noise.
 
 ### Reward hacking (CPU, caption task, 60 steps, 4 images x 8 rollouts, evaluated on 50 scenes)
 
