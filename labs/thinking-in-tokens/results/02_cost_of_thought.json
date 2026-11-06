@@ -1,0 +1,135 @@
+{
+ "tinyllm_check": [
+  {
+   "prompt": 16,
+   "k": 16,
+   "measured_flops": 139771904,
+   "formula_exact": 139771904.0,
+   "formula_post": 139722752.0,
+   "weights_term": 137363456.0,
+   "attention_term": 2408448.0,
+   "kv_bytes_measured": 98304,
+   "kv_bytes_formula": 98304
+  },
+  {
+   "prompt": 64,
+   "k": 256,
+   "measured_flops": 2500591616,
+   "formula_exact": 2500591616.0,
+   "formula_post": 2499805184.0,
+   "weights_term": 2197815296.0,
+   "attention_term": 302776320.0,
+   "kv_bytes_measured": 983040,
+   "kv_bytes_formula": 983040
+  },
+  {
+   "prompt": 256,
+   "k": 256,
+   "measured_flops": 2802581504,
+   "formula_exact": 2802581504.0,
+   "formula_post": 2801795072.0,
+   "weights_term": 2197815296.0,
+   "attention_term": 604766208.0,
+   "kv_bytes_measured": 1572864,
+   "kv_bytes_formula": 1572864
+  },
+  {
+   "prompt": 16,
+   "k": 1024,
+   "measured_flops": 12116295680,
+   "formula_exact": 12116295680.0,
+   "formula_post": 12113149952.0,
+   "weights_term": 8791261184.0,
+   "attention_term": 3325034496.0,
+   "kv_bytes_measured": 3194880,
+   "kv_bytes_formula": 3194880
+  }
+ ],
+ "post_claims": [
+  [
+   "non-embedding params N of the 32B-class config",
+   "32B-class",
+   "31.2 B"
+  ],
+  [
+   "attention / weight FLOPs per token at 1k context",
+   "a few per cent",
+   "2.2%"
+  ],
+  [
+   "attention / weight FLOPs per token at 32k context",
+   "roughly comparable",
+   "69%"
+  ],
+  [
+   "context where the two terms are equal",
+   "-",
+   "47,616 tokens"
+  ],
+  [
+   "KV cache per token, 64 layers x 8 KV heads x 128, bf16",
+   "256 KiB",
+   "256 KiB"
+  ],
+  [
+   "KV cache for 10,000 thinking tokens",
+   "about 2.6 GB",
+   "2.62 GB"
+  ],
+  [
+   "weights in bf16, 32e9 params",
+   "64 GB",
+   "64 GB"
+  ],
+  [
+   "decode floor per token at 3.3 TB/s",
+   "about 19 ms",
+   "19.4 ms"
+  ],
+  [
+   "decode floor per token at 3.35 TB/s (H100 SXM spec)",
+   "-",
+   "19.1 ms"
+  ],
+  [
+   "10,000 thinking tokens at that floor",
+   "three minutes",
+   "3.2 min"
+  ]
+ ],
+ "bill": [
+  {
+   "k": 1000,
+   "weights": 62411243520000.0,
+   "attention": 1966080000000.0,
+   "kv_gb": 0.524288,
+   "seconds": 19.1044776119403
+  },
+  {
+   "k": 4000,
+   "weights": 249644974080000.0,
+   "attention": 15728640000000.0,
+   "kv_gb": 1.31072,
+   "seconds": 76.4179104477612
+  },
+  {
+   "k": 10000,
+   "weights": 624112435200000.0,
+   "attention": 78643200000000.0,
+   "kv_gb": 2.883584,
+   "seconds": 191.044776119403
+  },
+  {
+   "k": 32000,
+   "weights": 1997159792640000.0,
+   "attention": 713031680000000.0,
+   "kv_gb": 8.650752,
+   "seconds": 611.3432835820896
+  }
+ ],
+ "bits": {
+  "vocab": 151669,
+  "source": "len(AutoTokenizer('Qwen/Qwen3-0.6B'))",
+  "bits": 17.210566714164578
+ }
+}

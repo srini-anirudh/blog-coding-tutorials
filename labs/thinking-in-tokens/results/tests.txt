@@ -1,0 +1,5 @@
+# hardware: AMD EPYC 7R13, 2 threads (offline, network); NVIDIA H100 80GB HBM3 (gpu); torch 2.15.0+cu132
+# commands: pytest labs/thinking-in-tokens -m 'not slow and not gpu and not network' | -m network | -m gpu
+offline: 26 passed (2 deselected)
+network: 1 passed
+gpu: 1 passed (Qwen3-0.6B budget run on CUDA)

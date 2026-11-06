@@ -1,0 +1,10 @@
+# Checkpoints, datasets and caches never go in git.
+*.pt
+*.pth
+*.safetensors
+*.bin
+checkpoints/
+data/
+hf_cache/
+__pycache__/
+results/*_smoke*

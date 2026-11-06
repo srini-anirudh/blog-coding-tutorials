@@ -1,0 +1,44 @@
+{
+ "0": {
+  "acc": 0.61,
+  "mean_thinking_tokens": 0,
+  "truncated": 0,
+  "seconds": 48.91355558298528
+ },
+ "64": {
+  "acc": 0.68,
+  "mean_thinking_tokens": 64,
+  "truncated": 1,
+  "seconds": 28.227066999068484
+ },
+ "128": {
+  "acc": 0.59,
+  "mean_thinking_tokens": 128,
+  "truncated": 1,
+  "seconds": 29.022378243971616
+ },
+ "256": {
+  "acc": 0.69,
+  "mean_thinking_tokens": 256,
+  "truncated": 1,
+  "seconds": 38.127485774923116
+ },
+ "512": {
+  "acc": 0.77,
+  "mean_thinking_tokens": 497.47,
+  "truncated": 0.85,
+  "seconds": 59.05330170900561
+ },
+ "1024": {
+  "acc": 0.81,
+  "mean_thinking_tokens": 823.42,
+  "truncated": 0.38,
+  "seconds": 108.88197336392477
+ },
+ "2048": {
+  "acc": 0.78,
+  "mean_thinking_tokens": 1130.91,
+  "truncated": 0.23,
+  "seconds": 225.82515980303288
+ }
+}

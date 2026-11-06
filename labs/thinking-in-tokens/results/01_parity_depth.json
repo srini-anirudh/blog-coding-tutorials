@@ -1,0 +1,383 @@
+{
+ "hardware": "AMD EPYC 7R13, 2 threads, torch 2.15.0+cu132 per run, 4 runs in parallel",
+ "runs": [
+  {
+   "config": {
+    "n": 4,
+    "mode": "direct",
+    "layers": 2,
+    "hidden": 128,
+    "heads": 4,
+    "steps": 2000,
+    "batch": 256,
+    "lr": 0.001,
+    "eval_size": 2000,
+    "seed": 0
+   },
+   "params": 525440,
+   "final_acc": 1.0,
+   "solved_at_step": 500,
+   "tokens_written": 1,
+   "serial_depth_bound": 2,
+   "seconds": 194.7,
+   "history": [
+    {
+     "step": 500,
+     "loss": 0.0003,
+     "acc": 1.0
+    },
+    {
+     "step": 1000,
+     "loss": 0.0001,
+     "acc": 1.0
+    },
+    {
+     "step": 1500,
+     "loss": 0.0,
+     "acc": 1.0
+    },
+    {
+     "step": 2000,
+     "loss": 0.0,
+     "acc": 1.0
+    }
+   ]
+  },
+  {
+   "config": {
+    "n": 4,
+    "mode": "cot",
+    "layers": 2,
+    "hidden": 128,
+    "heads": 4,
+    "steps": 2000,
+    "batch": 256,
+    "lr": 0.001,
+    "eval_size": 2000,
+    "seed": 0
+   },
+   "params": 525440,
+   "final_acc": 1.0,
+   "solved_at_step": 500,
+   "tokens_written": 4,
+   "serial_depth_bound": 8,
+   "seconds": 329.9,
+   "history": [
+    {
+     "step": 500,
+     "loss": 0.0002,
+     "acc": 1.0
+    },
+    {
+     "step": 1000,
+     "loss": 0.0001,
+     "acc": 1.0
+    },
+    {
+     "step": 1500,
+     "loss": 0.0,
+     "acc": 1.0
+    },
+    {
+     "step": 2000,
+     "loss": 0.0,
+     "acc": 1.0
+    }
+   ]
+  },
+  {
+   "config": {
+    "n": 8,
+    "mode": "direct",
+    "layers": 2,
+    "hidden": 128,
+    "heads": 4,
+    "steps": 2000,
+    "batch": 256,
+    "lr": 0.001,
+    "eval_size": 2000,
+    "seed": 0
+   },
+   "params": 525440,
+   "final_acc": 0.5145,
+   "solved_at_step": null,
+   "tokens_written": 1,
+   "serial_depth_bound": 2,
+   "seconds": 335.0,
+   "history": [
+    {
+     "step": 500,
+     "loss": 0.6924,
+     "acc": 0.4965
+    },
+    {
+     "step": 1000,
+     "loss": 0.6943,
+     "acc": 0.51
+    },
+    {
+     "step": 1500,
+     "loss": 0.6916,
+     "acc": 0.5095
+    },
+    {
+     "step": 2000,
+     "loss": 0.692,
+     "acc": 0.4905
+    }
+   ]
+  },
+  {
+   "config": {
+    "n": 8,
+    "mode": "cot",
+    "layers": 2,
+    "hidden": 128,
+    "heads": 4,
+    "steps": 2000,
+    "batch": 256,
+    "lr": 0.001,
+    "eval_size": 2000,
+    "seed": 0
+   },
+   "params": 525440,
+   "final_acc": 1.0,
+   "solved_at_step": 500,
+   "tokens_written": 8,
+   "serial_depth_bound": 16,
+   "seconds": 786.1,
+   "history": [
+    {
+     "step": 500,
+     "loss": 0.0002,
+     "acc": 1.0
+    },
+    {
+     "step": 1000,
+     "loss": 0.0001,
+     "acc": 1.0
+    },
+    {
+     "step": 1500,
+     "loss": 0.0,
+     "acc": 1.0
+    },
+    {
+     "step": 2000,
+     "loss": 0.0,
+     "acc": 1.0
+    }
+   ]
+  },
+  {
+   "config": {
+    "n": 16,
+    "mode": "direct",
+    "layers": 2,
+    "hidden": 128,
+    "heads": 4,
+    "steps": 2000,
+    "batch": 256,
+    "lr": 0.001,
+    "eval_size": 2000,
+    "seed": 0
+   },
+   "params": 525440,
+   "final_acc": 0.507,
+   "solved_at_step": null,
+   "tokens_written": 1,
+   "serial_depth_bound": 2,
+   "seconds": 611.1,
+   "history": [
+    {
+     "step": 500,
+     "loss": 0.6932,
+     "acc": 0.494
+    },
+    {
+     "step": 1000,
+     "loss": 0.6918,
+     "acc": 0.521
+    },
+    {
+     "step": 1500,
+     "loss": 0.6936,
+     "acc": 0.488
+    },
+    {
+     "step": 2000,
+     "loss": 0.6938,
+     "acc": 0.492
+    }
+   ]
+  },
+  {
+   "config": {
+    "n": 16,
+    "mode": "cot",
+    "layers": 2,
+    "hidden": 128,
+    "heads": 4,
+    "steps": 2000,
+    "batch": 256,
+    "lr": 0.001,
+    "eval_size": 2000,
+    "seed": 0
+   },
+   "params": 525440,
+   "final_acc": 1.0,
+   "solved_at_step": 500,
+   "tokens_written": 16,
+   "serial_depth_bound": 32,
+   "seconds": 1818.3,
+   "history": [
+    {
+     "step": 500,
+     "loss": 0.0002,
+     "acc": 1.0
+    },
+    {
+     "step": 1000,
+     "loss": 0.0001,
+     "acc": 1.0
+    },
+    {
+     "step": 1500,
+     "loss": 0.0,
+     "acc": 1.0
+    },
+    {
+     "step": 2000,
+     "loss": 0.0,
+     "acc": 1.0
+    }
+   ]
+  },
+  {
+   "config": {
+    "n": 32,
+    "mode": "direct",
+    "layers": 2,
+    "hidden": 128,
+    "heads": 4,
+    "steps": 2000,
+    "batch": 256,
+    "lr": 0.001,
+    "eval_size": 2000,
+    "seed": 0
+   },
+   "params": 525440,
+   "final_acc": 0.521,
+   "solved_at_step": null,
+   "tokens_written": 1,
+   "serial_depth_bound": 2,
+   "seconds": 1981.4,
+   "history": [
+    {
+     "step": 500,
+     "loss": 0.6945,
+     "acc": 0.5165
+    },
+    {
+     "step": 1000,
+     "loss": 0.6927,
+     "acc": 0.504
+    },
+    {
+     "step": 1500,
+     "loss": 0.6941,
+     "acc": 0.5205
+    },
+    {
+     "step": 2000,
+     "loss": 0.6925,
+     "acc": 0.4885
+    }
+   ]
+  },
+  {
+   "config": {
+    "n": 32,
+    "mode": "cot",
+    "layers": 2,
+    "hidden": 128,
+    "heads": 4,
+    "steps": 2000,
+    "batch": 256,
+    "lr": 0.001,
+    "eval_size": 2000,
+    "seed": 0
+   },
+   "params": 525440,
+   "final_acc": 1.0,
+   "solved_at_step": 500,
+   "tokens_written": 32,
+   "serial_depth_bound": 64,
+   "seconds": 3000.1,
+   "history": [
+    {
+     "step": 500,
+     "loss": 0.0002,
+     "acc": 1.0
+    },
+    {
+     "step": 1000,
+     "loss": 0.0001,
+     "acc": 1.0
+    },
+    {
+     "step": 1500,
+     "loss": 0.0,
+     "acc": 1.0
+    },
+    {
+     "step": 2000,
+     "loss": 0.0,
+     "acc": 1.0
+    }
+   ]
+  },
+  {
+   "config": {
+    "n": 16,
+    "mode": "direct",
+    "layers": 6,
+    "hidden": 128,
+    "heads": 4,
+    "steps": 2000,
+    "batch": 256,
+    "lr": 0.001,
+    "eval_size": 2000,
+    "seed": 0
+   },
+   "params": 1575040,
+   "final_acc": 0.507,
+   "solved_at_step": null,
+   "tokens_written": 1,
+   "serial_depth_bound": 6,
+   "seconds": 2668.3,
+   "history": [
+    {
+     "step": 500,
+     "loss": 0.6933,
+     "acc": 0.494
+    },
+    {
+     "step": 1000,
+     "loss": 0.6918,
+     "acc": 0.521
+    },
+    {
+     "step": 1500,
+     "loss": 0.6968,
+     "acc": 0.512
+    },
+    {
+     "step": 2000,
+     "loss": 0.6952,
+     "acc": 0.492
+    }
+   ]
+  }
+ ]
+}
