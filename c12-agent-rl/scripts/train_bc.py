@@ -36,7 +36,6 @@ def main() -> None:
     ap.add_argument("--out", default="bc")
     args = ap.parse_args()
 
-    torch.set_num_threads(2)
     torch.manual_seed(args.seed)
     device = pick_device(args.device)
     codec = WordCodec()
@@ -44,7 +43,7 @@ def main() -> None:
     policy = TinyPolicy(PolicyConfig(codec.vocab_size, d_model=args.d_model, n_layers=args.layers,
                                      max_len=384)).to(device)
     n_params = sum(p.numel() for p in policy.parameters())
-    print(f"device={device} vocab={codec.vocab_size} params={n_params:,} demos={len(demos)}")
+    print(f"device={device} threads={torch.get_num_threads()} vocab={codec.vocab_size} params={n_params:,} demos={len(demos)}")
     t0 = time.time()
     history = train_bc(policy, demos, steps=args.steps, batch_size=args.batch_size, lr=args.lr, device=device,
                        pad=codec.pad, seed=args.seed, log_every=max(args.steps // 15, 1))

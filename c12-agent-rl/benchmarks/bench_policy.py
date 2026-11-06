@@ -1,8 +1,9 @@
 """Why the tiny policy: the same GRPO iteration timed with each policy that fits the interface.
 
-    python c12-agent-rl/benchmarks/bench_policy.py --tasks 4 --G 4
+    python c12-agent-rl/benchmarks/bench_policy.py --tasks 4 --G 4 --hardware "your CPU or GPU name"
 
-The time per iteration decides what learning curve you can measure on a laptop.
+The time per iteration decides what learning curve you can measure on a laptop. SmolLM2 also runs on a GPU when one
+is visible.
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ sys.path.insert(0, str(ROOT))
 
 from agentrl.codec import WordCodec  # noqa: E402
 from agentrl.env import FileSystemEnv  # noqa: E402
+from agentrl.evaluate import pick_device  # noqa: E402
 from agentrl.grpo import GRPOConfig, update  # noqa: E402
 from agentrl.hf_policy import smollm_policy, tiny_llama_policy  # noqa: E402
 from agentrl.policy import PolicyConfig, TinyPolicy  # noqa: E402
@@ -54,18 +56,21 @@ def main() -> None:
     ap.add_argument("--tasks", type=int, default=4)
     ap.add_argument("--G", type=int, default=4)
     ap.add_argument("--skip-smollm", action="store_true")
+    ap.add_argument("--hardware", default="unnamed hardware")
     args = ap.parse_args()
-    torch.set_num_threads(2)
     codec = WordCodec()
     torch.manual_seed(0)
     n = args.tasks * args.G
-    print(f"one GRPO iteration: {args.tasks} tasks x G={args.G} = {n} episodes, untrained policies, Apple M5\n")
+    print(f"one GRPO iteration: {args.tasks} tasks x G={args.G} = {n} episodes, untrained policies, {args.hardware}, {torch.get_num_threads()} CPU threads\n")
     print(f"{'policy':<30}{'device':<7}{'params':>13}{'trainable':>12}{'rollout s':>11}{'update s':>10}{'total s':>9}")
     rows = [("TinyPolicy d=128 L=3", lambda d: (TinyPolicy(PolicyConfig(codec.vocab_size, n_layers=3, max_len=384)).to(d), codec), "cpu"),
             ("LlamaForCausalLM d=128 L=3", lambda d: (tiny_llama_policy(codec.vocab_size, 128, 3, 4).to(d), codec), "cpu")]
     if not args.skip_smollm:
-        rows += [("SmolLM2-135M + LoRA r=16", lambda d: smollm_policy(device=d), "cpu"),
-                 ("SmolLM2-135M + LoRA r=16", lambda d: smollm_policy(device=d), "mps")]
+        from transformers.utils import logging as hf_logging
+
+        hf_logging.disable_progress_bar()
+        rows += [("SmolLM2-135M + LoRA r=16", lambda d: smollm_policy(device=d), d)
+                 for d in dict.fromkeys(["cpu", pick_device()])]
     for name, make, device in rows:
         policy, cdc = make(device)
         roll, upd, _ = timed_iteration(policy, cdc, device, args.tasks, args.G)

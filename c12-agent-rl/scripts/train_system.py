@@ -1,7 +1,8 @@
 """Run the full pipeline: task sampler, env workers, rollouts, store, verifier, batches, update.
 
-    python c12-agent-rl/scripts/train_system.py --iters 10 --workers 8 --tool-latency 0.02
+    python c12-agent-rl/scripts/train_system.py --iters 10
 
+Runs three configurations from the BC checkpoint: instant tools, 20 ms tools inline, 20 ms tools with 32 workers.
 Prints the time spent in each box of the pipeline. Writes results/system.json.
 """
 
@@ -60,7 +61,6 @@ def main() -> None:
     ap.add_argument("--G", type=int, default=8)
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
-    torch.set_num_threads(2)
     codec = WordCodec()
     out = [run(args, 0, 0.0, codec), run(args, 0, 0.02, codec), run(args, 32, 0.02, codec)]
     (ROOT / "results" / "system.json").write_text(json.dumps(out, indent=1))

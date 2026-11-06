@@ -1,0 +1,6 @@
+$ pytest c12-agent-rl -m "not slow and not gpu and not network"
+50 passed, 1 deselected in 20.31s
+$ pytest c12-agent-rl -m network
+1 passed, 50 deselected in 35.43s
+$ pytest c12-agent-rl -m "slow or gpu"
+51 deselected in 0.17s

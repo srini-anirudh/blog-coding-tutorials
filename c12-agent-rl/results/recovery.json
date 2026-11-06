@@ -1,0 +1,48 @@
+{
+ "bc": {
+  "episodes": 300,
+  "hit_error": 218,
+  "recovered": 5,
+  "by_type": {
+   "error no such file": [
+    0,
+    133
+   ],
+   "error timeout": [
+    0,
+    63
+   ],
+   "error invalid input": [
+    4,
+    217
+   ],
+   "error internal": [
+    1,
+    87
+   ]
+  }
+ },
+ "grpo": {
+  "episodes": 300,
+  "hit_error": 221,
+  "recovered": 0,
+  "by_type": {
+   "error timeout": [
+    0,
+    63
+   ],
+   "error invalid input": [
+    0,
+    221
+   ],
+   "error no such file": [
+    0,
+    118
+   ],
+   "error internal": [
+    0,
+    68
+   ]
+  }
+ }
+}

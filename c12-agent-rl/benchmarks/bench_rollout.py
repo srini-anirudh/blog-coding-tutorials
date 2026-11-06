@@ -1,6 +1,6 @@
 """Where does a rollout spend its time?
 
-    python c12-agent-rl/benchmarks/bench_rollout.py
+    python c12-agent-rl/benchmarks/bench_rollout.py --hardware "your CPU name"
 
 Prints: naive vs batched rollouts, the split between policy forwards and tool calls, and what concurrent env workers
 buy when tools are slow.
@@ -8,6 +8,7 @@ buy when tools are slow.
 
 from __future__ import annotations
 
+import argparse
 import sys
 import time
 from pathlib import Path
@@ -19,6 +20,7 @@ sys.path.insert(0, str(ROOT))
 
 from agentrl.codec import WordCodec  # noqa: E402
 from agentrl.env import FileSystemEnv  # noqa: E402
+from agentrl.evaluate import pick_device  # noqa: E402
 from agentrl.policy import PolicyConfig, TinyPolicy  # noqa: E402
 from agentrl.rollout import rollout_batch  # noqa: E402
 from agentrl.rollout_naive import rollout_one  # noqa: E402
@@ -53,11 +55,13 @@ def load_policy(codec, device: str) -> TinyPolicy:
 
 
 def main() -> None:
-    torch.set_num_threads(2)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--hardware", default="unnamed hardware")
+    args = ap.parse_args()
     codec = WordCodec()
     torch.manual_seed(0)
     n = 64
-    print(f"episodes={n}, levels 1-5, greedy decoding, Apple M5 CPU, 2 threads\n")
+    print(f"episodes={n}, levels 1-5, greedy decoding, {args.hardware}, {torch.get_num_threads()} CPU threads\n")
 
     print(f"{'rollout':<20}{'device':<8}{'batch':>6}{'seconds':>10}{'episodes/s':>12}{'forwards':>10}")
     policy = Counting(load_policy(codec, "cpu"))
@@ -71,22 +75,25 @@ def main() -> None:
     for batch in (8, 64, 256):
         count = batch if batch > n else n
         policy = Counting(load_policy(codec, "cpu"))
+        pool = tasks(count)
         t = time.perf_counter()
         for i in range(0, count, batch):
-            rollout_batch(policy, codec, [FileSystemEnv(x) for x in tasks(count)[i: i + batch]], temperature=0)
+            rollout_batch(policy, codec, [FileSystemEnv(x) for x in pool[i: i + batch]], temperature=0)
         sec = time.perf_counter() - t
         print(f"{'batched':<20}{'cpu':<8}{batch:>6}{sec:>10.2f}{count / sec:>12.1f}{policy.calls:>10}")
         if batch == 64:
             batched, batched_forward = sec, policy.seconds
 
-    if torch.backends.mps.is_available():
+    accel = pick_device()
+    if accel != "cpu":
         for batch in (64, 256):
             count = batch if batch > n else n
-            policy = Counting(load_policy(codec, "mps"))
+            policy = Counting(load_policy(codec, accel))
+            pool = tasks(count)
             t = time.perf_counter()
-            rollout_batch(policy, codec, [FileSystemEnv(x) for x in tasks(count)], temperature=0, device="mps")
+            rollout_batch(policy, codec, [FileSystemEnv(x) for x in pool], temperature=0, device=accel)
             sec = time.perf_counter() - t
-            print(f"{'batched':<20}{'mps':<8}{batch:>6}{sec:>10.2f}{count / sec:>12.1f}{policy.calls:>10}")
+            print(f"{'batched':<20}{accel:<8}{batch:>6}{sec:>10.2f}{count / sec:>12.1f}{policy.calls:>10}")
 
     print(f"\ntime inside policy forward: naive {100 * naive_forward / naive:.0f}%, "
           f"batched {100 * batched_forward / batched:.0f}%")

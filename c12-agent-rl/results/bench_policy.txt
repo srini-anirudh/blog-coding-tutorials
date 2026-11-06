@@ -1,7 +1,6 @@
-one GRPO iteration: 4 tasks x G=4 = 16 episodes, untrained policies, Apple M5
+one GRPO iteration: 4 tasks x G=4 = 16 episodes, untrained policies, AMD EPYC 7R13, 8 CPU threads
 
 policy                        device        params   trainable  rollout s  update s  total s
-TinyPolicy d=128 L=3          cpu          686,465     686,465       0.99      0.14     1.14
-LlamaForCausalLM d=128 L=3    cpu          832,001     832,001       1.35      0.15     1.49
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:49,  5.47it/s]Loading weights:  93%|█████████▎| 252/272 [00:00<00:00, 1103.66it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 934.56it/s] 
-SmolLM2-135M + LoRA r=16      cpu      136,358,785   1,843,777     289.07      9.18   298.25
+TinyPolicy d=128 L=3          cpu          686,465     686,465       0.37      0.06     0.43
+LlamaForCausalLM d=128 L=3    cpu          832,001     832,001       0.60      0.06     0.66
+SmolLM2-135M + LoRA r=16      cpu      136,358,785   1,843,777      29.77      2.92    32.69

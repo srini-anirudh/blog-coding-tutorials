@@ -1,0 +1,648 @@
+[
+{
+"level": 4,
+"task": "set workers to 97",
+"wins": 3,
+"members": [
+{
+"success": false,
+"traj_adv": -0.724,
+"steps": [
+{
+"action": "search workers",
+"obs": "found web/base",
+"error": false,
+"value": 0.435,
+"gae": -0.353,
+"td": 0.436
+},
+{
+"action": "edit web/base workers 97",
+"obs": "error internal",
+"error": true,
+"value": 0.871,
+"gae": -0.83,
+"td": -0.493
+},
+{
+"action": "edit jobs/prod workers jobs/prod jobs/prod jobs/prod",
+"obs": "error invalid input",
+"error": true,
+"value": 0.378,
+"gae": -0.355,
+"td": -0.099
+},
+{
+"action": "edit jobs/prod workers 97",
+"obs": "error no such file",
+"error": true,
+"value": 0.279,
+"gae": -0.27,
+"td": -0.097
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.182,
+"gae": -0.182,
+"td": -0.182
+}
+]
+},
+{
+"success": true,
+"traj_adv": 1.207,
+"steps": [
+{
+"action": "search workers",
+"obs": "found web/base",
+"error": false,
+"value": 0.435,
+"gae": 0.559,
+"td": 0.436
+},
+{
+"action": "edit web/base workers 97",
+"obs": "ok",
+"error": false,
+"value": 0.871,
+"gae": 0.129,
+"td": 0.123
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.994,
+"gae": 0.006,
+"td": 0.006
+}
+]
+},
+{
+"success": true,
+"traj_adv": 1.207,
+"steps": [
+{
+"action": "search workers",
+"obs": "found web/base",
+"error": false,
+"value": 0.435,
+"gae": 0.466,
+"td": 0.436
+},
+{
+"action": "edit web/base workers 97",
+"obs": "error internal",
+"error": true,
+"value": 0.871,
+"gae": 0.032,
+"td": -0.493
+},
+{
+"action": "edit web/base = rate 97",
+"obs": "error invalid input",
+"error": true,
+"value": 0.378,
+"gae": 0.552,
+"td": -0.097
+},
+{
+"action": "edit web/base workers 97",
+"obs": "ok",
+"error": false,
+"value": 0.281,
+"gae": 0.683,
+"td": 0.0
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.281,
+"gae": 0.719,
+"td": 0.719
+}
+]
+},
+{
+"success": true,
+"traj_adv": 1.207,
+"steps": [
+{
+"action": "search workers",
+"obs": "found web/base",
+"error": false,
+"value": 0.435,
+"gae": 0.559,
+"td": 0.436
+},
+{
+"action": "edit web/base workers 97",
+"obs": "ok",
+"error": false,
+"value": 0.871,
+"gae": 0.129,
+"td": 0.123
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.994,
+"gae": 0.006,
+"td": 0.006
+}
+]
+},
+{
+"success": false,
+"traj_adv": -0.724,
+"steps": [
+{
+"action": "search workers",
+"obs": "error timeout",
+"error": true,
+"value": 0.435,
+"gae": -0.422,
+"td": -0.436
+},
+{
+"action": "search cache/dev workers 97",
+"obs": "error invalid input",
+"error": true,
+"value": -0.001,
+"gae": 0.015,
+"td": 0.105
+},
+{
+"action": "edit cache/dev auth/prod 97",
+"obs": "error no such file",
+"error": true,
+"value": 0.104,
+"gae": -0.095,
+"td": 0.013
+},
+{
+"action": "edit db/main 97",
+"obs": "error invalid input",
+"error": true,
+"value": 0.116,
+"gae": -0.113,
+"td": -0.053
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.063,
+"gae": -0.063,
+"td": -0.063
+}
+]
+},
+{
+"success": false,
+"traj_adv": -0.724,
+"steps": [
+{
+"action": "search workers",
+"obs": "error internal",
+"error": true,
+"value": 0.435,
+"gae": -0.427,
+"td": -0.439
+},
+{
+"action": "search app/dev workers 97",
+"obs": "error invalid input",
+"error": true,
+"value": -0.004,
+"gae": 0.012,
+"td": 0.063
+},
+{
+"action": "edit <obs> jobs/prod 97",
+"obs": "error no such file",
+"error": true,
+"value": 0.059,
+"gae": -0.053,
+"td": -0.015
+},
+{
+"action": "edit workers 97",
+"obs": "error invalid input",
+"error": true,
+"value": 0.044,
+"gae": -0.04,
+"td": 0.024
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.068,
+"gae": -0.068,
+"td": -0.068
+}
+]
+},
+{
+"success": false,
+"traj_adv": -0.724,
+"steps": [
+{
+"action": "search workers",
+"obs": "error internal",
+"error": true,
+"value": 0.435,
+"gae": -0.438,
+"td": -0.439
+},
+{
+"action": "search web/main workers 97",
+"obs": "error invalid input",
+"error": true,
+"value": -0.004,
+"gae": 0.001,
+"td": -0.005
+},
+{
+"action": "edit jobs/prod jobs/prod 17",
+"obs": "error no such file",
+"error": true,
+"value": -0.009,
+"gae": 0.006,
+"td": -0.062
+},
+{
+"action": "edit db/main 97",
+"obs": "error invalid input",
+"error": true,
+"value": -0.071,
+"gae": 0.072,
+"td": 0.094
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.022,
+"gae": -0.022,
+"td": -0.022
+}
+]
+},
+{
+"success": false,
+"traj_adv": -0.724,
+"steps": [
+{
+"action": "search workers",
+"obs": "error timeout",
+"error": true,
+"value": 0.435,
+"gae": -0.435,
+"td": -0.436
+},
+{
+"action": "search web/main workers 97",
+"obs": "error invalid input",
+"error": true,
+"value": -0.001,
+"gae": 0.001,
+"td": 0.002
+},
+{
+"action": "edit web/main db/main 97",
+"obs": "error no such file",
+"error": true,
+"value": 0.001,
+"gae": -0.001,
+"td": -0.032
+},
+{
+"action": "edit workers 97",
+"obs": "error invalid input",
+"error": true,
+"value": -0.031,
+"gae": 0.033,
+"td": 0.067
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.036,
+"gae": -0.036,
+"td": -0.036
+}
+]
+}
+]
+},
+{
+"level": 4,
+"task": "set size to 92",
+"wins": 5,
+"members": [
+{
+"success": true,
+"traj_adv": 0.724,
+"steps": [
+{
+"action": "search size",
+"obs": "found auth/dev",
+"error": false,
+"value": 0.435,
+"gae": 0.502,
+"td": 0.388
+},
+{
+"action": "edit auth/dev size 92",
+"obs": "error invalid input",
+"error": true,
+"value": 0.823,
+"gae": 0.12,
+"td": -0.378
+},
+{
+"action": "edit auth/dev size 92",
+"obs": "ok",
+"error": false,
+"value": 0.445,
+"gae": 0.525,
+"td": 0.186
+},
+{
+"action": "edit auth/dev size 92 size 92",
+"obs": "error invalid input",
+"error": true,
+"value": 0.631,
+"gae": 0.356,
+"td": 0.117
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.748,
+"gae": 0.252,
+"td": 0.252
+}
+]
+},
+{
+"success": true,
+"traj_adv": 0.724,
+"steps": [
+{
+"action": "search size",
+"obs": "found auth/dev",
+"error": false,
+"value": 0.435,
+"gae": 0.553,
+"td": 0.388
+},
+{
+"action": "edit auth/dev size 92",
+"obs": "ok",
+"error": false,
+"value": 0.823,
+"gae": 0.174,
+"td": 0.119
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.942,
+"gae": 0.058,
+"td": 0.058
+}
+]
+},
+{
+"success": true,
+"traj_adv": 0.724,
+"steps": [
+{
+"action": "search size",
+"obs": "found auth/dev",
+"error": false,
+"value": 0.435,
+"gae": 0.553,
+"td": 0.388
+},
+{
+"action": "edit auth/dev size 92",
+"obs": "ok",
+"error": false,
+"value": 0.823,
+"gae": 0.174,
+"td": 0.119
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.942,
+"gae": 0.058,
+"td": 0.058
+}
+]
+},
+{
+"success": false,
+"traj_adv": -1.207,
+"steps": [
+{
+"action": "search size",
+"obs": "error internal",
+"error": true,
+"value": 0.435,
+"gae": -0.434,
+"td": -0.426
+},
+{
+"action": "search size size 92",
+"obs": "error invalid input",
+"error": true,
+"value": 0.009,
+"gae": -0.008,
+"td": 0.03
+},
+{
+"action": "edit auth/base size 92",
+"obs": "error no such key",
+"error": true,
+"value": 0.038,
+"gae": -0.04,
+"td": -0.081
+},
+{
+"action": "edit size 92",
+"obs": "error invalid input",
+"error": true,
+"value": -0.043,
+"gae": 0.044,
+"td": 0.061
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.018,
+"gae": -0.018,
+"td": -0.018
+}
+]
+},
+{
+"success": true,
+"traj_adv": 0.724,
+"steps": [
+{
+"action": "search size",
+"obs": "found auth/dev",
+"error": false,
+"value": 0.435,
+"gae": 0.553,
+"td": 0.388
+},
+{
+"action": "edit auth/dev size 92",
+"obs": "ok",
+"error": false,
+"value": 0.823,
+"gae": 0.174,
+"td": 0.119
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.942,
+"gae": 0.058,
+"td": 0.058
+}
+]
+},
+{
+"success": false,
+"traj_adv": -1.207,
+"steps": [
+{
+"action": "search size",
+"obs": "error timeout",
+"error": true,
+"value": 0.435,
+"gae": -0.428,
+"td": -0.424
+},
+{
+"action": "search size size 92",
+"obs": "error invalid input",
+"error": true,
+"value": 0.011,
+"gae": -0.005,
+"td": 0.033
+},
+{
+"action": "size 46 size size",
+"obs": "error invalid input",
+"error": true,
+"value": 0.044,
+"gae": -0.04,
+"td": -0.004
+},
+{
+"action": "edit 92 size 92",
+"obs": "error no such file",
+"error": true,
+"value": 0.04,
+"gae": -0.038,
+"td": 0.01
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.05,
+"gae": -0.05,
+"td": -0.05
+}
+]
+},
+{
+"success": false,
+"traj_adv": -1.207,
+"steps": [
+{
+"action": "search size",
+"obs": "error timeout",
+"error": true,
+"value": 0.435,
+"gae": -0.432,
+"td": -0.424
+},
+{
+"action": "search size size 92",
+"obs": "error invalid input",
+"error": true,
+"value": 0.011,
+"gae": -0.009,
+"td": 0.033
+},
+{
+"action": "edit size 80 92",
+"obs": "error internal",
+"error": true,
+"value": 0.044,
+"gae": -0.044,
+"td": -0.036
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.008,
+"gae": -0.008,
+"td": -0.008
+}
+]
+},
+{
+"success": true,
+"traj_adv": 0.724,
+"steps": [
+{
+"action": "search size",
+"obs": "found auth/dev",
+"error": false,
+"value": 0.435,
+"gae": 0.553,
+"td": 0.388
+},
+{
+"action": "edit auth/dev size 92",
+"obs": "ok",
+"error": false,
+"value": 0.823,
+"gae": 0.174,
+"td": 0.119
+},
+{
+"action": "submit",
+"obs": "submitted",
+"error": false,
+"value": 0.942,
+"gae": 0.058,
+"td": 0.058
+}
+]
+}
+]
+}
+]

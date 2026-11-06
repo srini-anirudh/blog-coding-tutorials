@@ -37,7 +37,6 @@ def recovery(trajs) -> dict:
 
 
 def main() -> None:
-    torch.set_num_threads(2)
     codec = WordCodec()
     eps = suite("failures", 300)
     out, payload = [], {}

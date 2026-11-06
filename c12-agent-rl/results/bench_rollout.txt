@@ -1,0 +1,18 @@
+episodes=64, levels 1-5, greedy decoding, AMD EPYC 7R13, 8 CPU threads
+
+rollout             device   batch   seconds  episodes/s  forwards
+naive               cpu          1      1.17        54.6       777
+batched             cpu          8      0.52       122.4       197
+batched             cpu         64      0.26       248.8        43
+batched             cpu        256      0.90       285.3        53
+
+time inside policy forward: naive 94%, batched 91%
+
+slow tools: every call sleeps as if it ran a command (batched rollout, batch 64)
+tool latency     workers   seconds  episodes/s
+     0 ms              0      0.26       247.2
+     0 ms              8      0.22       291.2
+     0 ms             32      0.29       221.0
+    20 ms              0      5.09        12.6
+    20 ms              8      1.01        63.1
+    20 ms             32      0.55       117.3

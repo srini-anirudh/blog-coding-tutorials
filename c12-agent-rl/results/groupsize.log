@@ -1,0 +1,244 @@
+--- G=2
+it   1  success 0.26  return 0.26  zero-var 0.91  steps 4.4  clip 0.207  0.8s+1.7s
+it   2  success 0.21  return 0.21  zero-var 0.91  steps 8.1  clip 0.134  3.0s+1.2s
+it   3  success 0.16  return 0.16  zero-var 0.91  steps 8.5  clip 0.104  2.3s+1.1s
+it   4  success 0.28  return 0.28  zero-var 0.90  steps 7.2  clip 0.104  1.7s+1.0s
+it   5  success 0.28  return 0.28  zero-var 0.96  steps 7.2  clip 0.078  1.8s+1.1s
+it   6  success 0.29  return 0.29  zero-var 0.86  steps 7.4  clip 0.127  2.4s+1.3s
+it   7  success 0.21  return 0.21  zero-var 0.91  steps 7.9  clip 0.100  2.5s+1.2s
+it   8  success 0.22  return 0.22  zero-var 0.93  steps 7.4  clip 0.148  2.4s+1.2s
+it   9  success 0.24  return 0.24  zero-var 0.86  steps 7.3  clip 0.137  2.6s+1.3s
+it  10  success 0.18  return 0.18  zero-var 0.91  steps 7.7  clip 0.151  3.0s+1.2s  eval clean=0.79 perturbed=0.07 failures=0.19 long=0.00
+it  11  success 0.22  return 0.22  zero-var 0.90  steps 7.3  clip 0.103  2.6s+1.2s
+it  12  success 0.27  return 0.27  zero-var 0.93  steps 6.8  clip 0.121  2.4s+1.2s
+it  13  success 0.19  return 0.19  zero-var 0.92  steps 6.8  clip 0.156  2.1s+1.1s
+it  14  success 0.18  return 0.18  zero-var 0.93  steps 5.7  clip 0.118  1.5s+1.1s
+it  15  success 0.23  return 0.23  zero-var 0.85  steps 5.7  clip 0.165  1.8s+1.2s
+it  16  success 0.21  return 0.21  zero-var 0.86  steps 5.4  clip 0.156  1.6s+1.1s
+it  17  success 0.20  return 0.20  zero-var 0.94  steps 6.2  clip 0.098  2.3s+1.5s
+it  18  success 0.27  return 0.27  zero-var 0.86  steps 5.9  clip 0.143  2.1s+1.2s
+it  19  success 0.22  return 0.22  zero-var 0.86  steps 6.1  clip 0.120  2.4s+1.3s
+it  20  success 0.22  return 0.22  zero-var 0.90  steps 7.2  clip 0.107  3.4s+1.4s  eval clean=0.78 perturbed=0.01 failures=0.19 long=0.00
+it  21  success 0.18  return 0.18  zero-var 0.92  steps 8.0  clip 0.143  4.1s+1.5s
+it  22  success 0.23  return 0.23  zero-var 0.94  steps 7.1  clip 0.161  3.6s+1.5s
+it  23  success 0.26  return 0.26  zero-var 0.93  steps 7.0  clip 0.161  3.5s+1.5s
+it  24  success 0.22  return 0.22  zero-var 0.91  steps 7.3  clip 0.057  3.7s+1.5s
+it  25  success 0.20  return 0.20  zero-var 0.84  steps 6.8  clip 0.170  3.2s+1.2s
+it  26  success 0.17  return 0.17  zero-var 0.94  steps 8.1  clip 0.157  4.1s+1.4s
+it  27  success 0.21  return 0.21  zero-var 0.90  steps 7.3  clip 0.103  3.4s+1.3s
+it  28  success 0.20  return 0.20  zero-var 0.86  steps 7.7  clip 0.092  3.7s+1.4s
+it  29  success 0.19  return 0.19  zero-var 0.85  steps 7.5  clip 0.142  3.7s+1.3s
+it  30  success 0.20  return 0.20  zero-var 0.86  steps 8.0  clip 0.135  3.6s+1.3s  eval clean=0.78 perturbed=0.01 failures=0.19 long=0.00
+it  31  success 0.16  return 0.16  zero-var 0.88  steps 7.8  clip 0.132  3.6s+1.3s
+it  32  success 0.17  return 0.17  zero-var 0.91  steps 7.8  clip 0.110  3.8s+1.2s
+it  33  success 0.27  return 0.27  zero-var 0.90  steps 7.1  clip 0.140  3.1s+1.3s
+it  34  success 0.16  return 0.16  zero-var 0.90  steps 8.2  clip 0.127  3.9s+1.3s
+it  35  success 0.26  return 0.26  zero-var 0.86  steps 7.5  clip 0.114  3.6s+1.3s
+it  36  success 0.18  return 0.18  zero-var 0.90  steps 8.2  clip 0.069  3.9s+1.2s
+it  37  success 0.14  return 0.14  zero-var 0.95  steps 8.7  clip 0.169  4.3s+1.2s
+it  38  success 0.13  return 0.13  zero-var 0.95  steps 8.1  clip 0.043  3.9s+1.2s
+it  39  success 0.21  return 0.21  zero-var 0.86  steps 7.9  clip 0.150  3.7s+1.3s
+it  40  success 0.21  return 0.21  zero-var 0.92  steps 7.2  clip 0.171  3.1s+1.4s  eval clean=0.81 perturbed=0.01 failures=0.20 long=0.00
+it  41  success 0.21  return 0.21  zero-var 0.92  steps 7.7  clip 0.158  3.7s+1.4s
+it  42  success 0.21  return 0.21  zero-var 0.91  steps 7.7  clip 0.123  3.8s+1.3s
+it  43  success 0.11  return 0.11  zero-var 0.96  steps 8.0  clip 0.138  4.1s+1.4s
+it  44  success 0.25  return 0.25  zero-var 0.96  steps 7.3  clip 0.060  3.5s+1.4s
+it  45  success 0.27  return 0.27  zero-var 0.89  steps 7.1  clip 0.153  3.4s+1.3s
+it  46  success 0.20  return 0.20  zero-var 0.90  steps 7.3  clip 0.146  3.4s+1.3s
+it  47  success 0.28  return 0.28  zero-var 0.94  steps 7.2  clip 0.190  3.4s+1.3s
+it  48  success 0.24  return 0.24  zero-var 0.92  steps 7.0  clip 0.082  3.3s+1.3s
+it  49  success 0.16  return 0.16  zero-var 0.89  steps 7.4  clip 0.197  3.5s+1.2s
+it  50  success 0.21  return 0.21  zero-var 0.93  steps 6.9  clip 0.165  3.0s+1.3s  eval clean=0.82 perturbed=0.03 failures=0.21 long=0.00
+it  51  success 0.20  return 0.20  zero-var 0.92  steps 7.1  clip 0.152  3.3s+1.3s
+it  52  success 0.27  return 0.27  zero-var 0.91  steps 6.8  clip 0.064  3.2s+1.4s
+it  53  success 0.17  return 0.17  zero-var 0.93  steps 7.4  clip 0.144  3.4s+1.4s
+it  54  success 0.21  return 0.21  zero-var 0.89  steps 7.2  clip 0.104  3.4s+1.3s
+it  55  success 0.23  return 0.23  zero-var 0.91  steps 6.7  clip 0.114  2.9s+1.4s
+it  56  success 0.26  return 0.26  zero-var 0.94  steps 7.0  clip 0.134  3.3s+1.3s
+it  57  success 0.23  return 0.23  zero-var 0.90  steps 7.0  clip 0.122  3.4s+1.5s
+it  58  success 0.24  return 0.24  zero-var 0.89  steps 7.5  clip 0.102  3.8s+1.5s
+it  59  success 0.22  return 0.22  zero-var 0.95  steps 7.4  clip 0.162  3.7s+1.6s
+it  60  success 0.17  return 0.17  zero-var 0.91  steps 7.7  clip 0.158  3.9s+1.4s  eval clean=0.80 perturbed=0.00 failures=0.21 long=0.00
+--- G=4
+it   1  success 0.28  return 0.28  zero-var 0.85  steps 4.4  clip 0.187  0.9s+0.9s
+it   2  success 0.20  return 0.20  zero-var 0.73  steps 3.1  clip 0.120  0.4s+0.5s
+it   3  success 0.27  return 0.27  zero-var 0.88  steps 2.8  clip 0.075  0.3s+0.4s
+it   4  success 0.17  return 0.17  zero-var 0.88  steps 3.3  clip 0.077  0.5s+0.5s
+it   5  success 0.13  return 0.13  zero-var 0.92  steps 3.0  clip 0.068  0.5s+0.5s
+it   6  success 0.22  return 0.22  zero-var 0.77  steps 3.3  clip 0.109  0.6s+0.8s
+it   7  success 0.21  return 0.21  zero-var 0.83  steps 4.0  clip 0.173  0.9s+0.9s
+it   8  success 0.30  return 0.30  zero-var 0.79  steps 5.7  clip 0.076  2.1s+1.3s
+it   9  success 0.25  return 0.25  zero-var 0.92  steps 5.8  clip 0.214  1.8s+1.2s
+it  10  success 0.26  return 0.26  zero-var 0.90  steps 5.2  clip 0.111  1.5s+1.2s  eval clean=0.77 perturbed=0.01 failures=0.20 long=0.00
+it  11  success 0.27  return 0.27  zero-var 0.79  steps 4.9  clip 0.158  1.1s+0.9s
+it  12  success 0.30  return 0.30  zero-var 0.83  steps 4.8  clip 0.160  1.3s+1.0s
+it  13  success 0.24  return 0.24  zero-var 0.85  steps 5.4  clip 0.143  1.8s+1.1s
+it  14  success 0.17  return 0.17  zero-var 0.85  steps 5.4  clip 0.116  1.9s+1.3s
+it  15  success 0.21  return 0.21  zero-var 0.92  steps 5.7  clip 0.143  2.1s+1.2s
+it  16  success 0.25  return 0.25  zero-var 0.85  steps 5.6  clip 0.128  2.1s+1.3s
+it  17  success 0.19  return 0.19  zero-var 0.83  steps 6.4  clip 0.149  2.6s+1.4s
+it  18  success 0.30  return 0.30  zero-var 0.77  steps 6.1  clip 0.069  3.2s+1.7s
+it  19  success 0.12  return 0.12  zero-var 0.90  steps 6.2  clip 0.091  3.1s+1.5s
+it  20  success 0.24  return 0.24  zero-var 0.81  steps 4.8  clip 0.067  2.1s+1.6s  eval clean=0.78 perturbed=0.03 failures=0.19 long=0.00
+it  21  success 0.19  return 0.19  zero-var 0.71  steps 4.9  clip 0.155  1.8s+1.3s
+it  22  success 0.28  return 0.28  zero-var 0.81  steps 5.1  clip 0.106  2.1s+1.5s
+it  23  success 0.27  return 0.27  zero-var 0.81  steps 4.7  clip 0.138  1.4s+1.1s
+it  24  success 0.23  return 0.23  zero-var 0.81  steps 4.6  clip 0.155  1.2s+1.1s
+it  25  success 0.21  return 0.21  zero-var 0.77  steps 4.4  clip 0.096  0.9s+0.9s
+it  26  success 0.26  return 0.26  zero-var 0.75  steps 4.9  clip 0.143  1.3s+1.1s
+it  27  success 0.18  return 0.18  zero-var 0.85  steps 5.1  clip 0.117  1.2s+1.1s
+it  28  success 0.13  return 0.13  zero-var 0.92  steps 4.6  clip 0.173  0.9s+0.9s
+it  29  success 0.30  return 0.30  zero-var 0.77  steps 4.6  clip 0.155  1.1s+1.0s
+it  30  success 0.14  return 0.14  zero-var 0.88  steps 5.5  clip 0.198  1.5s+1.2s  eval clean=0.78 perturbed=0.04 failures=0.22 long=0.00
+it  31  success 0.22  return 0.22  zero-var 0.77  steps 4.9  clip 0.108  1.1s+1.0s
+it  32  success 0.24  return 0.24  zero-var 0.83  steps 4.6  clip 0.103  1.0s+0.9s
+it  33  success 0.27  return 0.27  zero-var 0.85  steps 4.9  clip 0.201  1.0s+0.9s
+it  34  success 0.16  return 0.16  zero-var 0.88  steps 5.1  clip 0.131  1.2s+1.0s
+it  35  success 0.32  return 0.32  zero-var 0.83  steps 4.5  clip 0.118  1.0s+1.0s
+it  36  success 0.21  return 0.21  zero-var 0.85  steps 5.7  clip 0.080  1.6s+1.2s
+it  37  success 0.30  return 0.30  zero-var 0.75  steps 5.8  clip 0.141  1.9s+1.2s
+it  38  success 0.18  return 0.18  zero-var 0.88  steps 6.3  clip 0.084  2.2s+1.3s
+it  39  success 0.21  return 0.21  zero-var 0.81  steps 6.4  clip 0.176  2.6s+1.4s
+it  40  success 0.21  return 0.21  zero-var 0.77  steps 6.9  clip 0.124  3.4s+1.8s  eval clean=0.76 perturbed=0.01 failures=0.22 long=0.00
+it  41  success 0.18  return 0.18  zero-var 0.90  steps 7.4  clip 0.074  4.0s+1.7s
+it  42  success 0.19  return 0.19  zero-var 0.92  steps 7.0  clip 0.175  3.7s+1.8s
+it  43  success 0.26  return 0.26  zero-var 0.79  steps 7.2  clip 0.121  3.9s+1.8s
+it  44  success 0.20  return 0.20  zero-var 0.90  steps 7.5  clip 0.086  3.8s+1.6s
+it  45  success 0.23  return 0.23  zero-var 0.81  steps 6.9  clip 0.075  3.8s+2.3s
+it  46  success 0.27  return 0.27  zero-var 0.92  steps 5.9  clip 0.217  3.3s+2.3s
+it  47  success 0.17  return 0.17  zero-var 0.83  steps 6.1  clip 0.139  3.7s+2.4s
+it  48  success 0.26  return 0.26  zero-var 0.85  steps 5.9  clip 0.059  3.7s+1.9s
+it  49  success 0.21  return 0.21  zero-var 0.81  steps 6.5  clip 0.170  3.9s+2.3s
+it  50  success 0.20  return 0.20  zero-var 0.85  steps 7.0  clip 0.074  4.9s+2.2s  eval clean=0.80 perturbed=0.00 failures=0.22 long=0.00
+it  51  success 0.16  return 0.16  zero-var 0.88  steps 6.5  clip 0.082  4.4s+2.6s
+it  52  success 0.12  return 0.12  zero-var 0.94  steps 7.0  clip 0.222  5.0s+2.5s
+it  53  success 0.17  return 0.17  zero-var 0.83  steps 6.2  clip 0.054  3.7s+2.3s
+it  54  success 0.30  return 0.30  zero-var 0.77  steps 6.1  clip 0.120  3.5s+2.2s
+it  55  success 0.23  return 0.23  zero-var 0.83  steps 6.0  clip 0.276  3.3s+2.3s
+it  56  success 0.21  return 0.21  zero-var 0.88  steps 5.1  clip 0.140  2.2s+2.0s
+it  57  success 0.16  return 0.16  zero-var 0.85  steps 6.1  clip 0.141  3.2s+2.1s
+it  58  success 0.22  return 0.22  zero-var 0.77  steps 5.8  clip 0.092  2.5s+2.1s
+it  59  success 0.22  return 0.22  zero-var 0.88  steps 5.9  clip 0.217  2.6s+2.1s
+it  60  success 0.16  return 0.16  zero-var 0.85  steps 5.3  clip 0.161  2.1s+1.9s  eval clean=0.81 perturbed=0.05 failures=0.20 long=0.00
+--- G=8
+it   1  success 0.29  return 0.29  zero-var 0.75  steps 4.3  clip 0.142  1.4s+1.6s
+it   2  success 0.26  return 0.26  zero-var 0.83  steps 4.3  clip 0.158  1.6s+1.3s
+it   3  success 0.23  return 0.23  zero-var 0.67  steps 3.7  clip 0.125  1.1s+0.9s
+it   4  success 0.24  return 0.24  zero-var 0.79  steps 3.2  clip 0.054  0.9s+0.9s
+it   5  success 0.40  return 0.40  zero-var 0.67  steps 2.9  clip 0.037  0.7s+0.8s
+it   6  success 0.11  return 0.11  zero-var 0.75  steps 3.7  clip 0.187  1.1s+1.0s
+it   7  success 0.23  return 0.23  zero-var 0.92  steps 4.2  clip 0.058  1.5s+1.5s
+it   8  success 0.07  return 0.07  zero-var 0.79  steps 5.3  clip 0.098  2.9s+2.5s
+it   9  success 0.12  return 0.12  zero-var 0.88  steps 6.6  clip 0.072  4.8s+2.3s
+it  10  success 0.14  return 0.14  zero-var 0.92  steps 6.4  clip 0.196  4.7s+2.9s  eval clean=0.79 perturbed=0.01 failures=0.20 long=0.00
+it  11  success 0.25  return 0.25  zero-var 0.75  steps 5.3  clip 0.094  5.1s+5.3s
+it  12  success 0.18  return 0.18  zero-var 0.79  steps 6.2  clip 0.130  6.9s+3.4s
+it  13  success 0.21  return 0.21  zero-var 0.88  steps 6.6  clip 0.124  7.5s+3.9s
+it  14  success 0.20  return 0.20  zero-var 0.75  steps 6.7  clip 0.132  7.8s+4.7s
+it  15  success 0.32  return 0.32  zero-var 0.67  steps 4.8  clip 0.097  4.1s+4.2s
+it  16  success 0.23  return 0.23  zero-var 0.79  steps 4.8  clip 0.081  4.7s+4.2s
+it  17  success 0.26  return 0.26  zero-var 0.75  steps 4.7  clip 0.102  4.4s+4.0s
+it  18  success 0.20  return 0.20  zero-var 0.71  steps 4.8  clip 0.208  3.7s+4.0s
+it  19  success 0.21  return 0.21  zero-var 0.96  steps 4.4  clip 0.138  3.8s+3.7s
+it  20  success 0.29  return 0.29  zero-var 0.83  steps 4.1  clip 0.095  2.8s+3.1s  eval clean=0.80 perturbed=0.00 failures=0.20 long=0.00
+it  21  success 0.31  return 0.31  zero-var 0.67  steps 4.6  clip 0.117  3.0s+3.0s
+it  22  success 0.17  return 0.17  zero-var 0.83  steps 4.9  clip 0.109  4.1s+3.0s
+it  23  success 0.24  return 0.24  zero-var 0.71  steps 4.8  clip 0.110  3.2s+2.8s
+it  24  success 0.32  return 0.32  zero-var 0.83  steps 4.3  clip 0.084  4.8s+4.6s
+it  25  success 0.24  return 0.24  zero-var 0.75  steps 5.2  clip 0.084  6.2s+4.6s
+it  26  success 0.23  return 0.23  zero-var 0.83  steps 4.8  clip 0.179  6.0s+5.4s
+it  27  success 0.14  return 0.14  zero-var 0.67  steps 5.1  clip 0.171  6.8s+4.8s
+it  28  success 0.15  return 0.15  zero-var 0.79  steps 5.9  clip 0.144  7.8s+4.3s
+it  29  success 0.32  return 0.32  zero-var 0.75  steps 5.7  clip 0.162  6.6s+4.5s
+it  30  success 0.08  return 0.08  zero-var 0.92  steps 6.8  clip 0.331  11.5s+6.0s  eval clean=0.79 perturbed=0.03 failures=0.20 long=0.00
+it  31  success 0.30  return 0.30  zero-var 0.79  steps 5.1  clip 0.128  6.0s+4.7s
+it  32  success 0.18  return 0.18  zero-var 0.83  steps 5.1  clip 0.148  4.7s+4.4s
+it  33  success 0.24  return 0.24  zero-var 0.88  steps 5.2  clip 0.143  4.8s+4.9s
+it  34  success 0.09  return 0.09  zero-var 0.83  steps 6.4  clip 0.204  10.7s+4.5s
+it  35  success 0.29  return 0.29  zero-var 0.79  steps 5.2  clip 0.151  5.4s+2.7s
+it  36  success 0.30  return 0.30  zero-var 0.71  steps 5.2  clip 0.116  2.7s+2.3s
+it  37  success 0.08  return 0.08  zero-var 0.83  steps 6.1  clip 0.063  3.3s+2.2s
+it  38  success 0.17  return 0.17  zero-var 0.83  steps 5.3  clip 0.076  3.1s+2.7s
+it  39  success 0.29  return 0.29  zero-var 0.54  steps 5.1  clip 0.118  3.2s+2.6s
+it  40  success 0.23  return 0.23  zero-var 0.71  steps 5.6  clip 0.246  3.9s+2.5s  eval clean=0.79 perturbed=0.03 failures=0.23 long=0.00
+it  41  success 0.24  return 0.24  zero-var 0.83  steps 4.7  clip 0.209  2.4s+2.2s
+it  42  success 0.19  return 0.19  zero-var 0.62  steps 5.2  clip 0.132  2.8s+2.5s
+it  43  success 0.32  return 0.32  zero-var 0.88  steps 5.2  clip 0.130  2.7s+2.2s
+it  44  success 0.25  return 0.25  zero-var 0.67  steps 5.0  clip 0.145  3.2s+2.3s
+it  45  success 0.28  return 0.28  zero-var 0.83  steps 5.3  clip 0.150  2.5s+2.3s
+it  46  success 0.23  return 0.23  zero-var 0.88  steps 5.1  clip 0.181  2.6s+2.6s
+it  47  success 0.27  return 0.27  zero-var 0.92  steps 4.4  clip 0.072  1.9s+2.3s
+it  48  success 0.17  return 0.17  zero-var 0.71  steps 4.9  clip 0.107  1.9s+2.1s
+it  49  success 0.13  return 0.13  zero-var 0.75  steps 5.4  clip 0.145  3.1s+2.6s
+it  50  success 0.31  return 0.31  zero-var 0.88  steps 6.0  clip 0.256  5.0s+2.5s  eval clean=0.77 perturbed=0.02 failures=0.20 long=0.00
+it  51  success 0.21  return 0.21  zero-var 0.75  steps 7.0  clip 0.106  5.5s+3.1s
+it  52  success 0.27  return 0.27  zero-var 0.71  steps 6.3  clip 0.097  5.0s+3.3s
+it  53  success 0.10  return 0.10  zero-var 0.83  steps 7.3  clip 0.192  7.3s+3.0s
+it  54  success 0.28  return 0.28  zero-var 0.83  steps 6.2  clip 0.073  5.3s+3.1s
+it  55  success 0.03  return 0.03  zero-var 0.92  steps 7.6  clip 0.017  8.4s+3.4s
+it  56  success 0.22  return 0.22  zero-var 0.88  steps 6.7  clip 0.048  5.7s+2.7s
+it  57  success 0.29  return 0.29  zero-var 0.67  steps 6.1  clip 0.092  5.4s+2.6s
+it  58  success 0.32  return 0.32  zero-var 0.75  steps 6.0  clip 0.110  4.4s+2.8s
+it  59  success 0.12  return 0.12  zero-var 0.88  steps 7.5  clip 0.069  7.0s+3.0s
+it  60  success 0.17  return 0.17  zero-var 0.54  steps 7.2  clip 0.107  7.1s+3.4s  eval clean=0.79 perturbed=0.01 failures=0.19 long=0.00
+--- G=16
+it   1  success 0.22  return 0.22  zero-var 0.75  steps 4.3  clip 0.122  1.4s+1.2s
+it   2  success 0.33  return 0.33  zero-var 0.58  steps 4.3  clip 0.085  1.8s+1.3s
+it   3  success 0.31  return 0.31  zero-var 0.75  steps 4.1  clip 0.066  1.1s+1.0s
+it   4  success 0.19  return 0.19  zero-var 0.75  steps 4.3  clip 0.064  1.4s+1.5s
+it   5  success 0.22  return 0.22  zero-var 0.75  steps 3.6  clip 0.110  1.0s+1.1s
+it   6  success 0.25  return 0.25  zero-var 0.50  steps 3.4  clip 0.097  1.0s+2.5s
+it   7  success 0.28  return 0.28  zero-var 0.67  steps 3.6  clip 0.099  1.4s+1.6s
+it   8  success 0.21  return 0.21  zero-var 0.75  steps 4.0  clip 0.109  1.1s+1.7s
+it   9  success 0.42  return 0.42  zero-var 0.50  steps 3.4  clip 0.077  1.3s+1.9s
+it  10  success 0.37  return 0.37  zero-var 0.50  steps 3.4  clip 0.078  1.1s+1.6s  eval clean=0.78 perturbed=0.08 failures=0.21 long=0.00
+it  11  success 0.01  return 0.01  zero-var 0.92  steps 4.0  clip 0.068  1.3s+1.5s
+it  12  success 0.26  return 0.26  zero-var 0.83  steps 4.2  clip 0.047  1.7s+2.2s
+it  13  success 0.17  return 0.17  zero-var 0.83  steps 3.3  clip 0.108  1.3s+1.4s
+it  14  success 0.26  return 0.26  zero-var 0.75  steps 4.4  clip 0.097  1.8s+2.2s
+it  15  success 0.17  return 0.17  zero-var 0.58  steps 5.2  clip 0.139  2.8s+2.5s
+it  16  success 0.11  return 0.11  zero-var 0.75  steps 5.4  clip 0.089  2.7s+3.1s
+it  17  success 0.18  return 0.18  zero-var 0.67  steps 6.1  clip 0.129  4.3s+3.3s
+it  18  success 0.08  return 0.08  zero-var 0.83  steps 6.8  clip 0.141  5.6s+2.7s
+it  19  success 0.20  return 0.20  zero-var 0.67  steps 5.7  clip 0.136  2.6s+2.6s
+it  20  success 0.10  return 0.10  zero-var 0.83  steps 6.5  clip 0.231  5.2s+4.4s  eval clean=0.78 perturbed=0.11 failures=0.20 long=0.00
+it  21  success 0.16  return 0.16  zero-var 0.67  steps 4.9  clip 0.168  3.1s+3.7s
+it  22  success 0.39  return 0.39  zero-var 0.83  steps 4.6  clip 0.143  4.0s+4.1s
+it  23  success 0.22  return 0.22  zero-var 0.58  steps 5.4  clip 0.106  4.0s+3.1s
+it  24  success 0.19  return 0.19  zero-var 0.67  steps 5.9  clip 0.196  4.6s+2.9s
+it  25  success 0.24  return 0.24  zero-var 0.67  steps 6.5  clip 0.135  6.3s+6.6s
+it  26  success 0.22  return 0.22  zero-var 0.75  steps 6.1  clip 0.099  12.6s+9.7s
+it  27  success 0.24  return 0.24  zero-var 0.67  steps 6.8  clip 0.065  21.7s+8.9s
+it  28  success 0.30  return 0.30  zero-var 0.50  steps 6.5  clip 0.137  18.2s+13.1s
+it  29  success 0.36  return 0.36  zero-var 0.42  steps 5.6  clip 0.112  10.9s+4.5s
+it  30  success 0.33  return 0.33  zero-var 0.67  steps 6.4  clip 0.143  8.6s+3.5s  eval clean=0.79 perturbed=0.15 failures=0.21 long=0.00
+it  31  success 0.23  return 0.23  zero-var 0.75  steps 6.8  clip 0.086  159.0s+51.4s
+it  32  success 0.29  return 0.29  zero-var 0.58  steps 6.8  clip 0.105  189.8s+76.8s
+it  33  success 0.22  return 0.22  zero-var 0.67  steps 6.6  clip 0.107  190.2s+63.3s
+it  34  success 0.31  return 0.31  zero-var 0.67  steps 6.2  clip 0.133  140.8s+50.0s
+it  35  success 0.21  return 0.21  zero-var 0.58  steps 7.1  clip 0.204  80.0s+22.0s
+it  36  success 0.22  return 0.22  zero-var 0.75  steps 6.7  clip 0.134  90.3s+33.4s
+it  37  success 0.46  return 0.46  zero-var 0.75  steps 5.4  clip 0.071  82.4s+22.6s
+it  38  success 0.07  return 0.07  zero-var 0.83  steps 8.7  clip 0.080  71.5s+29.1s
+it  39  success 0.26  return 0.26  zero-var 0.67  steps 7.0  clip 0.114  25.9s+6.2s
+it  40  success 0.36  return 0.36  zero-var 0.50  steps 5.9  clip 0.086  20.2s+2.7s  eval clean=0.79 perturbed=0.15 failures=0.23 long=0.00
+it  41  success 0.32  return 0.32  zero-var 0.58  steps 6.8  clip 0.161  42.7s+19.3s
+it  42  success 0.26  return 0.26  zero-var 0.75  steps 6.8  clip 0.116  24.0s+15.3s
+it  43  success 0.18  return 0.18  zero-var 0.67  steps 7.3  clip 0.167  45.6s+9.7s
+it  44  success 0.23  return 0.23  zero-var 0.67  steps 7.9  clip 0.190  12.0s+3.2s
+it  45  success 0.18  return 0.18  zero-var 0.75  steps 8.4  clip 0.062  10.7s+5.4s
+it  46  success 0.49  return 0.49  zero-var 0.50  steps 4.9  clip 0.097  4.3s+3.3s
+it  47  success 0.32  return 0.32  zero-var 0.75  steps 6.7  clip 0.064  7.3s+3.9s
+it  48  success 0.36  return 0.36  zero-var 0.58  steps 6.6  clip 0.120  4.7s+4.2s
+it  49  success 0.24  return 0.24  zero-var 0.58  steps 7.6  clip 0.108  9.8s+4.0s
+it  50  success 0.38  return 0.38  zero-var 0.67  steps 5.7  clip 0.134  4.5s+2.9s  eval clean=0.79 perturbed=0.23 failures=0.21 long=0.00
+it  51  success 0.27  return 0.27  zero-var 0.75  steps 5.5  clip 0.125  3.8s+3.8s
+it  52  success 0.27  return 0.27  zero-var 0.58  steps 5.4  clip 0.087  5.6s+4.2s
+it  53  success 0.18  return 0.18  zero-var 0.67  steps 6.6  clip 0.102  7.3s+3.7s
+it  54  success 0.30  return 0.30  zero-var 0.50  steps 5.5  clip 0.094  4.2s+5.0s
+it  55  success 0.34  return 0.34  zero-var 0.58  steps 6.2  clip 0.159  6.8s+6.5s
+it  56  success 0.09  return 0.09  zero-var 0.75  steps 8.3  clip 0.047  12.2s+5.6s
+it  57  success 0.36  return 0.36  zero-var 0.67  steps 6.9  clip 0.044  9.2s+4.3s
+it  58  success 0.33  return 0.33  zero-var 0.42  steps 6.7  clip 0.095  7.2s+4.1s
+it  59  success 0.08  return 0.08  zero-var 1.00  steps 9.5  clip 0.039  12.3s+4.1s
+it  60  success 0.16  return 0.16  zero-var 0.83  steps 7.7  clip 0.120  7.7s+3.3s  eval clean=0.79 perturbed=0.19 failures=0.21 long=0.00

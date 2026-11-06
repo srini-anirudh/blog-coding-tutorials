@@ -7,13 +7,14 @@
     python c12-agent-rl/scripts/experiments.py offline
     python c12-agent-rl/scripts/experiments.py exploration
     python c12-agent-rl/scripts/experiments.py groupsize
+    python c12-agent-rl/scripts/experiments.py onpolicy
 """
 
 from __future__ import annotations
 
 import argparse
-import copy
 import json
+import math
 import sys
 import time
 from pathlib import Path
@@ -104,7 +105,10 @@ def offline() -> None:
     behaviour = fresh()
     sampler = TaskSampler(FULL_MIX, seed=0)
     t0 = time.time()
-    buffer = group_rollouts(behaviour, codec, sampler.sample(iters * tasks), G, cfg, DEVICE)
+    episodes = sampler.sample(iters * tasks)
+    buffer = []
+    for i in range(0, len(episodes), tasks):             # same batch size as an online iteration
+        buffer += group_rollouts(behaviour, codec, episodes[i: i + tasks], G, cfg, DEVICE, group_offset=i)
     success = sum(t.success for t in buffer) / len(buffer)
     print(f"buffer: {len(buffer)} trajectories, behaviour success {success:.3f}, {time.time() - t0:.0f}s", flush=True)
     online = run("online", FULL_MIX, cfg, iterations=iters, tasks=tasks, G=G)
@@ -114,7 +118,7 @@ def offline() -> None:
                         eval_fn=eval_fn(), log=lambda s: print(s, flush=True))
     off = {"name": "offline GRPO", "start": start, "history": hist}
     pol = fresh()
-    steps = iters * (tasks * G // cfg.minibatch + 1) * cfg.epochs
+    steps = iters * math.ceil(tasks * G / cfg.minibatch) * cfg.epochs
     fb = filtered_bc(pol, codec, buffer, steps=steps, device=DEVICE, eval_fn=eval_fn(),
                      eval_every=max(steps // 8, 1), log=lambda s: print(s, flush=True))
     dump("offline", {"buffer_success": success, "buffer_size": len(buffer), "gradient_steps": steps,
@@ -133,8 +137,14 @@ def groupsize() -> None:
     dump("groupsize", out)
 
 
+def onpolicy() -> None:
+    """The main run with one on-policy gradient step per iteration on a 4x larger batch (96 tasks x G=8)."""
+    cfg = GRPOConfig(lr=3e-4, epochs=1, minibatch=768)
+    dump("onpolicy", run("grpo on-policy", FULL_MIX, cfg, iterations=ARGS.iters or 60, tasks=96, G=8, eval_every=20))
+
+
 EXPERIMENTS = {"main": main_run, "credit": credit, "shaping": shaping, "curriculum": curriculum, "offline": offline,
-               "exploration": exploration, "groupsize": groupsize}
+               "exploration": exploration, "groupsize": groupsize, "onpolicy": onpolicy}
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
@@ -143,5 +153,4 @@ if __name__ == "__main__":
     ap.add_argument("--iters", type=int, default=0)
     ap.add_argument("--seed", type=int, default=0)
     ARGS = ap.parse_args()
-    torch.set_num_threads(2)
     EXPERIMENTS[ARGS.name]()

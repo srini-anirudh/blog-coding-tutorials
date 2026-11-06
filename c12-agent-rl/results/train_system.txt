@@ -1,0 +1,36 @@
+v1   success 0.28  zero-var 0.79  sample 0.00s  rollout 0.84s  store 0.02s  verify 0.02s  batch 0.00s  update 1.04s
+v2   success 0.27  zero-var 0.83  sample 0.00s  rollout 3.29s  store 0.02s  verify 0.02s  batch 0.00s  update 1.07s
+v3   success 0.23  zero-var 0.67  sample 0.00s  rollout 3.25s  store 0.02s  verify 0.02s  batch 0.00s  update 1.14s
+v4   success 0.23  zero-var 0.83  sample 0.00s  rollout 3.97s  store 0.02s  verify 0.02s  batch 0.00s  update 1.37s
+v5   success 0.42  zero-var 0.67  sample 0.00s  rollout 1.17s  store 0.02s  verify 0.02s  batch 0.00s  update 1.16s
+v6   success 0.14  zero-var 0.96  sample 0.00s  rollout 1.72s  store 0.02s  verify 0.02s  batch 0.00s  update 1.16s
+v7   success 0.20  zero-var 0.83  sample 0.00s  rollout 2.48s  store 0.02s  verify 0.02s  batch 0.00s  update 1.15s
+v8   success 0.12  zero-var 0.71  sample 0.00s  rollout 3.24s  store 0.03s  verify 0.02s  batch 0.00s  update 1.27s
+v9   success 0.14  zero-var 0.79  sample 0.00s  rollout 3.53s  store 0.03s  verify 0.02s  batch 0.00s  update 1.40s
+v10  success 0.12  zero-var 0.92  sample 0.00s  rollout 3.97s  store 0.03s  verify 0.02s  batch 0.00s  update 1.39s
+workers=0 latency=0ms  total 40.0s  sample 0.0%  rollout 68.6%  store 0.6%  verify 0.4%  batch 0.0%  update 30.4%
+store: 1920 trajectories, 5.87 MB; verifier: 1920 checked, 0 mismatches
+v1   success 0.28  zero-var 0.79  sample 0.00s  rollout 17.34s  store 0.02s  verify 0.02s  batch 0.00s  update 0.69s
+v2   success 0.27  zero-var 0.83  sample 0.00s  rollout 32.04s  store 0.02s  verify 0.02s  batch 0.00s  update 1.17s
+v3   success 0.23  zero-var 0.67  sample 0.00s  rollout 34.76s  store 0.03s  verify 0.02s  batch 0.00s  update 1.36s
+v4   success 0.23  zero-var 0.83  sample 0.00s  rollout 34.64s  store 0.03s  verify 0.02s  batch 0.00s  update 1.24s
+v5   success 0.42  zero-var 0.67  sample 0.00s  rollout 19.56s  store 0.02s  verify 0.02s  batch 0.00s  update 0.97s
+v6   success 0.14  zero-var 0.96  sample 0.00s  rollout 25.29s  store 0.02s  verify 0.02s  batch 0.00s  update 0.98s
+v7   success 0.20  zero-var 0.83  sample 0.00s  rollout 30.69s  store 0.02s  verify 0.02s  batch 0.00s  update 1.11s
+v8   success 0.12  zero-var 0.71  sample 0.00s  rollout 35.05s  store 0.03s  verify 0.02s  batch 0.00s  update 1.17s
+v9   success 0.14  zero-var 0.79  sample 0.00s  rollout 37.69s  store 0.03s  verify 0.02s  batch 0.00s  update 1.39s
+v10  success 0.12  zero-var 0.92  sample 0.00s  rollout 39.68s  store 0.03s  verify 0.02s  batch 0.00s  update 0.97s
+workers=0 latency=20ms  total 318.2s  sample 0.0%  rollout 96.4%  store 0.1%  verify 0.1%  batch 0.0%  update 3.5%
+store: 1920 trajectories, 5.87 MB; verifier: 1920 checked, 0 mismatches
+v1   success 0.28  zero-var 0.79  sample 0.00s  rollout 1.30s  store 0.02s  verify 0.03s  batch 0.00s  update 0.52s
+v2   success 0.27  zero-var 0.83  sample 0.00s  rollout 3.46s  store 0.02s  verify 0.02s  batch 0.00s  update 0.93s
+v3   success 0.23  zero-var 0.67  sample 0.00s  rollout 3.70s  store 0.02s  verify 0.02s  batch 0.00s  update 1.11s
+v4   success 0.23  zero-var 0.83  sample 0.00s  rollout 4.36s  store 0.02s  verify 0.02s  batch 0.00s  update 1.22s
+v5   success 0.42  zero-var 0.67  sample 0.00s  rollout 1.85s  store 0.02s  verify 0.02s  batch 0.00s  update 1.06s
+v6   success 0.14  zero-var 0.96  sample 0.00s  rollout 2.63s  store 0.02s  verify 0.02s  batch 0.00s  update 1.09s
+v7   success 0.20  zero-var 0.83  sample 0.00s  rollout 3.46s  store 0.03s  verify 0.02s  batch 0.00s  update 1.00s
+v8   success 0.12  zero-var 0.71  sample 0.00s  rollout 3.84s  store 0.02s  verify 0.02s  batch 0.00s  update 1.06s
+v9   success 0.14  zero-var 0.79  sample 0.00s  rollout 4.53s  store 0.03s  verify 0.02s  batch 0.00s  update 1.16s
+v10  success 0.12  zero-var 0.92  sample 0.00s  rollout 5.13s  store 0.03s  verify 0.02s  batch 0.00s  update 1.06s
+workers=32 latency=20ms  total 44.9s  sample 0.0%  rollout 76.3%  store 0.5%  verify 0.4%  batch 0.0%  update 22.7%
+store: 1920 trajectories, 5.87 MB; verifier: 1920 checked, 0 mismatches

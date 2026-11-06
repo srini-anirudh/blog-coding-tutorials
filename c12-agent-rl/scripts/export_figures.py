@@ -27,7 +27,6 @@ from agentrl.rewards import outcome  # noqa: E402
 
 
 def main() -> None:
-    torch.set_num_threads(2)
     torch.manual_seed(3)
     codec = WordCodec()
     policy = TinyPolicy.load(str(ROOT / "runs" / "grpo_action.pt")).eval()

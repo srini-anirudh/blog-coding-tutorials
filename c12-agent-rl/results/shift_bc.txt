@@ -1,9 +1,9 @@
 9 distinct abstract states in 5000 demonstrations
 mistakes  success  expert  unseen-state rate  submitted
        0    0.797   1.000              0.000      1.000
-       1    0.177   1.000              0.946      0.963
+       1    0.173   1.000              0.946      0.963
        2    0.087   1.000              0.992      0.933
-       3    0.043   1.000              1.000      0.740
+       3    0.043   1.000              1.000      0.737
 
 task [2]: set ttl to 0
   0: read jobs/main               -> workers = 48 ; host = 76 ; ttl = 87 (forced)

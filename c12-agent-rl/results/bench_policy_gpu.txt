@@ -1,0 +1,7 @@
+one GRPO iteration: 4 tasks x G=4 = 16 episodes, untrained policies, NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2; CPU rows: AMD EPYC 7R13, 8 CPU threads
+
+policy                        device        params   trainable  rollout s  update s  total s
+TinyPolicy d=128 L=3          cpu          686,465     686,465       0.38      0.27     0.64
+LlamaForCausalLM d=128 L=3    cpu          832,001     832,001       0.70      0.08     0.78
+SmolLM2-135M + LoRA r=16      cpu      136,358,785   1,843,777      29.83      2.89    32.72
+SmolLM2-135M + LoRA r=16      cuda     136,358,785   1,843,777       3.14      0.38     3.52

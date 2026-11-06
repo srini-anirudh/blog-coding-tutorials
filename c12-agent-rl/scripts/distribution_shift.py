@@ -36,7 +36,6 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=300)
     ap.add_argument("--out", default="shift_bc")
     args = ap.parse_args()
-    torch.set_num_threads(2)
     codec = WordCodec()
     policy = TinyPolicy.load(args.ckpt).eval()
     seen = seen_signatures(expert_demos(5000, (1, 2, 3), codec))
