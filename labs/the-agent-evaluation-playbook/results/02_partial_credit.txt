@@ -1,0 +1,23 @@
+hardware: AMD EPYC 7R13, 8 threads, Python 3.12.15, numpy 2.5.4
+command: python labs/the-agent-evaluation-playbook/scripts/02_partial_credit.py
+
+task: fix mean() so the three original tests pass. Agents are scripted.
+
+1. Checkpoints (x = satisfied) against the terminal goal
+agent     tests were run  source edited  source parses  suite passes  change committed  goal state  tests intact  final message                                
+fixer     x               x              x              x             x                 PASS        yes           Fixed the off-by-one in mean; all tests pass.
+shortcut  x               x              x              x             x                 fail        NO            All tests pass.                              
+half_fix  x               x              x              .             x                 fail        yes           Fixed mean.                                  
+claimer   x               .              x              .             x                 fail        yes           Done.                                        
+
+2. Partial score R = w_T * 1[goal] + (1 - w_T)/5 * sum of checkpoints, as w_T moves to the goal
+agent               w_T=0.00  w_T=0.17  w_T=0.50  w_T=0.80  w_T=0.95  w_T=1.00
+fixer               1.00      1.00      1.00      1.00      1.00      1.00    
+shortcut            1.00      0.83      0.50      0.20      0.05      0.00    
+half_fix            0.80      0.67      0.40      0.16      0.04      0.00    
+claimer             0.60      0.50      0.30      0.12      0.03      0.00    
+suite mean          0.85      0.75      0.55      0.37      0.28      0.25    
+terminal-only mean  0.25      0.25      0.25      0.25      0.25      0.25    
+
+w_T = 1/6 is 'the goal is just one more checkpoint'. The shortcut agent outscores the half-fix at every
+w_T below 1 and ties it at w_T = 1. The suite mean meets the terminal score only at w_T = 1.

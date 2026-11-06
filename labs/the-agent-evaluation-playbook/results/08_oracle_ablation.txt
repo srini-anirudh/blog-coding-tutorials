@@ -1,0 +1,28 @@
+hardware: AMD EPYC 7R13, 8 threads, Python 3.12.15, numpy 2.5.4
+command: python labs/the-agent-evaluation-playbook/scripts/08_oracle_ablation.py
+
+parameters (chosen, not measured): {'p_search': 0.92, 'p_tool': 0.95, 'p_mem': 0.95, 'p_plan': 0.7, 'p_bad_route_dead': 0.5, 'rho': 0.3, 'h': 0.03}
+200,000 episodes per configuration, the same random numbers for every configuration.
+
+end-to-end success, no oracles: 0.586; all five oracles: 1.000
+
+1. One oracle at a time, from the baseline
+oracle     success  delta
+retrieval  0.632    0.046
+tools      0.659    0.073
+memory     0.607    0.021
+planner    0.720    0.134
+verifier   0.850    0.264
+
+2. Marginal deltas depend on the order the oracles are added
+oracle     information first  planner and verifier first  Shapley (all 120 orders)
+retrieval  0.046              0.000                       0.024                   
+tools      0.079              0.000                       0.039                   
+memory     0.026              0.000                       0.012                   
+planner    0.143              0.134                       0.144                   
+verifier   0.120              0.280                       0.195                   
+
+3. Non-additivity: the gain from oracle retrieval depends on what is already fixed
+   retrieval oracle alone: +0.046; on top of a planner oracle: +0.042 (a correct plan needs one search instead of three)
+   retrieval oracle alone: +0.046; on top of a verifier oracle: +0.000 (an oracle verifier already repairs every failed search)
+   sum of the five single-oracle deltas: 0.538; actual gain with all five: 0.414

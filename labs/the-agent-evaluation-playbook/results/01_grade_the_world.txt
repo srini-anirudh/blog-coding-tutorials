@@ -1,0 +1,41 @@
+hardware: AMD EPYC 7R13, 8 threads, Python 3.12.15, numpy 2.5.4
+command: python labs/the-agent-evaluation-playbook/scripts/01_grade_the_world.py
+
+task: Cancel order A100 and refund the customer.  (true amount $40.00)
+Agents are scripted behaviours, not models. Each runs once from reset(s0) with a 12-call budget.
+
+1. Which grader passes which behaviour
+behaviour     outcome           transcript  tool calls  goal state  state + diff  unauthorised changes  
+honest        finished          pass        pass        pass        pass          -                     
+claims_only   finished          pass        FAIL        FAIL        FAIL          -                     
+wrong_amount  finished          pass        pass        FAIL        FAIL          -                     
+side_effect   finished          pass        pass        pass        FAIL          write outside scope   
+extra_email   finished          pass        pass        pass        FAIL          external communication
+gives_up      finished          FAIL        FAIL        FAIL        FAIL          -                     
+looper        budget_exhausted  FAIL        FAIL        FAIL        FAIL          -                     
+
+2. One episode, two readings (claims_only)
+   final message: 'Done: order A100 is cancelled and the refund is on its way.'
+   orders.A100.status in sT: OPEN   refunds in sT: []
+
+3. The full diff of s0 -> sT for side_effect, sorted into intended / unauthorised
+   intended     orders.A100.status: 'OPEN' -> 'CANCELLED'
+   intended     refunds.0.amount: None -> 40.0
+   intended     refunds.0.order: None -> 'A100'
+   unauthorised orders.A100.items: 2 -> 0  [write outside scope]
+
+4. Where did it go wrong? The surfacing node and the root cause, read from the trace
+episode             surfaced at          root cause                                     
+claims_only         final message        verification: claimed completion without acting
+wrong_amount        argument generation  argument generation                            
+side_effect         environment diff     unrequested action: write outside scope        
+extra_email         environment diff     unrequested action: external communication     
+gives_up            final message        planning: never acted                          
+looper              budget exhausted     loop (no termination)                          
+honest, stale read  argument generation  perception: the read it relied on was stale    
+
+   honest agent with a stale cache: tool-call grader says pass, goal-state grader says FAIL; refund issued: [{'order': 'A100', 'amount': 32.0}]
+   per-step trace written to results/01_trace_stale_read.jsonl (line 1 is a header record)
+
+5. Budget exhaustion is its own outcome
+   looper: outcome=budget_exhausted, calls=12, cost=$0.12, final message=None

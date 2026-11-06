@@ -1,0 +1,50 @@
+hardware: AMD EPYC 7R13, 8 threads, Python 3.12.15, numpy 2.5.4
+command: python labs/the-agent-evaluation-playbook/scripts/06_thresholds_and_oversight.py
+
+1. p* = L_eff / (U + L_eff), L_eff = min(c_r, L)
+tier                     U  L    c_r   p*    
+read-only                1  0    -     0     
+reversible, cheap undo   1  100  0.25  0.2   
+reversible, costly undo  1  100  5     0.8333
+irreversible, L/U=100    1  100  -     0.9901
+
+   A 97%-confident agent facing an irreversible action with L/U = 100: p* = 0.9901, so it should escalate.
+
+2. Three acting policies on 100,000 calibrated actions per tier (confidence ~ Beta(19, 1), mean 0.95).
+   Escalated actions are worth -0.01 (the reviewer's time). 'below-p* acts' is the share of the agent's
+   own actions taken at a confidence below p*; 'escalation recall' is the share of below-p* actions it
+   handed to a person.
+tier                     policy          utility/action  escalated  below-p* acts  escalation recall
+read-only                always act      0.949           0.000      0.000          0.000            
+read-only                act if p > 0.9  0.833           0.135      0.000          0.000            
+read-only                act if p > p*   0.949           0.000      0.000          0.000            
+reversible, cheap undo   always act      0.936           0.000      0.000          0.000            
+reversible, cheap undo   act if p > 0.9  0.825           0.135      0.000          0.000            
+reversible, cheap undo   act if p > p*   0.936           0.000      0.000          0.000            
+reversible, costly undo  always act      0.704           0.000      0.032          0.000            
+reversible, costly undo  act if p > 0.9  0.682           0.137      0.000          1.000            
+reversible, costly undo  act if p > p*   0.711           0.032      0.000          1.000            
+irreversible, L/U=100    always act      -4.002          0.000      0.828          0.000            
+irreversible, L/U=100    act if p > 0.9  -2.146          0.134      0.802          0.162            
+irreversible, L/U=100    act if p > p*   0.081           0.828      0.000          1.000            
+
+3. A reviewer with capacity: per-item catch rate q(e) = 0.9 / (1 + e / 0.2), cost 0.02 per escalation.
+   200,000 actions, confidence ~ Beta(9, 1), so about 10% are wrong. Harm = errors that reach the world
+   per action + 0.02 e. 'random' escalates a random subset (the post's model); 'ranked' escalates the
+   least confident actions first.
+e     q(e)   harm random  H(e) formula  caught random  harm ranked  caught ranked  precision  recall  F1   
+0     0.900  0.099        0.100         0.000          0.100        0.000          0.000      0.000   0.000
+0.02  0.818  0.098        0.099         0.016          0.094        0.070          0.419      0.084   0.139
+0.05  0.720  0.097        0.097         0.038          0.089        0.128          0.356      0.177   0.237
+0.1   0.600  0.095        0.096         0.059          0.084        0.183          0.307      0.306   0.307
+0.15  0.514  0.094        0.095         0.079          0.082        0.210          0.274      0.409   0.328
+0.2   0.450  0.094        0.095         0.090          0.082        0.226          0.250      0.498   0.333
+0.3   0.360  0.095        0.095         0.107          0.083        0.232          0.214      0.639   0.320
+0.5   0.257  0.096        0.097         0.133          0.089        0.215          0.168      0.835   0.279
+0.75  0.189  0.100        0.101         0.140          0.097        0.181          0.129      0.964   0.228
+1     0.150  0.105        0.105         0.148          0.105        0.150          0.100      1.000   0.182
+
+   random: lowest harm 0.0943 at e = 0.2; e = 0 gives 0.0993; e = 1 gives 0.1046
+   ranked: lowest harm 0.0818 at e = 0.2; e = 0 gives 0.1004; e = 1 gives 0.1053
+   Escalating everything is not the safe policy: past the optimum, each extra escalation dilutes the
+   reviewer's attention more than it adds catches.

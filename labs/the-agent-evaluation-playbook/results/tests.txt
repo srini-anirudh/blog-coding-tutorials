@@ -1,0 +1,5 @@
+hardware: AMD EPYC 7R13, 8 threads, Python 3.12.15
+command: python -m pytest labs/the-agent-evaluation-playbook -m "not slow and not gpu and not network"
+
+..................                                                       [100%]
+18 passed in 0.58s

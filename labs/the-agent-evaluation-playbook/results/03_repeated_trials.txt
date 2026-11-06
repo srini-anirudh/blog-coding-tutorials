@@ -1,0 +1,55 @@
+hardware: AMD EPYC 7R13, 8 threads, Python 3.12.15, numpy 2.5.4
+command: python labs/the-agent-evaluation-playbook/scripts/03_repeated_trials.py
+
+200 tasks per suite, 16 harness episodes per task, scripted noisy agent whose per-task
+success probability p_i is drawn from the suite with mean 0.6. Each sampled mean is printed below.
+
+suite: constant   mean p = 0.600, Var(p) = 0.0000   outcomes: {'success': 1902, 'wrong end state': 852, 'budget exhausted': 446}
+     measured pass^k  E[p^k] (true p_i)  pbar^k  2nd-order approx
+k=1  0.594            0.600              0.600   0.600           
+k=2  0.354            0.360              0.360   0.360           
+k=4  0.127            0.130              0.130   0.130           
+k=8  0.018            0.017              0.017   0.017           
+
+suite: beta, wide   mean p = 0.551, Var(p) = 0.0821   outcomes: {'success': 1815, 'wrong end state': 916, 'budget exhausted': 469}
+     measured pass^k  E[p^k] (true p_i)  pbar^k  2nd-order approx
+k=1  0.567            0.551              0.551   0.551           
+k=2  0.397            0.386              0.304   0.386           
+k=4  0.255            0.249              0.092   0.242           
+k=8  0.157            0.150              0.009   0.073           
+
+suite: beta, narrow   mean p = 0.615, Var(p) = 0.0120   outcomes: {'success': 1953, 'wrong end state': 826, 'budget exhausted': 421}
+     measured pass^k  E[p^k] (true p_i)  pbar^k  2nd-order approx
+k=1  0.610            0.615              0.615   0.615           
+k=2  0.386            0.390              0.378   0.390           
+k=4  0.168            0.170              0.143   0.170           
+k=8  0.041            0.041              0.020   0.038           
+
+suite: bimodal   mean p = 0.600, Var(p) = 0.2400   outcomes: {'success': 1920, 'wrong end state': 826, 'budget exhausted': 454}
+     measured pass^k  E[p^k] (true p_i)  pbar^k  2nd-order approx
+k=1  0.600            0.600              0.600   0.600           
+k=2  0.600            0.600              0.360   0.600           
+k=4  0.600            0.600              0.130   0.648           
+k=8  0.600            0.600              0.017   0.330           
+
+pass@k against pass^k on the same runs (measured)
+suite         pass@1  pass@2  pass@4  pass@8  pass^1  pass^2  pass^4  pass^8
+constant      0.594   0.835   0.973   0.999   0.594   0.354   0.127   0.018 
+beta, wide    0.567   0.738   0.866   0.939   0.567   0.397   0.255   0.157 
+beta, narrow  0.610   0.835   0.963   0.997   0.610   0.386   0.168   0.041 
+bimodal       0.600   0.600   0.600   0.600   0.600   0.600   0.600   0.600 
+
+Cost (beta, wide suite). Each tool call is priced at $0.01, an assumed price. A retry loop uses the
+goal-state check as its verifier, so it stops at the first success. 'best-of-8' always runs 8 attempts.
+Q for a config that allows k attempts uses the first k of each task's 16 episodes.
+config          Q (solved)  C ($/task)  U, lambda=0  U, lambda=1  U, lambda=5  U, lambda=20
+single attempt  0.535       0.036       0.535        0.499        0.354        -0.191      
+retry up to 3   0.805       0.068       0.805        0.738        0.468        -0.545      
+retry up to 8   0.930       0.098       0.930        0.832        0.441        -1.025      
+best-of-8       0.930       0.314       0.930        0.616        -0.640       -5.348      
+
+   lambda = 0 per dollar: best config is retry up to 8
+   lambda = 1 per dollar: best config is retry up to 8
+   lambda = 5 per dollar: best config is retry up to 3
+   lambda = 20 per dollar: best config is single attempt
+   cost of one attempt: $0.030 when it succeeds, $0.044 when it fails (loops run to the 12-call budget)

@@ -1,0 +1,27 @@
+hardware: AMD EPYC 7R13, 8 threads, Python 3.12.15, numpy 2.5.4
+command: python labs/the-agent-evaluation-playbook/scripts/04_horizon.py
+
+400,000 simulated episodes per row.
+
+1. H50 against the per-step hazard h and the repair fraction rho
+h      rho   H50 simulated  H50 exact  ln2 / h_eff  S(50) simulated  S(50) exact
+0.04   0     17.00          16.98      17.33        0.13             0.13       
+0.02   0     35.00          34.31      34.66        0.36             0.36       
+0.01   0     69.00          68.97      69.31        0.61             0.61       
+0.005  0     139.00         138.28     138.63       0.78             0.78       
+0.02   0.5   69.00          68.97      69.31        0.60             0.61       
+0.02   0.75  139.00         138.28     138.63       0.78             0.78       
+
+Each halving of h doubles H50. rho = 0.5 at h = 0.02 gives the same H50 as h = 0.01 with no repair.
+
+2. Correlated failures: 20% of episodes start with a bad early decision that triples the hazard
+task length H   S(H) simulated  S(H) constant-hazard fit at H50
+0.25 x H50 = 7  0.824           0.841                          
+0.5 x H50 = 14  0.687           0.707                          
+1 x H50 = 28    0.490           0.500                          
+2 x H50 = 56    0.264           0.250                          
+4 x H50 = 112   0.084           0.062                          
+8 x H50 = 224   0.009           0.004                          
+
+H50 = 28. The constant-hazard model fitted at H50 underpredicts survival on long tasks and
+overpredicts it on short ones: clustered failures fatten the tail, so a single hazard is the wrong summary.

@@ -1,0 +1,32 @@
+hardware: AMD EPYC 7R13, 8 threads, Python 3.12.15, numpy 2.5.4
+command: python labs/the-agent-evaluation-playbook/scripts/05_grader_noise.py
+
+alpha = P(grader passes a wrong solution), beta = P(grader fails a correct one).
+
+1. Measured score against true capability pi (100,000 graded runs per cell, then the formula)
+         sim a=0,b=0  formula a=0,b=0  sim a=0.08,b=0.15  formula a=0.08,b=0.15  sim a=0.2,b=0.25  formula a=0.2,b=0.25
+pi=0     0.000        0.000            0.079              0.080                  0.199             0.200               
+pi=0.3   0.298        0.300            0.310              0.311                  0.364             0.365               
+pi=0.5   0.498        0.500            0.463              0.465                  0.475             0.475               
+pi=0.75  0.751        0.750            0.658              0.657                  0.613             0.613               
+pi=1     1.000        1.000            0.851              0.850                  0.750             0.750               
+
+Floor at pi = 0 is alpha. Ceiling at pi = 1 is 1 - beta. Slope is 1 - alpha - beta.
+
+2. Runs per agent to separate pi = 0.50 from pi = 0.60 (two-sided 5% test, 80% power)
+   simulated: bisection over n, 20,000 simulated comparisons per n, runs graded by the noisy grader
+grader          slope  n simulated  n normal approx  ratio sim  ratio normal  (1-a-b)^-2
+a=0, b=0        1.00   392.00       384.60           1.00       1.00          1.00      
+a=0.08, b=0.15  0.77   664.00       657.95           1.69       1.71          1.69      
+a=0.2, b=0.25   0.55   1296.00      1293.38          3.31       3.36          3.31      
+
+The ratios track (1 - alpha - beta)^-2. They differ a little because noise also moves the measured
+rates toward 0.5, where a proportion's variance is largest.
+
+3. The ceiling eats headroom as agents improve (alpha = 0.08, beta = 0.15)
+         measured  measured headroom to ceiling  true headroom  share of visible gap that is closable
+pi=0.3   0.311     0.539                         0.700          0.782                                
+pi=0.5   0.465     0.385                         0.500          0.720                                
+pi=0.75  0.657     0.193                         0.250          0.562                                
+pi=0.9   0.773     0.077                         0.100          0.339                                
+
