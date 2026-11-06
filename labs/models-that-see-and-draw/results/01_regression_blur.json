@@ -1,0 +1,24 @@
+{
+  "hardware": "Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "Command: python labs/models-that-see-and-draw/scripts/01_regression_blur.py",
+  "regression": {
+    "max_pixel_mean": 0.3585633635520935,
+    "committed_to_one_side": 0.0,
+    "left_share_of_committed": null,
+    "mse_to_nearest_valid_image": 0.05499393120408058,
+    "max_gap_to_mean_image": 0.010129064321517944
+  },
+  "rectified_flow": {
+    "max_pixel_mean": 0.9629078507423401,
+    "committed_to_one_side": 0.8619999885559082,
+    "left_share_of_committed": 0.5220417380332947,
+    "mse_to_nearest_valid_image": 0.004163976293057203
+  },
+  "raster_autoregression": {
+    "max_pixel_mean": 1.0,
+    "committed_to_one_side": 0.9909999966621399,
+    "left_share_of_committed": 0.4883955717086792,
+    "mse_to_nearest_valid_image": 0.000750000006519258,
+    "passes_per_image": 64
+  }
+}

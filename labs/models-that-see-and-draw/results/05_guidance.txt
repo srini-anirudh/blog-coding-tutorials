@@ -1,0 +1,20 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+Command: python labs/models-that-see-and-draw/scripts/05_guidance.py
+
+Part 1: twelve candidate codebook entries, illustrative logits.
+  s = 1 gives back the conditional distribution: True
+  s = 0.0: entropy 3.27 bits, top token p = 0.19, max |guided - Bayes form| = 0.0e+00
+  s = 1.0: entropy 3.18 bits, top token p = 0.20, max |guided - Bayes form| = 0.0e+00
+  s = 2.0: entropy 2.86 bits, top token p = 0.25, max |guided - Bayes form| = 4.8e-07
+  s = 3.0: entropy 2.51 bits, top token p = 0.34, max |guided - Bayes form| = 9.5e-07
+  s = 5.0: entropy 1.88 bits, top token p = 0.52, max |guided - Bayes form| = 1.9e-06
+
+Part 2: raster prior, 512 samples (128 per shape), temperature 1.
+  scale shape acc distinct pixel spread network evals
+    0.0     0.232    97.7%       0.2237            16
+    1.0     0.924    97.5%       0.2289            16
+    2.0     0.906    91.2%       0.2188            32
+    3.0     0.732    83.2%       0.1668            32
+    5.0     0.467    80.1%       0.1502            32
+  scale 0 = unconditional samples. pixel spread = mean per-pixel std within each requested shape.
+  network evals counts a guided pass as two, one conditional and one unconditional.

@@ -1,0 +1,36 @@
+{
+  "hardware": "Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "Command: python labs/models-that-see-and-draw/scripts/07_loss_balance.py",
+  "part1_image_share": {
+    "per-token CE, no weight": 0.9927290353853612,
+    "per-token CE, image x 0.5 (Emu3)": 0.9855630413859481,
+    "one diffusion mean per image, no weight": 0.03225806451612903,
+    "one diffusion mean per image, x 5 (Transfusion)": 0.14285714285714285
+  },
+  "part2": [
+    {
+      "normalisation": "mean over patches",
+      "lambda": 1.0,
+      "grad_text": 1.8814371824264526,
+      "grad_flow": 1.5313894748687744
+    },
+    {
+      "normalisation": "mean over patches",
+      "lambda": 5.0,
+      "grad_text": 1.8814371824264526,
+      "grad_flow": 7.656948089599609
+    },
+    {
+      "normalisation": "sum over patch values",
+      "lambda": 1.0,
+      "grad_text": 1.8814371824264526,
+      "grad_flow": 392.03570556640625
+    },
+    {
+      "normalisation": "sum over patch values",
+      "lambda": 5.0,
+      "grad_text": 1.8814371824264526,
+      "grad_flow": 1960.1787109375
+    }
+  ]
+}

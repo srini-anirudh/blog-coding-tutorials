@@ -1,0 +1,45 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+Command: python labs/models-that-see-and-draw/scripts/03_tokenizers.py
+
+Shapes: 10000 train, 2000 test images, 16 x 16. 2000 training steps each, batch 128.
+
+tokenizer                                  usage perplexity  test MSE   time
+VQ, 1,024 codes of dim 64                   4.5%       15.1   0.00245   714s
+VQ, 1,024 codes, dim 8, l2-normalised       6.4%       13.4   0.00151   787s
+FSQ, levels [8, 5, 5, 5] = 1,000 codes     77.4%       81.9   0.00089   164s
+  one test image, then its FSQ reconstruction from 16 integers [215, 41, 990, 797, 82, 49, 994, 797, 999, 994, 790, 797, 797, 797, 797, 797]:
+      %%%%                      
+  %%%%%%%%%%%%                  
+  %%%%%%%%%%%%                  
+%%%%%%%%%%%%%%%%                
+%%%%%%%%%%%%%%%%                
+  %%%%%%%%%%%%                  
+  %%%%%%%%%%%%                  
+      %%%%                      
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+    ..####::                    
+  **%%%%%%%%%%..                
+--%%%%%%%%%%%%--                
+##%%%%%%##%%%%%%                
+##@@%%%%%%%%@@@@                
+..%%##@@%%%%%%                  
+  ##%%%%%%%%##                  
+    ..##%%    ..                
+    ..                          
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+
+Usage = share of codes chosen at least once on the test set. Perplexity = effective number of codes in use.
+Times include training only when no cached checkpoint existed.

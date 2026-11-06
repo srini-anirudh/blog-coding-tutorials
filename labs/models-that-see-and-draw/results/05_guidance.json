@@ -1,0 +1,51 @@
+{
+  "hardware": "Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "Command: python labs/models-that-see-and-draw/scripts/05_guidance.py",
+  "part1": {
+    "s1_equals_conditional": true,
+    "entropy_bits": {
+      "0.0": 3.2691211700439453,
+      "1.0": 3.1796493530273438,
+      "2.0": 2.8555612564086914,
+      "3.0": 2.5119006633758545,
+      "5.0": 1.878777027130127
+    }
+  },
+  "part2": [
+    {
+      "scale": 0.0,
+      "shape_acc": 0.232421875,
+      "distinct": 0.9765625,
+      "pixel_spread": 0.22366976737976074,
+      "network_evals": 16
+    },
+    {
+      "scale": 1.0,
+      "shape_acc": 0.923828125,
+      "distinct": 0.974609375,
+      "pixel_spread": 0.2289382517337799,
+      "network_evals": 16
+    },
+    {
+      "scale": 2.0,
+      "shape_acc": 0.90625,
+      "distinct": 0.912109375,
+      "pixel_spread": 0.21879538893699646,
+      "network_evals": 32
+    },
+    {
+      "scale": 3.0,
+      "shape_acc": 0.732421875,
+      "distinct": 0.83203125,
+      "pixel_spread": 0.16675788164138794,
+      "network_evals": 32
+    },
+    {
+      "scale": 5.0,
+      "shape_acc": 0.466796875,
+      "distinct": 0.80078125,
+      "pixel_spread": 0.1501704603433609,
+      "network_evals": 32
+    }
+  ]
+}

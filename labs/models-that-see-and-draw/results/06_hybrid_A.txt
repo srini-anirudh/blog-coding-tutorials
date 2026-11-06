@@ -1,0 +1,52 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+Command: python labs/models-that-see-and-draw/scripts/06_hybrid.py --runs A_bidirectional_image --name 06_hybrid_A
+
+Attention mask of the drawing layout (1 = may attend). Rows are queries.
+Positions: <bos> shape side <boi> p1..p16 <eoi>
+  #....................
+  ##...................
+  ###..................
+  ####.................
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  #####################
+
+Run A_bidirectional_image: 10000 steps, lr 0.003, width 96, 755 s, 344,474 parameters
+   step   L_LM  L_flow draw: shape draw: shape+side read: shape read: shape+side
+   2500  0.667  0.1120       0.555            0.538       0.990            0.948
+   5000  0.632  0.0922       0.705            0.695       0.982            0.982
+   7500  0.625  0.0792       0.808            0.788       0.992            0.992
+  10000  0.614  0.0734       0.845            0.822       1.000            1.000
+  drawn for the caption 'disk right':
+                                
+                                
+                                
+                                
+                    ==          
+                  ******        
+              ************++    
+              **************    
+              ************      
+                  ++****::      
+                    ****        
+                                
+                                
+                                
+                                
+                                
+
+Drawing: 400 samples, 30 Euler steps, graded by the judge. Reading: 1,000 clean test images, greedy caption.

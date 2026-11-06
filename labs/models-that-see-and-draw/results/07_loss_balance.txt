@@ -1,0 +1,18 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+Command: python labs/models-that-see-and-draw/scripts/07_loss_balance.py
+
+Part 1: a 512 x 512 image (Emu3: 4,096 tokens) and a 30-token caption.
+  per-token CE, no weight                            image share of loss terms  99.3%
+  per-token CE, image x 0.5 (Emu3)                   image share of loss terms  98.6%
+  one diffusion mean per image, no weight            image share of loss terms   3.2%
+  one diffusion mean per image, x 5 (Transfusion)    image share of loss terms  14.3%
+  Per-token counting puts about 99% of the loss terms on the image. A weight of 0.5 trims that share only a little (by the term count alone). One mean per image starts near 3%, and a weight of 5 raises it.
+  The two weights correct opposite counting rules. Term counts are not gradient shares, so Part 2 measures gradients.
+
+Part 2: trunk gradient norms in this lab's hybrid at initialisation, batch 256 (16 patches, 2-3 text targets).
+  flow loss normalisation      lambda  |g| text  |g| flow flow / text
+  mean over patches               1.0    1.8814    1.5314        0.81
+  mean over patches               5.0    1.8814    7.6569        4.07
+  sum over patch values           1.0    1.8814  392.0357      208.37
+  sum over patch values           5.0    1.8814 1960.1787     1041.85
+  Check how a loss is normalised before copying its weight from a paper.

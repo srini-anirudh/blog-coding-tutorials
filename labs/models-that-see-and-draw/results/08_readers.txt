@@ -1,0 +1,10 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+Command: python labs/models-that-see-and-draw/scripts/08_readers.py
+
+Encoders: 2000 steps each. Decoder probe: 1500 steps. Probes test on 2000 images.
+encoder    shape, 64 labels shape, 256 labels side, 256 labels decoder MSE  time
+pixel                 0.470             0.603            0.990     0.00004  751s
+semantic              0.819             0.962            0.979     0.00103  681s
+both                  0.726             0.929            0.990     0.00008  278s
+
+Chance: shape 0.25, side 0.50. A lower decoder MSE means the features keep more pixel detail.

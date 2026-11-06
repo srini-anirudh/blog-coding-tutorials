@@ -1,0 +1,56 @@
+{
+  "hardware": "Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "Command: python labs/models-that-see-and-draw/scripts/02_token_budget.py",
+  "text_bits_per_token": 17.194602975157967,
+  "rows": [
+    {
+      "name": "Chameleon",
+      "h": 512,
+      "w": 512,
+      "f": 16,
+      "codebook": 8192,
+      "tokens": 1024,
+      "bits_per_token": 13.0,
+      "max_bits": 13312.0,
+      "raw_bits": 6291456,
+      "compression": 472.61538461538464
+    },
+    {
+      "name": "Emu3",
+      "h": 512,
+      "w": 512,
+      "f": 8,
+      "codebook": 32768,
+      "tokens": 4096,
+      "bits_per_token": 15.0,
+      "max_bits": 61440.0,
+      "raw_bits": 6291456,
+      "compression": 102.4
+    },
+    {
+      "name": "Janus (generation side)",
+      "h": 384,
+      "w": 384,
+      "f": 16,
+      "codebook": 16384,
+      "tokens": 576,
+      "bits_per_token": 14.0,
+      "max_bits": 8064.0,
+      "raw_bits": 3538944,
+      "compression": 438.85714285714283
+    },
+    {
+      "name": "This lab's FSQ tokenizer (1 channel)",
+      "h": 16,
+      "w": 16,
+      "f": 4,
+      "codebook": 1000,
+      "tokens": 16,
+      "bits_per_token": 9.965784284662087,
+      "max_bits": 159.4525485545934,
+      "raw_bits": 2048,
+      "compression": 12.843946481663197
+    }
+  ],
+  "mismatches": []
+}

@@ -1,0 +1,14 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+Command: python labs/models-that-see-and-draw/scripts/02_token_budget.py
+
+Text: a 150,000-entry vocabulary carries at most log2(150000) = 17.2 bits per token.
+A 30-token answer carries at most 516 bits.  (post: about 17.2 and about 520)
+A 512 x 512 RGB image has 786,432 values = 6.3 million bits at 8 bits each.  (post: 786,432 and about 6.3 million)
+
+tokenizer                               tokens bits/token   max bits    raw bits compression
+Chameleon                                 1024      13.00      13312   6,291,456        473x
+Emu3                                      4096      15.00      61440   6,291,456        102x
+Janus (generation side)                    576      14.00       8064   3,538,944        439x
+This lab's FSQ tokenizer (1 channel)        16       9.97        159       2,048         13x
+
+Every number checked against the post matches.

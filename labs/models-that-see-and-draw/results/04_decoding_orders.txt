@@ -1,0 +1,55 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+Command: python labs/models-that-see-and-draw/scripts/04_decoding_orders.py
+
+Judge accuracy on real test images: {'shape_acc': 1.0, 'side_acc': 1.0, 'both_acc': 1.0}
+Judge shape accuracy on FSQ reconstructions of test images (the tokenizer's ceiling): 0.990
+
+Pass counts for a 16 x 16 token grid (arithmetic, as in the post's Figure 2):
+  raster autoregression                                 256 passes
+  masked parallel decoding (12 rounds)                   12 passes
+  next-scale prediction (scales [1, 2, 3, 4, 6, 8, 10, 13, 16])    9 passes
+  diffusion (50 steps)                                   50 passes
+
+Sampling 512 images (128 per shape), no guidance, temperature 1.
+order                            passes time (s) shape acc distinct
+raster autoregression                16     1.07     0.949    97.9%
+  first sample (requested: square):
+                                
+                                
+                                
+                                
+                                
+                    ::--        
+                  ..++==..      
+      ..            ++..  ..    
+    ..::      ..----%%##**++==  
+    ++::  ..  ==::::..::--::    
+  ..==  ..    --      ....      
+    --        ....              
+    ..            ..::..        
+                ..  ==..        
+                  ..--          
+                    ::..        
+MaskGIT, 1 rounds                     1     0.25     0.373   100.0%
+MaskGIT, 2 rounds                     2     0.50     0.449   100.0%
+MaskGIT, 4 rounds                     4     1.03     0.629   100.0%
+  first sample (requested: square):
+                                
+                                
+                                
+                                
+                                
+              ..--++**++        
+              ..++**++**::      
+              ..++**++**--      
+              ::==##****==      
+              ++**##++**==      
+              ########****      
+              ..::::----....    
+              ..        ..      
+                                
+                                
+                                
+MaskGIT, 8 rounds                     8     2.02     0.760   100.0%
+
+passes = sequential forward passes of the network for the whole batch. shape acc = share of samples the judge reads as the requested shape. distinct = share of unique token grids.

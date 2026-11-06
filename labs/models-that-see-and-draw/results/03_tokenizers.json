@@ -1,0 +1,25 @@
+{
+  "hardware": "Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "Command: python labs/models-that-see-and-draw/scripts/03_tokenizers.py",
+  "vq": {
+    "label": "VQ, 1,024 codes of dim 64",
+    "codebook": 1024,
+    "test_mse": 0.0024513998068869114,
+    "usage": 0.044921875,
+    "perplexity": 15.105372428894043
+  },
+  "vq-lowdim": {
+    "label": "VQ, 1,024 codes, dim 8, l2-normalised",
+    "codebook": 1024,
+    "test_mse": 0.0015100381569936872,
+    "usage": 0.064453125,
+    "perplexity": 13.35943603515625
+  },
+  "fsq": {
+    "label": "FSQ, levels [8, 5, 5, 5] = 1,000 codes",
+    "codebook": 1000,
+    "test_mse": 0.0008900074753910303,
+    "usage": 0.7739999890327454,
+    "perplexity": 81.93785095214844
+  }
+}

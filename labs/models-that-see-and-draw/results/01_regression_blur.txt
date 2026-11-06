@@ -1,0 +1,72 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+Command: python labs/models-that-see-and-draw/scripts/01_regression_blur.py
+
+Valid images: 6 (2 sides x 3 heights). Two of them:
+                
+                
+                
+@@@@@@          
+@@@@@@          
+                
+                
+                
+                
+                
+                
+                
+          @@@@@@
+          @@@@@@
+                
+                
+
+[1] Regression, 1500 steps (7.9 s). Output f(c):
+                
+                
+..::..    ......
+------    ------
+------    ------
+......    ::::::
+                
+                
+Largest gap between f(c) and the mean training image: 0.0101  (the optimum is E[x | c])
+regression: brightest pixel 0.36, committed to one side 0.0%, left among committed 0.0%, MSE to nearest valid image 0.0550
+
+[2] Rectified flow, 8000 steps, 100 Euler steps per sample (97.3 s). Two samples:
+                
+                
+                
+                
+          @@@@@@
+          @@%%@@
+                
+                
+                
+                
+                
+          @@@@@@
+          @@@@@@
+        ..      
+                
+                
+rectified flow: brightest pixel 0.96, committed to one side 86.2%, left among committed 52.2%, MSE to nearest valid image 0.0042
+
+[3] Raster autoregression, 1500 steps, 64 forward passes per batch of samples (415.8 s). Two samples:
+                
+                
+          @@@@@@
+          @@@@@@
+                
+                
+                
+                
+                
+                
+                
+          @@@@@@
+          @@@@@@
+                
+                
+                
+raster autoregression: brightest pixel 1.00, committed to one side 99.1%, left among committed 48.8%, MSE to nearest valid image 0.0008
+
+Committed = more than 90% of the image's brightness is in one half. Regression can never commit: its single output is the mean image, with half-bright blocks on both sides.

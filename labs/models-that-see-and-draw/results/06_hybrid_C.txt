@@ -1,0 +1,52 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+Command: python labs/models-that-see-and-draw/scripts/06_hybrid.py --runs C_bidirectional_noise_cap --name 06_hybrid_C
+
+Attention mask of the drawing layout (1 = may attend). Rows are queries.
+Positions: <bos> shape side <boi> p1..p16 <eoi>
+  #....................
+  ##...................
+  ###..................
+  ####.................
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  ####################.
+  #####################
+
+Run C_bidirectional_noise_cap: 10000 steps, lr 0.003, width 96, 783 s, 344,474 parameters
+   step   L_LM  L_flow draw: shape draw: shape+side read: shape read: shape+side
+   2500  0.464  0.1108       0.570            0.555       1.000            0.997
+   5000  0.426  0.0830       0.675            0.647       0.994            0.994
+   7500  0.411  0.0686       0.728            0.702       1.000            1.000
+  10000  0.404  0.0618       0.803            0.788       1.000            0.999
+  drawn for the caption 'disk right':
+                                
+                                
+                                
+                                
+                    **          
+                  **####        
+              ####****##**      
+              ####**##****..    
+              ##########**      
+                  ****##        
+                    ****        
+                                
+                                
+                                
+                                
+                                
+
+Drawing: 400 samples, 30 Euler steps, graded by the judge. Reading: 1,000 clean test images, greedy caption.

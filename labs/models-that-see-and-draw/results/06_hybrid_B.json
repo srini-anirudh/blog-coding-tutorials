@@ -1,0 +1,55 @@
+{
+  "hardware": "Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "Command: python labs/models-that-see-and-draw/scripts/06_hybrid.py --runs B_causal_image --name 06_hybrid_B",
+  "steps": 10000,
+  "lr": 0.003,
+  "width": 96,
+  "layers": 3,
+  "lambda": 5.0,
+  "runs": {
+    "B_causal_image": {
+      "config": {
+        "bidirectional_images": false,
+        "read_t_max": 1.0
+      },
+      "log": [
+        {
+          "step": 2500,
+          "lm": 0.6581932306289673,
+          "flow": 0.11804281175136566,
+          "draw_shape_acc": 0.5299999713897705,
+          "draw_both_acc": 0.5199999809265137,
+          "read_shape_acc": 1.0,
+          "read_both_acc": 0.9729999899864197
+        },
+        {
+          "step": 5000,
+          "lm": 0.6330462694168091,
+          "flow": 0.10663760453462601,
+          "draw_shape_acc": 0.6150000095367432,
+          "draw_both_acc": 0.612500011920929,
+          "read_shape_acc": 0.9980000257492065,
+          "read_both_acc": 0.9980000257492065
+        },
+        {
+          "step": 7500,
+          "lm": 0.6242005825042725,
+          "flow": 0.09428183734416962,
+          "draw_shape_acc": 0.6274999976158142,
+          "draw_both_acc": 0.6225000023841858,
+          "read_shape_acc": 1.0,
+          "read_both_acc": 1.0
+        },
+        {
+          "step": 10000,
+          "lm": 0.6222859025001526,
+          "flow": 0.08916198462247849,
+          "draw_shape_acc": 0.6650000214576721,
+          "draw_both_acc": 0.6549999713897705,
+          "read_shape_acc": 1.0,
+          "read_both_acc": 1.0
+        }
+      ]
+    }
+  }
+}
