@@ -1,0 +1,213 @@
+{
+ "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132",
+ "name": "8-bit AdamW",
+ "runs": [
+  {
+   "diverged": false,
+   "train_loss": 1.8286,
+   "val_loss": 1.9593647599220276,
+   "curve": [
+    [
+     0,
+     5.5681
+    ],
+    [
+     50,
+     2.7601
+    ],
+    [
+     100,
+     2.3518
+    ],
+    [
+     150,
+     2.1294
+    ],
+    [
+     200,
+     2.0559
+    ],
+    [
+     250,
+     1.9642
+    ],
+    [
+     299,
+     1.8286
+    ]
+   ],
+   "seconds": 91.2229515920626,
+   "state_bytes_per_param": 2.0488070539419088,
+   "update_ratio": {
+    "embed_tokens.weight": 0.00031724077416583896,
+    "layers.0.self_attn.q_proj.weight": 0.000818579108454287,
+    "layers.0.self_attn.k_proj.weight": 0.0008045443682931364,
+    "layers.0.self_attn.v_proj.weight": 0.0008398962672799826,
+    "layers.0.self_attn.o_proj.weight": 0.002252694685012102,
+    "layers.0.mlp.gate_proj.weight": 0.0010556068737059832,
+    "layers.0.mlp.up_proj.weight": 0.0010704173473641276,
+    "layers.0.mlp.down_proj.weight": 0.0017903164261952043,
+    "layers.1.self_attn.q_proj.weight": 0.001075598644092679,
+    "layers.1.self_attn.k_proj.weight": 0.000895689008757472,
+    "layers.1.self_attn.v_proj.weight": 0.0012308943551033735,
+    "layers.1.self_attn.o_proj.weight": 0.002691166242584586,
+    "layers.1.mlp.gate_proj.weight": 0.0013059028424322605,
+    "layers.1.mlp.up_proj.weight": 0.0013000924373045564,
+    "layers.1.mlp.down_proj.weight": 0.0020829772111028433,
+    "layers.2.self_attn.q_proj.weight": 0.0010602837428450584,
+    "layers.2.self_attn.k_proj.weight": 0.0009827546309679747,
+    "layers.2.self_attn.v_proj.weight": 0.0011014832416549325,
+    "layers.2.self_attn.o_proj.weight": 0.002969731343910098,
+    "layers.2.mlp.gate_proj.weight": 0.0014615467516705394,
+    "layers.2.mlp.up_proj.weight": 0.001448400435037911,
+    "layers.2.mlp.down_proj.weight": 0.0026004649698734283,
+    "layers.3.self_attn.q_proj.weight": 0.0010147899156436324,
+    "layers.3.self_attn.k_proj.weight": 0.0008474131464026868,
+    "layers.3.self_attn.v_proj.weight": 0.0011463159462437034,
+    "layers.3.self_attn.o_proj.weight": 0.0023741605691611767,
+    "layers.3.mlp.gate_proj.weight": 0.0015230393037199974,
+    "layers.3.mlp.up_proj.weight": 0.0015354289207607508,
+    "layers.3.mlp.down_proj.weight": 0.0024329754523932934
+   },
+   "lr": 0.001
+  },
+  {
+   "diverged": false,
+   "train_loss": 1.7394,
+   "val_loss": 1.918374490737915,
+   "curve": [
+    [
+     0,
+     5.5681
+    ],
+    [
+     50,
+     2.5839
+    ],
+    [
+     100,
+     2.2645
+    ],
+    [
+     150,
+     2.068
+    ],
+    [
+     200,
+     1.9879
+    ],
+    [
+     250,
+     1.8819
+    ],
+    [
+     299,
+     1.7394
+    ]
+   ],
+   "seconds": 135.58869810495526,
+   "state_bytes_per_param": 2.0488070539419088,
+   "update_ratio": {
+    "embed_tokens.weight": 0.0005873667541891336,
+    "layers.0.self_attn.q_proj.weight": 0.001823824248276651,
+    "layers.0.self_attn.k_proj.weight": 0.0017824553651735187,
+    "layers.0.self_attn.v_proj.weight": 0.0027544957119971514,
+    "layers.0.self_attn.o_proj.weight": 0.004390433896332979,
+    "layers.0.mlp.gate_proj.weight": 0.0021100251469761133,
+    "layers.0.mlp.up_proj.weight": 0.002240219386294484,
+    "layers.0.mlp.down_proj.weight": 0.0025765514001250267,
+    "layers.1.self_attn.q_proj.weight": 0.0020287404768168926,
+    "layers.1.self_attn.k_proj.weight": 0.0019712522625923157,
+    "layers.1.self_attn.v_proj.weight": 0.003071705112233758,
+    "layers.1.self_attn.o_proj.weight": 0.004231779370456934,
+    "layers.1.mlp.gate_proj.weight": 0.0027459640987217426,
+    "layers.1.mlp.up_proj.weight": 0.0029709318187087774,
+    "layers.1.mlp.down_proj.weight": 0.003753654658794403,
+    "layers.2.self_attn.q_proj.weight": 0.0026408329140394926,
+    "layers.2.self_attn.k_proj.weight": 0.002487943973392248,
+    "layers.2.self_attn.v_proj.weight": 0.0031600918155163527,
+    "layers.2.self_attn.o_proj.weight": 0.004422028083354235,
+    "layers.2.mlp.gate_proj.weight": 0.0033516332041472197,
+    "layers.2.mlp.up_proj.weight": 0.0034872740507125854,
+    "layers.2.mlp.down_proj.weight": 0.00465117022395134,
+    "layers.3.self_attn.q_proj.weight": 0.0018435802776366472,
+    "layers.3.self_attn.k_proj.weight": 0.0018796444637700915,
+    "layers.3.self_attn.v_proj.weight": 0.002710268832743168,
+    "layers.3.self_attn.o_proj.weight": 0.0034519564360380173,
+    "layers.3.mlp.gate_proj.weight": 0.00335485627874732,
+    "layers.3.mlp.up_proj.weight": 0.0035314993001520634,
+    "layers.3.mlp.down_proj.weight": 0.004546184558421373
+   },
+   "lr": 0.003
+  },
+  {
+   "diverged": false,
+   "train_loss": 2.1312,
+   "val_loss": 2.2242192029953003,
+   "curve": [
+    [
+     0,
+     5.5681
+    ],
+    [
+     50,
+     2.7352
+    ],
+    [
+     100,
+     2.5294
+    ],
+    [
+     150,
+     2.3871
+    ],
+    [
+     200,
+     2.3514
+    ],
+    [
+     250,
+     2.2349
+    ],
+    [
+     299,
+     2.1312
+    ]
+   ],
+   "seconds": 135.94148336502258,
+   "state_bytes_per_param": 2.0488070539419088,
+   "update_ratio": {
+    "embed_tokens.weight": 0.0011655902490019798,
+    "layers.0.self_attn.q_proj.weight": 0.0026814122684299946,
+    "layers.0.self_attn.k_proj.weight": 0.0031345889437943697,
+    "layers.0.self_attn.v_proj.weight": 0.003994903992861509,
+    "layers.0.self_attn.o_proj.weight": 0.004290914628654718,
+    "layers.0.mlp.gate_proj.weight": 0.003063634503632784,
+    "layers.0.mlp.up_proj.weight": 0.0029347266536206007,
+    "layers.0.mlp.down_proj.weight": 0.0031057922169566154,
+    "layers.1.self_attn.q_proj.weight": 0.0033719968050718307,
+    "layers.1.self_attn.k_proj.weight": 0.002995117101818323,
+    "layers.1.self_attn.v_proj.weight": 0.002484159544110298,
+    "layers.1.self_attn.o_proj.weight": 0.0046820915304124355,
+    "layers.1.mlp.gate_proj.weight": 0.004411624278873205,
+    "layers.1.mlp.up_proj.weight": 0.004817925859242678,
+    "layers.1.mlp.down_proj.weight": 0.00461368216201663,
+    "layers.2.self_attn.q_proj.weight": 0.00273682433180511,
+    "layers.2.self_attn.k_proj.weight": 0.002896446269005537,
+    "layers.2.self_attn.v_proj.weight": 0.002622318221256137,
+    "layers.2.self_attn.o_proj.weight": 0.0029472499154508114,
+    "layers.2.mlp.gate_proj.weight": 0.004351351410150528,
+    "layers.2.mlp.up_proj.weight": 0.004714037291705608,
+    "layers.2.mlp.down_proj.weight": 0.004528596997261047,
+    "layers.3.self_attn.q_proj.weight": 0.0038308908697217703,
+    "layers.3.self_attn.k_proj.weight": 0.004288442898541689,
+    "layers.3.self_attn.v_proj.weight": 0.002916838275268674,
+    "layers.3.self_attn.o_proj.weight": 0.002876109443604946,
+    "layers.3.mlp.gate_proj.weight": 0.0045018442906439304,
+    "layers.3.mlp.up_proj.weight": 0.004619466606527567,
+    "layers.3.mlp.down_proj.weight": 0.0049293567426502705
+   },
+   "lr": 0.01
+  }
+ ]
+}

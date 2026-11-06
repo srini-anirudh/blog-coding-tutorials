@@ -1,0 +1,48 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/what-an-optimizer-actually-does/scripts/01_landscapes.py
+best lr per optimizer from 13 values in [1e-3, 1]; tolerance f - f* < 0.001
+
+## ill-conditioned bowl, k=29  (start (-4.0, 1.5), 300 steps)
+optimizer    best lr                 result
+SGD           0.0562               78 steps
+Momentum      0.0100               59 steps
+Nesterov      0.0316               10 steps
+RMSProp       0.5623                6 steps
+AdamW         0.1778               60 steps
+Muon-style    0.1778               86 steps
+
+## same bowl rotated 45 deg  (start (-4.0, 1.5), 300 steps)
+optimizer    best lr                 result
+SGD           0.0562               64 steps
+Momentum      0.0316               47 steps
+Nesterov      0.0316               10 steps
+RMSProp       0.5623               67 steps
+AdamW         1.0000               85 steps
+Muon-style    0.1778              106 steps
+
+## rosenbrock valley  (start (-1.5, 2.0), 3000 steps)
+optimizer    best lr                 result
+SGD              nan      not in 3000 steps
+Momentum      0.0018              309 steps
+Nesterov      0.0010              557 steps
+RMSProp          nan      not in 3000 steps
+AdamW         1.0000              415 steps
+Muon-style    0.0316              231 steps
+
+## saddle + plateau  (start (2.0, 0.001), 300 steps)
+optimizer    best lr                 result
+SGD           0.5623               17 steps
+Momentum      0.5623               53 steps
+Nesterov      0.5623               13 steps
+RMSProp       0.1000               10 steps
+AdamW         1.0000               17 steps
+Muon-style    0.5623               45 steps
+
+## noisy bowl, k=29  (start (-4.0, 1.5), 300 steps)
+optimizer    best lr                 result
+SGD           0.0178 mean gap 4.02e-02 (last 50)
+Momentum      0.0018 mean gap 2.48e-02 (last 50)
+Nesterov      0.0018 mean gap 2.41e-02 (last 50)
+RMSProp       0.0316 mean gap 2.68e-02 (last 50)
+AdamW         0.0562 mean gap 2.48e-02 (last 50)
+Muon-style    0.0316 mean gap 5.54e-02 (last 50)

@@ -1,0 +1,78 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/what-an-optimizer-actually-does/scripts/08_train_compare.py --table",
+ "results": {
+  "SGD + momentum": {
+   "best_lr": 0.1,
+   "val_loss": 2.5137096405029298,
+   "train_loss": 2.4579,
+   "state_bytes_per_param": 4.0,
+   "sweep": "2.564 2.514 2.610",
+   "update_ratio_median": 0.0006341123953461647,
+   "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132"
+  },
+  "AdamW": {
+   "best_lr": 0.003,
+   "val_loss": 1.9311281800270081,
+   "train_loss": 1.7799,
+   "state_bytes_per_param": 8.0,
+   "sweep": "1.964 1.931 2.018",
+   "update_ratio_median": 0.0026370713021606207,
+   "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132"
+  },
+  "Adam + L2": {
+   "best_lr": 0.01,
+   "val_loss": 3.230849862098694,
+   "train_loss": 3.2075,
+   "state_bytes_per_param": 8.0,
+   "sweep": "3.256 3.387 3.231",
+   "update_ratio_median": 0.1652912199497223,
+   "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132"
+  },
+  "Adam + L2 1e-3": {
+   "best_lr": 0.003,
+   "val_loss": 2.0262521743774413,
+   "train_loss": 1.9197,
+   "state_bytes_per_param": 8.0,
+   "sweep": "2.149 2.026 2.288",
+   "update_ratio_median": 0.004504258744418621,
+   "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132"
+  },
+  "8-bit AdamW": {
+   "best_lr": 0.003,
+   "val_loss": 1.918374490737915,
+   "train_loss": 1.7394,
+   "state_bytes_per_param": 2.0488070539419088,
+   "sweep": "1.959 1.918 2.224",
+   "update_ratio_median": 0.0027544957119971514,
+   "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132"
+  },
+  "Lion": {
+   "best_lr": 0.001,
+   "val_loss": 2.088792061805725,
+   "train_loss": 1.9919,
+   "state_bytes_per_param": 4.0,
+   "sweep": "3.188 2.386 2.089 2.253",
+   "update_ratio_median": 0.0017139773117378354,
+   "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132"
+  },
+  "Adafactor": {
+   "best_lr": 0.003,
+   "val_loss": 1.99972505569458,
+   "train_loss": 1.8897,
+   "state_bytes_per_param": 0.056431535269709544,
+   "sweep": "2.014 2.000 2.445",
+   "update_ratio_median": 0.010389301925897598,
+   "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132"
+  },
+  "Muon + AdamW": {
+   "best_lr": 0.01,
+   "val_loss": 1.7239082217216493,
+   "train_loss": 1.5078,
+   "state_bytes_per_param": 4.1759336099585065,
+   "sweep": "2.305 1.878 1.724 1.754 1.917",
+   "update_ratio_median": 0.002187064616009593,
+   "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132"
+  }
+ }
+}

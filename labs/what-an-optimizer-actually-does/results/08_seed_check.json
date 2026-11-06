@@ -1,0 +1,18 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/what-an-optimizer-actually-does/scripts/08_train_compare.py --seed-check",
+ "val_loss_by_seed": {
+  "AdamW": [
+   1.9423871994018556,
+   1.9581877827644347
+  ],
+  "8-bit AdamW": [
+   1.9334123849868774,
+   1.9371779918670655
+  ],
+  "Muon + AdamW": [
+   1.7232436537742615,
+   1.734097409248352
+  ]
+ }
+}

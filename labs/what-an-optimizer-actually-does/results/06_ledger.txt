@@ -1,0 +1,48 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/what-an-optimizer-actually-does/scripts/06_ledger.py
+## Measured optimizer state on a small model (one step taken)
+TinyLLM, hidden 128, 4 layers: 771,200 parameters; 95.6% of them are hidden 2-D weights
+optimizer                   state bytes / param
+SGD                                       0.000
+SGD + momentum                            4.000
+Lion                                      4.000
+AdamW (fp32 m, v)                         8.000
+8-bit AdamW (block 2048)                  2.049
+Adafactor (b1 = 0)                        0.056
+Muon + AdamW hybrid                       4.176
+torch.optim.AdamW                         8.000
+hybrid check: 4 B on 95.6% + 8 B on the rest = 4.176
+
+## Per-parameter totals, mixed precision: bf16 weights 2 + bf16 grads 2 + fp32 master 4 + K
+SGD                K= 0  total  8 B/param  7B model    56 GB
+Adafactor          K= 0  total  8 B/param  7B model    56 GB
+8-bit AdamW        K= 2  total 10 B/param  7B model    70 GB
+SGD + momentum     K= 4  total 12 B/param  7B model    84 GB
+Lion               K= 4  total 12 B/param  7B model    84 GB
+Muon (2-D)         K= 4  total 12 B/param  7B model    84 GB
+AdamW bf16 states  K= 4  total 12 B/param  7B model    84 GB
+AdamW              K= 8  total 16 B/param  7B model   112 GB
+
+## Sharding a 7B AdamW run over N = 8 ranks (K = 12: master 4 + m 4 + v 4)
+replicated     16.000 B/param  112.00 GB per rank
+ZeRO-1          5.500 B/param   38.50 GB per rank
+ZeRO-2          3.750 B/param   26.25 GB per rank
+ZeRO-3 / FSDP   2.000 B/param   14.00 GB per rank
+
+## Checkpoint, step traffic, offload
+checkpoint = master + m + v = 12 B/param = 84 GB; bf16 weights 14 GB; ratio 6.0x
+fused AdamW traffic 28 B/param, intensity 12/28 = 0.43 FLOP/B; H100 ridge 989e12/3.35e12 = 295 FLOP/B; gap 689x
+7B step at 3.35 TB/s: 58.5 ms unsharded, 7.3 ms per rank at ZeRO-3 on 8
+offload: 84 GB over 64 GB/s PCIe = 1.31 s each way
+
+## Shape-dependent state
+4096 x 4096: Adafactor 16,777,216 -> 8,192 values (2048x); Shampoo (m^2 + n^2)/mn = 2.00 floats/param
+4096 x 11008: Adafactor 45,088,768 -> 15,104 values (2985x); Shampoo (m^2 + n^2)/mn = 3.06 floats/param
+
+## Muon cost: 5 Newton-Schulz steps on an m x n matrix, n = min(m, n)
+4096 x 4096: 122,880 FLOP/param (20n + 10n^2/m = 122,880); vs 6T at T = 4M tokens: 0.51%
+11008 x 4096: 97,161 FLOP/param (20n + 10n^2/m = 97,161); vs 6T at T = 4M tokens: 0.40%
+post's shortcut 3.3 d/T with d = 4096: 0.34% (drops the n^2/m term)
+Muon gather, 2 B/param on 70% hidden: 9.8 GB/step; NVLink 400 GB/s 24 ms, EFA 40 GB/s 245 ms
+Muon gather, 2 B/param on 85% hidden: 11.9 GB/step; NVLink 400 GB/s 30 ms, EFA 40 GB/s 298 ms
+Muon gather, 2 B/param on 93% hidden: 13.0 GB/step; NVLink 400 GB/s 32 ms, EFA 40 GB/s 325 ms

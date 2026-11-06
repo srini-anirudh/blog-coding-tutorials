@@ -1,0 +1,16 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/what-an-optimizer-actually-does/benchmarks/step_cost.py --gpu
+## 1. Fused AdamW on one flat fp32 tensor
+N =    16.8 M     0.277 ms    1698.7 GB/s achieved
+N =    67.1 M     0.803 ms    2338.6 GB/s achieved
+N =   268.4 M     2.672 ms    2812.6 GB/s achieved
+
+## 2. 217 tensors, 341.1 M params (d=1024, ffn=2816, 24 layers): ms per step
+optlab.Adam (Python loop)      27.33 ms     349.5 GB/s
+torch for-loop                 29.49 ms     323.8 GB/s
+torch foreach                  11.48 ms     832.2 GB/s
+torch fused                     4.98 ms    1917.1 GB/s
+
+## 3. Five Newton-Schulz steps in bfloat16
+4096 x 4096:     3.68 ms   560.68 TFLOP/s achieved  (122,880 FLOP/param)
+11008 x 4096:     8.87 ms   493.97 TFLOP/s achieved  (97,161 FLOP/param)

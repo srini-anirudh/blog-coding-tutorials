@@ -1,0 +1,6 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/what-an-optimizer-actually-does/scripts/08_train_compare.py --seed-check
+best lr from the sweep, new seeds change the model init and the data order; val loss per seed
+AdamW          lr 0.003: seed 1 1.942  seed 2 1.958
+8-bit AdamW    lr 0.003: seed 1 1.933  seed 2 1.937
+Muon + AdamW   lr 0.01: seed 1 1.723  seed 2 1.734

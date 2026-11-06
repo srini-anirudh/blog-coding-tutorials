@@ -1,0 +1,30 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/what-an-optimizer-actually-does/scripts/02_momentum.py
+## 1. Two conventions, constant gradient g = 1, b = 0.9, 200 steps
+accumulator  m -> 10.0000
+EMA          m -> 1.0000
+
+## 2. EMA window: weight (1-b) b^k on the gradient from k steps ago
+b=0.9    sum of weights 1.0000  1/(1-b)    10.0  mean age     9.0  (b/(1-b) = 9.0)
+b=0.99   sum of weights 1.0000  1/(1-b)   100.0  mean age    99.0  (b/(1-b) = 99.0)
+b=0.999  sum of weights 1.0000  1/(1-b)  1000.0  mean age   999.0  (b/(1-b) = 999.0)
+
+## 3. Contraction per step on a 50-dim quadratic, eigenvalues in [1, k]
+  kappa     b*  GD theory    GD meas  HB theory    HB meas  GD steps to 1e-6  HB steps to 1e-6
+    100  0.669   0.980198   0.980198   0.818182   0.819040               612                85
+  10000  0.961   0.999800   0.999800   0.980198   0.980651             61039               972
+(SGD's accumulator form: the heavy-ball lr is 4/(sqrt L + sqrt mu)^2 with m = b m + g.)
+
+## 4. kappa = 100, b varied, lr tuned for each b on a grid
+     b  best lr     rate  steps to 1e-6   sign flips of slowest coord, 300 steps
+   0.3   0.0251   0.9627           None                                        0
+   0.5   0.0282   0.9394            193                                        0
+ 0.669   0.0316   0.8541             82                                        0
+   0.8   0.0112   0.8913            130                                        0
+   0.9   0.0063   0.9481            257                                        6
+  0.95   0.0282   0.9737           None                                       16
+(with lr retuned, b below b* is over-damped: slower and no ringing; above b* it rings)
+
+## 5. Heavy ball vs Nesterov, kappa = 100, lr = 1/L, b = 0.9
+heavy ball  largest overshoot of slowest coord 0.153  sign flips  56  steps to 1e-6 258
+Nesterov    largest overshoot of slowest coord 0.121  sign flips  54  steps to 1e-6 213

@@ -1,0 +1,26 @@
+# hardware: AMD EPYC 7R13, 4 threads, torch 2.15.0+cu132
+# command: python labs/what-an-optimizer-actually-does/scripts/04_weight_decay.py
+## 1. The idealized recursion, u ~ N(0, 1) i.i.d., 4096 coordinates
+      lr    wd  measured RMS  sqrt(lr/2wd)
+   3e-04   0.1        0.0385        0.0387
+   1e-03   0.1        0.0700        0.0707
+   1e-02   0.1        0.2244        0.2236
+   1e-03   1.0        0.0224        0.0224
+   5e-04   0.1        0.0498        0.0500
+halving lr from 1e-3 to 5e-4 at wd 0.1: ratio 0.711 (sqrt(1/2) = 0.707)
+
+## 2. AdamW on a scale-invariant layer, 6000 steps, averages over the second half
+RMS(u) is the per-step RMS of Adam's direction m_hat/(sqrt(v_hat)+eps), decay term removed
+  b1     lr    wd   RMS(W)  sqrt(lr/2wd)  ratio  RMS(u)     loss
+ 0.9  1e-02   0.1   0.2610        0.2236   1.17   0.157   0.0028
+ 0.9  1e-02   0.5   0.1323        0.1000   1.32   0.175   0.0032
+ 0.9  5e-03   0.5   0.1000        0.0707   1.41   0.181   0.0029
+ 0.9  1e-02   2.0   0.0603        0.0500   1.21   0.191   0.0034
+ 0.0  1e-02   0.1   0.2945        0.2236   1.32   0.737   0.0029
+ 0.0  1e-02   0.5   0.1685        0.1000   1.69   0.868   0.0033
+ 0.0  5e-03   0.5   0.1198        0.0707   1.69   0.882   0.0030
+ 0.0  1e-02   2.0   0.0878        0.0500   1.76   0.935   0.0039
+
+## 3. Cosine schedule from peak to 0: share of the total decay sum(lr(t) wd) applied in each tenth
+0.198 0.189 0.170 0.145 0.116 0.084 0.055 0.030 0.011 0.002
+last tenth: 0.16% of all decay; first tenth: 19.83%

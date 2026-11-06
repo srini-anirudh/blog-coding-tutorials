@@ -1,0 +1,16 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/what-an-optimizer-actually-does/benchmarks/step_cost.py
+## 1. Fused AdamW on one flat fp32 tensor
+N =     1.0 M    21.659 ms       1.4 GB/s achieved
+N =     4.2 M    15.409 ms       7.6 GB/s achieved
+N =    16.8 M    17.024 ms      27.6 GB/s achieved
+
+## 2. 73 tensors, 7.5 M params (d=256, ffn=704, 8 layers): ms per step
+optlab.Adam (Python loop)      27.84 ms       7.5 GB/s
+torch for-loop                 23.45 ms       8.9 GB/s
+torch foreach                  36.44 ms       5.7 GB/s
+torch fused                     7.80 ms      26.8 GB/s
+
+## 3. Five Newton-Schulz steps in float32
+1024 x 1024:   492.47 ms     0.07 TFLOP/s achieved  (30,720 FLOP/param)
+2816 x 1024:  1230.39 ms     0.06 TFLOP/s achieved  (24,204 FLOP/param)

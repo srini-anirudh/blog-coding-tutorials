@@ -1,0 +1,20 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/what-an-optimizer-actually-does/scripts/06_ledger.py",
+ "measured_state_bytes_per_param": {
+  "SGD": 0.0,
+  "SGD + momentum": 4.0,
+  "Lion": 4.0,
+  "AdamW (fp32 m, v)": 8.0,
+  "8-bit AdamW (block 2048)": 2.0488070539419088,
+  "Adafactor (b1 = 0)": 0.056431535269709544,
+  "Muon + AdamW hybrid": 4.1759336099585065,
+  "torch.optim.AdamW": 8.0
+ },
+ "zero_bytes_per_param": {
+  "replicated": 16,
+  "ZeRO-1": 5.5,
+  "ZeRO-2": 3.75,
+  "ZeRO-3 / FSDP": 2.0
+ }
+}

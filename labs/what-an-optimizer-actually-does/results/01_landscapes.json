@@ -1,0 +1,137 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/what-an-optimizer-actually-does/scripts/01_landscapes.py",
+ "tolerance": 0.001,
+ "results": {
+  "ill-conditioned bowl, k=29": {
+   "SGD": {
+    "best_lr": 0.05623413251903491,
+    "score": 78.0
+   },
+   "Momentum": {
+    "best_lr": 0.01,
+    "score": 59.0
+   },
+   "Nesterov": {
+    "best_lr": 0.03162277660168379,
+    "score": 10.0
+   },
+   "RMSProp": {
+    "best_lr": 0.5623413251903491,
+    "score": 6.0
+   },
+   "AdamW": {
+    "best_lr": 0.1778279410038923,
+    "score": 60.0
+   },
+   "Muon-style": {
+    "best_lr": 0.1778279410038923,
+    "score": 86.0
+   }
+  },
+  "same bowl rotated 45 deg": {
+   "SGD": {
+    "best_lr": 0.05623413251903491,
+    "score": 64.0
+   },
+   "Momentum": {
+    "best_lr": 0.03162277660168379,
+    "score": 47.0
+   },
+   "Nesterov": {
+    "best_lr": 0.03162277660168379,
+    "score": 10.0
+   },
+   "RMSProp": {
+    "best_lr": 0.5623413251903491,
+    "score": 67.0
+   },
+   "AdamW": {
+    "best_lr": 1.0,
+    "score": 85.0
+   },
+   "Muon-style": {
+    "best_lr": 0.1778279410038923,
+    "score": 106.0
+   }
+  },
+  "rosenbrock valley": {
+   "SGD": {
+    "best_lr": null,
+    "score": null
+   },
+   "Momentum": {
+    "best_lr": 0.0017782794100389228,
+    "score": 309.0
+   },
+   "Nesterov": {
+    "best_lr": 0.001,
+    "score": 557.0
+   },
+   "RMSProp": {
+    "best_lr": null,
+    "score": null
+   },
+   "AdamW": {
+    "best_lr": 1.0,
+    "score": 415.0
+   },
+   "Muon-style": {
+    "best_lr": 0.03162277660168379,
+    "score": 231.0
+   }
+  },
+  "saddle + plateau": {
+   "SGD": {
+    "best_lr": 0.5623413251903491,
+    "score": 17.0
+   },
+   "Momentum": {
+    "best_lr": 0.5623413251903491,
+    "score": 53.0
+   },
+   "Nesterov": {
+    "best_lr": 0.5623413251903491,
+    "score": 13.0
+   },
+   "RMSProp": {
+    "best_lr": 0.1,
+    "score": 10.0
+   },
+   "AdamW": {
+    "best_lr": 1.0,
+    "score": 17.0
+   },
+   "Muon-style": {
+    "best_lr": 0.5623413251903491,
+    "score": 45.0
+   }
+  },
+  "noisy bowl, k=29": {
+   "SGD": {
+    "best_lr": 0.01778279410038923,
+    "score": 0.0401766005398822
+   },
+   "Momentum": {
+    "best_lr": 0.0017782794100389228,
+    "score": 0.024762224771548064
+   },
+   "Nesterov": {
+    "best_lr": 0.0017782794100389228,
+    "score": 0.024077134900260717
+   },
+   "RMSProp": {
+    "best_lr": 0.03162277660168379,
+    "score": 0.02678938402942731
+   },
+   "AdamW": {
+    "best_lr": 0.05623413251903491,
+    "score": 0.024778701404342428
+   },
+   "Muon-style": {
+    "best_lr": 0.03162277660168379,
+    "score": 0.05537694525416009
+   }
+  }
+ }
+}

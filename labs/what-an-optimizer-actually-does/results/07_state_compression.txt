@@ -1,0 +1,48 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/what-an-optimizer-actually-does/scripts/07_state_compression.py
+AdamW, 200 steps, final train loss 2.061
+
+## 1. Adafactor's rank-1 second moment on real Adam state
+tensor                                 shape          storage  |V-Vhat|/|V|  cos(update)
+embed_tokens.weight               (256, 128)   32768 -> 384            0.299        0.965
+layers.0.self_attn.q_proj.weight  (128, 128)   16384 -> 256            0.246        0.993
+layers.0.self_attn.k_proj.weight   (64, 128)    8192 -> 192            0.267        0.988
+layers.0.self_attn.v_proj.weight   (64, 128)    8192 -> 192            0.172        0.993
+layers.0.self_attn.o_proj.weight  (128, 128)   16384 -> 256            0.205        0.996
+layers.0.mlp.gate_proj.weight     (352, 128)   45056 -> 480            0.391        0.984
+layers.0.mlp.up_proj.weight       (352, 128)   45056 -> 480            0.366        0.983
+layers.0.mlp.down_proj.weight     (128, 352)   45056 -> 480            0.333        0.990
+layers.1.self_attn.q_proj.weight  (128, 128)   16384 -> 256            0.164        0.994
+layers.1.self_attn.k_proj.weight   (64, 128)    8192 -> 192            0.412        0.975
+layers.1.self_attn.v_proj.weight   (64, 128)    8192 -> 192            0.339        0.988
+layers.1.self_attn.o_proj.weight  (128, 128)   16384 -> 256            0.356        0.982
+layers.1.mlp.gate_proj.weight     (352, 128)   45056 -> 480            0.397        0.980
+layers.1.mlp.up_proj.weight       (352, 128)   45056 -> 480            0.390        0.985
+layers.1.mlp.down_proj.weight     (128, 352)   45056 -> 480            0.337        0.989
+layers.2.self_attn.q_proj.weight  (128, 128)   16384 -> 256            0.280        0.992
+layers.2.self_attn.k_proj.weight   (64, 128)    8192 -> 192            0.471        0.964
+layers.2.self_attn.v_proj.weight   (64, 128)    8192 -> 192            0.369        0.986
+layers.2.self_attn.o_proj.weight  (128, 128)   16384 -> 256            0.269        0.974
+layers.2.mlp.gate_proj.weight     (352, 128)   45056 -> 480            0.415        0.982
+layers.2.mlp.up_proj.weight       (352, 128)   45056 -> 480            0.381        0.987
+layers.2.mlp.down_proj.weight     (128, 352)   45056 -> 480            0.383        0.988
+layers.3.self_attn.q_proj.weight  (128, 128)   16384 -> 256            0.211        0.994
+layers.3.self_attn.k_proj.weight   (64, 128)    8192 -> 192            0.150        0.966
+layers.3.self_attn.v_proj.weight   (64, 128)    8192 -> 192            0.222        0.992
+layers.3.self_attn.o_proj.weight  (128, 128)   16384 -> 256            0.356        0.979
+layers.3.mlp.gate_proj.weight     (352, 128)   45056 -> 480            0.443        0.980
+layers.3.mlp.up_proj.weight       (352, 128)   45056 -> 480            0.405        0.986
+layers.3.mlp.down_proj.weight     (128, 352)   45056 -> 480            0.378        0.985
+mean cosine between Adafactor-style and Adam updates: 0.984
+
+## 2. 8-bit state: relative error, pooled over all 2-D tensors
+scheme                    err m    err v  err u (m only)  err u (v only)  err u (both)
+per-tensor, linear        0.104    0.048           0.662       11714.053     11909.429
+block 2048, linear        0.012    0.007           0.035         601.107       601.627
+per-tensor, log           0.026    0.019           0.025           0.009         0.027
+block 2048, log           0.025    0.019           0.025           0.009         0.027
+block 2048 linear: 2.8% of nonzero v entries round to 0, so m/(sqrt(v)+eps) becomes m/eps there
+
+## 3. One outlier: multiply a single entry of m by 1000
+per-tensor  log code: 81.2% of m entries become 0; error on the rest 0.161
+block 2048  log code: 0.3% of m entries become 0; error on the rest 0.025

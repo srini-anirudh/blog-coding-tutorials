@@ -1,0 +1,14 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/what-an-optimizer-actually-does/scripts/08_train_compare.py --table
+TinyLLM 0.77 M params, Tiny Shakespeare bytes, 300 steps x 16 x 128 tokens, warmup 30, cosine to 10%
+val loss = mean over 10 held-out batches; ratio = RMS(dW)/RMS(W) per 2-D tensor on the last step
+optimizer       lr sweep: val loss                best  B/param  s/run    ratio median [min, max]
+SGD + momentum  2.564 2.514 2.610                2.514    4.000    101  6.34e-04 [2.6e-05, 3.8e-03]
+AdamW           1.964 1.931 2.018                1.931    8.000     98  2.64e-03 [5.5e-04, 4.6e-03]
+Adam + L2       3.256 3.387 3.231                3.231    8.000    118  1.65e-01 [6.0e-04, 2.9e-01]
+Adam + L2 1e-3  2.149 2.026 2.288                2.026    8.000     64  4.50e-03 [8.2e-04, 8.2e-02]
+8-bit AdamW     1.959 1.918 2.224                1.918    2.049    136  2.75e-03 [5.9e-04, 4.7e-03]
+Lion            3.188 2.386 2.089 2.253          2.089    4.000     87  1.71e-03 [6.8e-04, 4.7e-03]
+Adafactor       2.014 2.000 2.445                2.000    0.056     62  1.04e-02 [2.4e-03, 2.4e-02]
+Muon + AdamW    2.305 1.878 1.724 1.754 1.917    1.724    4.176    101  2.19e-03 [9.3e-04, 3.1e-03]
+lr sweeps: SGD 0.03/0.1/0.3; Lion 1e-4 to 3e-3; Muon 1e-3 to 1e-1; all others 1e-3/3e-3/1e-2
