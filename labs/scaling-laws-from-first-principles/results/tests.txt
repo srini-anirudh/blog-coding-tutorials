@@ -1,0 +1,4 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python -m pytest labs/scaling-laws-from-first-principles -m 'not slow and not gpu and not network' -q
+.....................                                                    [100%]
+21 passed in 9.97s

@@ -1,0 +1,41 @@
+# sweep hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, bf16 autocast
+# command: python scripts/08_emergence.py   (reads the sweep, CPU)
+
+All sweep runs, worst to best validation loss.
+'100-item' rounds exact16 to what a 100-question test set can resolve (steps of 0.01).
+
+      C model      val loss  exact1  exact4  exact8  exact16 exact1^16 100-item
+  1e+14 d192-L6      2.9280  0.4049  0.0508  0.0101  0.00028  0.000001     0.00
+  1e+14 d160-L5      2.5708  0.4512  0.0674  0.0124  0.00037  0.000003     0.00
+  1e+14 d64-L2       2.4612  0.4596  0.0691  0.0126  0.00036  0.000004     0.00
+  3e+14 d64-L2       2.3373  0.4779  0.0770  0.0138  0.00035  0.000007     0.00
+  1e+14 d128-L4      2.3103  0.4874  0.0830  0.0153  0.00040  0.000010     0.00
+  3e+14 d256-L6      2.2806  0.4936  0.0859  0.0159  0.00045  0.000012     0.00
+  1e+14 d96-L3       2.2150  0.4992  0.0873  0.0159  0.00045  0.000015     0.00
+  1e+15 d384-L8      2.0494  0.5277  0.1049  0.0206  0.00066  0.000036     0.00
+  3e+14 d192-L6      2.0403  0.5292  0.1055  0.0205  0.00073  0.000038     0.00
+  3e+14 d96-L3       2.0403  0.5261  0.1024  0.0193  0.00058  0.000034     0.00
+  3e+14 d128-L4      2.0059  0.5321  0.1077  0.0212  0.00082  0.000041     0.00
+  1e+15 d96-L3       1.9978  0.5319  0.1061  0.0205  0.00066  0.000041     0.00
+  3e+14 d160-L5      1.9639  0.5385  0.1107  0.0216  0.00077  0.000050     0.00
+  1e+15 d320-L7      1.8727  0.5536  0.1213  0.0252  0.00105  0.000078     0.00
+  1e+15 d160-L5      1.8287  0.5604  0.1260  0.0261  0.00106  0.000095     0.00
+  1e+15 d128-L4      1.8242  0.5604  0.1271  0.0264  0.00103  0.000095     0.00
+  3e+15 d128-L4      1.7981  0.5648  0.1296  0.0272  0.00113  0.000107     0.00
+  1e+15 d256-L6      1.7544  0.5728  0.1357  0.0291  0.00138  0.000134     0.00
+  1e+15 d192-L6      1.7516  0.5738  0.1366  0.0294  0.00146  0.000138     0.00
+  3e+15 d448-L9      1.6996  0.5824  0.1433  0.0315  0.00164  0.000175     0.00
+  3e+15 d160-L5      1.6838  0.5843  0.1442  0.0320  0.00157  0.000185     0.00
+  3e+15 d192-L6      1.6730  0.5865  0.1461  0.0324  0.00174  0.000196     0.00
+  3e+15 d384-L8      1.6304  0.5941  0.1533  0.0351  0.00192  0.000241     0.00
+  3e+15 d256-L6      1.6104  0.5970  0.1554  0.0356  0.00197  0.000261     0.00
+  3e+15 d320-L7      1.6003  0.5988  0.1564  0.0359  0.00202  0.000274     0.00
+
+From the worst to the best run, val loss falls 1.328 nats and next-token accuracy rises 0.405 -> 0.599 (x1.48).
+Exact match on 16 tokens rises 0.00028 -> 0.00202 (x7).
+Per-token accuracy moves by tens of percent; the 16-token score moves by a large factor over the same models,
+because an exact match multiplies many per-token successes. A 100-question test set (last column) scores
+zero for every model here, so it cannot see any of this progress. The sweep spans only about one order of
+magnitude of compute and every model is far from solving 16-token spans, so no sharp transition appears;
+this shows the amplification and the resolution problem, not an emergent jump.
+Measured exact16 is well above exact1^16 because errors cluster: easy spans are easy for every token in them.

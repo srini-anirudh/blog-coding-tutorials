@@ -1,0 +1,14 @@
+# training hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, bf16 autocast
+# model d192-L6, N_total 3,443,136, training tokens 48,398,336 in every run
+
+epochs    unique  val loss vs 1 epoch  D_eff (R*=15.4) law at D_eff
+   1.0    48.41M    1.7607     +0.00%            48.4M       1.7285
+   2.0    24.20M    1.7613     +0.03%            47.6M       1.7307
+   4.0    12.10M    1.7804     +1.12%            45.1M       1.7386
+   8.0     6.05M    1.8651     +5.93%            40.1M       1.7569
+  16.0     3.03M    2.2104    +25.54%            32.0M       1.7984
+  32.0     1.51M    3.9174   +122.49%            21.7M       1.8959
+  64.0     0.76M    6.2424   +254.54%            12.2M       2.1285
+
+law: the parametric fit to the 6*N_total sweep (results/fit_sweep.json), evaluated at N = N_total and D = D_eff.
+At 1 epoch the law predicts 1.7285.

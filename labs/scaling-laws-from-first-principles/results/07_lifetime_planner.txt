@@ -1,0 +1,40 @@
+# hardware: CPU (pure arithmetic)
+# command: python scripts/07_lifetime_planner.py
+
+1. Lifetime cost 6 N D + 2 N T_inf at fixed loss (Hoffmann constants, Figure 9)
+   target loss 1.900; train-optimal model N = 4.81e+10, D = 4.86e+12
+       T_inf          N          D      D/N  N vs T=0  cost vs train-opt
+     0.0e+00   4.81e+10   4.86e+12      101     1.00x              1.00x
+     1.0e+11   4.76e+10   4.91e+12      103     0.99x              1.00x
+     1.0e+12   4.37e+10   5.36e+12      123     0.91x              1.00x
+     1.0e+13   2.96e+10   8.62e+12      292     0.61x              0.90x
+     1.0e+14   1.61e+10   2.55e+13     1582     0.33x              0.52x
+     1.0e+15      1e+10   1.09e+14    10842     0.21x              0.27x
+   (T_inf in tokens; the last column is lifetime FLOPs relative to serving the train-optimal model)
+   N falls monotonically as inference demand grows, and tokens per parameter rise.
+
+1b. The same calculation with the law fitted to this lab's TinyStories sweep (05_fit_sweep.py)
+   target loss 1.593; train-optimal model N = 7.49e+06, D = 6.68e+07
+       T_inf          N          D      D/N  N vs T=0  cost vs train-opt
+     0.0e+00   7.49e+06   6.68e+07        9     1.00x              1.00x
+     1.0e+09   4.52e+06   1.58e+08       35     0.60x              0.74x
+     1.0e+10   3.74e+06   4.19e+08      112     0.50x              0.55x
+     1.0e+11   3.47e+06   1.26e+09      362     0.46x              0.48x
+     1.0e+12   3.38e+06    3.9e+09     1153     0.45x              0.46x
+   (T_inf in tokens; the last column is lifetime FLOPs relative to serving the train-optimal model)
+
+2. Repeated data (Muennighoff et al. 2023 form, R* = 15.4, Figure 10)
+   unique corpus U = 1e+12 tokens
+     1 epochs:  1.0e+12 tokens seen, effective 1.00e+12 (100.0% of seen)
+     2 epochs:  2.0e+12 tokens seen, effective 1.97e+12 ( 98.4% of seen)
+     4 epochs:  4.0e+12 tokens seen, effective 3.73e+12 ( 93.1% of seen)
+     8 epochs:  8.0e+12 tokens seen, effective 6.63e+12 ( 82.8% of seen)
+    16 epochs:  1.6e+13 tokens seen, effective 1.06e+13 ( 66.2% of seen)
+    32 epochs:  3.2e+13 tokens seen, effective 1.43e+13 ( 44.8% of seen)
+    64 epochs:  6.4e+13 tokens seen, effective 1.61e+13 ( 25.2% of seen)
+   ceiling (1 + R*) U = 1.64e+13: no number of epochs gets past it in this functional form
+
+3. The planner (Figure 16 defaults): 1,024 H100 for 720 h at 42% MFU, 6T unique tokens
+   lifetime tokens served 0e+00: budget C = 1.103e+24 FLOPs -> N* = 43.2B, D* = 4.26T (99 per parameter), 0.71 epochs of the corpus
+   lifetime tokens served 1e+13: budget C = 1.103e+24 FLOPs -> N* = 43.2B, D* = 4.26T (99 per parameter), 0.71 epochs of the corpus; serving-aware N = 25.6B
+   Peak 989 TFLOP/s is the vendor's dense BF16 figure. Constants are Hoffmann's, not yours.

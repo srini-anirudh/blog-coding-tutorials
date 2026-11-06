@@ -1,0 +1,44 @@
+# hardware: CPU (pure arithmetic)
+# command: python scripts/02_allocation.py
+
+Loss law: L = 1.69 + 406.4 N^-0.34 + 410.7 D^-0.28  (Hoffmann et al. 2022, Approach 3)
+Predicted exponents: N* ~ C^0.4516, D* ~ C^0.5484, sum 1.0000
+
+1. Closed form against a brute-force search along each budget curve
+        C   N* closed   N* search         D*   D*/N*      L*  aT_N / bT_D
+ 1.00e+19  2.2796e+08  2.2797e+08  7.311e+09    32.1  2.9857     1.000000
+ 1.00e+21  1.8242e+09  1.8241e+09  9.136e+10    50.1  2.3289     1.000000
+ 1.00e+23  1.4598e+10  1.4598e+10  1.142e+12    78.2  2.0050     1.000000
+ 5.76e+23  3.2190e+10  3.2191e+10  2.982e+12    92.6  1.9307     1.000000
+ 3.80e+25  2.1348e+11  2.1349e+11  2.967e+13   139.0  1.8165     1.000000
+The last column is the section 5 invariant alpha*T_N = beta*T_D: it is 1 at every budget.
+
+2. Gopher's budget, 5.76e23 FLOPs (the post's Approximation 00)
+   these constants recommend N = 32.2B at 93 tokens per parameter;
+   Chinchilla trained 70B on 1.4T (20 per parameter). L(70B, 1.4T) = 1.9366, L at the recommendation = 1.9307
+
+3. How flat is the valley? Loss on the 1e23 budget curve, relative to its minimum
+   N =  0.125 x N*: loss 2.0750  (+0.0700)
+   N =  0.250 x N*: loss 2.0351  (+0.0301)
+   N =  0.500 x N*: loss 2.0123  (+0.0073)
+   N =  1.000 x N*: loss 2.0050  (+0.0000)
+   N =  2.000 x N*: loss 2.0121  (+0.0071)
+   N =  4.000 x N*: loss 2.0335  (+0.0285)
+   N =  8.000 x N*: loss 2.0694  (+0.0644)
+   A factor of 2 either way costs under 0.01 nats.
+   C = 1e+19: N*/4 costs +0.1238, 4 N* costs +0.1171 -> too small is the worse mistake under these constants
+   C = 1e+23: N*/4 costs +0.0301, 4 N* costs +0.0285 -> too small is the worse mistake under these constants
+   C = 1e+25: N*/4 costs +0.0148, 4 N* costs +0.0140 -> too small is the worse mistake under these constants
+
+4. Tokens per parameter drifts as C^((alpha-beta)/(alpha+beta))
+   exponent 0.0968; D*/N* goes from 50.1 at 1e21 to 122.1 at 1e25 (x2.438, 10^(4*0.0968) = 2.438)
+   Aside 01: anchored at 20 for Chinchilla's 5.8e23 and moved to 3.8e25: 20 x 66^0.097 = 30.0  (Meta measured 41)
+   with alpha = beta = 0.31 the ratio is 1.03, 1.03, 1.03 at 1e19, 1e22, 1e25: constant, the only case where a fixed '20' can exist.
+
+5. Constants move the intercept, only alpha/beta moves the slope
+   published       N*(1e23) = 1.460e+10  fitted slope d log N*/d log C = 0.4516
+   A x 3           N*(1e23) = 8.587e+10  fitted slope d log N*/d log C = 0.4516
+   B / 3, E - 0.3  N*(1e23) = 8.587e+10  fitted slope d log N*/d log C = 0.4516
+
+6. Section 13: tokens per parameter for an MoE depends on which N
+   DeepSeek-V3: 22 tokens per total parameter, 400 per active parameter

@@ -1,0 +1,32 @@
+# hardware: CPU, torch 2.15.0+cu132 (FLOP counts do not depend on hardware)
+# command: python scripts/01_six_flops.py
+
+Part 1. Measured FLOPs per token, one forward + one backward pass, sequence 256.
+P = matmul weights (blocks + tied LM head). Attention scores/values are counted separately.
+
+model              P   fwd/P   bwd/P  (fwd+bwd)/P attn fwd / 4LdS attn bwd / fwd attn share
+d64-L2       368,640   2.000   4.000        6.000           1.000          2.50x      17.2%
+d128-L4    1,327,104   2.000   4.000        6.000           1.000          2.50x      18.7%
+d256-L6    5,865,472   2.000   4.000        6.000           1.000          2.50x      13.5%
+d512-L10  33,718,272   2.000   4.000        6.000           1.000          2.50x       8.3%
+
+The linear part is exactly 2 FLOPs per weight forward and 4 backward: 6 per weight per token.
+Attention is a separate, sequence-length cost. Its backward counts 2.5x its forward here, because
+PyTorch's fused attention backward recomputes the score matrix QK^T instead of storing it.
+RMSNorm, SiLU, softmax and residual adds are not matmuls and FlopCounterMode does not count them.
+
+Part 2. FLOPs per token under three published conventions, relative to the reference count
+(reference = 72 L d^2 + 6 V d + 6 L d S: linear layers, untied head, causal attention).
+L = 32, V = 100,352, S = 8,192, d_ffn = 4d, untied embeddings: the post's Figure 3 defaults.
+
+     d   reference  Kaplan 6N_ne  Chinchilla 6N  DeepSeek M  head+attn share
+  4096   4.756e+10         0.813          0.916       1.084           18.7%
+  2048   1.412e+10         0.684          0.859       1.141           31.6%
+  1024   4.643e+09         0.520          0.786       1.214           48.0%
+   512   1.718e+09         0.352          0.711       1.289           64.8%
+   256   7.078e+08         0.213          0.649       1.351           78.7%
+
+At d = 4096 the conventions agree within about 30%. As d shrinks, the head and attention, which
+6N_non-embedding ignores, become most of the work, so Kaplan's count undershoots more and more.
+Attention / linear FLOPs at d = 4096, S = 8192: unmasked 12dS/72d^2 = 0.333 (the post's S/(6d)), causal 6dS/72d^2 = 0.167.
+Note: FlopCounterMode counts attention unmasked (the full S x S score matrix), as DeepSeek's M does.

@@ -1,0 +1,28 @@
+# hardware: CPU (numpy and torch float64)
+# command: python scripts/03_fit_synthetic.py
+
+1. L(N) = 1.69 + 406.4 N^-0.34 with 1.5% multiplicative noise, fit on N = 1e7 .. 10^9.5
+   fit with a floor : E = 1.629, A = 286.7, alpha = 0.316
+   fit without floor: alpha = 0.098 (the floor is absorbed into a shallower slope)
+   extrapolated to N = 1e12 (2.5 decades out). True loss 1.7238
+     floor fitted       -> 1.6749
+     no floor           -> 1.0360
+     floor fixed at 1.20 -> 1.4185  (alpha 0.195)
+     floor fixed at 1.50 -> 1.5867  (alpha 0.265)
+     floor fixed at 1.69 -> 1.7208  (alpha 0.350)
+     floor fixed at 1.90 -> 1.9013  (alpha 0.644)
+   The fit window cannot pin the floor; the extrapolation inherits whatever floor you assume.
+
+2. IsoFLOP sweep on the Hoffmann law, 0.5% noise, 9 sizes per budget spanning 1/8 .. 8 x N*
+   C = 1e+18: valley minimum N = 7.868e+07  (true N* = 8.058e+07)
+   C = 1e+19: valley minimum N = 2.425e+08  (true N* = 2.280e+08)
+   C = 1e+20: valley minimum N = 6.450e+08  (true N* = 6.449e+08)
+   C = 1e+21: valley minimum N = 1.822e+09  (true N* = 1.824e+09)
+   fitted exponent a = 0.452; true beta/(alpha+beta) = 0.452
+   extrapolated to 1e23 (2 decades out): N = 1.476e+10, true 1.460e+10
+
+3. Parametric fit (Approach 3) on the same 36 runs: Huber loss on log L, grid of 2,000 starts
+   fitted: E = 1.714  A = 352.0  B = 473.1  alpha = 0.332  beta = 0.288
+   true  : E = 1.690  A = 406.4  B = 410.7  alpha = 0.340  beta = 0.280
+   implied a = 0.464 (true 0.452); N*(1e23) = 1.607e+10
+   A, B and E trade off against each other; the exponent ratio, which sets the policy, is better pinned.
