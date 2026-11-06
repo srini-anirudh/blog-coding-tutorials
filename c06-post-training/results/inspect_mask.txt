@@ -1,0 +1,125 @@
+pos      id  token            role       label
+  0       1  '<|im_start|>'   header     -100
+  1    9690  'system'         header     -100
+  2     198  '\n'             header     -100
+  3    2683  'You'            system     -100
+  4     359  ' are'           system     -100
+  5     253  ' a'             system     -100
+  6    5649  ' careful'       system     -100
+  7   17993  ' calculator'    system     -100
+  8      30  '.'              system     -100
+  9    5917  ' Work'          system     -100
+ 10    1833  ' step'          system     -100
+ 11     411  ' by'            system     -100
+ 12    1833  ' step'          system     -100
+ 13      28  ','              system     -100
+ 14     965  ' then'          system     -100
+ 15    9199  ' finish'        system     -100
+ 16     351  ' with'          system     -100
+ 17     637  " '"             system     -100
+ 18     504  'The'            system     -100
+ 19    2988  ' answer'        system     -100
+ 20     314  ' is'            system     -100
+ 21     442  ' N'             system     -100
+ 22    6662  ".'"             system     -100
+ 23       2  '<|im_end|>'     system     -100
+ 24     198  '\n'             sep        -100
+ 25       1  '<|im_start|>'   header     -100
+ 26    4093  'user'           header     -100
+ 27     198  '\n'             header     -100
+ 28    1780  'What'           user       -100
+ 29     314  ' is'            user       -100
+ 30     216  ' '              user       -100
+ 31      37  '5'              user       -100
+ 32      41  '9'              user       -100
+ 33    1232  ' +'             user       -100
+ 34     216  ' '              user       -100
+ 35      38  '6'              user       -100
+ 36      35  '3'              user       -100
+ 37     731  ' -'             user       -100
+ 38     216  ' '              user       -100
+ 39      33  '1'              user       -100
+ 40      37  '5'              user       -100
+ 41      47  '?'              user       -100
+ 42       2  '<|im_end|>'     user       -100
+ 43     198  '\n'             sep        -100
+ 44       1  '<|im_start|>'   header     -100
+ 45     520  'ass'            header     -100
+ 46    9531  'istant'         header     -100
+ 47     198  '\n'             header     -100
+ 48      37  '5'              assistant  37
+ 49      41  '9'              assistant  41
+ 50    1232  ' +'             assistant  1232
+ 51     216  ' '              assistant  216
+ 52      38  '6'              assistant  38
+ 53      35  '3'              assistant  35
+ 54     446  ' ='             assistant  446
+ 55     216  ' '              assistant  216
+ 56      33  '1'              assistant  33
+ 57      34  '2'              assistant  34
+ 58      34  '2'              assistant  34
+ 59      30  '.'              assistant  30
+ 60     216  ' '              assistant  216
+ 61      33  '1'              assistant  33
+ 62      34  '2'              assistant  34
+ 63      34  '2'              assistant  34
+ 64     731  ' -'             assistant  731
+ 65     216  ' '              assistant  216
+ 66      33  '1'              assistant  33
+ 67      37  '5'              assistant  37
+ 68     446  ' ='             assistant  446
+ 69     216  ' '              assistant  216
+ 70      33  '1'              assistant  33
+ 71      32  '0'              assistant  32
+ 72      39  '7'              assistant  39
+ 73      30  '.'              assistant  30
+ 74     378  ' The'           assistant  378
+ 75    2988  ' answer'        assistant  2988
+ 76     314  ' is'            assistant  314
+ 77     216  ' '              assistant  216
+ 78      33  '1'              assistant  33
+ 79      32  '0'              assistant  32
+ 80      39  '7'              assistant  39
+ 81      30  '.'              assistant  30
+ 82       2  '<|im_end|>'     assistant  2
+ 83     198  '\n'             sep        -100
+ 84       1  '<|im_start|>'   header     -100
+ 85    4093  'user'           header     -100
+ 86     198  '\n'             header     -100
+ 87    2696  'Now'            user       -100
+ 88     803  ' add'           user       -100
+ 89     216  ' '              user       -100
+ 90      38  '6'              user       -100
+ 91     288  ' to'            user       -100
+ 92     338  ' that'          user       -100
+ 93      30  '.'              user       -100
+ 94       2  '<|im_end|>'     user       -100
+ 95     198  '\n'             sep        -100
+ 96       1  '<|im_start|>'   header     -100
+ 97     520  'ass'            header     -100
+ 98    9531  'istant'         header     -100
+ 99     198  '\n'             header     -100
+100      33  '1'              assistant  33
+101      32  '0'              assistant  32
+102      39  '7'              assistant  39
+103    1232  ' +'             assistant  1232
+104     216  ' '              assistant  216
+105      38  '6'              assistant  38
+106     446  ' ='             assistant  446
+107     216  ' '              assistant  216
+108      33  '1'              assistant  33
+109      33  '1'              assistant  33
+110      35  '3'              assistant  35
+111      30  '.'              assistant  30
+112     378  ' The'           assistant  378
+113    2988  ' answer'        assistant  2988
+114     314  ' is'            assistant  314
+115     216  ' '              assistant  216
+116      33  '1'              assistant  33
+117      33  '1'              assistant  33
+118      35  '3'              assistant  35
+119      30  '.'              assistant  30
+120       2  '<|im_end|>'     assistant  2
+121     198  '\n'             sep        -100
+
+122 tokens, 56 targets, 66 masked

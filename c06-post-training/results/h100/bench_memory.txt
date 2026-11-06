@@ -1,0 +1,5 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, batch 16, memory = peak CUDA memory allocated
+MiB columns: peak so far after loading, then after the first forward, backward and optimizer step
+mode         trainable   loaded  forward  backward  opt step    peak  sec/step
+full       134,515,008      521     4516      4898      4898    5938      0.24
+lora         4,884,480      540     4275      4657      4657    4695      0.31

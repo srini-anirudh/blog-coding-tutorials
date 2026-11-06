@@ -1,0 +1,761 @@
+{
+  "tag": "reinforce-seed1",
+  "algo": "reinforce",
+  "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2",
+  "steps": 100,
+  "prompts": 32,
+  "group_size": 1,
+  "inner": 2,
+  "lr": 1e-05,
+  "beta": 0.04,
+  "start": {
+    "add": 0.98,
+    "all": 0.8,
+    "sub": 0.88,
+    "chain": 0.7,
+    "mul": 0.64,
+    "format": 1.0
+  },
+  "history": [
+    {
+      "step": 1,
+      "reward": 0.75,
+      "loss": 0.2702,
+      "truncated": 0.0,
+      "sec": 1.5
+    },
+    {
+      "step": 2,
+      "reward": 0.6562,
+      "loss": 0.082,
+      "truncated": 0.0,
+      "sec": 2.7
+    },
+    {
+      "step": 3,
+      "reward": 0.75,
+      "loss": 0.1585,
+      "truncated": 0.0,
+      "sec": 3.9
+    },
+    {
+      "step": 4,
+      "reward": 0.5938,
+      "loss": 0.0998,
+      "truncated": 0.0,
+      "sec": 5.2
+    },
+    {
+      "step": 5,
+      "reward": 0.5,
+      "loss": 0.2153,
+      "truncated": 0.0,
+      "sec": 6.4
+    },
+    {
+      "step": 6,
+      "reward": 0.6562,
+      "loss": 0.1103,
+      "truncated": 0.0,
+      "sec": 7.6
+    },
+    {
+      "step": 7,
+      "reward": 0.5625,
+      "loss": 0.1423,
+      "truncated": 0.0,
+      "sec": 8.8
+    },
+    {
+      "step": 8,
+      "reward": 0.625,
+      "loss": 0.0559,
+      "truncated": 0.0,
+      "sec": 10.0
+    },
+    {
+      "step": 9,
+      "reward": 0.5312,
+      "loss": 0.0158,
+      "truncated": 0.0,
+      "sec": 11.2
+    },
+    {
+      "step": 10,
+      "reward": 0.7812,
+      "loss": 0.1552,
+      "truncated": 0.0,
+      "sec": 12.4
+    },
+    {
+      "step": 11,
+      "reward": 0.625,
+      "loss": 0.201,
+      "truncated": 0.0,
+      "sec": 13.5
+    },
+    {
+      "step": 12,
+      "reward": 0.6875,
+      "loss": 0.0512,
+      "truncated": 0.0,
+      "sec": 14.7
+    },
+    {
+      "step": 13,
+      "reward": 0.75,
+      "loss": 0.061,
+      "truncated": 0.0,
+      "sec": 15.9
+    },
+    {
+      "step": 14,
+      "reward": 0.6562,
+      "loss": 0.4355,
+      "truncated": 0.0,
+      "sec": 17.0
+    },
+    {
+      "step": 15,
+      "reward": 0.6875,
+      "loss": 0.1367,
+      "truncated": 0.0,
+      "sec": 18.2
+    },
+    {
+      "step": 16,
+      "reward": 0.7812,
+      "loss": 0.2335,
+      "truncated": 0.0,
+      "sec": 19.3
+    },
+    {
+      "step": 17,
+      "reward": 0.8438,
+      "loss": 0.0576,
+      "truncated": 0.0,
+      "sec": 20.4
+    },
+    {
+      "step": 18,
+      "reward": 0.625,
+      "loss": 0.1728,
+      "truncated": 0.0,
+      "sec": 21.6
+    },
+    {
+      "step": 19,
+      "reward": 0.625,
+      "loss": 0.0699,
+      "truncated": 0.0,
+      "sec": 22.8
+    },
+    {
+      "step": 20,
+      "reward": 0.625,
+      "loss": 0.1182,
+      "truncated": 0.0,
+      "sec": 23.9,
+      "eval": {
+        "add": 0.92,
+        "all": 0.775,
+        "sub": 0.84,
+        "chain": 0.78,
+        "mul": 0.56,
+        "format": 1.0
+      }
+    },
+    {
+      "step": 21,
+      "reward": 0.7188,
+      "loss": 0.143,
+      "truncated": 0.0,
+      "sec": 29.2
+    },
+    {
+      "step": 22,
+      "reward": 0.7188,
+      "loss": 0.1642,
+      "truncated": 0.0,
+      "sec": 30.4
+    },
+    {
+      "step": 23,
+      "reward": 0.8125,
+      "loss": 0.2874,
+      "truncated": 0.0,
+      "sec": 31.6
+    },
+    {
+      "step": 24,
+      "reward": 0.75,
+      "loss": 0.1638,
+      "truncated": 0.0,
+      "sec": 32.7
+    },
+    {
+      "step": 25,
+      "reward": 0.7188,
+      "loss": 0.1127,
+      "truncated": 0.0,
+      "sec": 33.8
+    },
+    {
+      "step": 26,
+      "reward": 0.75,
+      "loss": 0.1667,
+      "truncated": 0.0,
+      "sec": 35.0
+    },
+    {
+      "step": 27,
+      "reward": 0.7812,
+      "loss": 0.1483,
+      "truncated": 0.0,
+      "sec": 36.2
+    },
+    {
+      "step": 28,
+      "reward": 0.625,
+      "loss": 0.2133,
+      "truncated": 0.0,
+      "sec": 37.4
+    },
+    {
+      "step": 29,
+      "reward": 0.625,
+      "loss": 0.1051,
+      "truncated": 0.0,
+      "sec": 38.6
+    },
+    {
+      "step": 30,
+      "reward": 0.6875,
+      "loss": 0.0801,
+      "truncated": 0.0,
+      "sec": 39.9
+    },
+    {
+      "step": 31,
+      "reward": 0.6562,
+      "loss": 0.0815,
+      "truncated": 0.0,
+      "sec": 41.1
+    },
+    {
+      "step": 32,
+      "reward": 0.75,
+      "loss": 0.2004,
+      "truncated": 0.0,
+      "sec": 42.3
+    },
+    {
+      "step": 33,
+      "reward": 0.75,
+      "loss": 0.1727,
+      "truncated": 0.0,
+      "sec": 43.5
+    },
+    {
+      "step": 34,
+      "reward": 0.8438,
+      "loss": 0.1929,
+      "truncated": 0.0,
+      "sec": 44.7
+    },
+    {
+      "step": 35,
+      "reward": 0.5625,
+      "loss": 0.0654,
+      "truncated": 0.0,
+      "sec": 45.9
+    },
+    {
+      "step": 36,
+      "reward": 0.7188,
+      "loss": 0.0667,
+      "truncated": 0.0,
+      "sec": 47.1
+    },
+    {
+      "step": 37,
+      "reward": 0.7188,
+      "loss": 0.1364,
+      "truncated": 0.0,
+      "sec": 48.2
+    },
+    {
+      "step": 38,
+      "reward": 0.625,
+      "loss": 0.0775,
+      "truncated": 0.0,
+      "sec": 49.4
+    },
+    {
+      "step": 39,
+      "reward": 0.7188,
+      "loss": 0.2329,
+      "truncated": 0.0,
+      "sec": 50.5
+    },
+    {
+      "step": 40,
+      "reward": 0.6875,
+      "loss": 0.0774,
+      "truncated": 0.0,
+      "sec": 51.7,
+      "eval": {
+        "add": 0.96,
+        "all": 0.755,
+        "sub": 0.84,
+        "chain": 0.68,
+        "mul": 0.54,
+        "format": 1.0
+      }
+    },
+    {
+      "step": 41,
+      "reward": 0.75,
+      "loss": 0.1543,
+      "truncated": 0.0,
+      "sec": 56.8
+    },
+    {
+      "step": 42,
+      "reward": 0.6875,
+      "loss": 0.061,
+      "truncated": 0.0,
+      "sec": 58.0
+    },
+    {
+      "step": 43,
+      "reward": 0.75,
+      "loss": 0.0553,
+      "truncated": 0.0,
+      "sec": 59.2
+    },
+    {
+      "step": 44,
+      "reward": 0.9062,
+      "loss": 0.2317,
+      "truncated": 0.0,
+      "sec": 60.4
+    },
+    {
+      "step": 45,
+      "reward": 0.6875,
+      "loss": 0.1642,
+      "truncated": 0.0,
+      "sec": 61.6
+    },
+    {
+      "step": 46,
+      "reward": 0.75,
+      "loss": 0.0665,
+      "truncated": 0.0,
+      "sec": 62.8
+    },
+    {
+      "step": 47,
+      "reward": 0.8125,
+      "loss": 0.0569,
+      "truncated": 0.0,
+      "sec": 64.0
+    },
+    {
+      "step": 48,
+      "reward": 0.75,
+      "loss": 0.0574,
+      "truncated": 0.0,
+      "sec": 65.2
+    },
+    {
+      "step": 49,
+      "reward": 0.75,
+      "loss": 0.1136,
+      "truncated": 0.0,
+      "sec": 66.4
+    },
+    {
+      "step": 50,
+      "reward": 0.6562,
+      "loss": 0.0387,
+      "truncated": 0.0,
+      "sec": 67.6
+    },
+    {
+      "step": 51,
+      "reward": 0.75,
+      "loss": 0.3536,
+      "truncated": 0.0,
+      "sec": 68.8
+    },
+    {
+      "step": 52,
+      "reward": 0.8438,
+      "loss": 0.0845,
+      "truncated": 0.0,
+      "sec": 70.0
+    },
+    {
+      "step": 53,
+      "reward": 0.6562,
+      "loss": 0.0699,
+      "truncated": 0.0,
+      "sec": 71.2
+    },
+    {
+      "step": 54,
+      "reward": 0.7188,
+      "loss": 0.1542,
+      "truncated": 0.0,
+      "sec": 72.3
+    },
+    {
+      "step": 55,
+      "reward": 0.75,
+      "loss": 0.0749,
+      "truncated": 0.0,
+      "sec": 73.5
+    },
+    {
+      "step": 56,
+      "reward": 0.75,
+      "loss": 0.1186,
+      "truncated": 0.0,
+      "sec": 74.7
+    },
+    {
+      "step": 57,
+      "reward": 0.7188,
+      "loss": 0.048,
+      "truncated": 0.0,
+      "sec": 75.8
+    },
+    {
+      "step": 58,
+      "reward": 0.625,
+      "loss": 0.0647,
+      "truncated": 0.0,
+      "sec": 76.9
+    },
+    {
+      "step": 59,
+      "reward": 0.8438,
+      "loss": 0.0746,
+      "truncated": 0.0,
+      "sec": 78.1
+    },
+    {
+      "step": 60,
+      "reward": 0.6875,
+      "loss": 0.034,
+      "truncated": 0.0,
+      "sec": 79.3,
+      "eval": {
+        "add": 0.94,
+        "all": 0.73,
+        "sub": 0.78,
+        "chain": 0.64,
+        "mul": 0.56,
+        "format": 1.0
+      }
+    },
+    {
+      "step": 61,
+      "reward": 0.75,
+      "loss": 0.1304,
+      "truncated": 0.0,
+      "sec": 84.7
+    },
+    {
+      "step": 62,
+      "reward": 0.5,
+      "loss": 0.0934,
+      "truncated": 0.0,
+      "sec": 85.9
+    },
+    {
+      "step": 63,
+      "reward": 0.7188,
+      "loss": 0.0848,
+      "truncated": 0.0,
+      "sec": 87.1
+    },
+    {
+      "step": 64,
+      "reward": 0.6562,
+      "loss": 0.0978,
+      "truncated": 0.0,
+      "sec": 88.3
+    },
+    {
+      "step": 65,
+      "reward": 0.625,
+      "loss": 0.0699,
+      "truncated": 0.0,
+      "sec": 89.5
+    },
+    {
+      "step": 66,
+      "reward": 0.75,
+      "loss": 0.1525,
+      "truncated": 0.0,
+      "sec": 90.6
+    },
+    {
+      "step": 67,
+      "reward": 0.625,
+      "loss": 0.2162,
+      "truncated": 0.0,
+      "sec": 91.8
+    },
+    {
+      "step": 68,
+      "reward": 0.7188,
+      "loss": 0.04,
+      "truncated": 0.0,
+      "sec": 93.0
+    },
+    {
+      "step": 69,
+      "reward": 0.6562,
+      "loss": 0.1435,
+      "truncated": 0.0,
+      "sec": 94.2
+    },
+    {
+      "step": 70,
+      "reward": 0.625,
+      "loss": 0.0457,
+      "truncated": 0.0,
+      "sec": 95.4
+    },
+    {
+      "step": 71,
+      "reward": 0.5312,
+      "loss": 0.1038,
+      "truncated": 0.0,
+      "sec": 96.6
+    },
+    {
+      "step": 72,
+      "reward": 0.7812,
+      "loss": 0.4663,
+      "truncated": 0.0,
+      "sec": 97.8
+    },
+    {
+      "step": 73,
+      "reward": 0.75,
+      "loss": 0.1011,
+      "truncated": 0.0,
+      "sec": 99.0
+    },
+    {
+      "step": 74,
+      "reward": 0.5938,
+      "loss": 0.0286,
+      "truncated": 0.0,
+      "sec": 100.3
+    },
+    {
+      "step": 75,
+      "reward": 0.625,
+      "loss": 0.0906,
+      "truncated": 0.0,
+      "sec": 101.5
+    },
+    {
+      "step": 76,
+      "reward": 0.625,
+      "loss": 0.5508,
+      "truncated": 0.0,
+      "sec": 102.7
+    },
+    {
+      "step": 77,
+      "reward": 0.75,
+      "loss": 0.0793,
+      "truncated": 0.0,
+      "sec": 103.8
+    },
+    {
+      "step": 78,
+      "reward": 0.7812,
+      "loss": 0.1026,
+      "truncated": 0.0,
+      "sec": 105.0
+    },
+    {
+      "step": 79,
+      "reward": 0.7812,
+      "loss": 0.146,
+      "truncated": 0.0,
+      "sec": 106.2
+    },
+    {
+      "step": 80,
+      "reward": 0.75,
+      "loss": 0.1502,
+      "truncated": 0.0,
+      "sec": 107.4,
+      "eval": {
+        "add": 1.0,
+        "all": 0.74,
+        "sub": 0.8,
+        "chain": 0.58,
+        "mul": 0.58,
+        "format": 1.0
+      }
+    },
+    {
+      "step": 81,
+      "reward": 0.7188,
+      "loss": 0.0643,
+      "truncated": 0.0,
+      "sec": 112.8
+    },
+    {
+      "step": 82,
+      "reward": 0.625,
+      "loss": 0.515,
+      "truncated": 0.0,
+      "sec": 114.0
+    },
+    {
+      "step": 83,
+      "reward": 0.6562,
+      "loss": 0.0824,
+      "truncated": 0.0,
+      "sec": 115.2
+    },
+    {
+      "step": 84,
+      "reward": 0.6875,
+      "loss": 0.1583,
+      "truncated": 0.0,
+      "sec": 116.4
+    },
+    {
+      "step": 85,
+      "reward": 0.75,
+      "loss": 0.1043,
+      "truncated": 0.0,
+      "sec": 117.6
+    },
+    {
+      "step": 86,
+      "reward": 0.75,
+      "loss": 0.1335,
+      "truncated": 0.0,
+      "sec": 118.8
+    },
+    {
+      "step": 87,
+      "reward": 0.7188,
+      "loss": 0.206,
+      "truncated": 0.0,
+      "sec": 120.0
+    },
+    {
+      "step": 88,
+      "reward": 0.625,
+      "loss": 0.0508,
+      "truncated": 0.0,
+      "sec": 121.2
+    },
+    {
+      "step": 89,
+      "reward": 0.7812,
+      "loss": 0.1454,
+      "truncated": 0.0,
+      "sec": 122.5
+    },
+    {
+      "step": 90,
+      "reward": 0.75,
+      "loss": 0.0562,
+      "truncated": 0.0,
+      "sec": 123.7
+    },
+    {
+      "step": 91,
+      "reward": 0.8125,
+      "loss": 0.1256,
+      "truncated": 0.0,
+      "sec": 124.9
+    },
+    {
+      "step": 92,
+      "reward": 0.7188,
+      "loss": 0.0703,
+      "truncated": 0.0,
+      "sec": 126.1
+    },
+    {
+      "step": 93,
+      "reward": 0.875,
+      "loss": 0.0772,
+      "truncated": 0.0,
+      "sec": 127.3
+    },
+    {
+      "step": 94,
+      "reward": 0.8125,
+      "loss": 0.1761,
+      "truncated": 0.0,
+      "sec": 128.5
+    },
+    {
+      "step": 95,
+      "reward": 0.6562,
+      "loss": 0.1335,
+      "truncated": 0.0,
+      "sec": 129.8
+    },
+    {
+      "step": 96,
+      "reward": 0.6562,
+      "loss": 0.0394,
+      "truncated": 0.0,
+      "sec": 131.0
+    },
+    {
+      "step": 97,
+      "reward": 0.9062,
+      "loss": 0.0898,
+      "truncated": 0.0,
+      "sec": 132.2
+    },
+    {
+      "step": 98,
+      "reward": 0.75,
+      "loss": 0.0948,
+      "truncated": 0.0,
+      "sec": 133.4
+    },
+    {
+      "step": 99,
+      "reward": 0.7812,
+      "loss": 0.1247,
+      "truncated": 0.0,
+      "sec": 134.5
+    },
+    {
+      "step": 100,
+      "reward": 0.8125,
+      "loss": 0.1875,
+      "truncated": 0.0,
+      "sec": 135.7,
+      "eval": {
+        "add": 0.98,
+        "all": 0.76,
+        "sub": 0.92,
+        "chain": 0.64,
+        "mul": 0.5,
+        "format": 1.0
+      }
+    }
+  ]
+}

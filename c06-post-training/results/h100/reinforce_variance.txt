@@ -1,0 +1,7 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, gradient dimension 3,540,096, 32 rollouts per estimate, 12 estimates each
+estimator     prompts x G  mean reward  grad norm  pairwise cos      SNR
+none               32 x 1        0.701       0.87         0.042    0.115
+batch              32 x 1        0.701       1.37         0.014    0.108
+group               8 x 4        0.669       1.02         0.002    0.106
+group_std           8 x 4        0.669       1.86         0.002    0.106
+SNR of pure noise with 12 estimates: about 0.091

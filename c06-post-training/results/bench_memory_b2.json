@@ -1,0 +1,32 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads",
+  "steps": 10,
+  "rows": [
+    {
+      "mode": "full",
+      "hardware": "AMD EPYC 7R13, 8 threads",
+      "batch_size": 2,
+      "trainable_params": 134515008,
+      "total_params": 134515008,
+      "loaded_mb": 1194.8,
+      "forward_mb": 1354.9,
+      "backward_mb": 2013.5,
+      "opt_step_mb": 2853.6,
+      "peak_mb": 3164.8,
+      "sec_per_step": 1.09
+    },
+    {
+      "mode": "lora",
+      "hardware": "AMD EPYC 7R13, 8 threads",
+      "batch_size": 2,
+      "trainable_params": 4884480,
+      "total_params": 139399488,
+      "loaded_mb": 1219.9,
+      "forward_mb": 1532.2,
+      "backward_mb": 1568.1,
+      "opt_step_mb": 1568.1,
+      "peak_mb": 1896.8,
+      "sec_per_step": 0.735
+    }
+  ]
+}

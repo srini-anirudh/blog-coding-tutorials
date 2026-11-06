@@ -9,7 +9,7 @@ from datasets import Dataset
 from posttrain.chat import load_tokenizer
 from posttrain.generation import completion_mask_from_ids, left_pad, score_completions
 from posttrain.grpo import GRPOLossConfig, group_advantages, grpo_loss
-from posttrain.models import frozen_copy, tiny_llama
+from posttrain.models import frozen_copy, load_policy, random_policy, tiny_llama
 from posttrain.reinforce import estimator_weights, gradient_noise, reinforce_loss
 from posttrain.rollout import RolloutEngine
 from posttrain.tasks import ANSWER_RE, exact_reward, extract_answer, sample_problems
@@ -207,6 +207,14 @@ def test_rollout_engine_builds_a_consistent_batch(workers):
     assert b["advantages"].shape == (8,)
 
 
+def test_snr_of_pure_noise_sits_at_one_over_k_minus_one():
+    torch.manual_seed(0)
+    k = 12
+    stats = gradient_noise(torch.randn(k, 20_000))
+    assert stats["snr"] == pytest.approx(1 / (k - 1), rel=0.1)
+    assert abs(stats["pairwise_cos"]) < 0.01
+
+
 def test_worker_replica_only_changes_on_sync():
     from posttrain.rollout import GenerationWorker
 
@@ -223,3 +231,14 @@ def test_worker_replica_only_changes_on_sync():
 def test_reference_copy_is_frozen():
     ref = frozen_copy(tiny_llama().train())
     assert not ref.training and not any(p.requires_grad for p in ref.parameters())
+
+
+def test_random_policy_does_not_keep_the_pretrained_weights(tmp_path):
+    tiny_llama().save_pretrained(tmp_path)
+    loaded, fresh = load_policy(str(tmp_path)), random_policy(str(tmp_path))
+    assert [p.shape for p in loaded.parameters()] == [p.shape for p in fresh.parameters()]
+    assert not torch.equal(next(loaded.parameters()), next(fresh.parameters()))
+    # The trap this guards against: re-running the init functions on loaded weights silently changes nothing.
+    before = next(loaded.parameters()).clone()
+    loaded.apply(loaded._init_weights)
+    assert torch.equal(before, next(loaded.parameters()))

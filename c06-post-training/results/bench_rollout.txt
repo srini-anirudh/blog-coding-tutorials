@@ -1,0 +1,6 @@
+hardware: AMD EPYC 7R13, 8 threads, 64 rollouts, up to 48 new tokens each
+engine                           sec  rollouts/sec  generate    reward
+sequential (batch 4)           36.04           1.8     36.04    0.0004
+batched (batch 64)              9.38           6.8      9.38    0.0002
+2 workers (batch 32 each)       8.87           7.2      8.87    0.0002
+weight sync to 2 replicas: 191 ms

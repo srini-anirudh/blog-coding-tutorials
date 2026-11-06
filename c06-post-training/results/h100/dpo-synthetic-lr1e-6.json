@@ -1,0 +1,174 @@
+{
+  "tag": "dpo-synthetic-lr1e-6",
+  "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2",
+  "pairs": "synthetic",
+  "n_pairs": 800,
+  "beta": 0.1,
+  "lr": 1e-06,
+  "steps": 200,
+  "before": {
+    "add": 1.0,
+    "all": 0.795,
+    "sub": 0.86,
+    "chain": 0.62,
+    "mul": 0.7,
+    "format": 1.0
+  },
+  "after": {
+    "add": 0.96,
+    "all": 0.665,
+    "sub": 0.7,
+    "chain": 0.52,
+    "mul": 0.48,
+    "format": 1.0
+  },
+  "history": [
+    {
+      "step": 1,
+      "loss": 0.6931,
+      "margin": 0.0,
+      "pair_acc": 0.0,
+      "sec": 0.4
+    },
+    {
+      "step": 10,
+      "loss": 0.6883,
+      "margin": 0.01,
+      "pair_acc": 0.75,
+      "sec": 1.6
+    },
+    {
+      "step": 20,
+      "loss": 0.6547,
+      "margin": 0.08,
+      "pair_acc": 1.0,
+      "sec": 2.9
+    },
+    {
+      "step": 30,
+      "loss": 0.6822,
+      "margin": 0.022,
+      "pair_acc": 0.75,
+      "sec": 4.3
+    },
+    {
+      "step": 40,
+      "loss": 0.6847,
+      "margin": 0.017,
+      "pair_acc": 0.5,
+      "sec": 5.6
+    },
+    {
+      "step": 50,
+      "loss": 0.6287,
+      "margin": 0.138,
+      "pair_acc": 0.75,
+      "sec": 7.0
+    },
+    {
+      "step": 60,
+      "loss": 0.6645,
+      "margin": 0.059,
+      "pair_acc": 0.75,
+      "sec": 8.3
+    },
+    {
+      "step": 70,
+      "loss": 0.6297,
+      "margin": 0.133,
+      "pair_acc": 1.0,
+      "sec": 9.6
+    },
+    {
+      "step": 80,
+      "loss": 0.6516,
+      "margin": 0.086,
+      "pair_acc": 1.0,
+      "sec": 11.0
+    },
+    {
+      "step": 90,
+      "loss": 0.6362,
+      "margin": 0.124,
+      "pair_acc": 0.75,
+      "sec": 12.3
+    },
+    {
+      "step": 100,
+      "loss": 0.6768,
+      "margin": 0.038,
+      "pair_acc": 0.25,
+      "sec": 13.6
+    },
+    {
+      "step": 110,
+      "loss": 0.6006,
+      "margin": 0.195,
+      "pair_acc": 1.0,
+      "sec": 15.0
+    },
+    {
+      "step": 120,
+      "loss": 0.6895,
+      "margin": 0.011,
+      "pair_acc": 0.75,
+      "sec": 16.3
+    },
+    {
+      "step": 130,
+      "loss": 0.613,
+      "margin": 0.176,
+      "pair_acc": 1.0,
+      "sec": 17.6
+    },
+    {
+      "step": 140,
+      "loss": 0.5877,
+      "margin": 0.227,
+      "pair_acc": 1.0,
+      "sec": 18.9
+    },
+    {
+      "step": 150,
+      "loss": 0.5726,
+      "margin": 0.265,
+      "pair_acc": 1.0,
+      "sec": 20.2
+    },
+    {
+      "step": 160,
+      "loss": 0.563,
+      "margin": 0.281,
+      "pair_acc": 1.0,
+      "sec": 21.5
+    },
+    {
+      "step": 170,
+      "loss": 0.6046,
+      "margin": 0.192,
+      "pair_acc": 0.75,
+      "sec": 22.8
+    },
+    {
+      "step": 180,
+      "loss": 0.6155,
+      "margin": 0.167,
+      "pair_acc": 0.75,
+      "sec": 24.1
+    },
+    {
+      "step": 190,
+      "loss": 0.6086,
+      "margin": 0.181,
+      "pair_acc": 0.75,
+      "sec": 25.4
+    },
+    {
+      "step": 200,
+      "loss": 0.5558,
+      "margin": 0.297,
+      "pair_acc": 1.0,
+      "sec": 26.7
+    }
+  ]
+}

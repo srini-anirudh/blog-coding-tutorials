@@ -1,0 +1,62 @@
+{
+  "hardware": {
+    "name": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2"
+  },
+  "pad_is_eos": {
+    "stop_targets_correct": 1,
+    "stop_targets_with_bug": 0
+  },
+  "packing": {
+    "max_logit_diff_block_mask": 6.4849853515625e-05,
+    "max_logit_diff_no_mask": 39.61619567871094
+  },
+  "reference_is_policy": {
+    "loss_frozen_copy": 0.6915407180786133,
+    "grad_norm_frozen_copy": 4.009212493896484,
+    "loss_bug": 0.6931471824645996,
+    "grad_norm_bug": 4.0235748291015625
+  },
+  "reference_with_grad": {
+    "reference_grad_norm": 3.9995434284210205
+  },
+  "sum_vs_mean": {
+    "mean_reply_tokens": 23.25,
+    "margin_sum": 0.003218639176338911,
+    "margin_mean": 0.00015294259355869144,
+    "grad_sum": 4.009212493896484,
+    "grad_mean": 0.19423002004623413
+  },
+  "off_by_one": {
+    "right": -4.266027927398682,
+    "wrong": -20.008329391479492
+  },
+  "old_logprobs": {
+    "inner_steps": [
+      {
+        "ratio_fixed": 1.0,
+        "clip_fixed": 0.0,
+        "ratio_recomputed": 1.0,
+        "clip_recomputed": 0.0
+      },
+      {
+        "ratio_fixed": 0.9697202444076538,
+        "clip_fixed": 0.028089888393878937,
+        "ratio_recomputed": 1.0,
+        "clip_recomputed": 0.0
+      },
+      {
+        "ratio_fixed": 0.96261066198349,
+        "clip_fixed": 0.03089887648820877,
+        "ratio_recomputed": 1.0,
+        "clip_recomputed": 0.0
+      },
+      {
+        "ratio_fixed": 0.9634997844696045,
+        "clip_fixed": 0.03651685267686844,
+        "ratio_recomputed": 1.0,
+        "clip_recomputed": 0.0
+      }
+    ],
+    "mean_abs_advantage": 0.5913938879966736
+  }
+}

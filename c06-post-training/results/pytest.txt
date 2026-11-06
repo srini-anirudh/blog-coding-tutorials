@@ -1,0 +1,53 @@
+$ python -m pytest c06-post-training -m "not slow and not gpu and not network" -rA   # AMD EPYC 7R13, tests pinned to 2 threads
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_packing_keeps_conversations_whole_and_resets_positions
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_block_mask_is_causal_and_block_diagonal
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_packed_logits_equal_unpacked_logits
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_naive_packing_leaks_across_conversations
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_position_ids_alone_need_use_cache_false
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_masked_loss_matches_hf_loss_on_padded_batch
+PASSED c06-post-training/tests/test_dpo.py::test_sequence_logprob_matches_explicit_loop
+PASSED c06-post-training/tests/test_dpo.py::test_prompt_tokens_do_not_count
+PASSED c06-post-training/tests/test_dpo.py::test_padding_does_not_change_sequence_logprob
+PASSED c06-post-training/tests/test_dpo.py::test_left_and_right_padding_agree
+PASSED c06-post-training/tests/test_dpo.py::test_sum_vs_mean_changes_the_margin
+PASSED c06-post-training/tests/test_dpo.py::test_equal_policy_and_reference_give_log_two
+PASSED c06-post-training/tests/test_dpo.py::test_reference_gets_no_gradient
+PASSED c06-post-training/tests/test_dpo.py::test_dpo_loss_decreases_with_margin
+PASSED c06-post-training/tests/test_grpo.py::test_group_advantages_by_hand
+PASSED c06-post-training/tests/test_grpo.py::test_all_same_reward_gives_zero_advantage
+PASSED c06-post-training/tests/test_grpo.py::test_group_advantages_match_trl_formula
+PASSED c06-post-training/tests/test_grpo.py::test_first_inner_step_has_ratio_one_and_no_clipping
+PASSED c06-post-training/tests/test_grpo.py::test_clipping_removes_the_incentive_past_one_plus_eps
+PASSED c06-post-training/tests/test_grpo.py::test_negative_advantage_is_never_clipped_upward
+PASSED c06-post-training/tests/test_grpo.py::test_padding_tokens_do_not_change_the_loss
+PASSED c06-post-training/tests/test_grpo.py::test_grpo_loss_is_length_normalised_but_dapo_is_token_weighted
+PASSED c06-post-training/tests/test_grpo.py::test_kl_is_zero_at_the_reference_and_positive_elsewhere
+PASSED c06-post-training/tests/test_grpo.py::test_completion_mask_stops_after_first_eos
+PASSED c06-post-training/tests/test_grpo.py::test_score_completions_matches_a_full_forward
+PASSED c06-post-training/tests/test_grpo.py::test_exact_reward_is_strict
+PASSED c06-post-training/tests/test_grpo.py::test_reinforce_sums_over_tokens_and_ignores_padding
+PASSED c06-post-training/tests/test_grpo.py::test_estimators_zero_out_constant_rewards_except_vanilla
+PASSED c06-post-training/tests/test_grpo.py::test_gradient_noise_separates_signal_from_noise
+PASSED c06-post-training/tests/test_grpo.py::test_snr_of_pure_noise_sits_at_one_over_k_minus_one
+PASSED c06-post-training/tests/test_grpo.py::test_worker_replica_only_changes_on_sync
+PASSED c06-post-training/tests/test_grpo.py::test_reference_copy_is_frozen
+PASSED c06-post-training/tests/test_grpo.py::test_random_policy_does_not_keep_the_pretrained_weights
+PASSED c06-post-training/tests/test_lora_and_reward.py::test_lora_starts_at_the_base_model
+PASSED c06-post-training/tests/test_lora_and_reward.py::test_only_adapter_weights_train
+PASSED c06-post-training/tests/test_lora_and_reward.py::test_lora_linear_matches_peft_with_the_same_factors
+PASSED c06-post-training/tests/test_lora_and_reward.py::test_merge_preserves_outputs_and_removes_the_wrappers
+PASSED c06-post-training/tests/test_lora_and_reward.py::test_pairwise_loss_by_hand
+38 passed, 10 deselected in 21.42s
+
+$ python -m pytest c06-post-training -m network -rA   # downloads SmolLM2-135M; compares against TRL, PEFT and the HF chat template
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_manual_ids_match_chat_template
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_assistant_mask_matches_hf_generation_mask
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_only_assistant_content_and_im_end_are_targets
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_last_turn_mode_trains_one_reply
+PASSED c06-post-training/tests/test_chat_and_packing.py::test_pad_token_is_not_end_of_turn
+PASSED c06-post-training/tests/test_dpo.py::test_matches_trl_dpo_trainer_on_the_same_batch
+PASSED c06-post-training/tests/test_grpo.py::test_matches_trl_grpo_loss_on_the_same_tensors[grpo]
+PASSED c06-post-training/tests/test_grpo.py::test_matches_trl_grpo_loss_on_the_same_tensors[dapo]
+PASSED c06-post-training/tests/test_grpo.py::test_rollout_engine_builds_a_consistent_batch[1]
+PASSED c06-post-training/tests/test_grpo.py::test_rollout_engine_builds_a_consistent_batch[2]
+10 passed, 38 deselected in 29.67s

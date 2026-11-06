@@ -1,0 +1,105 @@
+{
+  "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2",
+  "steps": 300,
+  "lr": 2e-05,
+  "before": 0.0,
+  "after": 0.555,
+  "history": [
+    {
+      "step": 1,
+      "loss": 0.6931,
+      "train_acc": 0.0,
+      "sec": 0.8
+    },
+    {
+      "step": 20,
+      "loss": 0.6262,
+      "train_acc": 0.75,
+      "sec": 4.6
+    },
+    {
+      "step": 40,
+      "loss": 0.6796,
+      "train_acc": 1.0,
+      "sec": 8.0
+    },
+    {
+      "step": 60,
+      "loss": 0.7524,
+      "train_acc": 0.5,
+      "sec": 10.9
+    },
+    {
+      "step": 80,
+      "loss": 0.6324,
+      "train_acc": 0.75,
+      "sec": 14.8
+    },
+    {
+      "step": 100,
+      "loss": 0.6814,
+      "train_acc": 0.5,
+      "sec": 18.4
+    },
+    {
+      "step": 120,
+      "loss": 0.67,
+      "train_acc": 0.75,
+      "sec": 22.2
+    },
+    {
+      "step": 140,
+      "loss": 0.6324,
+      "train_acc": 0.75,
+      "sec": 26.2
+    },
+    {
+      "step": 160,
+      "loss": 0.7957,
+      "train_acc": 0.25,
+      "sec": 29.6
+    },
+    {
+      "step": 180,
+      "loss": 0.6717,
+      "train_acc": 0.5,
+      "sec": 32.7
+    },
+    {
+      "step": 200,
+      "loss": 0.604,
+      "train_acc": 0.75,
+      "sec": 36.1
+    },
+    {
+      "step": 220,
+      "loss": 0.9123,
+      "train_acc": 0.5,
+      "sec": 39.9
+    },
+    {
+      "step": 240,
+      "loss": 0.4226,
+      "train_acc": 0.75,
+      "sec": 43.7
+    },
+    {
+      "step": 260,
+      "loss": 0.5307,
+      "train_acc": 0.75,
+      "sec": 47.8
+    },
+    {
+      "step": 280,
+      "loss": 0.9085,
+      "train_acc": 0.5,
+      "sec": 51.2
+    },
+    {
+      "step": 300,
+      "loss": 0.6403,
+      "train_acc": 0.75,
+      "sec": 54.6
+    }
+  ]
+}

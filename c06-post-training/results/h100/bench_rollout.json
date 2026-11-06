@@ -1,0 +1,27 @@
+{
+  "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2",
+  "results": {
+    "sequential (batch 4)": {
+      "rollouts": 64.0,
+      "sec": 16.55056071281433,
+      "rollouts_per_sec": 3.866938474806341,
+      "generate_sec": 16.540430784225464,
+      "reward_sec": 0.00034928321838378906
+    },
+    "batched (batch 64)": {
+      "rollouts": 64.0,
+      "sec": 1.9002864360809326,
+      "rollouts_per_sec": 33.679133200566746,
+      "generate_sec": 1.899906873703003,
+      "reward_sec": 0.00010442733764648438
+    },
+    "2 workers (batch 32 each)": {
+      "rollouts": 64.0,
+      "sec": 2.578354835510254,
+      "rollouts_per_sec": 24.82202958202782,
+      "generate_sec": 2.578066825866699,
+      "reward_sec": 0.00010085105895996094
+    }
+  },
+  "sync_ms": 13.792037963867188
+}

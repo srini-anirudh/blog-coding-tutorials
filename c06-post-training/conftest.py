@@ -8,6 +8,6 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-# Many tutorials share one laptop; keep each test process polite.
+# The tests use small models, so two threads are enough. It keeps them polite on a shared machine.
 torch.set_num_threads(2)
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")

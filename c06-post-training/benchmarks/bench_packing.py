@@ -19,7 +19,7 @@ from posttrain.models import load_policy  # noqa: E402
 from posttrain.packing import padding_stats  # noqa: E402
 from posttrain.sft import batches, build_examples, masked_lm_loss  # noqa: E402
 from posttrain.tasks import split_problems  # noqa: E402
-from posttrain.utils import BASE_MODEL, pick_device, polite_threads, save_json, synchronize  # noqa: E402
+from posttrain.utils import BASE_MODEL, hardware_label, pick_device, polite_threads, save_json, synchronize  # noqa: E402
 
 
 def speed(model, stream, device, steps: int) -> dict[str, float]:
@@ -46,6 +46,7 @@ def speed(model, stream, device, steps: int) -> dict[str, float]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--steps", type=int, default=12)
+    ap.add_argument("--out", default="bench_packing.json")
     args = ap.parse_args()
     polite_threads()
     device = pick_device()
@@ -61,12 +62,12 @@ def main() -> None:
     model = load_policy(BASE_MODEL, device).train()
     padded = speed(model, batches(examples, 8, tok.pad_token_id, False, 256, 0), device, args.steps)
     packed = speed(model, batches(examples, 4, tok.pad_token_id, True, 256, 0), device, args.steps)
-    print(f"device={device}")
+    print(f"hardware: {hardware_label(device)}")
     print(f"{'batching':<20}{'sec/step':>10}{'targets/step':>14}{'slots/step':>12}{'targets/sec':>13}")
     for name, s in (("padded 8 x bucket", padded), ("packed 4 x 256", packed)):
         print(f"{name:<20}{s['sec_per_step']:>10.2f}{s['target_tokens_per_step']:>14.0f}"
               f"{s['slots_per_step']:>12.0f}{s['target_tokens_per_sec']:>13.0f}")
-    save_json({"device": str(device), "stats": stats, "padded": padded, "packed": packed}, "bench_packing.json")
+    save_json({"hardware": hardware_label(device), "stats": stats, "padded": padded, "packed": packed}, args.out)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,62 @@
+{
+  "hardware": {
+    "name": "AMD EPYC 7R13, 8 threads"
+  },
+  "pad_is_eos": {
+    "stop_targets_correct": 1,
+    "stop_targets_with_bug": 0
+  },
+  "packing": {
+    "max_logit_diff_block_mask": 0.0,
+    "max_logit_diff_no_mask": 39.7541618347168
+  },
+  "reference_is_policy": {
+    "loss_frozen_copy": 0.6915826797485352,
+    "grad_norm_frozen_copy": 3.961393117904663,
+    "loss_bug": 0.6931471824645996,
+    "grad_norm_bug": 3.9748144149780273
+  },
+  "reference_with_grad": {
+    "reference_grad_norm": 3.947033643722534
+  },
+  "sum_vs_mean": {
+    "mean_reply_tokens": 23.25,
+    "margin_sum": 0.003134357975795865,
+    "margin_mean": 0.0001486049877712503,
+    "grad_sum": 3.961393117904663,
+    "grad_mean": 0.19171549379825592
+  },
+  "off_by_one": {
+    "right": -4.234045505523682,
+    "wrong": -20.03685760498047
+  },
+  "old_logprobs": {
+    "inner_steps": [
+      {
+        "ratio_fixed": 1.0,
+        "clip_fixed": 0.0,
+        "ratio_recomputed": 1.0,
+        "clip_recomputed": 0.0
+      },
+      {
+        "ratio_fixed": 0.9827872514724731,
+        "clip_fixed": 0.03651685267686844,
+        "ratio_recomputed": 1.0,
+        "clip_recomputed": 0.0
+      },
+      {
+        "ratio_fixed": 0.9795129299163818,
+        "clip_fixed": 0.03932584449648857,
+        "ratio_recomputed": 1.0,
+        "clip_recomputed": 0.0
+      },
+      {
+        "ratio_fixed": 0.9784489274024963,
+        "clip_fixed": 0.028089888393878937,
+        "ratio_recomputed": 1.0,
+        "clip_recomputed": 0.0
+      }
+    ],
+    "mean_abs_advantage": 0.8078627586364746
+  }
+}

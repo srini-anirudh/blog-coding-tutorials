@@ -19,7 +19,7 @@ from posttrain.chat import load_tokenizer  # noqa: E402
 from posttrain.dpo import collate_pairs, synthetic_pairs, tokenize_pair  # noqa: E402
 from posttrain.reward_model import RewardModel, pairwise_loss  # noqa: E402
 from posttrain.tasks import split_problems  # noqa: E402
-from posttrain.utils import pick_device, polite_threads, save_json  # noqa: E402
+from posttrain.utils import hardware_label, pick_device, polite_threads, save_json  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -44,6 +44,7 @@ def main() -> None:
     ap.add_argument("--steps", type=int, default=120)
     ap.add_argument("--batch-size", type=int, default=4)
     ap.add_argument("--lr", type=float, default=2e-5)
+    ap.add_argument("--tag", default="reward_model")
     args = ap.parse_args()
 
     polite_threads()
@@ -59,6 +60,7 @@ def main() -> None:
     opt = torch.optim.AdamW([{"params": model.body.parameters(), "lr": args.lr},
                              {"params": model.head.parameters(), "lr": args.lr * 50}], weight_decay=0.0)
     before = held_out_accuracy(model, tok, test_ex, device)
+    # The head starts at zero, so every pair is a tie and "chosen > rejected" is never true: 0.000 is a tie, not an error.
     print(f"held-out pair accuracy before: {before:.3f}", flush=True)
     rng, history, t0 = random.Random(0), [], time.time()
     model.train()
@@ -78,8 +80,8 @@ def main() -> None:
             print(row, flush=True)
     after = held_out_accuracy(model, tok, test_ex, device)
     print(f"held-out pair accuracy after: {after:.3f}", flush=True)
-    save_json({"device": str(device), "steps": args.steps, "lr": args.lr, "before": before, "after": after,
-               "history": history}, "reward_model.json")
+    save_json({"hardware": hardware_label(device), "steps": args.steps, "batch_size": args.batch_size, "lr": args.lr, "before": before, "after": after,
+               "history": history}, f"{args.tag}.json")
 
 
 if __name__ == "__main__":

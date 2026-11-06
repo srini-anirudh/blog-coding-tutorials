@@ -24,7 +24,7 @@ from posttrain.models import frozen_copy, load_policy  # noqa: E402
 from posttrain.packing import collate_packed, pack_examples  # noqa: E402
 from posttrain.sft import build_examples  # noqa: E402
 from posttrain.tasks import exact_reward, sample_problems, to_messages  # noqa: E402
-from posttrain.utils import pick_device, polite_threads, save_json, synchronize  # noqa: E402
+from posttrain.utils import hardware_label, pick_device, polite_threads, save_json, synchronize  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -43,7 +43,7 @@ def main() -> None:
     tok = load_tokenizer()
     policy = load_policy(args.base, device).eval()
     problems = sample_problems(8, seed=7)
-    out: dict[str, dict] = {"device": {"name": str(device)}}
+    out: dict[str, dict] = {"hardware": {"name": hardware_label(device)}}
 
     # 1. Pad token = end-of-turn token. A collator that masks pad ids also masks the stop token.
     ex = encode_chat(tok, to_messages(problems[0]))
@@ -69,11 +69,14 @@ def main() -> None:
     out["packing"] = {"max_logit_diff_block_mask": leak_safe, "max_logit_diff_no_mask": leak_naive}
     print(f"[packing]  max |logit diff| vs running alone: block mask {leak_safe:.5f}, no mask {leak_naive:.3f}")
 
-    # 3. DPO reference that is the policy itself: the margin is 0 by construction, and so is the gradient.
+    # 3. DPO reference that is the policy itself: the margin is 0 by construction, so the loss stays at log 2 forever.
+    # The gradient is not 0, because the reference term runs under no_grad. The push never saturates, and nothing
+    # in the gradient norm gives the bug away. Watch for a loss and a margin that never move.
     pairs = synthetic_pairs(problems)
     batch = {k: v.to(device) for k, v in collate_pairs([tokenize_pair(tok, p) for p in pairs], tok.pad_token_id, 32).items()}
     policy.train()
-    # With a real frozen copy the first step also has margin 0, so nudge the policy first to get a live gradient.
+    # A real frozen copy also has margin 0 at the first step, and the same gradient as the bug. Nudge the policy once
+    # so the two cases can differ: the frozen copy's margin moves, while the bug's margin stays at 0.
     ref = frozen_copy(policy)
     opt = torch.optim.SGD(policy.parameters(), lr=1e-4)
     dpo_batch_loss(policy, ref, batch)[0].backward()
@@ -92,7 +95,8 @@ def main() -> None:
     print(f"[ref = policy]  frozen copy: loss {loss_ok.item():.4f}, grad norm {gn_ok:.2f}."
           f"  bug: loss {loss_same.item():.4f}, margin {m_same['margin'].abs().max().item():.1e}, grad norm {gn_same:.2f}")
 
-    # 4. Reference with gradients enabled: the same shape of bug, but the graph doubles and the sign is wrong.
+    # 4. Reference with gradients enabled: backward builds a second graph and fills the reference's .grad, which costs
+    # memory and time. The loss value does not change, so only a look at the reference's gradient reveals it.
     unfrozen = copy.deepcopy(ref)
     for p in unfrozen.parameters():
         p.requires_grad_(True)
@@ -124,7 +128,8 @@ def main() -> None:
     print(f"[sum vs mean]  reply ~{lengths:.0f} tokens. |margin| sum {m_sum['margin'].abs().mean().item():.4f}, "
           f"mean {m_mean['margin'].abs().mean().item():.4f}. grad norm sum {gn_sum:.2f}, mean {gn_mean:.2f}")
 
-    # 6. Off by one: score tokens with the wrong shift, so the header newline counts and the stop token does not.
+    # 6. Off by one: logps[t] scores token t + 1, so the mask must be cm[:, 1:]. With cm[:, :-1] the mask lands one token
+    # late: it skips the first reply token and picks up the token after the reply (a pad token where the row has padding).
     policy.eval()
     with torch.no_grad():
         logps = per_token_logprobs(policy, *args_t[:2])
@@ -156,7 +161,7 @@ def main() -> None:
         opt.zero_grad(set_to_none=True)
         rows.append({"ratio_fixed": good_stats["ratio_mean"], "clip_fixed": good_stats["clip_frac"],
                      "ratio_recomputed": bad_stats["ratio_mean"], "clip_recomputed": bad_stats["clip_frac"]})
-    out["old_logprobs"] = {"inner_steps": rows, "reward_mean": float(adv.abs().mean())}
+    out["old_logprobs"] = {"inner_steps": rows, "mean_abs_advantage": float(adv.abs().mean())}
     print("[old log-probs]  inner step: ratio/clip with fixed old | ratio/clip when recomputed")
     for i, r in enumerate(rows):
         print(f"    {i}: {r['ratio_fixed']:.3f} / {r['clip_fixed']:.3f}   |   "

@@ -1,0 +1,11 @@
+[pad = <|im_end|>]  stop-token targets in one conversation: correct 1, with the bug 0
+[packing]  max |logit diff| vs running alone: block mask 0.00000, no mask 39.754
+[ref = policy]  frozen copy: loss 0.6916, grad norm 3.96.  bug: loss 0.6931, margin 0.0e+00, grad norm 3.97
+[ref has grad]  gradient norm that lands on the reference: 3.95 (must be 0)
+[sum vs mean]  reply ~23 tokens. |margin| sum 0.0031, mean 0.0001. grad norm sum 3.96, mean 0.19
+[off by one]  mean log pi(y|x): right -4.234, wrong shift -20.037
+[old log-probs]  inner step: ratio/clip with fixed old | ratio/clip when recomputed
+    0: 1.000 / 0.000   |   1.000 / 0.000
+    1: 0.983 / 0.037   |   1.000 / 0.000
+    2: 0.980 / 0.039   |   1.000 / 0.000
+    3: 0.978 / 0.028   |   1.000 / 0.000

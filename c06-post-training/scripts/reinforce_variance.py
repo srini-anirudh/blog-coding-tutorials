@@ -22,7 +22,7 @@ from posttrain.generation import generate, score_completions  # noqa: E402
 from posttrain.models import load_policy  # noqa: E402
 from posttrain.reinforce import estimator_weights, flat_grad, gradient_noise, reinforce_loss  # noqa: E402
 from posttrain.tasks import exact_reward, sample_problems, to_messages  # noqa: E402
-from posttrain.utils import pick_device, polite_threads, save_json  # noqa: E402
+from posttrain.utils import hardware_label, pick_device, polite_threads, save_json  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 ESTIMATORS = {"none": 1, "batch": 1, "group": 4, "group_std": 4}  # estimator -> samples per prompt
@@ -55,7 +55,7 @@ def main() -> None:
     model = load_policy(args.base, device)
     params = list(model.model.layers[-1].parameters())
     pool = sample_problems(args.samples * args.trials, seed=4)
-    print(f"device={device}, gradient dimension {sum(p.numel() for p in params):,}, "
+    print(f"hardware: {hardware_label(device)}, gradient dimension {sum(p.numel() for p in params):,}, "
           f"{args.samples} rollouts per estimate, {args.trials} estimates each")
     print(f"{'estimator':<12}{'prompts x G':>13}{'mean reward':>13}{'grad norm':>11}{'pairwise cos':>14}{'SNR':>9}")
     results = {}
@@ -73,7 +73,11 @@ def main() -> None:
                          "per_trial_reward": [round(r.mean().item(), 4) for r in rewards]}
         print(f"{name:<12}{f'{P} x {G}':>13}{mean_r:>13.3f}{noise['mean_norm']:>11.2f}"
               f"{noise['pairwise_cos']:>14.3f}{noise['snr']:>9.3f}", flush=True)
-    save_json({"device": str(device), "trials": args.trials, "samples": args.samples, "results": results},
+    # K estimates of pure noise still give SNR near 1/(K-1), because the sample mean keeps some noise. Read SNR against it.
+    floor = 1 / (args.trials - 1)
+    print(f"SNR of pure noise with {args.trials} estimates: about {floor:.3f}")
+    save_json({"hardware": hardware_label(device), "trials": args.trials, "samples": args.samples,
+               "snr_pure_noise": floor, "results": results},
               "reinforce_variance.json")
 
 

@@ -21,10 +21,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from posttrain.chat import load_tokenizer  # noqa: E402
 from posttrain.evaluate import evaluate  # noqa: E402
 from posttrain.lora import apply_lora, lora_state_dict, merge_lora  # noqa: E402
-from posttrain.models import load_policy  # noqa: E402
+from posttrain.models import load_policy, random_policy  # noqa: E402
 from posttrain.sft import SFTConfig, build_examples, train_sft  # noqa: E402
 from posttrain.tasks import split_problems  # noqa: E402
-from posttrain.utils import BASE_MODEL, count_parameters, dir_size_mb, pick_device, polite_threads, save_json  # noqa: E402
+from posttrain.utils import BASE_MODEL, count_parameters, dir_size_mb, hardware_label, pick_device, polite_threads, save_json  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -50,14 +50,12 @@ def main() -> None:
     train, test = split_problems(args.n_train, args.n_test, seed=0, follow_up_frac=0.3)
     examples = build_examples(tok, train)
 
-    model = load_policy(BASE_MODEL, device)
-    if args.init == "random":
-        model.apply(model._init_weights)  # same architecture and size, no pretraining
+    model = load_policy(BASE_MODEL, device) if args.init == "pretrained" else random_policy(BASE_MODEL, device)
     if args.mode == "lora":
         apply_lora(model, r=args.rank, alpha=2 * args.rank)
     lr = args.lr or (1e-3 if args.mode == "lora" else 5e-5)
     trainable, total = count_parameters(model)
-    print(f"device={device} trainable={trainable:,} total={total:,} examples={len(examples)}")
+    print(f"hardware: {hardware_label(device)} trainable={trainable:,} total={total:,} examples={len(examples)}")
 
     before = evaluate(model, tok, test) if args.init == "pretrained" else None
     print("before", before)
@@ -85,7 +83,7 @@ def main() -> None:
     tok.save_pretrained(out)
 
     save_json({
-        "tag": tag, "device": str(device), "mode": args.mode, "init": args.init, "pack": args.pack,
+        "tag": tag, "hardware": hardware_label(device), "mode": args.mode, "init": args.init, "pack": args.pack,
         "lr": lr, "steps": args.steps, "batch_size": args.batch_size,
         "trainable_params": trainable, "total_params": total, "checkpoint_mb": round(ckpt_mb, 1),
         "peak_mem_mb": max(h["mem_mb"] for h in history), "train_sec": round(train_sec, 1),

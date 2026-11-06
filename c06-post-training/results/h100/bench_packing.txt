@@ -1,0 +1,7 @@
+2000 conversations, 62-124 tokens, 159383 real tokens
+padding (8 per batch): 250112 slots, 63.7% real
+packing (256 per row): 177408 slots, 89.8% real
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2
+batching              sec/step  targets/step  slots/step  targets/sec
+padded 8 x bucket         0.17           224         998         1332
+packed 4 x 256            0.16           329        1024         2118

@@ -18,7 +18,7 @@ from posttrain.chat import load_tokenizer  # noqa: E402
 from posttrain.models import load_policy  # noqa: E402
 from posttrain.rollout import RolloutEngine  # noqa: E402
 from posttrain.tasks import exact_reward, sample_problems  # noqa: E402
-from posttrain.utils import pick_device, polite_threads, save_json, synchronize  # noqa: E402
+from posttrain.utils import hardware_label, pick_device, polite_threads, save_json, synchronize  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -41,6 +41,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default=str(ROOT / "checkpoints" / "sft-full"))
     ap.add_argument("--rollouts", type=int, default=64)
+    ap.add_argument("--out", default="bench_rollout.json")
     args = ap.parse_args()
     polite_threads()
     device = pick_device()
@@ -57,12 +58,12 @@ def main() -> None:
     two.sync(policy, 1)
     sync_ms = two.timings["sync_sec"] * 1000
 
-    print(f"device={device}, {args.rollouts} rollouts, up to 48 new tokens each")
+    print(f"hardware: {hardware_label(device)}, {args.rollouts} rollouts, up to 48 new tokens each")
     print(f"{'engine':<28}{'sec':>8}{'rollouts/sec':>14}{'generate':>10}{'reward':>10}")
     for name, r in results.items():
         print(f"{name:<28}{r['sec']:>8.2f}{r['rollouts_per_sec']:>14.1f}{r['generate_sec']:>10.2f}{r['reward_sec']:>10.4f}")
     print(f"weight sync to 2 replicas: {sync_ms:.0f} ms")
-    save_json({"device": str(device), "results": results, "sync_ms": sync_ms}, "bench_rollout.json")
+    save_json({"hardware": hardware_label(device), "results": results, "sync_ms": sync_ms}, args.out)
 
 
 if __name__ == "__main__":

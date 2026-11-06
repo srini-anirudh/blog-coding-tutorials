@@ -1,0 +1,23 @@
+{
+  "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2",
+  "stats": {
+    "real_tokens": 159383,
+    "padded_slots": 250112,
+    "packed_slots": 177408,
+    "pad_efficiency": 0.6372465135619243,
+    "pack_efficiency": 0.8983980429292929,
+    "packed_rows": 693
+  },
+  "padded": {
+    "sec_per_step": 0.1684052586555481,
+    "target_tokens_per_step": 224.25,
+    "slots_per_step": 998.4,
+    "target_tokens_per_sec": 1331.6092489645787
+  },
+  "packed": {
+    "sec_per_step": 0.15542356967926024,
+    "target_tokens_per_step": 329.15,
+    "slots_per_step": 1024.0,
+    "target_tokens_per_sec": 2117.7611650488416
+  }
+}

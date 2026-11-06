@@ -5,7 +5,7 @@ from __future__ import annotations
 import copy
 
 import torch
-from transformers import AutoModelForCausalLM, LlamaConfig, LlamaForCausalLM
+from transformers import AutoConfig, AutoModelForCausalLM, LlamaConfig, LlamaForCausalLM
 
 from .utils import BASE_MODEL
 
@@ -14,6 +14,15 @@ def load_policy(name: str = BASE_MODEL, device: torch.device | str = "cpu", dtyp
     """The pretrained base (or an SFT checkpoint directory), on `device`."""
     model = AutoModelForCausalLM.from_pretrained(name, dtype=dtype)
     return model.to(device)
+
+
+def random_policy(name: str = BASE_MODEL, device: torch.device | str = "cpu", dtype=torch.float32):
+    """The same architecture and size as `name`, with no pretraining.
+
+    Build from the config. Calling model.apply(model._init_weights) after from_pretrained looks right but changes
+    nothing in transformers 5: loaded tensors are flagged as initialised, and the init functions skip them.
+    """
+    return AutoModelForCausalLM.from_config(AutoConfig.from_pretrained(name), dtype=dtype).to(device)
 
 
 def frozen_copy(model: torch.nn.Module) -> torch.nn.Module:

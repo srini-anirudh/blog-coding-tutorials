@@ -1,0 +1,7 @@
+hardware: AMD EPYC 7R13, 8 threads, gradient dimension 3,540,096, 32 rollouts per estimate, 12 estimates each
+estimator     prompts x G  mean reward  grad norm  pairwise cos      SNR
+none               32 x 1        0.656       0.73         0.037    0.147
+batch              32 x 1        0.656       1.45        -0.007    0.080
+group               8 x 4        0.656       1.21         0.007    0.104
+group_std           8 x 4        0.656       2.29         0.005    0.101
+SNR of pure noise with 12 estimates: about 0.091

@@ -1,0 +1,23 @@
+before {'add': 1.0, 'all': 0.795, 'sub': 0.86, 'chain': 0.62, 'mul': 0.7, 'format': 1.0}
+{'step': 1, 'loss': 0.6931, 'margin': 0.0, 'pair_acc': 0.0, 'sec': 0.8}
+{'step': 10, 'loss': 0.6778, 'margin': 0.032, 'pair_acc': 0.75, 'sec': 3.6}
+{'step': 20, 'loss': 0.6044, 'margin': 0.201, 'pair_acc': 0.75, 'sec': 6.5}
+{'step': 30, 'loss': 0.6217, 'margin': 0.15, 'pair_acc': 1.0, 'sec': 9.3}
+{'step': 40, 'loss': 0.6661, 'margin': 0.059, 'pair_acc': 0.75, 'sec': 11.9}
+{'step': 50, 'loss': 0.6111, 'margin': 0.221, 'pair_acc': 0.75, 'sec': 14.4}
+{'step': 60, 'loss': 0.6084, 'margin': 0.18, 'pair_acc': 1.0, 'sec': 17.1}
+{'step': 70, 'loss': 0.5049, 'margin': 0.509, 'pair_acc': 0.75, 'sec': 20.0}
+{'step': 80, 'loss': 0.6331, 'margin': 0.156, 'pair_acc': 0.75, 'sec': 22.7}
+{'step': 90, 'loss': 0.4783, 'margin': 0.505, 'pair_acc': 1.0, 'sec': 26.0}
+{'step': 100, 'loss': 0.6134, 'margin': 0.178, 'pair_acc': 0.75, 'sec': 29.8}
+{'step': 110, 'loss': 0.506, 'margin': 0.424, 'pair_acc': 1.0, 'sec': 32.6}
+{'step': 120, 'loss': 0.724, 'margin': -0.046, 'pair_acc': 0.5, 'sec': 35.2}
+{'step': 130, 'loss': 0.5345, 'margin': 0.4, 'pair_acc': 1.0, 'sec': 38.0}
+{'step': 140, 'loss': 0.4778, 'margin': 0.505, 'pair_acc': 1.0, 'sec': 40.9}
+{'step': 150, 'loss': 0.4344, 'margin': 0.647, 'pair_acc': 1.0, 'sec': 43.8}
+{'step': 160, 'loss': 0.5126, 'margin': 0.441, 'pair_acc': 0.75, 'sec': 46.5}
+{'step': 170, 'loss': 0.5153, 'margin': 0.445, 'pair_acc': 0.75, 'sec': 49.0}
+{'step': 180, 'loss': 0.5111, 'margin': 0.466, 'pair_acc': 0.75, 'sec': 51.7}
+{'step': 190, 'loss': 0.5015, 'margin': 0.454, 'pair_acc': 1.0, 'sec': 54.3}
+{'step': 200, 'loss': 0.45, 'margin': 0.624, 'pair_acc': 0.75, 'sec': 57.3}
+after {'add': 0.88, 'all': 0.445, 'sub': 0.46, 'chain': 0.14, 'mul': 0.3, 'format': 0.995}

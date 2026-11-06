@@ -1,0 +1,300 @@
+{
+  "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2",
+  "dpo": {
+    "prompt_tokens": 44,
+    "chosen_ids": [
+      {
+        "token": "3",
+        "id": 35,
+        "logp": -0.0
+      },
+      {
+        "token": "9",
+        "id": 41,
+        "logp": 0.0
+      },
+      {
+        "token": " +",
+        "id": 1232,
+        "logp": -0.0
+      },
+      {
+        "token": " ",
+        "id": 216,
+        "logp": -0.0
+      },
+      {
+        "token": "5",
+        "id": 37,
+        "logp": 0.0
+      },
+      {
+        "token": "7",
+        "id": 39,
+        "logp": -0.0
+      },
+      {
+        "token": " =",
+        "id": 446,
+        "logp": 0.0
+      },
+      {
+        "token": " ",
+        "id": 216,
+        "logp": -0.0
+      },
+      {
+        "token": "9",
+        "id": 41,
+        "logp": -0.005
+      },
+      {
+        "token": "6",
+        "id": 38,
+        "logp": -0.0
+      },
+      {
+        "token": ".",
+        "id": 30,
+        "logp": 0.0
+      },
+      {
+        "token": " The",
+        "id": 378,
+        "logp": -0.0
+      },
+      {
+        "token": " answer",
+        "id": 2988,
+        "logp": -0.0
+      },
+      {
+        "token": " is",
+        "id": 314,
+        "logp": 0.0
+      },
+      {
+        "token": " ",
+        "id": 216,
+        "logp": -0.0
+      },
+      {
+        "token": "9",
+        "id": 41,
+        "logp": -0.0
+      },
+      {
+        "token": "6",
+        "id": 38,
+        "logp": -0.0
+      },
+      {
+        "token": ".",
+        "id": 30,
+        "logp": 0.0
+      },
+      {
+        "token": "<|im_end|>",
+        "id": 2,
+        "logp": -0.005
+      },
+      {
+        "token": "\n",
+        "id": 198,
+        "logp": -0.161
+      }
+    ],
+    "rejected_ids": [
+      {
+        "token": "3",
+        "id": 35,
+        "logp": -0.0
+      },
+      {
+        "token": "9",
+        "id": 41,
+        "logp": 0.0
+      },
+      {
+        "token": " +",
+        "id": 1232,
+        "logp": -0.0
+      },
+      {
+        "token": " ",
+        "id": 216,
+        "logp": -0.0
+      },
+      {
+        "token": "5",
+        "id": 37,
+        "logp": 0.0
+      },
+      {
+        "token": "7",
+        "id": 39,
+        "logp": -0.0
+      },
+      {
+        "token": " =",
+        "id": 446,
+        "logp": 0.0
+      },
+      {
+        "token": " ",
+        "id": 216,
+        "logp": -0.0
+      },
+      {
+        "token": "1",
+        "id": 33,
+        "logp": -6.012
+      },
+      {
+        "token": "0",
+        "id": 32,
+        "logp": -0.742
+      },
+      {
+        "token": "6",
+        "id": 38,
+        "logp": -0.0
+      },
+      {
+        "token": ".",
+        "id": 30,
+        "logp": 0.0
+      },
+      {
+        "token": " The",
+        "id": 378,
+        "logp": -0.0
+      },
+      {
+        "token": " answer",
+        "id": 2988,
+        "logp": -0.0
+      },
+      {
+        "token": " is",
+        "id": 314,
+        "logp": 0.0
+      },
+      {
+        "token": " ",
+        "id": 216,
+        "logp": 0.0
+      },
+      {
+        "token": "1",
+        "id": 33,
+        "logp": -0.0
+      },
+      {
+        "token": "0",
+        "id": 32,
+        "logp": 0.0
+      },
+      {
+        "token": "6",
+        "id": 38,
+        "logp": -0.0
+      },
+      {
+        "token": ".",
+        "id": 30,
+        "logp": 0.0
+      },
+      {
+        "token": "<|im_end|>",
+        "id": 2,
+        "logp": -0.005
+      },
+      {
+        "token": "\n",
+        "id": 198,
+        "logp": -0.149
+      }
+    ]
+  },
+  "grpo": {
+    "question": "What is 31 + 63 - 98?",
+    "truth": -4,
+    "group": [
+      {
+        "text": "31 + 63 = 94. 94 - 98 = -12. The answer is -12.",
+        "reward": 0.0,
+        "advantage": 0.0,
+        "logp": -2.77,
+        "tokens": 31
+      },
+      {
+        "text": "31 + 63 = 94. 94 - 98 = -2. The answer is -2.",
+        "reward": 0.0,
+        "advantage": 0.0,
+        "logp": -2.17,
+        "tokens": 29
+      },
+      {
+        "text": "31 + 63 = 94. 94 - 98 = -1. The answer is -1.",
+        "reward": 0.0,
+        "advantage": 0.0,
+        "logp": -1.91,
+        "tokens": 29
+      },
+      {
+        "text": "31 + 63 = 94. 94 - 98 = -3. The answer is -3.",
+        "reward": 0.0,
+        "advantage": 0.0,
+        "logp": -1.95,
+        "tokens": 29
+      },
+      {
+        "text": "31 + 63 = 94. 94 - 98 = -1. The answer is -1.",
+        "reward": 0.0,
+        "advantage": 0.0,
+        "logp": -1.91,
+        "tokens": 29
+      },
+      {
+        "text": "31 + 63 = 94. 94 - 98 = -2. The answer is -2.",
+        "reward": 0.0,
+        "advantage": 0.0,
+        "logp": -2.17,
+        "tokens": 29
+      },
+      {
+        "text": "31 + 63 = 94. 94 - 98 = -3. The answer is -3.",
+        "reward": 0.0,
+        "advantage": 0.0,
+        "logp": -1.95,
+        "tokens": 29
+      },
+      {
+        "text": "31 + 63 = 94. 94 - 98 = -12. The answer is -12.",
+        "reward": 0.0,
+        "advantage": 0.0,
+        "logp": -2.77,
+        "tokens": 31
+      }
+    ],
+    "shapes": {
+      "prompt_ids": [
+        8,
+        64
+      ],
+      "completion_ids": [
+        8,
+        31
+      ],
+      "completion_mask": [
+        8,
+        31
+      ],
+      "token_logps": [
+        8,
+        31
+      ]
+    }
+  }
+}

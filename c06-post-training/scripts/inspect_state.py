@@ -21,7 +21,7 @@ from posttrain.grpo import group_advantages  # noqa: E402
 from posttrain.logprobs import per_token_logprobs  # noqa: E402
 from posttrain.models import load_policy  # noqa: E402
 from posttrain.tasks import exact_reward, make_problem, sample_problems, to_messages  # noqa: E402
-from posttrain.utils import pick_device, polite_threads, save_json  # noqa: E402
+from posttrain.utils import hardware_label, pick_device, polite_threads, save_json  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -78,7 +78,7 @@ def main() -> None:
         "completion_mask": list(gen.completion_mask.shape), "token_logps": list(token_logps.shape),
     }
     print(shapes)
-    save_json({"device": str(device), "dpo": {"prompt_tokens": P, **dpo_rows},
+    save_json({"hardware": hardware_label(device), "dpo": {"prompt_tokens": P, **dpo_rows},
                "grpo": {"question": problem.question, "truth": problem.answer, "group": group, "shapes": shapes}},
               "inspect_state.json")
 

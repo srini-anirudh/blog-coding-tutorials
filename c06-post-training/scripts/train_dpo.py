@@ -20,7 +20,7 @@ from posttrain.dpo import collate_pairs, dpo_batch_loss, on_policy_pairs, synthe
 from posttrain.evaluate import evaluate  # noqa: E402
 from posttrain.models import frozen_copy, load_policy  # noqa: E402
 from posttrain.tasks import split_problems  # noqa: E402
-from posttrain.utils import pick_device, polite_threads, save_json  # noqa: E402
+from posttrain.utils import hardware_label, pick_device, polite_threads, save_json  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -77,7 +77,7 @@ def main() -> None:
     tag = args.tag or f"dpo-{args.pairs}"
     policy.save_pretrained(ROOT / "checkpoints" / tag)
     tok.save_pretrained(ROOT / "checkpoints" / tag)
-    save_json({"tag": tag, "device": str(device), "pairs": args.pairs, "n_pairs": len(pairs), "beta": args.beta,
+    save_json({"tag": tag, "hardware": hardware_label(device), "pairs": args.pairs, "n_pairs": len(pairs), "beta": args.beta,
                "lr": args.lr, "steps": args.steps, "before": before, "after": after, "history": history},
               f"{tag}.json")
 

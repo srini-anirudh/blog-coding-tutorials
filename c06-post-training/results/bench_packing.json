@@ -1,0 +1,23 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads",
+  "stats": {
+    "real_tokens": 159383,
+    "padded_slots": 250112,
+    "packed_slots": 177408,
+    "pad_efficiency": 0.6372465135619243,
+    "pack_efficiency": 0.8983980429292929,
+    "packed_rows": 693
+  },
+  "padded": {
+    "sec_per_step": 2.2501898805300393,
+    "target_tokens_per_step": 222.5,
+    "slots_per_step": 1002.6666666666666,
+    "target_tokens_per_sec": 98.88054422660073
+  },
+  "packed": {
+    "sec_per_step": 2.475610693295797,
+    "target_tokens_per_step": 330.5833333333333,
+    "slots_per_step": 1024.0,
+    "target_tokens_per_sec": 133.53607424163513
+  }
+}

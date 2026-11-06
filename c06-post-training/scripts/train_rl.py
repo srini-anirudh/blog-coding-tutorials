@@ -26,7 +26,7 @@ from posttrain.models import frozen_copy, load_policy  # noqa: E402
 from posttrain.reinforce import reinforce_loss  # noqa: E402
 from posttrain.rollout import RolloutEngine  # noqa: E402
 from posttrain.tasks import exact_reward, split_problems  # noqa: E402
-from posttrain.utils import pick_device, polite_threads, save_json  # noqa: E402
+from posttrain.utils import hardware_label, pick_device, polite_threads, save_json  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -69,7 +69,8 @@ def main() -> None:
         policy.eval()
         engine.sync(policy, step)
         rollouts = engine.collect(rng.sample(train, n_prompts))
-        batch = {k: v.to(device) for k, v in engine.build_batch(rollouts).items()}
+        scale = "group" if args.algo == "grpo" else "none"  # REINFORCE has groups of 1, which have no std
+        batch = {k: v.to(device) for k, v in engine.build_batch(rollouts, scale=scale).items()}
         policy.train()
         args_tensors = (batch["prompt_ids"], batch["prompt_mask"], batch["completion_ids"], batch["completion_mask"])
 
@@ -103,7 +104,7 @@ def main() -> None:
 
     tag = args.tag or args.algo
     policy.save_pretrained(ROOT / "checkpoints" / tag)
-    save_json({"tag": tag, "algo": args.algo, "device": str(device), "steps": args.steps, "prompts": n_prompts,
+    save_json({"tag": tag, "algo": args.algo, "hardware": hardware_label(device), "steps": args.steps, "prompts": n_prompts,
                "group_size": group, "inner": args.inner, "lr": args.lr, "beta": args.beta, "start": start,
                "history": history}, f"{tag}.json")
 

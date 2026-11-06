@@ -1,0 +1,27 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads",
+  "results": {
+    "sequential (batch 4)": {
+      "rollouts": 64.0,
+      "sec": 36.03692030906677,
+      "rollouts_per_sec": 1.7759564205573306,
+      "generate_sec": 36.036149978637695,
+      "reward_sec": 0.0004088878631591797
+    },
+    "batched (batch 64)": {
+      "rollouts": 64.0,
+      "sec": 9.38253116607666,
+      "rollouts_per_sec": 6.8211870408059445,
+      "generate_sec": 9.382228374481201,
+      "reward_sec": 0.00016641616821289062
+    },
+    "2 workers (batch 32 each)": {
+      "rollouts": 64.0,
+      "sec": 8.874146938323975,
+      "rollouts_per_sec": 7.211960816606382,
+      "generate_sec": 8.873856544494629,
+      "reward_sec": 0.00016450881958007812
+    }
+  },
+  "sync_ms": 191.38288497924805
+}

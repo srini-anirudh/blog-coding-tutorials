@@ -1,0 +1,6 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, 64 rollouts, up to 48 new tokens each
+engine                           sec  rollouts/sec  generate    reward
+sequential (batch 4)           16.55           3.9     16.54    0.0003
+batched (batch 64)              1.90          33.7      1.90    0.0001
+2 workers (batch 32 each)       2.58          24.8      2.58    0.0001
+weight sync to 2 replicas: 14 ms

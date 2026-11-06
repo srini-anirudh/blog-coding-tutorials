@@ -1,0 +1,5 @@
+hardware: AMD EPYC 7R13, 8 threads, batch 16, memory = peak of the training process
+MiB columns: peak so far after loading, then after the first forward, backward and optimizer step
+mode         trainable   loaded  forward  backward  opt step    peak  sec/step
+full       134,515,008     1171     5432      5814      5814    7045      4.70
+lora         4,884,480     1192     7001      7381      7381    7381      8.25
