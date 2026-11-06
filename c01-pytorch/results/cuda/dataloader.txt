@@ -1,0 +1,11 @@
+600 examples, 2 ms of CPU work each, batch 32
+config                              epoch 1 s  epoch 2 s  ex/s (ep 2)
+num_workers=0                            1.21       1.20          498
+num_workers=2                            0.74       0.70          854
+num_workers=2 persistent                 0.69       0.64          941
+num_workers=4                            0.40       0.52         1162
+num_workers=4 persistent                 0.50       0.33         1813
+num_workers=4 persistent prefetch=4       0.43       0.33         1804
+num_workers=4 persistent pin_memory       0.70       0.34         1771
+SimpleDataLoader num_workers=0           1.21       1.20          499
+SimpleDataLoader num_workers=4           0.45       0.46         1307

@@ -1,0 +1,4 @@
+== model and batch on different devices ==
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+check_same_device: x is on cpu but the model is on cuda:0; call .to(device)
+

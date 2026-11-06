@@ -86,7 +86,8 @@ Which script covers which section of the tutorial:
 Every number names its hardware. Raw output is in `results/`, under the name of the script that wrote it.
 
 Tests on AMD EPYC 7R13, 8 threads, torch 2.15.0: 50 passed, 6 `gpu` tests deselected. There are no `network` or `slow`
-tests. See `results/tests.txt`.
+tests. See `results/tests.txt`. On an NVIDIA H100 80GB HBM3 (torch 2.15.0+cu132, CUDA 13.2) the 6 `gpu` tests passed.
+See `results/cuda/tests_gpu.txt`.
 
 ### AMD EPYC 7R13, 8 threads, torch 2.15.0
 
@@ -114,7 +115,7 @@ so it does not show that either loader is faster.
 
 ### Apple M5, 10 cores, 16 GB, torch 2.15.0, 2 CPU threads
 
-These need an accelerator, and this is the only one measured so far. The laptop was shared with other jobs.
+These need an accelerator. The laptop was shared with other jobs. The CUDA numbers are further down.
 
 | Measurement | Result |
 |---|---|
@@ -134,15 +135,51 @@ pinned speed-up into these numbers.
 | Machine | Files in `results/` |
 |---|---|
 | Apple M5 | `05_train_mps.txt`, `transfer.txt`, `transfer.json`, `transfer_run2.txt`, `transfer_run2.json`, `matmul_apple_m5.txt`, `optimizers_apple_m5.txt`, `07_break_it_apple_m5.txt` |
+| NVIDIA H100 80GB HBM3, host AMD EPYC 7R13, 8 threads | Everything in `results/cuda/` |
 | AMD EPYC 7R13, 8 threads | Every other file |
 
 `07_break_it.txt` shows the device-mismatch error on the `meta` device, because the EPYC runs had no accelerator.
-`07_break_it_apple_m5.txt` shows the same mistake on MPS.
+`07_break_it_apple_m5.txt` shows the same mistake on MPS, and `cuda/07_break_it_device.txt` on CUDA.
 
-### CUDA: not yet measured
+### CUDA: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
 
-No CUDA numbers exist yet. These commands measure them. `pick_device` selects CUDA first and `synchronize` calls
-`torch.cuda.synchronize`.
+One H100, held alone for the whole run. The host CPU is also an AMD EPYC 7R13 with `OMP_NUM_THREADS=8`, so the CPU
+columns below come from that host in the same run. Other jobs ran on the node's other GPUs. Raw output is in
+`results/cuda/`. `pick_device` selects CUDA first and `synchronize` calls `torch.cuda.synchronize`.
+
+The 6 `gpu` tests passed (`results/cuda/tests_gpu.txt`). They cover `.cuda()` vs `.to()`, a pinned `non_blocking` copy,
+the real device mismatch, `scratchnet.AdamW` vs `torch.optim.AdamW` on CUDA, resuming from a checkpoint on CUDA, and
+`SimpleDataLoader` pinning.
+
+| Measurement | Result |
+|---|---|
+| Spiral MLP, AdamW, lr 0.01, 60 epochs on CUDA | train loss 0.0015, val accuracy 0.998, 4.91 s |
+| The same run on the EPYC CPU (`05_train_adamw.txt`, other machine, loaded) | train loss 0.0015, val accuracy 0.998, 5.79 s |
+| `optimizer.step()`, 6.3 M parameters, CUDA: ours / torch for-loop / foreach / fused | 3.24 / 3.78 / 0.55 / 0.23 ms |
+| The same on the host CPU, 8 threads | 4.11 / 4.34 / 10.51 / 0.96 ms |
+| `torch.mm` on CUDA, n = 256 / 1024 / 2048 / 4096 | 0.049 / 0.085 / 0.369 / 2.695 ms |
+| The same as GFLOP/s | 687 / 25,228 / 46,606 / 51,001 |
+| 2048 x 2048 `torch.mm`: host CPU, 8 threads / CUDA | 22.7 / 0.369 ms |
+| 4096 x 4096 `torch.mm` on CUDA, without / with `synchronize()` | 0.037 / 2.695 ms |
+| 256 MB copy to the GPU: pageable / pinned | 11.7 / 14.3 GB/s |
+| 256 MB copy back to the CPU | 1.35 GB/s |
+| 64 MB pinned copy, `non_blocking=True`: call returns / copy finishes | 0.036 / 4.74 ms |
+| DataLoader, 4 persistent workers, epoch 2: without / with `pin_memory` | 1813 / 1771 examples/s |
+
+The spiral MLP is too small to keep a GPU busy, so CUDA trains it barely faster than the CPU. The same seed gives the
+same loss and accuracy on both. The matmul runs in float32 with the default precision (no TF32). Without
+`synchronize()`, the 4096 matmul seems to take 0.037 ms: that is only the time to queue it.
+
+Pinned copies were faster at every size, from 1.8 to 3.1 GB/s at 64 KB and from 11.7 to 14.3 GB/s at 256 MB. These
+copies ran well below what the H100's PCIe Gen5 link can carry. Jobs on the other GPUs shared the host, and this run
+does not show which limit applied. Copies back to the CPU land in fresh pageable memory. They were about ten times
+slower than pinned copies to the GPU. Pinning did not change
+DataLoader throughput here, because each batch is a few KB and the 2 ms of CPU work per example dominates. This is one
+run of each benchmark.
+
+`results/cuda/07_break_it_device.txt` shows the real device-mismatch error: `cuda:0 and cpu`.
+
+To measure them again:
 
 ```bash
 python -m pytest c01-pytorch -m gpu

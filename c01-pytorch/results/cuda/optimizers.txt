@@ -1,0 +1,7 @@
+torch 2.15.0+cu132, 8 CPU threads
+6.30 M parameters in 48 tensors
+impl                  cpu ms   cuda ms
+scratchnet.AdamW        4.11      3.24
+torch for-loop          4.34      3.78
+torch foreach          10.51      0.55
+torch fused             0.96      0.23

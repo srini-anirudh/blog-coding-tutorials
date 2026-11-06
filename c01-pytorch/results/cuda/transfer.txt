@@ -1,0 +1,11 @@
+device=cuda  torch=2.15.0+cu132
+ size_MB  H2D_pageable  H2D_pinned      D2H   (GB/s)
+  0.0625          1.77        3.11     1.00
+       1          6.85       11.61     1.39
+       4         10.88       13.46     1.51
+      16         12.82       14.02     1.54
+      64         12.04       14.20     1.37
+     256         11.73       14.25     1.35
+
+what non_blocking=True returns (64 MB, pinned source):
+  call returned after 0.036 ms, copy finished after 4.741 ms
