@@ -2,6 +2,7 @@
 
 import pytest
 import torch
+from datasets import IterableDataset, load_dataset
 from PIL import Image
 from transformers import AutoConfig, AutoProcessor, AutoTokenizer, DataCollatorForLanguageModeling
 
@@ -88,3 +89,9 @@ def test_vision_collator_labels_only_the_reply():
     assert batch["labels"].shape == batch["input_ids"].shape
     decoded = [processor.tokenizer.decode(row[row != -100]).strip() for row in batch["labels"]]
     assert decoded[0].startswith("Seven") and decoded[1].startswith("Two")
+
+
+def test_hub_streaming_reads_rows_without_a_full_download():
+    stream = load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1", split="train", streaming=True)
+    assert isinstance(stream, IterableDataset)
+    assert len(list(stream.take(2))) == 2

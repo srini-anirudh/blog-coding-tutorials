@@ -14,7 +14,7 @@ from datasets import Dataset
 from transformers import AutoTokenizer
 
 from hfstack.data import make_arithmetic_rows, question
-from hfstack.utils import CHAT_LM, be_polite
+from hfstack.utils import CHAT_LM, be_polite, hardware_label
 
 be_polite()
 parser = argparse.ArgumentParser()
@@ -42,7 +42,7 @@ def run(name: str, **kwargs) -> None:
     print(f"{name:<34} {seconds:>7.2f} s {args.rows / seconds:>12,.0f} rows/s")
 
 
-print(f"{args.rows:,} rows, Apple M5 CPU")
+print(f"{args.rows:,} rows, {hardware_label()}, TOKENIZERS_PARALLELISM=false")
 run("per row")
 run("batched, batch_size=1000", batched=True)
 run("batched, batch_size=1000, 2 procs", batched=True, num_proc=2)

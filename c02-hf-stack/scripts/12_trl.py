@@ -15,13 +15,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import torch
-from transformers import AutoTokenizer, LlamaForCausalLM, PrinterCallback
-from trl import DPOConfig, DPOTrainer, GRPOConfig, GRPOTrainer, SFTConfig, SFTTrainer
+from transformers import AutoTokenizer, LlamaForCausalLM, LlamaForSequenceClassification, PrinterCallback
+from trl import DPOConfig, DPOTrainer, GRPOConfig, GRPOTrainer, RewardConfig, RewardTrainer, SFTConfig, SFTTrainer
 
 from hfstack.chat import SMOLLM2_TRAINING_TEMPLATE, assistant_labels_by_prefix
 from hfstack.trl_runs import exact_answer_reward, preference_dataset, prompt_dataset, sft_dataset
 from hfstack.training import clone_model
-from hfstack.utils import CHAT_LM, be_polite, tiny_llama_config
+from hfstack.utils import CHAT_LM, be_polite, hardware_label, tiny_llama_config
 
 be_polite()
 torch.manual_seed(0)
@@ -40,6 +40,7 @@ def losses(trainer) -> list[float]:
     return [round(e["loss"], 3) for e in trainer.state.log_history if "loss" in e and "train_loss" not in e]
 
 
+print("timings below:", hardware_label())
 print("--- formats ---")
 print("SFT       ", json.dumps(sft_dataset(1)[0]))
 print("preference", json.dumps(preference_dataset(1)[0]))
@@ -72,6 +73,21 @@ with tempfile.TemporaryDirectory() as tmp:
     trainer.train()
     print(f"loss per step {losses(trainer)}, {time.perf_counter() - start:.1f} s")
     print("ln 2 =", round(float(torch.log(torch.tensor(2.0))), 3), "(the DPO loss at step 0, when model == reference)")
+
+    print("\n--- RewardTrainer: same preference data, but the model outputs one score per sequence ---")
+    data = preference_dataset(32)
+    start = time.perf_counter()
+    scorer = LlamaForSequenceClassification(
+        tiny_llama_config(vocab_size=len(tok), num_labels=1, pad_token_id=tok.pad_token_id)
+    )
+    args = RewardConfig(output_dir=tmp, **common)
+    trainer = RewardTrainer(model=scorer, args=args, train_dataset=data, processing_class=tok)
+    print("columns after preparation:", trainer.train_dataset.column_names)
+    batch = trainer.data_collator([trainer.train_dataset[i] for i in range(2)])
+    print("batch (chosen rows, then rejected rows):", {k: tuple(v.shape) for k, v in batch.items()})
+    trainer.remove_callback(PrinterCallback)
+    trainer.train()
+    print(f"loss per step {losses(trainer)}, {time.perf_counter() - start:.1f} s")
 
     print("\n--- GRPOTrainer ---")
     data = prompt_dataset(32)

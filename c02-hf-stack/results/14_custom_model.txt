@@ -1,3 +1,16 @@
+--- what PreTrainedModel adds on top of nn.Module ---
+  method                           nn.Module  BackwardPassForCausalLM
+  forward                          True       True
+  state_dict                       True       True
+  save_pretrained                  False      True
+  from_pretrained                  False      True
+  push_to_hub                      False      True
+  generate                         False      True
+  resize_token_embeddings          False      True
+  gradient_checkpointing_enable    False      True
+  tie_weights                      False      True
+  post_init drew embeddings with std 0.0200, config.initializer_range = 0.02
+
 --- before register(): the Auto classes do not know the model type ---
 ValueError: The checkpoint you are trying to load has model type `backward_pass` but Transformers does not recognize this ...
 
@@ -23,7 +36,7 @@ tied after load: True
 generate equals a no-cache greedy loop: True
 
 --- Trainer treats it like any other model ---
-raw vs Trainer, max |loss diff|: 4.77e-07
+raw vs Trainer, max |loss diff|: 7.15e-07
 
 --- PEFT needs only module names ---
 trainable, total: (3072, 151488)

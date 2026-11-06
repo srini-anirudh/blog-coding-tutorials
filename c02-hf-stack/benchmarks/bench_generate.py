@@ -14,7 +14,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from hfstack.generation import generate_with_cache, greedy_no_cache
-from hfstack.utils import BASE_LM, be_polite
+from hfstack.utils import BASE_LM, be_polite, hardware_label
 
 be_polite()
 parser = argparse.ArgumentParser()
@@ -32,11 +32,13 @@ def timed(fn) -> tuple[torch.Tensor, float]:
     out = fn()
     if args.device == "mps":
         torch.mps.synchronize()
+    elif args.device.startswith("cuda"):
+        torch.cuda.synchronize()
     return out, time.perf_counter() - start
 
 
 timed(lambda: generate_with_cache(model, ids, max_new_tokens=4))  # warm up
-print(f"SmolLM2-135M, prompt {ids.size(1)} tokens, {args.new} new tokens, device {args.device}, float32")
+print(f"SmolLM2-135M, prompt {ids.size(1)} tokens, {args.new} new tokens, {hardware_label(args.device)}, float32")
 results = {}
 for name, fn in {
     "no cache (recompute history)": lambda: greedy_no_cache(model, ids, args.new),

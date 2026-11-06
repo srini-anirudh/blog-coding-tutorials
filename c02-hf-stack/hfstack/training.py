@@ -136,7 +136,7 @@ def training_arguments(cfg: LoopConfig, output_dir: str, **overrides) -> Trainin
         # optimisation
         learning_rate=cfg.learning_rate,
         weight_decay=cfg.weight_decay,
-        warmup_steps=cfg.warmup_steps,
+        warmup_steps=cfg.warmup_steps,  # a float below 1 is a ratio; transformers 5 has no warmup_ratio
         lr_scheduler_type="linear",
         optim="adamw_torch",  # the default "adamw_torch_fused" differs in the last float bits
         max_grad_norm=cfg.max_grad_norm,

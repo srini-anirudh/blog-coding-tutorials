@@ -11,14 +11,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from datasets import load_dataset
+from huggingface_hub import HfApi
 from transformers import AutoTokenizer
 
 from hfstack.chat import assistant_labels_by_prefix
-from hfstack.data import arithmetic_dataset_dict, make_arithmetic_rows, to_messages, write_jsonl
-from hfstack.utils import CHAT_LM, be_polite
+from hfstack.data import make_arithmetic_rows, to_messages, write_jsonl
+from hfstack.utils import CHAT_LM, be_polite, hardware_label
 
 be_polite()
-tmp = Path(tempfile.mkdtemp())
+tmp_dir = tempfile.TemporaryDirectory()  # removed when the script exits
+tmp = Path(tmp_dir.name)
+print("timings below:", hardware_label())
 
 # 1. load_dataset works on local files too; the Hub is one source among several.
 path = write_jsonl(make_arithmetic_rows(2_000), tmp / "arithmetic.jsonl")
@@ -76,3 +79,13 @@ buffered = stream.shuffle(seed=0, buffer_size=100)
 print("buffer shuffle, first ids:", [row["id"] for row, _ in zip(buffered, range(6))])
 print("take(2)        :", [row["id"] for row in stream.take(2)])
 print("skip(1998) ids :", [row["id"] for row in stream.skip(1998)])
+
+# 7. Why foundation-model corpora stream: a real one does not fit on most disks.
+info = HfApi().dataset_info("HuggingFaceFW/fineweb-edu", files_metadata=True)
+print(f"\nFineWeb-Edu on the Hub: {len(info.siblings):,} files, {sum(s.size or 0 for s in info.siblings) / 1e12:.2f} TB")
+
+start = time.perf_counter()
+hub_stream = load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1", split="train", streaming=True)
+# take() reads to the end of its 3 rows and closes the reader. A half-read iterator can stall interpreter exit.
+rows = list(hub_stream.take(3))
+print(f"wikitext from the Hub, first 3 rows in {time.perf_counter() - start:.1f} s, no full download:", rows[1])

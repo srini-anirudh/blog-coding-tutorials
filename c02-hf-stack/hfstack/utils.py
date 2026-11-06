@@ -1,9 +1,13 @@
-"""Small helpers shared by every module: device choice, tiny configs, parameter counts."""
+"""Small helpers shared by every module: device choice, hardware labels, tiny configs, parameter counts."""
 
 from __future__ import annotations
 
 import os
+import platform
+import re
+import subprocess
 import warnings
+from pathlib import Path
 
 import torch
 from datasets.utils.logging import disable_progress_bar as disable_datasets_progress_bar
@@ -26,9 +30,23 @@ def pick_device() -> torch.device:
     return torch.device("cpu")
 
 
-def be_polite(threads: int = 2) -> None:
-    """Limit CPU threads and silence progress noise. Thirteen tutorials share one laptop."""
-    torch.set_num_threads(threads)
+def hardware_label(device: str | torch.device = "cpu") -> str:
+    """Name the hardware that produced a timing, by model only: "AMD EPYC 7R13, 8 threads"."""
+    if torch.device(device).type == "cuda":
+        return torch.cuda.get_device_name(0)
+    model = platform.processor() or "unknown CPU"
+    if platform.system() == "Linux":
+        match = re.search(r"model name\s*:\s*(.+)", Path("/proc/cpuinfo").read_text())
+        model = match.group(1) if match else model
+    elif platform.system() == "Darwin":
+        model = subprocess.run(["sysctl", "-n", "machdep.cpu.brand_string"], capture_output=True, text=True).stdout.strip()
+    model = re.sub(r"\s+(\d+-Core\s+)?Processor\s*$", "", model)
+    return f"{model}, {torch.get_num_threads()} threads"
+
+
+def be_polite(threads: int = 8) -> None:
+    """Cap CPU threads and silence progress noise, so timings are comparable and the output stays readable."""
+    torch.set_num_threads(min(threads, os.cpu_count() or threads))
     os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
     hf_logging.set_verbosity_error()
     hf_logging.disable_progress_bar()

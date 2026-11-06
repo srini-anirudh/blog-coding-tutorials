@@ -1,3 +1,4 @@
+timings below: AMD EPYC 7R13, 8 threads
 DatasetDict -> DatasetDict({
     train: Dataset({
         features: ['id', 'a', 'b', 'op', 'answer'],
@@ -11,15 +12,15 @@ cache files  : ['json-train.arrow']
 arrow table  : MemoryMappedTable | nbytes: 74000
 python list  : 384184 bytes (shallow, no int objects)
 
-fingerprint            : 3972e5cfcc01e94a
-filter(answer >= 0)    : 3469f4b979444370 1486 rows
-shuffle(seed=0)        : 8ba6d979f229eb5d | indices mapping: True
-select(range(4))       : 925db5517f314b64 | ids [0, 1, 2, 3]
+fingerprint            : d9ca2f9e1eafa422
+filter(answer >= 0)    : 5c6e7c57485d18b0 1486 rows
+shuffle(seed=0)        : fc182f7b9d5de5db | indices mapping: True
+select(range(4))       : bc419f7ef77d8972 | ids [0, 1, 2, 3]
 first ids after shuffle: [1946, 1236, 1380, 1949, 1633, 474]
 
-first  map:   4.03 s | fingerprint 384c2d09daabf88e
+first  map:   1.47 s | fingerprint 6406fcdaa9bb7760
 
-second map:   1.04 s | fingerprint 384c2d09daabf88e
+second map:   0.55 s | fingerprint 6406fcdaa9bb7760
 columns after remove_columns: ['input_ids', 'attention_mask', 'labels']
 row 0 lengths: {'input_ids': 41, 'attention_mask': 41, 'labels': 41}
 
@@ -31,3 +32,6 @@ lazy transforms: {'id': 2, 'a': 51, 'b': 38, 'op': '-', 'answer': 13, 'text': '5
 buffer shuffle, first ids: [82, 36, 20, 5, 93, 16]
 take(2)        : [0, 1]
 skip(1998) ids : [1998, 1999]
+
+FineWeb-Edu on the Hub: 3,038 files, 5.84 TB
+wikitext from the Hub, first 3 rows in 5.6 s, no full download: {'text': ' = Valkyria Chronicles III = \n'}

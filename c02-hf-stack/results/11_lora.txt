@@ -1,0 +1,31 @@
+device cpu (AMD EPYC 7R13, 8 threads)
+trainable 921,600 of 135,436,608 (0.68%)
+  base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight         (8, 576)
+  base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight         (576, 8)
+  base_model.model.model.layers.0.self_attn.k_proj.lora_A.default.weight         (8, 576)
+  base_model.model.model.layers.0.self_attn.k_proj.lora_B.default.weight         (192, 8)
+  ... 240 trainable tensors in total
+
+wrapped layer: peft.tuners.lora.layer.Linear
+lora_B starts at zero: True
+|peft - by hand| max: 0.00e+00, scale = 2.0
+
+trained 150 steps in 203 s (1.35 s/step)
+loss: [(10, 2.5), (20, 1.152), (30, 0.815), (40, 0.699), (50, 0.717), (60, 0.606), (70, 0.479), (80, 0.44), (90, 0.398), (100, 0.46), (110, 0.416), (120, 0.436), (130, 0.383), (140, 0.302), (150, 0.311)]
+
+exact-match accuracy on 182 held-out sums: before 0.000, after 0.555
+  What is 86 + 11?   answer   97 | before 'To add 86 and'                    | after '97'
+  What is 80 + 11?   answer   91 | before 'To add 80 and'                    | after '91'
+  What is 84 - 74?   answer   10 | before 'To find the difference between '  | after '16'
+  What is 93 + 76?   answer  169 | before 'To add 93 and'                    | after '169'
+
+adapter checkpoint:
+  README.md                           5,224
+  adapter_config.json                 1,140
+  adapter_model.safetensors       3,717,656
+full model in float32 would be 541,746,432 bytes; the adapter is 0.69% of that
+adapter_config target_modules: ['k_proj', 'o_proj', 'q_proj', 'v_proj']
+|logits after reload - before| max: 0.00e+00
+
+merge_and_unload: type LlamaForCausalLM, |logits merged - adapter| max: 5.63e-05
+q_proj after merge: Linear

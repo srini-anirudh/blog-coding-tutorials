@@ -9,7 +9,7 @@ CausalLMOutputWithPast
   attentions       tuple of 30 × (2, 9, 5, 5)
 
 hidden_states has num_hidden_layers + 1 entries: 31 = 30 + 1
-attentions row sums to 1: 1.0
+attentions row sums to 1: 1.0000001192092896
 cached key shape: (B, num_key_value_heads, T, head_dim) = (2, 3, 5, 64)
 
 --- the KV cache grows by one position per step ---

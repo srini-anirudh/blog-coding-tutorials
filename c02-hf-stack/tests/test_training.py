@@ -4,7 +4,7 @@ import tempfile
 
 import pytest
 import torch
-from transformers import LlamaForCausalLM, PrinterCallback, Trainer
+from transformers import LlamaForCausalLM, PrinterCallback, Trainer, TrainerCallback
 
 from hfstack.accelerate_loop import train_accelerate
 from hfstack.collators import CausalLMCollator
@@ -114,3 +114,20 @@ def test_resume_from_checkpoint_matches_uninterrupted(setup):
 
     for a, b in zip(full.parameters(), resumed.parameters()):
         assert torch.allclose(a, b, atol=1e-5)
+
+
+def test_evaluation_and_callbacks_fire_on_schedule(setup):
+    model, data, collate = setup
+    seen = []
+
+    class Record(TrainerCallback):
+        def on_evaluate(self, args, state, control, metrics=None, **kwargs):
+            seen.append((state.global_step, "eval_loss" in metrics))
+
+    with tempfile.TemporaryDirectory() as tmp:
+        args = training_arguments(CFG, tmp, eval_strategy="steps", eval_steps=6)
+        trainer = Trainer(model=clone_model(model), args=args, train_dataset=data, eval_dataset=data, data_collator=collate)
+        trainer.remove_callback(PrinterCallback)
+        trainer.add_callback(Record())
+        trainer.train()
+    assert seen == [(6, True), (12, True)]

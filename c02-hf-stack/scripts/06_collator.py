@@ -19,7 +19,7 @@ be_polite()
 tok = AutoTokenizer.from_pretrained(CHAT_LM)
 print("pad token:", repr(tok.pad_token), tok.pad_token_id, "| eos token:", repr(tok.eos_token), tok.eos_token_id)
 
-rows = make_arithmetic_rows(3, seed=1)
+rows = make_arithmetic_rows(3, seed=2)  # lengths 39, 40 and 41, so the padding shows
 features = [assistant_labels_by_prefix(tok, to_messages(row)["messages"]) for row in rows]
 print("example lengths:", [len(f["input_ids"]) for f in features])
 

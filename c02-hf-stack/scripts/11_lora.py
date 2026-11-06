@@ -22,7 +22,7 @@ from hfstack.data import make_arithmetic_rows, question, SYSTEM_PROMPT, to_messa
 from hfstack.generation import generate_with_cache
 from hfstack.hub import list_files
 from hfstack.lora import add_lora, adapter_size_bytes, lora_shapes, manual_lora_forward, merge_matches
-from hfstack.utils import CHAT_LM, be_polite, count_parameters, pick_device
+from hfstack.utils import CHAT_LM, be_polite, count_parameters, hardware_label, pick_device
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--steps", type=int, default=150)
@@ -33,10 +33,10 @@ device = pick_device() if args.device == "auto" else torch.device(args.device)
 
 
 @torch.no_grad()
-def accuracy(model, tok, rows: list[dict]) -> float:
-    """Exact-match accuracy of greedy answers, batched with left padding."""
+def greedy_replies(model, tok, rows: list[dict]) -> list[str]:
+    """Greedy replies of at most 6 tokens, batched with left padding."""
     tok.padding_side = "left"
-    correct = 0
+    replies: list[str] = []
     for start in range(0, len(rows), 32):
         chunk = rows[start : start + 32]
         prompts = [
@@ -52,20 +52,27 @@ def accuracy(model, tok, rows: list[dict]) -> float:
             model, enc["input_ids"], enc["attention_mask"], 6,
             eos_token_id=tok.eos_token_id, pad_token_id=tok.pad_token_id,
         )
-        replies = tok.batch_decode(out[:, enc["input_ids"].size(1) :], skip_special_tokens=True)
-        correct += sum(reply.strip() == str(r["answer"]) for reply, r in zip(replies, chunk))
-    return correct / len(rows)
+        replies += tok.batch_decode(out[:, enc["input_ids"].size(1) :], skip_special_tokens=True)
+    return replies
+
+
+def accuracy(replies: list[str], rows: list[dict]) -> float:
+    """Exact match: the whole reply must be the answer, so a chatty reply scores 0 even if it would get there."""
+    return sum(reply.strip() == str(r["answer"]) for reply, r in zip(replies, rows)) / len(rows)
 
 
 tok = AutoTokenizer.from_pretrained(CHAT_LM)
 base = AutoModelForCausalLM.from_pretrained(CHAT_LM, dtype=torch.float32).to(device)
-test_rows = make_arithmetic_rows(1200, seed=0)[1000:]
-train_rows = make_arithmetic_rows(1200, seed=0)[:1000]
-before = accuracy(base, tok, test_rows)
+rows = make_arithmetic_rows(1200, seed=0)
+train_rows = rows[:1000]
+# Random draws repeat, so drop any test sum that also appears in training. Otherwise it is not held out.
+seen = {question(r) for r in train_rows}
+test_rows = [r for r in rows[1000:] if question(r) not in seen]
+replies_before = greedy_replies(base, tok, test_rows)
 
 model = add_lora(base, r=8, alpha=16)
 trainable, total = count_parameters(model)
-print(f"device {device}")
+print(f"device {device} ({hardware_label(device)})")
 print(f"trainable {trainable:,} of {total:,} ({100 * trainable / total:.2f}%)")
 for name, shape in lora_shapes(model)[:4]:
     print(f"  {name:<78} {shape}")
@@ -115,8 +122,11 @@ print(f"\ntrained {args.steps} steps in {seconds:.0f} s ({seconds / args.steps:.
 print("loss:", [(s, round(v, 3)) for s, v in curve[:: max(1, len(curve) // 8)]])
 
 model.eval()
-after = accuracy(model, tok, test_rows)
-print(f"\nexact-match accuracy on {len(test_rows)} held-out sums: before {before:.3f}, after {after:.3f}")
+replies_after = greedy_replies(model, tok, test_rows)
+print(f"\nexact-match accuracy on {len(test_rows)} held-out sums: "
+      f"before {accuracy(replies_before, test_rows):.3f}, after {accuracy(replies_after, test_rows):.3f}")
+for r, old, new in list(zip(test_rows, replies_before, replies_after))[:4]:
+    print(f"  {question(r):<18} answer {r['answer']:>4} | before {old!r:<34} | after {new!r}")
 
 with tempfile.TemporaryDirectory() as tmp:
     size = adapter_size_bytes(model, tmp)

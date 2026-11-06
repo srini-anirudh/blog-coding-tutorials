@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, DynamicCache
 
-from hfstack.generation import generate_with_cache, greedy_no_cache
+from hfstack.generation import generate_with_cache
 from hfstack.inspection import describe_outputs
 from hfstack.utils import BASE_LM, be_polite
 

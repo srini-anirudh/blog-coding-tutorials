@@ -14,20 +14,24 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import torch
+from huggingface_hub import HfApi
 from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 
 from hfstack.hub import list_files, read_index, read_safetensors_header, read_tensor_by_hand
-from hfstack.utils import CHAT_LM, be_polite
+from hfstack.utils import CHAT_LM, be_polite, hardware_label
 
 be_polite()
 tok = AutoTokenizer.from_pretrained(CHAT_LM)
 model = AutoModelForCausalLM.from_pretrained(CHAT_LM, dtype=torch.float32)
 
 PUSH_EXAMPLE = """
-# Not executed here. After `huggingface-cli login`:
+# Not executed here. After `hf auth login`:
 model.push_to_hub("your-name/smollm2-arithmetic")
 tok.push_to_hub("your-name/smollm2-arithmetic")
 """
+
+
+print("timings below:", hardware_label())
 
 
 def checksum(m) -> float:
@@ -83,5 +87,12 @@ with tempfile.TemporaryDirectory() as tmp:
     with torch.device("meta"):
         skeleton = AutoModelForCausalLM.from_config(config)
     print(f"meta-device skeleton in {1000 * (time.perf_counter() - start):.0f} ms, {sum(p.numel() for p in skeleton.parameters()):,} parameters, 0 bytes allocated")
+
+print(f"\n--- the same model on the Hub: {CHAT_LM} ---")
+# A repo is a git repo of these files. README.md is the model card; save_pretrained does not write one.
+info = HfApi().model_info(CHAT_LM, files_metadata=True)
+for sibling in info.siblings:
+    if "/" not in sibling.rfilename and not sibling.rfilename.startswith("."):
+        print(f"  {sibling.rfilename:<28} {sibling.size or 0:>12,}")
 
 print("\npush_to_hub (shown, not executed):" + PUSH_EXAMPLE)

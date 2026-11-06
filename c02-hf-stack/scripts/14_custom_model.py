@@ -11,6 +11,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import torch
+from torch import nn
 from transformers import AutoConfig, AutoModel, AutoModelForCausalLM
 
 from hfstack.collators import CausalLMCollator
@@ -26,9 +27,20 @@ from hfstack.utils import be_polite, count_parameters
 be_polite()
 torch.manual_seed(0)
 
-print("--- before register(): the Auto classes do not know the model type ---")
 config = BackwardPassConfig()
 model = BackwardPassForCausalLM(config).eval()
+
+print("--- what PreTrainedModel adds on top of nn.Module ---")
+print(f"  {'method':<32} {'nn.Module':<10} BackwardPassForCausalLM")
+for method in (
+    "forward", "state_dict", "save_pretrained", "from_pretrained", "push_to_hub", "generate",
+    "resize_token_embeddings", "gradient_checkpointing_enable", "tie_weights",
+):
+    print(f"  {method:<32} {hasattr(nn.Module, method)!s:<10} {hasattr(model, method)}")
+print(f"  post_init drew embeddings with std {model.model.embed_tokens.weight.std().item():.4f}, "
+      f"config.initializer_range = {config.initializer_range}")
+
+print("\n--- before register(): the Auto classes do not know the model type ---")
 with tempfile.TemporaryDirectory() as tmp:
     model.save_pretrained(tmp)
     try:

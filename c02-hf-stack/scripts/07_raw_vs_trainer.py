@@ -19,7 +19,7 @@ from hfstack.chat import assistant_labels_by_prefix
 from hfstack.collators import CausalLMCollator
 from hfstack.data import make_arithmetic_rows, to_messages
 from hfstack.training import LoopConfig, clone_model, train_raw, train_with_trainer
-from hfstack.utils import CHAT_LM, be_polite, tiny_llama_config
+from hfstack.utils import CHAT_LM, be_polite, hardware_label, tiny_llama_config
 
 be_polite()
 torch.manual_seed(0)
@@ -53,7 +53,7 @@ diff = max(abs(a - b) for a, b in zip(raw["loss"], hf["loss"]))
 gdiff = max(abs(a - b) for a, b in zip(raw["grad_norm"], hf["grad_norm"]))
 print(f"\nmax |loss diff| over {cfg.max_steps} steps : {diff:.2e}")
 print(f"max |grad norm diff|        : {gdiff:.2e}")
-print(f"wall clock (Apple M5 CPU, 2 threads): raw {raw_seconds:.1f} s, Trainer {hf_seconds:.1f} s")
+print(f"wall clock ({hardware_label()}): raw {raw_seconds:.1f} s, Trainer {hf_seconds:.1f} s")
 
 ndiff = max(abs(a - b) for a, b in zip(naive["loss"], hf["loss"]))
 ngdiff = max(abs(a - b) for a, b in zip(naive["grad_norm"], hf["grad_norm"]))

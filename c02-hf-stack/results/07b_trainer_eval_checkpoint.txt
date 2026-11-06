@@ -1,0 +1,15 @@
+--- what the callback saw ---
+step 10: evaluate, eval_loss 6.2735
+step 10: save
+step 20: evaluate, eval_loss 6.2984
+step 20: save
+step 30: evaluate, eval_loss 6.3036
+step 30: save
+
+--- save_total_limit=2 keeps the newest two checkpoints ---
+['checkpoint-20', 'checkpoint-30']
+inside checkpoint-20: ['config.json', 'generation_config.json', 'model.safetensors', 'optimizer.pt', 'rng_state.pth', 'scheduler.pt', 'trainer_state.json', 'training_args.bin']
+trainer_state.json: global_step 20 | log entries 22
+
+--- resume: a new Trainer and a new model object, starting from checkpoint-20 ---
+max |weight difference| against the uninterrupted run: 0.00e+00

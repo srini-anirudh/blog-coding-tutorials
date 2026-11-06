@@ -1,12 +1,13 @@
-20,000 rows, Apple M5 CPU
-per row                               4.37 s        4,578 rows/s
-batched, batch_size=1000              2.13 s        9,390 rows/s
-batched, batch_size=1000, 2 procs     1.75 s       11,449 rows/s
-4-layer Llama, hidden 128, batch 8, 100 steps, Apple M5 CPU, 2 threads
-  raw loop       4.17 s total,   41.7 ms/step
-  Trainer        6.32 s total,   63.2 ms/step
-  Accelerate     4.74 s total,   47.4 ms/step
-SmolLM2-135M, prompt 6 tokens, 64 new tokens, device cpu, float32
-  no cache (recompute history)     13.42 s      4.8 tokens/s
-  our loop with KV cache            4.41 s     14.5 tokens/s
-  model.generate                    6.74 s      9.5 tokens/s
+20,000 rows, AMD EPYC 7R13, 8 threads, TOKENIZERS_PARALLELISM=false
+per row                               3.44 s        5,813 rows/s
+batched, batch_size=1000              1.07 s       18,626 rows/s
+batched, batch_size=1000, 2 procs     1.08 s       18,596 rows/s
+4-layer Llama, hidden 128, batch 8, 100 steps, AMD EPYC 7R13, 8 threads
+  raw loop       3.21 s total,   32.1 ms/step
+  Trainer        3.50 s total,   35.0 ms/step
+  Accelerate     2.95 s total,   29.5 ms/step
+SmolLM2-135M, prompt 6 tokens, 64 new tokens, AMD EPYC 7R13, 8 threads, float32
+  no cache (recompute history)      5.39 s     11.9 tokens/s
+  our loop with KV cache            3.79 s     16.9 tokens/s
+  model.generate                    4.47 s     14.3 tokens/s
+  all three produced the same tokens: True

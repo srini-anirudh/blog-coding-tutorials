@@ -16,7 +16,7 @@ from hfstack.accelerate_loop import train_accelerate
 from hfstack.collators import CausalLMCollator
 from hfstack.data import random_token_dataset
 from hfstack.training import LoopConfig, clone_model, train_raw, train_with_trainer
-from hfstack.utils import be_polite, tiny_llama_config
+from hfstack.utils import be_polite, hardware_label, tiny_llama_config
 
 be_polite()
 torch.manual_seed(0)
@@ -26,7 +26,7 @@ data = random_token_dataset(256, config.vocab_size)
 collate = CausalLMCollator(pad_token_id=config.pad_token_id)
 cfg = LoopConfig(max_steps=100, batch_size=8, grad_accum=1, warmup_steps=5)
 
-print("4-layer Llama, hidden 128, batch 8, 100 steps, Apple M5 CPU, 2 threads")
+print(f"4-layer Llama, hidden 128, batch 8, 100 steps, {hardware_label()}")
 for name, fn in {
     "raw loop": lambda: train_raw(clone_model(model), data, collate, cfg),
     "Trainer": lambda: train_with_trainer(clone_model(model), data, collate, cfg),

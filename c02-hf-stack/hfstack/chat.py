@@ -7,7 +7,7 @@ Two ways to find which tokens the assistant wrote:
 2. Generation tags. A training template marks assistant text with `{% generation %}`, and
    `apply_chat_template(..., return_assistant_tokens_mask=True)` returns the mask directly.
 
-Both must give the same labels; `tests/test_chat.py` checks that they do.
+Both must give the same labels; `tests/test_network_tokenizers.py` checks that they do.
 """
 
 from __future__ import annotations

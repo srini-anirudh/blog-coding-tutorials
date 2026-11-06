@@ -1,3 +1,4 @@
+timings below: AMD EPYC 7R13, 8 threads
 --- save_pretrained + tokenizer.save_pretrained ---
   chat_template.jinja                   368
   config.json                           905
@@ -28,14 +29,30 @@ tensor read with seek() equals the model's: True
 index metadata: {'total_parameters': 134515008, 'total_size': 538060032}
 weight_map, first and last: ('model.embed_tokens.weight', 'model-00001-of-00003.safetensors') ('model.norm.weight', 'model-00003-of-00003.safetensors')
 tensors per shard: {'model-00001-of-00003.safetensors': 56, 'model-00002-of-00003.safetensors': 126, 'model-00003-of-00003.safetensors': 90}
-reload from shards in 0.14 s; identical weights: True
+reload from shards in 0.12 s; identical weights: True
 
 --- only the config: no weights touched ---
 config in 1.8 ms, hidden_size 576
-meta-device skeleton in 21 ms, 134,515,008 parameters, 0 bytes allocated
+meta-device skeleton in 35 ms, 134,515,008 parameters, 0 bytes allocated
+
+--- the same model on the Hub: HuggingFaceTB/SmolLM2-135M-Instruct ---
+  README.md                           6,772
+  all_results.json                      783
+  config.json                           861
+  eval_results.json                     586
+  generation_config.json                132
+  merges.txt                        466,391
+  model.safetensors             269,060,552
+  special_tokens_map.json               655
+  tokenizer.json                  2,104,556
+  tokenizer_config.json               3,764
+  train_results.json                    232
+  trainer_state.json                 57,225
+  training_args.bin                   6,520
+  vocab.json                        800,662
 
 push_to_hub (shown, not executed):
-# Not executed here. After `huggingface-cli login`:
+# Not executed here. After `hf auth login`:
 model.push_to_hub("your-name/smollm2-arithmetic")
 tok.push_to_hub("your-name/smollm2-arithmetic")
 

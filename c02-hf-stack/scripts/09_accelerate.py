@@ -34,9 +34,12 @@ data = random_token_dataset(64, config.vocab_size)
 collate = CausalLMCollator(pad_token_id=config.pad_token_id)
 
 accelerator = Accelerator(cpu=True)
+# One write per process, newline included, so the two ranks do not interleave within a line.
 print(
     f"[rank {accelerator.process_index}] processes={accelerator.num_processes} "
-    f"backend={accelerator.state.backend} device={accelerator.device}"
+    f"backend={accelerator.state.backend} device={accelerator.device}\n",
+    end="",
+    flush=True,
 )
 
 if args.ddp:
