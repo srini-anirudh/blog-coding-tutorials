@@ -1,0 +1,26 @@
+# hardware: AMD EPYC 7R13 Processor, CPU only, 8 worker processes x 1 thread, torch 2.15.0
+# command: python labs/mixing-data-without-losing-capabilities/scripts/08_diagnostic_ladder.py
+stage 1: 'add' for 3000 steps -> strict 97.4%, ranking 97.5%
+re-alignment set: 100 examples, 40 steps of batch 32; relearning target: strict >= 95.4%
+
+'add' after stage 2 (rev + sort only), accuracy %; rung 4 = add-training steps to recover
+stage-2 style | stage-2 steps | outputs start with '>' | strict | rung 1 lenient | rung 2 realigned | rung 3 ranking | rung 4 steps
+--------------+---------------+------------------------+--------+----------------+------------------+----------------+-------------
+plain         | 30            | 0%                     | 4.2    | 4.2            | 89.8             | 15.0           | 25          
+plain         | 100           | 0%                     | 0.6    | 0.6            | 29.8             | 1.0            | 100         
+plain         | 300           | 0%                     | 0.2    | 0.2            | 5.8              | 2.0            | 300         
+plain         | 3000          | 0%                     | 0.0    | 0.0            | 2.6              | 3.5            | 675         
+preamble      | 30            | 0%                     | 5.4    | 5.4            | 82.4             | 10.0           | 25          
+preamble      | 100           | 80%                    | 0.0    | 0.0            | 25.2             | 2.5            | 125         
+preamble      | 300           | 92%                    | 0.2    | 0.2            | 15.4             | 1.0            | 175         
+preamble      | 3000          | 84%                    | 0.0    | 0.0            | 3.2              | 4.5            | 350         
+
+sample generations, plain 30: ['069|', '157|', '158|']
+sample generations, plain 100: ['049|', '111|', '777|']
+sample generations, plain 300: ['223|', '116|', '877|']
+sample generations, plain 3000: ['334|', '966|', '866|']
+sample generations, preamble 30: ['0600|', '167|', '157|']
+sample generations, preamble 100: ['>23493', '165|', 'S97467']
+sample generations, preamble 300: ['>34|', '>65|', '>87768']
+sample generations, preamble 3000: ['>23|', '>6|', '>26|']
+# wall time: 1142 s

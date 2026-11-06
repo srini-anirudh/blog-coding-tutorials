@@ -1,0 +1,6 @@
+# Nothing heavy is written by the scripts, but keep stray artefacts out of git.
+*.pt
+*.safetensors
+checkpoints/
+data/
+__pycache__/

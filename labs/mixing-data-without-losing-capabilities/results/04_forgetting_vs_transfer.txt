@@ -1,0 +1,39 @@
+# hardware: AMD EPYC 7R13 Processor, CPU only, 12 worker processes x 1 thread, torch 2.15.0
+# command: python labs/mixing-data-without-losing-capabilities/scripts/04_forgetting_vs_transfer.py
+exact-match accuracy (%), mean of seeds (0, 1); every task has 1,500 steps of data in every setting
+setting                          | copy  | add  | rev   | sort | mean
+---------------------------------+-------+------+-------+------+-----
+specialist (own task only)       | 100.0 | 93.2 | 100.0 | 98.7 | 98.0
+sequential, after stage 1 (copy) | 100.0 | 0.0  | 0.4   | 5.4  | 26.4
+sequential, after stage 2 (add)  | 0.0   | 75.2 | 0.0   | 0.0  | 18.8
+sequential, after stage 3 (rev)  | 0.6   | 0.0  | 100.0 | 5.3  | 26.5
+sequential, after stage 4 (sort) | 7.3   | 0.0  | 5.9   | 98.5 | 27.9
+joint mixture, step 1500         | 100.0 | 34.2 | 99.5  | 94.9 | 82.2
+joint mixture, step 3000         | 100.0 | 49.4 | 100.0 | 95.2 | 86.2
+joint mixture, step 4500         | 100.0 | 73.2 | 100.0 | 99.2 | 93.1
+joint mixture, step 6000         | 100.0 | 95.8 | 99.9  | 96.8 | 98.1
+
+gap to specialist at the end (points): negative = below the specialist
+task | sequential (forgetting) | joint (transfer)
+-----+-------------------------+-----------------
+copy | -92.7                   | 0.0             
+add  | -93.2                   | 2.6             
+rev  | -94.1                   | -0.1            
+sort | -0.2                    | -1.9            
+
+erosion grows with time away: 'add' accuracy during the stages after it (seed 0)
+stage | step in stage | add | copy
+------+---------------+-----+-----
+rev   | 250           | 0.0 | 0.8 
+rev   | 500           | 0.0 | 0.5 
+rev   | 750           | 0.0 | 0.4 
+rev   | 1000          | 0.0 | 0.3 
+rev   | 1250          | 0.0 | 0.1 
+rev   | 1500          | 0.0 | 0.1 
+sort  | 250           | 0.0 | 5.9 
+sort  | 500           | 0.1 | 7.2 
+sort  | 750           | 0.1 | 7.4 
+sort  | 1000          | 0.1 | 7.6 
+sort  | 1250          | 0.1 | 7.2 
+sort  | 1500          | 0.0 | 7.4 
+# wall time: 226 s

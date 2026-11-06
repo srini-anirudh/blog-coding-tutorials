@@ -1,0 +1,59 @@
+# hardware: AMD EPYC 7R13 Processor, CPU only, 20 worker processes x 1 thread, torch 2.15.0
+# command: python labs/mixing-data-without-losing-capabilities/scripts/05_transfer_and_mixture_law.py
+0a. the post's two models: same mean, different minimum
+    A [95, 95, 94, 15]: mean 74.75, min 15    B [78, 76, 75, 71]: mean 75.00, min 71
+0b. non-convex front [(1.0, 0.0), (0.9, 0.3), (0.55, 0.55), (0.3, 0.9), (0.0, 1.0)]: points a weighted sum ever picks: [(0.0, 1.0), (0.3, 0.9), (0.9, 0.3), (1.0, 0.0)]
+    max-min picks (0.55, 0.55)
+
+1. stratified baseline (uniform), 3 seeds, accuracy %
+seed | add  | rev   | sort | copy  | mean | min 
+-----+------+-------+------+-------+------+-----
+0    | 7.2  | 99.5  | 93.0 | 99.5  | 74.8 | 7.2 
+1    | 90.1 | 100.0 | 97.2 | 100.0 | 96.8 | 90.1
+2    | 39.1 | 100.0 | 94.1 | 100.0 | 83.3 | 39.1
+   mean [45.5, 99.8, 94.8, 99.8], seed std [41.8, 0.3, 2.2, 0.3]  <- differences smaller than about 2 std are ties
+
+2. leave-one-out transfer matrix: M[i][j] = S_j(full) - S_j(full without source i), points, mean of seeds 0, 1
+   budget 1500 steps; full mixture scores [48.6, 99.8, 95.1, 99.8]
+source      | effect on add | effect on rev | effect on sort | effect on copy
+------------+---------------+---------------+----------------+---------------
+remove add  | +48.6         | +0.3          | -1.8           | -0.2          
+remove rev  | -16.1         | +99.6         | -0.3           | -0.2          
+remove sort | +18.9         | +1.0          | +93.8          | -0.2          
+remove copy | -32.7         | +0.2          | -1.9           | +99.4         
+   budget 4500 steps; full mixture scores [92.3, 99.9, 98.7, 99.9]
+source      | effect on add | effect on rev | effect on sort | effect on copy
+------------+---------------+---------------+----------------+---------------
+remove add  | +92.2         | -0.1          | -1.1           | -0.1          
+remove rev  | +2.0          | +99.8         | +3.0           | -0.1          
+remove sort | -3.3          | +0.4          | +98.1          | +0.0          
+remove copy | -6.3          | +0.1          | -0.1           | +99.7         
+
+3. surrogate fitted on 21 runs. Linear part c_ij (row = source, column = capability):
+source | add    | rev    | sort   | copy  
+-------+--------+--------+--------+-------
+add    | +201.3 | +176.6 | +171.1 | +212.1
+rev    | -43.1  | +67.3  | +172.4 | +213.6
+sort   | -13.1  | +180.9 | +81.5  | +227.4
+copy   | -39.1  | +218.7 | +165.3 | +50.6 
+   own-data log coefficient b_j: add -7.6, rev +45.8, sort +42.1, copy +54.2
+   in-sample mean |error| 6.5 points
+
+4. held-out random mixtures: predicted vs actual
+mixture (add, rev, sort, copy) | add pred/act | rev pred/act | sort pred/act | copy pred/act
+-------------------------------+--------------+--------------+---------------+--------------
+(0.04, 0.50, 0.38, 0.08)       | 0/3          | 97/99        | 99/94         | 80/99        
+(0.18, 0.15, 0.27, 0.40)       | 22/24        | 98/100       | 93/99         | 100/100      
+(0.04, 0.01, 0.72, 0.23)       | 11/1         | 29/1         | 92/99         | 100/100      
+(0.43, 0.00, 0.18, 0.39)       | 76/85        | 17/0         | 85/92         | 100/100      
+   held-out mean |error| 7.4 points
+
+5. objective -> mixture picked on the fitted surface -> real runs (2 seeds), accuracy %
+objective                           | mixture (add, rev, sort, copy) | predicted    | add  | rev  | sort | copy | mean | min 
+------------------------------------+--------------------------------+--------------+------+------+------+------+------+-----
+stratified (3 seeds)                | (0.25, 0.25, 0.25, 0.25)       | -            | 45.5 | 99.8 | 94.8 | 99.8 | 85.0 | 45.5
+mean                                | (0.55, 0.15, 0.15, 0.15)       | 100/86/82/94 | 81.5 | 89.9 | 78.4 | 98.8 | 87.2 | 78.4
+max-min                             | (0.50, 0.15, 0.20, 0.15)       | 91/86/89/95  | 69.5 | 89.3 | 84.2 | 98.8 | 85.5 | 69.5
+weighted u=(.4,.2,.2,.2)            | (0.55, 0.15, 0.15, 0.15)       | 100/86/82/94 | 81.5 | 89.9 | 78.4 | 98.8 | 87.2 | 78.4
+max add s.t. others >= stratified-2 | (0.25, 0.25, 0.30, 0.20)       | 38/99/95/100 | 31.2 | 99.2 | 94.9 | 99.8 | 81.3 | 31.2
+# wall time: 321 s

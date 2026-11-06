@@ -1,0 +1,26 @@
+# hardware: AMD EPYC 7R13 Processor, CPU only, 12 worker processes x 1 thread, torch 2.15.0
+# command: python labs/mixing-data-without-losing-capabilities/scripts/06_replay.py
+stage 1: 'add' only, 3000 steps -> add 97.5%, sub 0.3%, rev 0.0%
+
+stage 2: new task 'sub', 1500 steps, replay ratio lambda of 'add'; mean of 2 seeds, accuracy %
+replay | retention (add) | acquisition (sub) | min  | add lost (points)
+-------+-----------------+-------------------+------+------------------
+0%     | 0.0             | 100.0             | 0.0  | +97.5            
+1%     | 1.5             | 97.5              | 1.5  | +96.0            
+5%     | 57.3            | 99.5              | 57.3 | +40.2            
+10%    | 67.2            | 98.8              | 67.2 | +30.2            
+25%    | 97.2            | 99.2              | 97.2 | +0.3             
+50%    | 95.8            | 98.8              | 95.8 | +1.8             
+best max-min replay ratio for 'sub': 25%
+
+stage 2: new task 'rev', 1500 steps, replay ratio lambda of 'add'; mean of 2 seeds, accuracy %
+replay | retention (add) | acquisition (rev) | min  | add lost (points)
+-------+-----------------+-------------------+------+------------------
+0%     | 0.0             | 100.0             | 0.0  | +97.5            
+1%     | 2.0             | 99.9              | 2.0  | +95.5            
+5%     | 32.9            | 99.5              | 32.9 | +64.7            
+10%    | 51.6            | 99.8              | 51.6 | +45.9            
+25%    | 89.8            | 99.5              | 89.8 | +7.7             
+50%    | 96.1            | 97.8              | 96.1 | +1.4             
+best max-min replay ratio for 'rev': 50%
+# wall time: 246 s

@@ -1,0 +1,21 @@
+# hardware: AMD EPYC 7R13 Processor, CPU only, 9 worker processes x 1 thread, torch 2.15.0
+# command: python labs/mixing-data-without-losing-capabilities/scripts/02_token_weighting.py
+1. formula: lambda_eff = p_i l_i / sum_j p_j l_j
+source       | example share p | mean supervised tokens | lambda_eff (formula) | token share, 2,000 batches
+-------------+-----------------+------------------------+----------------------+---------------------------
+maths (long) | 0.30            | 13.0                   | 0.527                | 0.526                     
+code (rev)   | 0.30            | 5.0                    | 0.203                | 0.204                     
+chat (copy)  | 0.40            | 5.0                    | 0.270                | 0.270                     
+example shares that give a 30/30/40 token share: long 0.142, rev 0.368, copy 0.491
+
+2. exact identity on one batch: grad(token mean) = sum_i (T_i/T) grad(token mean over source i)
+   max |difference| = 2.98e-08, |grad| = 1.332
+   cosine(token-mean gradient, per-example-mean gradient) on the same batch = 0.971
+
+3. training consequence: 400 steps, batch 64, 3 seeds each; held-out per-token loss (lower is better)
+setting                 | loss maths (long) | loss code (rev) | loss chat (copy) | acc% maths (long) | acc% code (rev) | acc% chat (copy)
+------------------------+-------------------+-----------------+------------------+-------------------+-----------------+-----------------
+token-mean, p=30/30/40  | 0.0366            | 0.0978          | 0.0153           | 84.3              | 84.8            | 97.3            
+per-example, p=30/30/40 | 0.0214            | 0.0127          | 0.0024           | 91.8              | 98.2            | 99.8            
+token-mean, p corrected | 0.0754            | 0.0212          | 0.0060           | 84.9              | 96.5            | 99.3            
+# wall time: 27 s

@@ -1,0 +1,29 @@
+# hardware: AMD EPYC 7R13 Processor, CPU only, 6 worker processes x 1 thread, torch 2.15.0
+# command: python labs/mixing-data-without-losing-capabilities/scripts/07_loss_chasing.py
+3000 steps, batch 64, mean of 2 seeds. Budget share = fraction of all examples drawn from that source.
+schedule   | budget to noise | add acc% | rev acc% | sort acc% | copy acc% | mean | min 
+-----------+-----------------+----------+----------+-----------+-----------+------+-----
+static     | 20.0%           | 85.3     | 100.0    | 97.6      | 100.0     | 95.7 | 85.3
+level      | 56.9%           | 34.5     | 97.2     | 87.1      | 97.8      | 79.1 | 34.5
+derivative | 15.1%           | 11.9     | 93.7     | 87.1      | 99.2      | 72.9 | 11.9
+
+weights chosen by the 'level' controller, seed 0 (every 500 steps)
+step | add   | rev   | sort  | copy  | noise | noise loss
+-----+-------+-------+-------+-------+-------+-----------
+1    | 0.201 | 0.2   | 0.198 | 0.2   | 0.2   | 3.084     
+501  | 0.306 | 0.065 | 0.086 | 0.043 | 0.5   | 1.859     
+1001 | 0.262 | 0.046 | 0.072 | 0.034 | 0.586 | 1.844     
+1501 | 0.261 | 0.054 | 0.072 | 0.024 | 0.589 | 1.857     
+2001 | 0.23  | 0.07  | 0.054 | 0.028 | 0.618 | 1.845     
+2501 | 0.129 | 0.027 | 0.077 | 0.074 | 0.693 | 1.84      
+
+weights chosen by the 'derivative' controller, seed 0 (every 500 steps)
+step | add   | rev   | sort  | copy  | noise | noise loss
+-----+-------+-------+-------+-------+-------+-----------
+1    | 0.2   | 0.2   | 0.2   | 0.2   | 0.2   | 3.084     
+501  | 0.877 | 0.02  | 0.04  | 0.02  | 0.043 | 1.92      
+1001 | 0.849 | 0.028 | 0.02  | 0.02  | 0.084 | 1.884     
+1501 | 0.02  | 0.788 | 0.061 | 0.02  | 0.111 | 1.858     
+2001 | 0.064 | 0.303 | 0.521 | 0.092 | 0.02  | 1.849     
+2501 | 0.065 | 0.042 | 0.854 | 0.02  | 0.02  | 1.862     
+# wall time: 161 s
