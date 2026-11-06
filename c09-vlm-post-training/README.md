@@ -63,6 +63,8 @@ python c09-vlm-post-training/scripts/blind_probe.py --train 1000 --test 500
 python c09-vlm-post-training/scripts/reward_audit.py
 python c09-vlm-post-training/scripts/show_rollouts.py --group 8
 python c09-vlm-post-training/benchmarks/bench_encode_once.py --groups 4 8 16
+# On a GPU the benchmark also ran G=32 (results/bench_encode_once_gpu.log):
+# python c09-vlm-post-training/benchmarks/bench_encode_once.py --groups 4 8 16 32
 python c09-vlm-post-training/scripts/train_dpo.py --negatives balanced --steps 150
 python c09-vlm-post-training/scripts/train_dpo.py --negatives biased --steps 150
 python c09-vlm-post-training/scripts/train_grpo.py --freeze llm --steps 60 --eval both
