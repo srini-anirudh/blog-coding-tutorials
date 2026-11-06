@@ -1,0 +1,16 @@
+[grpo_caption_color_recall_llm] device=cpu trainable={'vision': 0, 'connector': 0, 'llm': 4884480, 'lm_head': 0, 'total': 4884480}
+before {'n_colors': 1.9, 'hallucinated': 0.06, 'f1': 0.7649523809523809, 'recall': 0.7416666666666667}
+step   0 reward=0.698 strict=0.682 len=16.4 flat_groups=0.00 colors=1.84 halluc=0.16 t=18s | ' Blue, Yellow.'
+step   5 reward=0.844 strict=0.806 len=8.0 flat_groups=0.75 colors=1.88 halluc=0.34 t=90s | ' The shapes in the image are a red circle and a triangle.'
+step  10 reward=0.969 strict=0.858 len=11.0 flat_groups=0.75 colors=3.22 halluc=0.78 t=158s | ' Blue, yellow, and clear.'
+step  15 reward=1.000 strict=0.825 len=13.8 flat_groups=1.00 colors=4.19 halluc=1.44 t=239s | ' Yellow, green, red, orange, and blue.'
+step  20 reward=1.000 strict=0.865 len=14.6 flat_groups=1.00 colors=4.12 halluc=1.12 t=321s | ' Red, blue, yellow, and green as the colors of the shapes.'
+step  25 reward=1.000 strict=0.718 len=16.8 flat_groups=1.00 colors=5.22 halluc=2.47 t=410s | ' Blue, yellow, green, orange, brown, red, gray, and black.'
+step  30 reward=0.979 strict=0.767 len=18.0 flat_groups=0.75 colors=3.84 halluc=1.66 t=496s | ' Blue, green, gray, blue, green, gray, blue, green, pink, gray, blue, green,'
+step  35 reward=1.000 strict=0.743 len=17.9 flat_groups=1.00 colors=5.16 halluc=2.41 t=586s | ' Red, green, blue, and red again.'
+step  40 reward=1.000 strict=0.725 len=20.6 flat_groups=1.00 colors=4.78 halluc=2.53 t=676s | ' Blue, yellow, blue, yellow, blue, yellow, blue, blue, yellow, blue, yellow, blue,'
+step  45 reward=1.000 strict=0.661 len=21.3 flat_groups=1.00 colors=6.25 halluc=3.50 t=768s | ' Red, blue, blue, green, yellow, red, blue, blue, green, yellow'
+step  50 reward=1.000 strict=0.730 len=18.4 flat_groups=1.00 colors=4.84 halluc=2.34 t=855s | ' Red, green, yellow, and blue.'
+step  55 reward=1.000 strict=0.496 len=20.9 flat_groups=1.00 colors=6.44 halluc=4.44 t=943s | ' Red, green, yellow, blue, orange, white, approximate they are red and green, and yellow and blue'
+step  59 reward=1.000 strict=0.686 len=21.4 flat_groups=1.00 colors=5.44 halluc=2.94 t=1014s | ' Blue, pink, red, green, yellow, yellow, red, yellow, red, green, blue, yellow'
+after {'n_colors': 5.46, 'hallucinated': 2.98, 'f1': 0.7034155844155844, 'recall': 1.0}

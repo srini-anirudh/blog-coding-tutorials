@@ -21,6 +21,11 @@ def pick_device(prefer: str | None = None) -> torch.device:
     return torch.device("cpu")
 
 
+def set_threads() -> None:
+    """Honour $OMP_NUM_THREADS, else use at most 8 threads. Export a lower number on a shared machine."""
+    torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", min(8, os.cpu_count() or 1))))
+
+
 def seed_everything(seed: int) -> None:
     random.seed(seed)
     np.random.seed(seed)

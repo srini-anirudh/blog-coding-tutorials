@@ -1,0 +1,1116 @@
+{
+ "args": {
+  "task": "caption",
+  "reward": "color_f1",
+  "freeze": "llm",
+  "steps": 60,
+  "prompts": 4,
+  "group": 8,
+  "lr": 0.0001,
+  "max_new_tokens": 24,
+  "temperature": 1.0,
+  "seed": 0,
+  "eval": "after",
+  "name": null
+ },
+ "trainable": {
+  "vision": 0,
+  "connector": 0,
+  "llm": 4884480,
+  "lm_head": 0,
+  "total": 4884480
+ },
+ "log": [
+  {
+   "step": 0,
+   "reward": 0.682440459728241,
+   "strict": 0.682440459728241,
+   "zero_std_groups": 0.0,
+   "length": 16.4375,
+   "loss": -0.0659896656870842,
+   "grad_norm": 0.5518562197685242,
+   "sample": [
+    " Blue, Yellow.",
+    " Blue and yellow",
+    " The shapes in the image are blue and yellow.",
+    " - Cyan\n- Yellow\n\nThe shapes in the image are shapes. These shapes are diagonal."
+   ],
+   "elapsed": 21.20799684524536,
+   "n_colors": 1.84375,
+   "hallucinated": 0.15625
+  },
+  {
+   "step": 1,
+   "reward": 0.7802083492279053,
+   "strict": 0.7802083492279053,
+   "zero_std_groups": 0.25,
+   "length": 11.96875,
+   "loss": -0.10452059656381607,
+   "grad_norm": 0.7216742634773254,
+   "sample": [
+    " The shapes in the image are a red triangle and a yellow triangle.",
+    " Red and Yellow",
+    " 1. Red triangle, 2. Yellow triangle.",
+    " The shapes in the image are red triangle and yellow triangle."
+   ],
+   "elapsed": 40.0494589805603,
+   "n_colors": 1.84375,
+   "hallucinated": 0.09375
+  },
+  {
+   "step": 2,
+   "reward": 0.8741071224212646,
+   "strict": 0.8741071224212646,
+   "zero_std_groups": 0.25,
+   "length": 15.625,
+   "loss": 0.01764579303562641,
+   "grad_norm": 0.5821226835250854,
+   "sample": [
+    " The colors of the shapes in the image are red, green, blue, and white.",
+    " The shapes in the image are a circle, a green square, a blue square, and a red triangle.",
+    " The provided information does not specify any shapes besides their colors.",
+    " The shapes in the image are green and red circles."
+   ],
+   "elapsed": 60.91642665863037,
+   "n_colors": 2.65625,
+   "hallucinated": 0.25
+  },
+  {
+   "step": 3,
+   "reward": 0.9291666150093079,
+   "strict": 0.9291666150093079,
+   "zero_std_groups": 0.0,
+   "length": 9.0625,
+   "loss": 0.10054288059473038,
+   "grad_norm": 1.8282926082611084,
+   "sample": [
+    " Blue and Yellow",
+    " blue, yellow.",
+    " Blue and Yellow.",
+    " Blue."
+   ],
+   "elapsed": 77.84763836860657,
+   "n_colors": 2.25,
+   "hallucinated": 0.03125
+  },
+  {
+   "step": 4,
+   "reward": 0.9226190447807312,
+   "strict": 0.9226190447807312,
+   "zero_std_groups": 0.0,
+   "length": 7.96875,
+   "loss": 0.2110433727502823,
+   "grad_norm": 1.503105640411377,
+   "sample": [
+    " Red, Blue, Yellow",
+    " Red, Blue, Yellow",
+    " Red, blue, and yellow",
+    " Blue, red, and yellow"
+   ],
+   "elapsed": 97.11785244941711,
+   "n_colors": 2.78125,
+   "hallucinated": 0.34375
+  },
+  {
+   "step": 5,
+   "reward": 0.7614583373069763,
+   "strict": 0.7614583373069763,
+   "zero_std_groups": 0.25,
+   "length": 6.8125,
+   "loss": -0.09503137320280075,
+   "grad_norm": 1.396418571472168,
+   "sample": [
+    " The colors of the shapes in the image are red and triangle.",
+    " The shapes in the image are red and triangle.",
+    " The shapes included are red, triangle and circle.",
+    " Ring, triangle"
+   ],
+   "elapsed": 115.76450443267822,
+   "n_colors": 1.9375,
+   "hallucinated": 0.4375
+  },
+  {
+   "step": 6,
+   "reward": 0.9375,
+   "strict": 0.9375,
+   "zero_std_groups": 0.0,
+   "length": 6.78125,
+   "loss": -0.08992700278759003,
+   "grad_norm": 2.3547191619873047,
+   "sample": [
+    " Blue, Green.",
+    " Blue, Green.",
+    " Blue, Green, Yellow",
+    " Blue, Green, Yellow."
+   ],
+   "elapsed": 131.20313835144043,
+   "n_colors": 2.625,
+   "hallucinated": 0.09375
+  },
+  {
+   "step": 7,
+   "reward": 0.832217276096344,
+   "strict": 0.832217276096344,
+   "zero_std_groups": 0.25,
+   "length": 7.4375,
+   "loss": 0.12649409472942352,
+   "grad_norm": 1.653674602508545,
+   "sample": [
+    " Blue, Green",
+    " Blue, Green, Red",
+    " Blue, Green, and Purple.",
+    " Blue, green and white."
+   ],
+   "elapsed": 147.75172233581543,
+   "n_colors": 2.9375,
+   "hallucinated": 0.96875
+  },
+  {
+   "step": 8,
+   "reward": 0.9324404001235962,
+   "strict": 0.9324404001235962,
+   "zero_std_groups": 0.25,
+   "length": 7.03125,
+   "loss": 0.0831756442785263,
+   "grad_norm": 1.1531705856323242,
+   "sample": [
+    " The colors of the shapes in the image are green at the top and yellow at the bottom.",
+    " Green\nYellow",
+    " The colors of the shapes in the image are green, yellow, brown, and orange.",
+    " The shapes in the image include a green square, a yellow circle, and a green triangle."
+   ],
+   "elapsed": 163.25243210792542,
+   "n_colors": 2.4375,
+   "hallucinated": 0.28125
+  },
+  {
+   "step": 9,
+   "reward": 0.9458333253860474,
+   "strict": 0.9458333253860474,
+   "zero_std_groups": 0.25,
+   "length": 5.8125,
+   "loss": 0.018687628209590912,
+   "grad_norm": 1.5903488397598267,
+   "sample": [
+    " Green, Yellow.",
+    " Green, Yellow",
+    " Green, Yellow",
+    " Green, Yellow"
+   ],
+   "elapsed": 176.3079493045807,
+   "n_colors": 2.5,
+   "hallucinated": 0.125
+  },
+  {
+   "step": 10,
+   "reward": 0.9244047403335571,
+   "strict": 0.9244047403335571,
+   "zero_std_groups": 0.0,
+   "length": 6.8125,
+   "loss": -0.024383874610066414,
+   "grad_norm": 2.100773811340332,
+   "sample": [
+    " Blue, Yellow, Yellow",
+    " Blue, yellow, and purple",
+    " Blue, yellow, blue and yellow.",
+    " Blue, Yellow, Yellow."
+   ],
+   "elapsed": 189.58596301078796,
+   "n_colors": 2.53125,
+   "hallucinated": 0.21875
+  },
+  {
+   "step": 11,
+   "reward": 0.940625011920929,
+   "strict": 0.940625011920929,
+   "zero_std_groups": 0.5,
+   "length": 9.875,
+   "loss": 0.059551842510700226,
+   "grad_norm": 0.68857342004776,
+   "sample": [
+    " - green\n- yellow\nThe image shows a pattern of small tiles or shapes arranged in a circular pattern. Each item",
+    " The colors of the shapes in the image are green, yellow, and green.",
+    " Green, Yellow, Green, Yellow",
+    " Green, Yellow, Yellow"
+   ],
+   "elapsed": 206.1575803756714,
+   "n_colors": 2.5,
+   "hallucinated": 0.28125
+  },
+  {
+   "step": 12,
+   "reward": 0.947916567325592,
+   "strict": 0.947916567325592,
+   "zero_std_groups": 0.75,
+   "length": 8.25,
+   "loss": 0.010663078166544437,
+   "grad_norm": 0.7564443349838257,
+   "sample": [
+    " Blue, red, yellow, and blue.",
+    " Blue, red, yellow, and green.",
+    " Blue, red, blue, and yellow",
+    " Blue, red, blue, triangle"
+   ],
+   "elapsed": 220.64327812194824,
+   "n_colors": 3.03125,
+   "hallucinated": 0.28125
+  },
+  {
+   "step": 13,
+   "reward": 0.9848214387893677,
+   "strict": 0.9848214387893677,
+   "zero_std_groups": 0.5,
+   "length": 8.25,
+   "loss": 0.049993738532066345,
+   "grad_norm": 1.1633954048156738,
+   "sample": [
+    " Blue, Green, Silver.",
+    " Blue, Green, Blue, Green",
+    " Blue, Green, Blue, Green",
+    " Blue triangle, Green circle."
+   ],
+   "elapsed": 234.71394300460815,
+   "n_colors": 2.59375,
+   "hallucinated": 0.09375
+  },
+  {
+   "step": 14,
+   "reward": 0.9803571701049805,
+   "strict": 0.9803571701049805,
+   "zero_std_groups": 0.5,
+   "length": 8.21875,
+   "loss": -0.042704615741968155,
+   "grad_norm": 0.8399413824081421,
+   "sample": [
+    " Blue, red, circle, blue circle.",
+    " Red triangle, blue circle.",
+    " Blue, red, blue.",
+    " The shapes in the image are a red triangle, a blue circle, and a red beam."
+   ],
+   "elapsed": 249.2389371395111,
+   "n_colors": 3.1875,
+   "hallucinated": 0.03125
+  },
+  {
+   "step": 15,
+   "reward": 0.9833333492279053,
+   "strict": 0.9833333492279053,
+   "zero_std_groups": 0.5,
+   "length": 7.25,
+   "loss": 0.024338405579328537,
+   "grad_norm": 0.6849020719528198,
+   "sample": [
+    " Yellow, Green, Red",
+    " Yellow, Green, Red",
+    " Red, green, yellow.",
+    " Green, Yellow, Red, Green"
+   ],
+   "elapsed": 262.1131224632263,
+   "n_colors": 2.78125,
+   "hallucinated": 0.0625
+  },
+  {
+   "step": 16,
+   "reward": 0.9910714626312256,
+   "strict": 0.9910714626312256,
+   "zero_std_groups": 0.75,
+   "length": 7.46875,
+   "loss": -0.013537491671741009,
+   "grad_norm": 0.5025476813316345,
+   "sample": [
+    " Green, Yellow, Green.",
+    " Green, yellow",
+    " Green, Yellow",
+    " Green, Yellow"
+   ],
+   "elapsed": 276.45372462272644,
+   "n_colors": 2.3125,
+   "hallucinated": 0.0625
+  },
+  {
+   "step": 17,
+   "reward": 0.9937499761581421,
+   "strict": 0.9937499761581421,
+   "zero_std_groups": 0.75,
+   "length": 8.125,
+   "loss": 0.008147520944476128,
+   "grad_norm": 0.6432555317878723,
+   "sample": [
+    " Green, red.",
+    " Green, red",
+    " Green, Red, Green, Red.",
+    " Green, Red."
+   ],
+   "elapsed": 291.4082839488983,
+   "n_colors": 2.53125,
+   "hallucinated": 0.03125
+  },
+  {
+   "step": 18,
+   "reward": 0.9197916388511658,
+   "strict": 0.9197916388511658,
+   "zero_std_groups": 0.5,
+   "length": 10.625,
+   "loss": 0.06251513957977295,
+   "grad_norm": 0.6732804179191589,
+   "sample": [
+    " Red, Green, Red, Red, Green",
+    " Red, Green, Red, Green, Red, Green, Red",
+    " Red, Green, Red, Green, Red",
+    " Red, Green, Red, Red"
+   ],
+   "elapsed": 308.06104946136475,
+   "n_colors": 2.5,
+   "hallucinated": 0.3125
+  },
+  {
+   "step": 19,
+   "reward": 0.9937499761581421,
+   "strict": 0.9937499761581421,
+   "zero_std_groups": 0.75,
+   "length": 10.28125,
+   "loss": 0.05902133136987686,
+   "grad_norm": 1.1938644647598267,
+   "sample": [
+    " Yellow, Blue, Yellow",
+    " Yellow, blue, yellow, blue",
+    " Yellow, Blue.",
+    " Yellow, Blue, Yellow"
+   ],
+   "elapsed": 324.8310503959656,
+   "n_colors": 2.71875,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 20,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 9.875,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Red, Blue, Yellow",
+    " Red, blue, yellow.",
+    " Red, blue, yellow, red, blue.",
+    " Red, blue, yellow."
+   ],
+   "elapsed": 340.8592383861542,
+   "n_colors": 3.0,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 21,
+   "reward": 0.9895833134651184,
+   "strict": 0.9895833134651184,
+   "zero_std_groups": 0.75,
+   "length": 9.5,
+   "loss": 0.0023239890579134226,
+   "grad_norm": 0.21635973453521729,
+   "sample": [
+    " Red, Green, Red triangle.",
+    " Red, Green, Red, Green, Red, Green",
+    " Red, Green, Red, Green, Red, Green, Red",
+    " Red, Green, Red, Green, Red, Green."
+   ],
+   "elapsed": 355.0016510486603,
+   "n_colors": 2.03125,
+   "hallucinated": 0.03125
+  },
+  {
+   "step": 22,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 7.84375,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Green, Yellow, Blue.",
+    " Green, Yellow, Blue.",
+    " Green, Blue, Yellow.",
+    " Green, Yellow, Blue."
+   ],
+   "elapsed": 367.2305076122284,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 23,
+   "reward": 0.9937499761581421,
+   "strict": 0.9937499761581421,
+   "zero_std_groups": 0.75,
+   "length": 9.4375,
+   "loss": 0.004676266573369503,
+   "grad_norm": 0.7204046845436096,
+   "sample": [
+    " Blue, Green, Green, Blue, Yellow, Green",
+    " Blue, Green, Green, Yellow",
+    " Blue, Green, Green, Yellow, Blue, Green",
+    " Blue, Green, Green, Yellow, Blue"
+   ],
+   "elapsed": 381.47224521636963,
+   "n_colors": 2.71875,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 24,
+   "reward": 0.9848214387893677,
+   "strict": 0.9848214387893677,
+   "zero_std_groups": 0.5,
+   "length": 9.0625,
+   "loss": -0.0322565957903862,
+   "grad_norm": 1.1525821685791016,
+   "sample": [
+    " Red, Yellow, Blue, Green",
+    " Red, blue, green, yellow.",
+    " Red, blue, green, yellow.",
+    " Red, yellow, blue, green."
+   ],
+   "elapsed": 395.22555804252625,
+   "n_colors": 2.96875,
+   "hallucinated": 0.03125
+  },
+  {
+   "step": 25,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 9.75,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Blue, yellow, green, blue.",
+    " Blue, yellow, green, blue, green.",
+    " Blue, Yellow, Green, Blue",
+    " Blue, Yellow, Green."
+   ],
+   "elapsed": 408.0209186077118,
+   "n_colors": 2.75,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 26,
+   "reward": 0.9937499761581421,
+   "strict": 0.9937499761581421,
+   "zero_std_groups": 0.75,
+   "length": 8.1875,
+   "loss": 0.07411450147628784,
+   "grad_norm": 0.9813727140426636,
+   "sample": [
+    " Yellow, Red, Green",
+    " Red, yellow, green",
+    " Yellow, Red, Green",
+    " Yellow, Red, Green"
+   ],
+   "elapsed": 420.95818853378296,
+   "n_colors": 2.28125,
+   "hallucinated": 0.03125
+  },
+  {
+   "step": 27,
+   "reward": 0.9145833253860474,
+   "strict": 0.9145833253860474,
+   "zero_std_groups": 0.25,
+   "length": 8.03125,
+   "loss": -0.04257648438215256,
+   "grad_norm": 1.3251221179962158,
+   "sample": [
+    " Red, Red, Green, Green",
+    " Red, Red, Green, Green",
+    " Red, Red Green, Green, Green",
+    " Red, Red, Green, Green"
+   ],
+   "elapsed": 432.7550232410431,
+   "n_colors": 2.34375,
+   "hallucinated": 0.03125
+  },
+  {
+   "step": 28,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 9.0625,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Blue, Yellow, Blue, Yellow",
+    " Yellow, Blue, Yellow, Blue",
+    " yellow, blue, yellow, blue",
+    " Yellow, Blue, Yellow, Blue"
+   ],
+   "elapsed": 444.9963433742523,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 29,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 8.46875,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Yellow, Green, Yellow, Yellow, Green",
+    " Yellow, Green, Yellow, Yellow",
+    " Yellow, Green, Yellow, Yellow, Green",
+    " Yellow, Green, Yellow, Green, Yellow."
+   ],
+   "elapsed": 458.1382715702057,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 30,
+   "reward": 0.9499999284744263,
+   "strict": 0.9499999284744263,
+   "zero_std_groups": 1.0,
+   "length": 8.21875,
+   "loss": 0.00014957819075789303,
+   "grad_norm": 0.00044683270971290767,
+   "sample": [
+    " Blue, Green, Blue.",
+    " Blue, Green, Blue.",
+    " Blue, Green.",
+    " Blue, Blue, Green, Green"
+   ],
+   "elapsed": 472.0843846797943,
+   "n_colors": 2.0,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 31,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 7.75,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Red, Green, Yellow.",
+    " Red, Green, Yellow.",
+    " Red, green, yellow.",
+    " Red, Green, Yellow."
+   ],
+   "elapsed": 484.6774823665619,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 32,
+   "reward": 0.9333332777023315,
+   "strict": 0.9333332777023315,
+   "zero_std_groups": 0.5,
+   "length": 7.78125,
+   "loss": 0.02567782811820507,
+   "grad_norm": 0.8620041012763977,
+   "sample": [
+    " Green, Green, Blue, Green, Green.",
+    " Green, Green, Green, Green",
+    " Green, Green, Green, Green",
+    " Green, Green, Green."
+   ],
+   "elapsed": 498.60773968696594,
+   "n_colors": 2.0625,
+   "hallucinated": 0.0625
+  },
+  {
+   "step": 33,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 7.65625,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Green, Green, Yellow.",
+    " Green, yellow.",
+    " Green, Green, Yellow.",
+    " Green, Green, Yellow."
+   ],
+   "elapsed": 511.63414788246155,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 34,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 7.53125,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Yellow, Green, Yellow, Green.",
+    " Yellow, Green, Yellow",
+    " Yellow, Green, Yellow, Green.",
+    " Yellow, Green, Yellow, Green."
+   ],
+   "elapsed": 523.9919447898865,
+   "n_colors": 2.25,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 35,
+   "reward": 0.9937499761581421,
+   "strict": 0.9937499761581421,
+   "zero_std_groups": 0.75,
+   "length": 8.5625,
+   "loss": -0.014173636212944984,
+   "grad_norm": 0.6903096437454224,
+   "sample": [
+    " Red, Red, Green.",
+    " red, green, red, green.",
+    " Red, Red, Green.",
+    " Red, red triangle, green, green triangle"
+   ],
+   "elapsed": 538.2450482845306,
+   "n_colors": 2.71875,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 36,
+   "reward": 0.9312499761581421,
+   "strict": 0.9312499761581421,
+   "zero_std_groups": 0.5,
+   "length": 9.5,
+   "loss": -0.02610241249203682,
+   "grad_norm": 0.9021608829498291,
+   "sample": [
+    " Red, green, red, yellow.",
+    " Red, Green, Red, Green",
+    " Red, Green, Red, Green, Yellow",
+    " Red, Red, Green, Green"
+   ],
+   "elapsed": 551.4157481193542,
+   "n_colors": 2.65625,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 37,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 8.46875,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Green, Green, blue, Yellow.",
+    " Blue, Green, Green, Yellow.",
+    " Blue, Green, Green, Yellow.",
+    " Green, Green, Blue, Yellow."
+   ],
+   "elapsed": 563.8641338348389,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 38,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 10.65625,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Red, red square, blue, blue square, yellow, blue, yellow triangle.",
+    " Red, blue, yellow, blue, yellow.",
+    " Red, Red, Blue, Blue, Yellow.",
+    " Red, red square, blue, yellow."
+   ],
+   "elapsed": 577.8282163143158,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 39,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 9.96875,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Red, Red triangle, Yellow triangle, Yellow blue sphere",
+    " Red, yellow triangle, blue sphere.",
+    " Red, red triangle, yellow triangle, blue sphere.",
+    " Red,Yellow,Blue,Red,Yellow"
+   ],
+   "elapsed": 590.8835909366608,
+   "n_colors": 2.25,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 40,
+   "reward": 0.9583333134651184,
+   "strict": 0.9583333134651184,
+   "zero_std_groups": 0.75,
+   "length": 9.375,
+   "loss": -0.006232640240341425,
+   "grad_norm": 1.388576626777649,
+   "sample": [
+    " Blue, Blue, Yellow.",
+    " Blue, blue, blue, blue.",
+    " Blue, Blue, Blue, Blue",
+    " Blue, Blue, Blue, Yellow."
+   ],
+   "elapsed": 603.9524338245392,
+   "n_colors": 2.125,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 41,
+   "reward": 0.9937499761581421,
+   "strict": 0.9937499761581421,
+   "zero_std_groups": 0.75,
+   "length": 8.5625,
+   "loss": 0.0115967420861125,
+   "grad_norm": 1.0103038549423218,
+   "sample": [
+    " Red, green, green, green, light green",
+    " Red, Green, Green, Green",
+    " Red, Green, Green, Green.",
+    " Red, green, green, green, red"
+   ],
+   "elapsed": 617.0844728946686,
+   "n_colors": 2.21875,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 42,
+   "reward": 0.9937499761581421,
+   "strict": 0.9937499761581421,
+   "zero_std_groups": 0.75,
+   "length": 9.4375,
+   "loss": 0.02688831277191639,
+   "grad_norm": 0.613945722579956,
+   "sample": [
+    " Red, Green, Yellow, Green, Yellow",
+    " Red, Green, Yellow, Yellow.",
+    " Red, Green, Yellow, Yellow.",
+    " Red, Green, Red, Green, Yellow."
+   ],
+   "elapsed": 631.4455213546753,
+   "n_colors": 2.21875,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 43,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 10.53125,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Red, green, yellow, red, green, yellow, red.",
+    " Red, green, yellow, red.",
+    " Red, green, yellow, red, green, yellow",
+    " Red, green, yellow, red, green."
+   ],
+   "elapsed": 645.4347195625305,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 44,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 8.125,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Green, Gold, Yellow.",
+    " Green, Yellow, Green, Yellow",
+    " Green, Yellow, Green, Yellow, Yellow",
+    " Green, yellow, green, yellow, green."
+   ],
+   "elapsed": 658.2317562103271,
+   "n_colors": 2.0,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 45,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 12.09375,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " red, red, blue, blue, green, yellow",
+    " red, red, blue, blue, green, yellow, green.",
+    " red, red square, blue, blue square, yellow, green triangle.",
+    " Red, red, blue, blue, blue, green, yellow, green"
+   ],
+   "elapsed": 672.5180213451385,
+   "n_colors": 2.75,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 46,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 9.375,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Green, Red, Green, Green",
+    " Green, Red, Green, Red, Green, Red",
+    " Green, Red, Green, Red, Green",
+    " Green, Red, Green, Red"
+   ],
+   "elapsed": 685.7068989276886,
+   "n_colors": 2.0,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 47,
+   "reward": 0.9749999642372131,
+   "strict": 0.9749999642372131,
+   "zero_std_groups": 0.75,
+   "length": 9.03125,
+   "loss": -0.009701037779450417,
+   "grad_norm": 0.8694034218788147,
+   "sample": [
+    " Green, Blue, Green, Blue.",
+    " Green, Blue, Green, Blue.",
+    " Green, blue, green.",
+    " Green, blue, green, blue."
+   ],
+   "elapsed": 697.6714313030243,
+   "n_colors": 2.125,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 48,
+   "reward": 0.9791666269302368,
+   "strict": 0.9791666269302368,
+   "zero_std_groups": 0.75,
+   "length": 9.96875,
+   "loss": 0.021994465962052345,
+   "grad_norm": 0.7966269850730896,
+   "sample": [
+    " Red, Green, Green, Red",
+    " Red, green, red, green, green.",
+    " Red, Green, Green, Red",
+    " Red, Green, Green\nAnswer: Red, Green, Green"
+   ],
+   "elapsed": 710.3149635791779,
+   "n_colors": 2.3125,
+   "hallucinated": 0.0625
+  },
+  {
+   "step": 49,
+   "reward": 0.9749999642372131,
+   "strict": 0.9749999642372131,
+   "zero_std_groups": 0.5,
+   "length": 10.28125,
+   "loss": 0.01985609158873558,
+   "grad_norm": 1.0178385972976685,
+   "sample": [
+    " Red, Green, Yellow, Red, Yellow",
+    " Red, Green, Red triangle.",
+    " Red, Green, red triangle, red circle.",
+    " Red, Green Triangle, Red."
+   ],
+   "elapsed": 722.8249244689941,
+   "n_colors": 2.6875,
+   "hallucinated": 0.03125
+  },
+  {
+   "step": 50,
+   "reward": 0.9895833134651184,
+   "strict": 0.9895833134651184,
+   "zero_std_groups": 0.75,
+   "length": 10.4375,
+   "loss": -0.01692238450050354,
+   "grad_norm": 0.6056858897209167,
+   "sample": [
+    " Red, Green, Yellow, Green & Yellow",
+    " Red, Green, Yellow, Red Triangle",
+    " Red, Green, Yellow, Green.",
+    " Red, Green, Yellow, Green"
+   ],
+   "elapsed": 735.2974705696106,
+   "n_colors": 2.46875,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 51,
+   "reward": 0.9937499761581421,
+   "strict": 0.9937499761581421,
+   "zero_std_groups": 0.75,
+   "length": 9.8125,
+   "loss": 0.007870716042816639,
+   "grad_norm": 0.3425193428993225,
+   "sample": [
+    " Green, blue, blue triangle, green circle.",
+    " Green, Blue, Blue, Green, Yellow.",
+    " Green, Blue, Blue, Green, Blue",
+    " Green, Blue, Blue, Green, Blue."
+   ],
+   "elapsed": 748.6009335517883,
+   "n_colors": 2.03125,
+   "hallucinated": 0.03125
+  },
+  {
+   "step": 52,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 8.4375,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Green, Yellow, Red, Green.",
+    " Green, Red, Yellow, Yellow.",
+    " Yellow, Green, Red, Yellow.",
+    " Green, yellow, red, green."
+   ],
+   "elapsed": 760.5952956676483,
+   "n_colors": 2.25,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 53,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 10.28125,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Red, blue, blue, red.",
+    " Red, blue, blue, red.",
+    " Red, blue, red, blue, blue.",
+    " Red, blue, red triangle, blue triangle."
+   ],
+   "elapsed": 774.2666034698486,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 54,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 10.75,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Blue, Green, Blue, Green.",
+    " Blue, Green, Blue, Green.",
+    " blue, green, blue.",
+    " Blue, Green, Blue, Green, Blue."
+   ],
+   "elapsed": 788.7521104812622,
+   "n_colors": 3.0,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 55,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 9.625,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Red circles, red triangle, green square",
+    " Red circle, red triangle, green green.",
+    " Red circles, red triangle, green square.",
+    " Red circle, red triangle, green square."
+   ],
+   "elapsed": 802.8356673717499,
+   "n_colors": 2.0,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 56,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 10.03125,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Blue, Blue, Green, Yellow.",
+    " Blue, blue, green, yellow.",
+    " Blue, blue, green, yellow.",
+    " Blue, Blue, Green, Yellow."
+   ],
+   "elapsed": 817.3106882572174,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 57,
+   "reward": 0.9874999523162842,
+   "strict": 0.9874999523162842,
+   "zero_std_groups": 0.75,
+   "length": 9.4375,
+   "loss": -0.008931619115173817,
+   "grad_norm": 0.8027936220169067,
+   "sample": [
+    " Yellow, Green, Yellow.",
+    " Yellow, Green, Yellow.",
+    " Yellow, Green, Yellow, Green.",
+    " Yellow, Green, Yellow."
+   ],
+   "elapsed": 832.0485463142395,
+   "n_colors": 2.1875,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 58,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 9.84375,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Red, red circle, yellow square.",
+    " Red, red, yellow, yellow.",
+    " Red, red circle, yellow, yellow circle.",
+    " Red, yellow, red, yellow"
+   ],
+   "elapsed": 846.048585653305,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  },
+  {
+   "step": 59,
+   "reward": 1.0,
+   "strict": 1.0,
+   "zero_std_groups": 1.0,
+   "length": 10.8125,
+   "loss": 0.0,
+   "grad_norm": 0.0,
+   "sample": [
+    " Blue, blue, red, red.",
+    " Blue, blue, red, red.",
+    " Blue, blue, red, red.",
+    " Blue, Blue, Red, Red."
+   ],
+   "elapsed": 859.5154402256012,
+   "n_colors": 2.5,
+   "hallucinated": 0.0
+  }
+ ],
+ "train_seconds": 859.5159168243408,
+ "delta_norm": {
+  "llm": 1.7312716820866247,
+  "vision": 0.0
+ },
+ "after": {
+  "n_colors": 2.48,
+  "hallucinated": 0.0,
+  "f1": 1.0,
+  "recall": 1.0
+ }
+}

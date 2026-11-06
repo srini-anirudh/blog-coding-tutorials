@@ -1,0 +1,20 @@
+[dpo_biased] reference scored for 600 pairs in 593s
+[dpo_biased] device=cpu trainable={'vision': 0, 'connector': 0, 'llm': 4884480, 'lm_head': 0, 'total': 4884480}
+before {"balanced": {"image": {"color": 0.9, "count": 0.5666666666666667, "object": 0.9333333333333333, "ocr": 1.0, "spatial": 0.5666666666666667, "mean": 0.7933333333333333, "mean_margin": 4.2938083028793335}, "blind": {"color": 0.36666666666666664, "count": 0.36666666666666664, "object": 0.5666666666666667, "ocr": 0.5333333333333333, "spatial": 0.5333333333333333, "mean": 0.47333333333333333, "mean_margin": 0.12045353730519613}}, "biased": {"image": {"color": 1.0, "count": 0.2, "object": 1.0, "ocr": 0.9666666666666667, "spatial": 0.5333333333333333, "mean": 0.74, "mean_margin": 5.548536352316538}, "blind": {"color": 1.0, "count": 0.8333333333333334, "object": 0.8666666666666667, "ocr": 0.9333333333333333, "spatial": 0.5333333333333333, "mean": 0.8333333333333334, "mean_margin": 1.7493441692988079}}, "vqa": {"color": 0.6666666666666666, "count": 0.06666666666666667, "object": 0.7666666666666667, "ocr": 0.9666666666666667, "spatial": 0.4666666666666667, "mean": 0.5866666666666667}}
+step   0 loss=0.6931 margin=+0.000 pair_acc=0.00 grad=0.59 t=4s
+step  10 loss=0.6554 margin=+0.081 pair_acc=0.75 grad=0.69 t=48s
+step  20 loss=0.7143 margin=-0.010 pair_acc=0.50 grad=0.71 t=89s
+step  30 loss=0.6375 margin=+0.206 pair_acc=0.50 grad=1.36 t=131s
+step  40 loss=0.2012 margin=+1.516 pair_acc=1.00 grad=0.80 t=172s
+step  50 loss=0.2142 margin=+1.520 pair_acc=1.00 grad=0.65 t=211s
+step  60 loss=0.2551 margin=+1.477 pair_acc=1.00 grad=1.20 t=249s
+step  70 loss=0.1950 margin=+1.703 pair_acc=1.00 grad=0.42 t=289s
+step  80 loss=0.0629 margin=+2.945 pair_acc=1.00 grad=0.23 t=324s
+step  90 loss=0.0629 margin=+2.836 pair_acc=1.00 grad=0.29 t=359s
+step 100 loss=0.0635 margin=+4.079 pair_acc=1.00 grad=0.27 t=394s
+step 110 loss=0.1315 margin=+2.467 pair_acc=1.00 grad=0.84 t=429s
+step 120 loss=0.2374 margin=+1.602 pair_acc=1.00 grad=0.84 t=463s
+step 130 loss=0.0987 margin=+2.679 pair_acc=1.00 grad=0.63 t=497s
+step 140 loss=0.0900 margin=+2.473 pair_acc=1.00 grad=0.35 t=532s
+step 149 loss=0.1744 margin=+2.173 pair_acc=1.00 grad=0.55 t=567s
+after {"balanced": {"image": {"color": 1.0, "count": 0.5, "object": 0.9333333333333333, "ocr": 1.0, "spatial": 0.7666666666666667, "mean": 0.84, "mean_margin": 14.688196339607238}, "blind": {"color": 0.36666666666666664, "count": 0.5, "object": 0.4666666666666667, "ocr": 0.6, "spatial": 0.5333333333333333, "mean": 0.49333333333333335, "mean_margin": 1.2104870382944743}}, "biased": {"image": {"color": 1.0, "count": 1.0, "object": 1.0, "ocr": 0.9666666666666667, "spatial": 0.8333333333333334, "mean": 0.96, "mean_margin": 35.11690790494283}, "blind": {"color": 1.0, "count": 1.0, "object": 1.0, "ocr": 0.9666666666666667, "spatial": 0.5333333333333333, "mean": 0.9, "mean_margin": 21.695853939056395}}, "vqa": {"color": 0.9, "count": 0.3, "object": 0.6, "ocr": 0.5333333333333333, "spatial": 0.26666666666666666, "mean": 0.52}}

@@ -19,7 +19,7 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from vlmalign.device import pick_device  # noqa: E402
+from vlmalign.device import pick_device, set_threads  # noqa: E402
 from vlmalign.freeze import configure_trainable  # noqa: E402
 from vlmalign.logprobs import image_features  # noqa: E402
 from vlmalign.model import encode_prompt, load_model, load_processor  # noqa: E402
@@ -37,11 +37,11 @@ def features(model, proc, scenes) -> torch.Tensor:
 
 
 def probe_accuracy(xtr, ytr, xte, yte) -> float:
-    """Ridge regression to the count of each shape; correct if all three round to the truth."""
-    mu, sd = xtr.mean(0), xtr.std(0) + 1e-6
+    """Ridge regression to the count of each shape; one hit per shape whose count rounds to the truth."""
+    mu, sd, ym = xtr.mean(0), xtr.std(0) + 1e-6, ytr.mean(0)  # ym is the intercept: centred features have none
     xtr, xte = (xtr - mu) / sd, (xte - mu) / sd
-    w = torch.linalg.solve(xtr.T @ xtr + 10.0 * torch.eye(xtr.shape[1]), xtr.T @ ytr)
-    return float(((xte @ w).round() == yte).float().mean())
+    w = torch.linalg.solve(xtr.T @ xtr + 10.0 * torch.eye(xtr.shape[1]), xtr.T @ (ytr - ym))
+    return float((((xte @ w) + ym).round() == yte).float().mean())
 
 
 def main() -> None:
@@ -50,7 +50,7 @@ def main() -> None:
     ap.add_argument("--train", type=int, default=600)
     ap.add_argument("--test", type=int, default=200)
     args = ap.parse_args()
-    torch.set_num_threads(2)
+    set_threads()
     device = pick_device()
     proc = load_processor()
     scenes = [sample_scene(900_000 + i, with_word=False) for i in range(args.train + args.test)]

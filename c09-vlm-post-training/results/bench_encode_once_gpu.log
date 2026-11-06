@@ -1,0 +1,8 @@
+trainable {'vision': 2654208, 'connector': 7077888, 'llm': 4884480, 'lm_head': 0, 'total': 14616576}
+
+device=cuda  freeze=all  one image, G rollouts, median of 5
+   G   naive (ms)    once (ms)  speed-up
+   4          226          205     1.10x
+   8          286          208     1.38x
+  16          398          209     1.90x
+  32          618          207     2.99x

@@ -17,7 +17,7 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from vlmalign.device import pick_device, sync  # noqa: E402
+from vlmalign.device import pick_device, set_threads, sync  # noqa: E402
 from vlmalign.freeze import configure_trainable  # noqa: E402
 from vlmalign.logprobs import build_batch, forward_logits, token_logprobs  # noqa: E402
 from vlmalign.model import encode_answer, encode_prompt, load_model, load_processor  # noqa: E402
@@ -41,7 +41,7 @@ def main() -> None:
     ap.add_argument("--groups", type=int, nargs="+", default=[4, 8, 16])
     ap.add_argument("--freeze", default="all")
     args = ap.parse_args()
-    torch.set_num_threads(2)
+    set_threads()
     device = pick_device()
     proc, model = load_processor(), load_model(device=device)
     print("trainable", configure_trainable(model, args.freeze))

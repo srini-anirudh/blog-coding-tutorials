@@ -1,0 +1,7 @@
+trainable {'vision': 2654208, 'connector': 7077888, 'llm': 4884480, 'lm_head': 0, 'total': 14616576}
+
+device=cpu  freeze=all  one image, G rollouts, median of 5
+   G   naive (ms)    once (ms)  speed-up
+   4         6922         2081     3.33x
+   8        12952         2857     4.53x
+  16        34549         4514     7.65x

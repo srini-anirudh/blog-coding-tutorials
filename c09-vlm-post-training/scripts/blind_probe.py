@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT))
 import torch  # noqa: E402
 
 from vlmalign.blind import fit_text_probe  # noqa: E402
+from vlmalign.device import set_threads  # noqa: E402
 from vlmalign.preference import build_pairs  # noqa: E402
 
 
@@ -24,7 +25,7 @@ def main() -> None:
     ap.add_argument("--train", type=int, default=1000)
     ap.add_argument("--test", type=int, default=500)
     args = ap.parse_args()
-    torch.set_num_threads(2)
+    set_threads()
     results = {}
     print(f"{'negatives':10s} {'train':>7s} {'test':>7s}   per kind (test)")
     for mode in ("balanced", "biased"):

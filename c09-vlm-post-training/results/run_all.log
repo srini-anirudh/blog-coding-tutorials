@@ -1,10 +1,16 @@
-=== show_pairs
-exit 0 show_pairs
-=== blind_probe
-exit 0 blind_probe
-=== reward_audit
-exit 0 reward_audit
-=== show_rollouts
-exit 0 show_rollouts
-=== bench_encode_once
-=== dpo_balanced
+# One line per run. Hardware: CPU = AMD EPYC 7R13, 8 threads, shared with other jobs. H100 = NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2.
+# "wall" includes model loading, evaluation and, for GPU runs, time spent waiting for a free GPU. Training seconds are in each run's JSON.
+exit 0 show_pairs            CPU   wall 20s
+exit 0 blind_probe           CPU   wall 9s
+exit 0 reward_audit          CPU   wall 0s
+exit 0 show_rollouts         CPU   wall 30s
+exit 0 bench_encode_once     CPU   wall 412s
+exit 0 dpo_balanced          CPU   wall 2692s   train 699s
+exit 0 dpo_biased            CPU   wall 2431s   train 567s
+exit 0 grpo_llm              H100  wall 363s    train 88s
+exit 0 grpo_projector        H100  wall 1263s   train 159s
+exit 0 grpo_all              CPU   wall 1197s   train 934s
+exit 0 hack_recall           CPU   wall 1201s   train 1014s
+exit 0 hack_f1               CPU   wall 939s    train 860s
+exit 0 perception_probe      CPU   wall 1706s   (a first run had no intercept in the probe and is discarded)
+exit 0 bench_encode_once_gpu H100  wall not recorded

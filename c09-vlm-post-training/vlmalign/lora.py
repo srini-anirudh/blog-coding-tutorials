@@ -63,5 +63,5 @@ def lora_delta_norms(model: nn.Module, prefix: str) -> float:
     total = 0.0
     for name, m in model.named_modules():
         if isinstance(m, LoRALinear) and name.startswith(prefix):
-            total += float((m.scale * m.lora_B @ m.lora_A).float().pow(2).sum())
+            total += float((m.scale * m.lora_B @ m.lora_A).detach().float().pow(2).sum())
     return math.sqrt(total)

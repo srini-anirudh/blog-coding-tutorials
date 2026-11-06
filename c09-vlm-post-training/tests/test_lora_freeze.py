@@ -72,3 +72,28 @@ def test_freeze_modes_control_what_moves(mode, vision, connector):
     feats_after = image_features(model, b.pixel_values)
     # the image features change only if the vision tower or the connector learns
     assert torch.allclose(feats_before, feats_after) == (not (vision or connector))
+
+
+def test_saved_trainable_set_reloads_exactly(tmp_path):
+    """Save the way train_grpo.py does, load the way perception_probe.py does.
+
+    The load uses strict=False, which would ignore a wrong key in silence, so the keys are checked too.
+    """
+    model, b = tiny_vlm(), _batch()
+    configure_trainable(model, "projector+llm")
+    for m in model.modules():
+        if isinstance(m, LoRALinear):
+            nn.init.normal_(m.lora_B)  # pretend training moved the adapters
+    moved, _ = sequence_logprobs(model, b)
+    path = tmp_path / "run.pt"
+    torch.save({n: p.detach().cpu() for n, p in model.named_parameters() if p.requires_grad}, path)
+
+    fresh = tiny_vlm()
+    torch.manual_seed(1)  # a different random lora_A, so only the load can make the two models agree
+    configure_trainable(fresh, "projector+llm")
+    before_load, _ = sequence_logprobs(fresh, b)
+    state = torch.load(path)
+    assert fresh.load_state_dict(state, strict=False).unexpected_keys == []
+    after_load, _ = sequence_logprobs(fresh, b)
+    assert not torch.allclose(before_load, moved)
+    torch.testing.assert_close(after_load, moved)

@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT))
 
 import torch  # noqa: E402
 
+from vlmalign.device import set_threads  # noqa: E402
 from vlmalign.dpo import pair_batch  # noqa: E402
 from vlmalign.logprobs import IGNORE  # noqa: E402
 from vlmalign.model import load_processor  # noqa: E402
@@ -21,7 +22,7 @@ from vlmalign.tasks import KINDS  # noqa: E402
 
 
 def main() -> None:
-    torch.set_num_threads(2)
+    set_threads()
     for mode in ("balanced", "biased"):
         print(f"--- {mode} ---")
         for p in build_pairs(len(KINDS), mode, seed=11):

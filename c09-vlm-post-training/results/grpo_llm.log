@@ -1,0 +1,16 @@
+[grpo_count_exact_llm] device=cuda trainable={'vision': 0, 'connector': 0, 'llm': 4884480, 'lm_head': 0, 'total': 4884480}
+before {'count': 0.08, 'other': {'color': 0.7, 'object': 0.7666666666666667, 'spatial': 0.6, 'ocr': 1.0, 'mean': 0.7666666666666666}, 'text_count': 0.0}
+step   0 reward=0.094 strict=0.094 len=3.2 flat_groups=0.75 t=2s | ' 5'
+step   5 reward=0.094 strict=0.094 len=3.1 flat_groups=0.75 t=10s | ' 2'
+step  10 reward=0.469 strict=0.469 len=3.0 flat_groups=0.25 t=18s | ' 1'
+step  15 reward=0.156 strict=0.156 len=3.0 flat_groups=0.50 t=25s | ' 4'
+step  20 reward=0.219 strict=0.219 len=3.0 flat_groups=0.75 t=33s | ' 1'
+step  25 reward=0.312 strict=0.312 len=3.0 flat_groups=0.50 t=40s | ' 2'
+step  30 reward=0.469 strict=0.469 len=3.0 flat_groups=0.50 t=46s | ' 1'
+step  35 reward=0.812 strict=0.812 len=3.0 flat_groups=0.50 t=53s | ' 2'
+step  40 reward=0.531 strict=0.531 len=3.0 flat_groups=0.75 t=60s | ' 1'
+step  45 reward=0.344 strict=0.344 len=3.2 flat_groups=0.75 t=67s | ' 1.'
+step  50 reward=0.562 strict=0.562 len=3.4 flat_groups=0.75 t=75s | ' 3.'
+step  55 reward=0.625 strict=0.625 len=3.3 flat_groups=0.25 t=82s | ' 2'
+step  59 reward=0.656 strict=0.656 len=3.3 flat_groups=0.50 t=88s | ' 2'
+after {'count': 0.6, 'other': {'color': 0.9333333333333333, 'object': 0.7333333333333333, 'spatial': 0.7333333333333333, 'ocr': 1.0, 'mean': 0.85}, 'text_count': 0.5}

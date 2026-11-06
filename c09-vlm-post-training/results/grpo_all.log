@@ -1,0 +1,15 @@
+[grpo_count_exact_all] device=cpu trainable={'vision': 2654208, 'connector': 7077888, 'llm': 4884480, 'lm_head': 0, 'total': 14616576}
+step   0 reward=0.094 strict=0.094 len=3.0 flat_groups=0.75 t=17s | ' 5'
+step   5 reward=0.000 strict=0.000 len=3.0 flat_groups=1.00 t=91s | ' 2'
+step  10 reward=0.000 strict=0.000 len=3.0 flat_groups=1.00 t=162s | ' 4'
+step  15 reward=0.000 strict=0.000 len=3.3 flat_groups=1.00 t=233s | ' 5'
+step  20 reward=0.250 strict=0.250 len=3.9 flat_groups=1.00 t=307s | ' 5'
+step  25 reward=0.250 strict=0.250 len=4.0 flat_groups=1.00 t=380s | ' 5.'
+step  30 reward=0.219 strict=0.219 len=4.0 flat_groups=0.50 t=456s | ' 2.'
+step  35 reward=0.500 strict=0.500 len=4.0 flat_groups=1.00 t=541s | ' 1.'
+step  40 reward=0.312 strict=0.312 len=4.0 flat_groups=0.50 t=624s | ' 1.'
+step  45 reward=0.500 strict=0.500 len=3.9 flat_groups=1.00 t=718s | ' 2.'
+step  50 reward=0.750 strict=0.750 len=3.1 flat_groups=1.00 t=798s | ' Two.'
+step  55 reward=0.250 strict=0.250 len=3.0 flat_groups=1.00 t=875s | ' Two.'
+step  59 reward=0.469 strict=0.469 len=3.0 flat_groups=0.75 t=934s | ' Two.'
+after {'count': 0.52, 'other': {'color': 0.8666666666666667, 'object': 0.6666666666666666, 'spatial': 0.5333333333333333, 'ocr': 1.0, 'mean': 0.7666666666666666}, 'text_count': 0.0}

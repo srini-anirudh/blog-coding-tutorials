@@ -7,5 +7,5 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-# Many tutorials share one laptop; keep each test process polite.
+# Tests use tiny models, so two threads are enough and keep a shared machine free.
 torch.set_num_threads(2)

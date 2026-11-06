@@ -1,0 +1,15 @@
+[grpo_caption_color_f1_llm] device=cpu trainable={'vision': 0, 'connector': 0, 'llm': 4884480, 'lm_head': 0, 'total': 4884480}
+step   0 reward=0.682 strict=0.682 len=16.4 flat_groups=0.00 colors=1.84 halluc=0.16 t=21s | ' Blue, Yellow.'
+step   5 reward=0.761 strict=0.761 len=6.8 flat_groups=0.25 colors=1.94 halluc=0.44 t=116s | ' The colors of the shapes in the image are red and triangle.'
+step  10 reward=0.924 strict=0.924 len=6.8 flat_groups=0.00 colors=2.53 halluc=0.22 t=190s | ' Blue, Yellow, Yellow'
+step  15 reward=0.983 strict=0.983 len=7.2 flat_groups=0.50 colors=2.78 halluc=0.06 t=262s | ' Yellow, Green, Red'
+step  20 reward=1.000 strict=1.000 len=9.9 flat_groups=1.00 colors=3.00 halluc=0.00 t=341s | ' Red, Blue, Yellow'
+step  25 reward=1.000 strict=1.000 len=9.8 flat_groups=1.00 colors=2.75 halluc=0.00 t=408s | ' Blue, yellow, green, blue.'
+step  30 reward=0.950 strict=0.950 len=8.2 flat_groups=1.00 colors=2.00 halluc=0.00 t=472s | ' Blue, Green, Blue.'
+step  35 reward=0.994 strict=0.994 len=8.6 flat_groups=0.75 colors=2.72 halluc=0.00 t=538s | ' Red, Red, Green.'
+step  40 reward=0.958 strict=0.958 len=9.4 flat_groups=0.75 colors=2.12 halluc=0.00 t=604s | ' Blue, Blue, Yellow.'
+step  45 reward=1.000 strict=1.000 len=12.1 flat_groups=1.00 colors=2.75 halluc=0.00 t=673s | ' red, red, blue, blue, green, yellow'
+step  50 reward=0.990 strict=0.990 len=10.4 flat_groups=0.75 colors=2.47 halluc=0.00 t=735s | ' Red, Green, Yellow, Green & Yellow'
+step  55 reward=1.000 strict=1.000 len=9.6 flat_groups=1.00 colors=2.00 halluc=0.00 t=803s | ' Red circles, red triangle, green square'
+step  59 reward=1.000 strict=1.000 len=10.8 flat_groups=1.00 colors=2.50 halluc=0.00 t=860s | ' Blue, blue, red, red.'
+after {'n_colors': 2.48, 'hallucinated': 0.0, 'f1': 1.0, 'recall': 1.0}

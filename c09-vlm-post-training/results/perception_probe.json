@@ -1,0 +1,6 @@
+{
+ "pretrained": 0.9950000047683716,
+ "grpo_count_exact_llm": 0.9950000047683716,
+ "grpo_count_exact_projector_llm": 0.9950000047683716,
+ "grpo_count_exact_all": 0.9900000095367432
+}

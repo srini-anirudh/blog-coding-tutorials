@@ -15,7 +15,7 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from vlmalign.device import pick_device, seed_everything  # noqa: E402
+from vlmalign.device import pick_device, seed_everything, set_threads  # noqa: E402
 from vlmalign.grpo import group_advantages, rollout_batch, sample_group  # noqa: E402
 from vlmalign.logprobs import IGNORE  # noqa: E402
 from vlmalign.model import encode_prompt, load_model, load_processor  # noqa: E402
@@ -28,7 +28,7 @@ def main() -> None:
     ap.add_argument("--group", type=int, default=8)
     ap.add_argument("--images", type=int, default=3)
     args = ap.parse_args()
-    torch.set_num_threads(2)
+    set_threads()
     seed_everything(0)
     device = pick_device()
     proc, model = load_processor(), load_model(device=device).eval()

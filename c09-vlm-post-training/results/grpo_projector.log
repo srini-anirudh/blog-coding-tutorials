@@ -1,0 +1,15 @@
+[grpo_count_exact_projector_llm] device=cuda trainable={'vision': 0, 'connector': 7077888, 'llm': 4884480, 'lm_head': 0, 'total': 11962368}
+step   0 reward=0.094 strict=0.094 len=3.2 flat_groups=0.75 t=5s | ' 5'
+step   5 reward=0.375 strict=0.375 len=3.1 flat_groups=0.50 t=20s | ' 1'
+step  10 reward=0.750 strict=0.750 len=4.0 flat_groups=1.00 t=33s | ' One.'
+step  15 reward=0.250 strict=0.250 len=3.8 flat_groups=1.00 t=46s | ' One.'
+step  20 reward=0.000 strict=0.000 len=3.8 flat_groups=1.00 t=60s | ' 1.'
+step  25 reward=0.500 strict=0.500 len=3.8 flat_groups=1.00 t=73s | ' 1.'
+step  30 reward=0.750 strict=0.750 len=3.9 flat_groups=1.00 t=86s | ' 1.'
+step  35 reward=0.500 strict=0.500 len=3.7 flat_groups=1.00 t=99s | ' One.'
+step  40 reward=0.500 strict=0.500 len=3.8 flat_groups=1.00 t=111s | ' 1.'
+step  45 reward=0.500 strict=0.500 len=3.8 flat_groups=1.00 t=125s | ' 1.'
+step  50 reward=0.500 strict=0.500 len=3.6 flat_groups=1.00 t=137s | ' One.'
+step  55 reward=0.500 strict=0.500 len=3.8 flat_groups=1.00 t=150s | ' One.'
+step  59 reward=0.500 strict=0.500 len=3.9 flat_groups=1.00 t=159s | ' 1.'
+after {'count': 0.55, 'other': {'color': 0.9, 'object': 0.6666666666666666, 'spatial': 0.7333333333333333, 'ocr': 1.0, 'mean': 0.825}, 'text_count': 0.0}

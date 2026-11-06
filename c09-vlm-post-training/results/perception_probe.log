@@ -1,0 +1,5 @@
+features                               per-shape count accuracy
+pretrained                                                0.995
+grpo_count_exact_llm                                      0.995
+grpo_count_exact_projector_llm                            0.995
+grpo_count_exact_all                                      0.990

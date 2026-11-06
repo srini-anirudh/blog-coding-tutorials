@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-# Every real run behind the post. Logs land in results/. About an hour on an Apple M5 (MPS).
+# Every real run behind the post, one after another. Logs and JSON land in results/.
+# About four hours on 8 threads of an AMD EPYC 7R13 (see the README for the run times).
 set -u
 cd "$(dirname "$0")/.."
 PY="${PY:-../.venv/bin/python}"
-run() { name=$1; shift; echo "=== $name"; "$PY" -u "$@" > "results/$name.log" 2>&1; echo "exit $? $name"; }
+export TQDM_DISABLE=1 TRANSFORMERS_VERBOSITY=error  # keep progress bars out of the logs
+exec > >(tee results/run_all.log) 2>&1
+run() { name=$1; shift; start=$SECONDS; echo "=== $name"; "$PY" -u "$@" > "results/$name.log" 2>&1; echo "exit $? $name $((SECONDS - start))s"; }
 
 run show_pairs        scripts/show_pairs.py
 run blind_probe       scripts/blind_probe.py

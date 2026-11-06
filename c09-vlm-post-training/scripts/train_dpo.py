@@ -20,7 +20,7 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from vlmalign.device import pick_device, seed_everything, sync  # noqa: E402
+from vlmalign.device import pick_device, seed_everything, set_threads, sync  # noqa: E402
 from vlmalign.dpo import dpo_loss, pair_batch, pair_logprobs, reference_logprobs  # noqa: E402
 from vlmalign.evaluate import preference_accuracy, vqa_accuracy, vqa_items  # noqa: E402
 from vlmalign.freeze import configure_trainable  # noqa: E402
@@ -70,7 +70,7 @@ def main(argv=None) -> dict:
     ap.add_argument("--name", default=None)
     args = ap.parse_args(argv)
 
-    torch.set_num_threads(2)
+    set_threads()
     seed_everything(args.seed)
     device = pick_device()
     name = args.name or f"dpo_{args.negatives}"

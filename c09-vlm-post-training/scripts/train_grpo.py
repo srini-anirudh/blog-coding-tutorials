@@ -17,7 +17,7 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from vlmalign.device import pick_device, seed_everything, sync  # noqa: E402
+from vlmalign.device import pick_device, seed_everything, set_threads, sync  # noqa: E402
 from vlmalign.evaluate import text_count_accuracy, vqa_accuracy, vqa_items  # noqa: E402
 from vlmalign.freeze import configure_trainable  # noqa: E402
 from vlmalign.grpo import group_advantages, grpo_loss, policy_token_logprobs, rollout_batch, sample_group  # noqa: E402
@@ -61,7 +61,7 @@ def evaluate(model, proc, task: str, seed: int = 12345) -> dict:
 
 def main(argv=None) -> dict:
     args = parse_args(argv)
-    torch.set_num_threads(2)
+    set_threads()
     seed_everything(args.seed)
     device = pick_device()
     name = args.name or f"grpo_{args.task}_{args.reward}_{args.freeze.replace('+', '_')}"

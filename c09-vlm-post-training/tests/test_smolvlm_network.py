@@ -6,6 +6,7 @@ import torch
 from vlmalign.dpo import pair_batch
 from vlmalign.freeze import MODES, configure_trainable
 from vlmalign.logprobs import IGNORE, sequence_logprobs
+from vlmalign.lora import LoRALinear
 from vlmalign.model import chat_prompt, encode_answer, load_model, load_processor
 from vlmalign.preference import build_pairs
 
@@ -49,7 +50,10 @@ def test_lora_regexes_cover_every_block_of_smolvlm():
     b = pair_batch(load_processor(), build_pairs(1, "balanced", seed=1))
     before, _ = sequence_logprobs(model, b)
     counts = configure_trainable(model, MODES[-1], r=16)
-    # 30 decoder blocks x 7 linears, 12 vision blocks x 6 linears, r = 16
+    # decoder blocks x 7 linears (q, k, v, o, gate, up, down), vision blocks x 6 (q, k, v, out, fc1, fc2)
+    adapted = [n for n, m in model.named_modules() if isinstance(m, LoRALinear)]
+    assert sum(n.startswith("model.text_model.") for n in adapted) == 7 * model.config.text_config.num_hidden_layers
+    assert sum(n.startswith("model.vision_model.") for n in adapted) == 6 * model.config.vision_config.num_hidden_layers
     assert counts["llm"] > 0 and counts["vision"] > 0
     after, _ = sequence_logprobs(model, b)
     torch.testing.assert_close(before, after)
