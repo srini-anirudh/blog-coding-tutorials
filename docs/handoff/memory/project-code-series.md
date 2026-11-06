@@ -1,24 +1,17 @@
 ---
 name: project-code-series
-description: Coding Tutorials series (C1–C12) — code in repo ~/Documents/Code/blog-coding-tutorials, posts on the blog with inline excerpts
+description: Coding Tutorials series (C1–C12) paused for a move to the cluster; read HANDOFF.md in blog-coding-tutorials; don't start agents on the laptop
 metadata:
   type: project
 ---
 
-Started 2026-11-06. The user asked for a code-first tutorial series ("a different type of blog, proper coding series"):
-12 build-along posts (C1 PyTorch … C12 agent RL). The code lives in the separate repo
-`/Users/anirudh-srini/Documents/Code/blog-coding-tutorials` (GitHub `srini-anirudh/blog-coding-tutorials`, chosen and
-created by the user; push remote `git@github-personal:...`), one folder per tutorial. Posts quote exact excerpts using
-`data-src` and `data-lines`. The plan is `docs/series-plan.md` in that repo. Shared page components are
-`assets/css/code-tutorial.css`, `assets/js/code-tutorial.js` and `docs/code-tutorial-template.html` on the site. The
-series id is `#code`, with `?series=code` and the nav label "Coding Tutorials series".
-Coordination tools (brief, checker, publisher) are in the git-ignored `.series/` folder in that repo, because the
-session scratchpad under /private/tmp gets wiped on restart.
+12 code-first tutorials (C1 PyTorch … C12 agent RL). Code is in GitHub `srini-anirudh/blog-coding-tutorials`, one folder per
+tutorial. The full state, setup and next steps are in `HANDOFF.md` at that repo's root. Unpublished post drafts are on the
+`code-tutorials-wip` branch of the blog repo, because pushes to blog `main` go live.
 
-**Why:** the user wants every layer from tensors to agents to be built and inspected, with code they can run.
-**How to apply:**
-- There is no `gh` CLI or token here, so the user must create GitHub repos themselves.
-- The user floated a code companion for every existing theory post. Proposal: builds plus labs, with companion links;
-  not yet approved.
+**Why:** on 2026-11-07 the user stopped all agents to move this work to a cluster: "dont start the agents here… we will move
+to cluster, and then u start there".
+**How to apply:** do not launch or resume tutorial agents on the laptop. On the cluster, wait for the user to say start, then
+follow HANDOFF.md. The code-versions-of-existing-posts proposal (companion links plus labs) is still unapproved.
 
 Related: [[project-vlm-series]], [[feedback-blog-writing]], [[feedback-commits]].
