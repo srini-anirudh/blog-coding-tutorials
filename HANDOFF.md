@@ -120,6 +120,8 @@ Wait for the author to say start. Then:
 3. Review each post as it finishes: run the listing checker and check it against the post checklist and the writing guide.
 4. Publish one tutorial at a time. Commit its code folder here and push. Commit its post on the blog repo, run
    `cpublish.py`, and push to `main`. Only link to posts that are live.
+   `main` no longer has a Projects nav tab. Remove that `<li>` from each draft before it goes live, because drafts
+   on `code-tutorials-wip` still carry it.
 5. Add `docs/code-series.md` status updates on the blog repo as posts ship. Remove the work-in-progress note from
    `README.md` when the series is done.
 
