@@ -1,0 +1,26 @@
+Step 1, compress: this is all we store
+  c_kv     (1, 1, 16, 32)
+  k_pe     (1, 1, 16, 8)
+Step 2, reconstruct per-head keys and values on the fly
+  k_nope   (1, 8, 16, 32)
+  v        (1, 8, 16, 32)
+Step 3, RoPE lives only in the small shared key
+  q_nope   (1, 8, 16, 32)
+  q_pe     (1, 8, 16, 8)
+  full query and key width: 32 + 8 = 40
+
+Decoding, three ways:
+  explicit K, V  max |cached - full| = 1.8e-07, cached tensors (1, 1, 16, 32) (1, 1, 16, 8)
+  absorbed       max |cached - full| = 2.7e-07, cached tensors (1, 1, 16, 32) (1, 1, 16, 8)
+
+Step 4, cache bytes per token for one layer (fp32):
+  MHA           2048 bytes     1.0x smaller than MHA
+  GQA Hkv=2      512 bytes     4.0x smaller than MHA
+  MQA            256 bytes     8.0x smaller than MHA
+  MLA r=32       160 bytes    12.8x smaller than MHA
+
+An honest catch: MLA spends cache savings on parameters and compute.
+  MHA          262,144 params
+  GQA Hkv=2    163,840 params
+  MQA          147,456 params
+  MLA r=32     174,112 params

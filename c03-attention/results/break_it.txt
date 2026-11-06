@@ -1,0 +1,28 @@
+1. Missing 1/sqrt(d): softmax collapses as d grows
+      d   right max p   wrong max p
+      8         0.112         0.417
+     64         0.106         0.805
+    512         0.106         0.914
+
+2. Mask inverted (triu instead of tril): every token reads only the future
+  weights of token 5 on keys 0..5: tensor([0., 0., 0., 0., 0., 1.])
+  weights of token 0 on keys 0..5: tensor([0.230, 0.234, 0.297, 0.054, 0.041, 0.145])
+  the causality check catches it: token 0 moved by 0.145 when token 5 changed
+
+3. A row with no visible key: softmax of all -inf is NaN
+  core.scaled_dot_product_attention row 0: tensor([nan, nan, nan, nan])
+  torch SDPA row 0 output: tensor([0., 0., 0.])
+
+4. is_causal=True while decoding: aligned top-left, so the new token sees only key 0
+  max |output - v[0]| = 0.0
+  causal_mask(1, 5): [[1, 1, 1, 1, 1]] against what is_causal builds: [[1, 0, 0, 0, 0]]
+
+5. Forgetting the position offset while decoding: RoPE restarts at 0
+  max error with position 8: 4.5e-08
+  max error with position 0: 0.084
+
+6. Shape mistakes that fail loudly, which is the good kind
+  merge without contiguous(): view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces)
+  60 dims into 8 heads: hidden_size must be divisible by num_heads (or set head_dim)
+  8 query heads over 3 KV heads: num_heads must be a multiple of num_kv_heads
+  q width 8, k width 16: Expected size for first two dimensions of batch2 tensor to be: [1, 8] 

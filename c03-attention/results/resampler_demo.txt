@@ -1,0 +1,25 @@
+ image tokens Nv          Q-Former         Perceiver
+             196      (1, 32, 256)      (1, 32, 256)
+             576      (1, 32, 256)      (1, 32, 256)
+            1369      (1, 32, 256)      (1, 32, 256)
+params: Q-Former 2,209,536, Perceiver 1,685,760
+
+What the language model pays per self-attention layer, with 30 text tokens:
+  Nv= 196: early fusion    51,076 scores, after a 32-token resampler 3,844
+  Nv= 576: early fusion   367,236 scores, after a 32-token resampler 3,844
+  Nv=1369: early fusion 1,957,201 scores, after a 32-token resampler 3,844
+
+Early fusion mask, 4 image tokens then 4 text tokens:
+####....
+####....
+####....
+####....
+#####...
+######..
+#######.
+########
+
+Early fusion:     (2, 10, 32) (the image joins the sequence)
+Cross-attention:  (2, 6, 32) (text length is kept)
+Gated at init:    max |output - input| = 0.0e+00 (gates closed)
+Gated, gate open: max |output - input| = 0.376

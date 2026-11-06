@@ -1,0 +1,28 @@
+Logits as activations grow. Uniform attention over 256 keys has entropy 5.55.
+activation scale x1              max |s|       std     max p   entropy
+  plain                      5.3      1.00     0.043      5.05
+  QK-norm                    4.3      1.00     0.040      5.06
+  soft-cap c=5               3.9      0.96     0.033      5.11
+activation scale x4              max |s|       std     max p   entropy
+  plain                     85.0     16.03     0.873      0.33
+  QK-norm                    4.3      1.00     0.040      5.06
+  soft-cap c=5               5.0      4.35     0.012      4.64
+activation scale x16              max |s|       std     max p   entropy
+  plain                   1360.5    256.51     0.992      0.02
+  QK-norm                    4.3      1.00     0.040      5.06
+  soft-cap c=5               5.0      4.96     0.008      4.84
+
+Dropout on one row of weights (p = 0.5): links vanish, survivors double
+  before: tensor([0.052, 0.341, 0.057, 0.045, 0.121, 0.384]) sum 1.0
+  after:  tensor([0.105, 0.000, 0.114, 0.090, 0.242, 0.000]) sum 0.55
+
+ALiBi for 8 heads: the slopes, and the bias of head 0 and head 7 for the last of 5 queries
+  slopes: tensor([0.500, 0.250, 0.125, 0.062, 0.031, 0.016, 0.008, 0.004])
+  head 0 (steep):  tensor([-2.000, -1.500, -1.000, -0.500, -0.000])
+  head 7 (shallow): tensor([-0.016, -0.012, -0.008, -0.004, -0.000])
+
+Research variants, one forward pass each (hidden 64, 4 heads):
+  GatedAttention          (1, 8, 64)     20,480 params
+  CosineAttention         (1, 8, 64)     16,388 params
+  DifferentialAttention   (1, 8, 64)     16,401 params
+  TalkingHeadsAttention   (1, 8, 64)     16,416 params

@@ -1,0 +1,25 @@
+attention_type  class                          params  cache/token
+mha             GroupedQueryAttention         262,144          512
+mqa             GroupedQueryAttention         147,456           64
+gqa             GroupedQueryAttention         163,840          128
+mla             MultiHeadLatentAttention      217,152           80
+linear          LinearAttention               262,144            0
+
+The same GQA weights on every backend (max |diff| against naive):
+  sdpa        1.8e-07
+  sdpa_math   1.5e-07
+  sdpa_flash  1.8e-07
+  tiled       1.6e-07
+
+A window can change the backend's cost without changing the answer:
+  sdpa + mask vs window_chunked: 7.5e-08
+
+Configs in configs/ (built on the meta device: no memory is allocated):
+  deepseek_like.yaml  MultiHeadLatentAttention     149,227,520 params,    576 cached numbers per token per layer
+  llama_like.yaml     GroupedQueryAttention         41,943,040 params,   2048 cached numbers per token per layer
+  mistral_like.yaml   GroupedQueryAttention          2,621,440 params,    512 cached numbers per token per layer
+
+Decode-time state from make_cache:
+  gqa     KVCache
+  mla     KVCache
+  linear  LinearStateCache

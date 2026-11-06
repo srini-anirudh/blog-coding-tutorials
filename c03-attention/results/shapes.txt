@@ -1,0 +1,29 @@
+--- attention on raw q, k, v (B=1, Nq=2, Nk=3, d=4) ---
+q          (1, 2, 4)            torch.float32
+k          (1, 3, 4)            torch.float32
+v          (1, 3, 4)            torch.float32
+weights    (1, 2, 3)            torch.float32
+out        (1, 2, 4)            torch.float32
+weights row sums: tensor([[1.000, 1.000]])
+weights:
+ tensor([[0.328, 0.391, 0.281],
+        [0.632, 0.211, 0.157]])
+
+--- multi-head reshapes (B=2, N=6, D=32, H=4) ---
+x          (2, 6, 32)           torch.float32
+q_proj(x)  (2, 6, 32)           torch.float32
+q split    (2, 4, 6, 8)         torch.float32
+weights    (2, 4, 6, 6)         torch.float32
+out        (2, 4, 6, 8)         torch.float32
+merged     (2, 6, 32)           torch.float32
+o_proj     (2, 6, 32)           torch.float32
+
+--- three Linear layers against one fused Linear ---
+separate params: 4096
+fused params:    4096
+max |separate - fused|: 1.4901161193847656e-07
+
+--- cross-attention: the output length follows the queries ---
+text -> text       query (2, 6, 32), context (2, 9, 48) -> (2, 6, 32)
+text -> image      query (2, 6, 32), context (2, 196, 48) -> (2, 6, 32)
+latents -> image   query (2, 8, 32), context (2, 729, 48) -> (2, 8, 32)

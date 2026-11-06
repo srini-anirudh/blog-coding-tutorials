@@ -1,0 +1,9 @@
+# GQA as in Llama 3 8B: 32 query heads share 8 KV head groups.
+attention_type: gqa
+hidden_size: 4096
+num_heads: 32
+num_kv_heads: 8
+causal: true
+window_size: null
+positional_encoding: rope
+backend: sdpa

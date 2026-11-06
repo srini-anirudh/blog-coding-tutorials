@@ -1,0 +1,20 @@
+all six scores: tensor([ 0.112, -0.885, -0.679,  0.589, -0.600, -1.203])
+true softmax:   tensor([0.239, 0.088, 0.108, 0.384, 0.117, 0.064])
+
+tile 0: scores tensor([ 0.112, -0.885, -0.679])
+  m: -inf -> 0.112   alpha = exp(m - m_new) = 0.000
+  p = exp(s - m_new): tensor([1.000, 0.369, 0.453])
+  l = 1.823   acc = tensor([-1.487,  0.064])
+
+tile 1: scores tensor([ 0.589, -0.600, -1.203])
+  m: 0.112 -> 0.589   alpha = exp(m - m_new) = 0.621
+  p = exp(s - m_new): tensor([1.000, 0.305, 0.167])
+  l = 2.603   acc = tensor([-0.407,  0.039])
+
+acc / l:           tensor([-0.156,  0.015])
+softmax @ v:       tensor([-0.156,  0.015])
+
+Full function, causal, N = 512, tiles 64 x 64:
+max |tiled - naive| = 9.54e-07
+tiles: 64 total, 28 skipped because they lie wholly in the future
+largest score tensor held: 64 x 64 per head = 4,096 entries, against 262,144 for naive

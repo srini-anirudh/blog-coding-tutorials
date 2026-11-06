@@ -1,0 +1,19 @@
+max |phi(Q)[phi(K)^T V] - [phi(Q)phi(K)^T]V| = 2.4e-07
+sizes: phi(K)^T V (1, 2, 8, 8) against phi(Q) phi(K)^T (1, 2, 10, 10)
+
+The recurrence: state size stays fixed while the sequence grows
+  t=0: S (1, 2, 8, 8), z (1, 2, 8), |S| = 15.980
+  t=4: S (1, 2, 8, 8), z (1, 2, 8), |S| = 42.479
+  t=9: S (1, 2, 8, 8), z (1, 2, 8), |S| = 63.308
+max |recurrent - parallel| = 3.6e-07
+
+How far is elu+1 from softmax? It is a different kernel, not an approximation:
+  mean |elu+1 - softmax| = 0.111, output std = 0.217
+
+Performer random features do approximate softmax, and improve with m (advanced):
+     m   mean |approx - softmax|
+     16   0.0403
+     64   0.0292
+    256   0.0272
+   1024   0.0153
+   4096   0.0118

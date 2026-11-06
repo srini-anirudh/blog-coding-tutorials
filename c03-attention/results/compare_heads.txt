@@ -1,0 +1,16 @@
+layer   Hq  Hkv  n_rep               q            k, v    params
+MHA     32   32      1 (2, 32, 16, 16) (2, 32, 16, 16) 1,048,576
+GQA     32    8      4 (2, 32, 16, 16)  (2, 8, 16, 16)   655,360
+GQA     32    2     16 (2, 32, 16, 16)  (2, 2, 16, 16)   557,056
+MQA     32    1     32 (2, 32, 16, 16)  (2, 1, 16, 16)   540,672
+
+repeat_kv: which KV head does each query head read? (Hq = 8, Hkv = 2)
+[0, 0, 0, 0, 1, 1, 1, 1]
+
+The unified module against the separate classes, weights copied:
+GQA(Hkv=32) vs MHA: max |diff| = 2.09e-07
+GQA(Hkv=1)  vs MQA: max |diff| = 2.38e-07
+
+Three Linear layers against one fused Linear (Apple M5 CPU, 2 threads, projections only):
+  separate  16.67 ms per call
+  fused     14.19 ms per call

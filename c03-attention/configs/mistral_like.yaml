@@ -1,0 +1,9 @@
+# GQA with a sliding window, on the chunked backend that exploits it.
+attention_type: gqa
+hidden_size: 1024
+num_heads: 16
+num_kv_heads: 4
+causal: true
+window_size: 512
+positional_encoding: rope
+backend: window_chunked

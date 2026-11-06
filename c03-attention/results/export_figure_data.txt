@@ -1,0 +1,3 @@
+tiles traced: 9, skipped: 3
+max |tiled - naive| = 2.4e-07
+wrote figure_data.json, 7105 bytes

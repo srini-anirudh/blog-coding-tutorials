@@ -1,0 +1,13 @@
+Part 1: measured. L = 2, B = 1, D = 1024, Hq = 16, dh = 64; GQA Hkv = 4; MLA r = 128, dr = 16.
+layer       S     dtype  device       formula       tensors  equal   MPS alloc delta
+MHA      1024      fp32     cpu    16,777,216    16,777,216   True                 -
+MHA     16384      fp32     cpu   268,435,456   268,435,456   True                 -
+GQA      1024      fp32     cpu     4,194,304     4,194,304   True                 -
+GQA     16384      fp32     cpu    67,108,864    67,108,864   True                 -
+MQA      1024      fp32     cpu     1,048,576     1,048,576   True                 -
+MQA     16384      fp32     cpu    16,777,216    16,777,216   True                 -
+MLA      1024      fp32     cpu     1,179,648     1,179,648   True                 -
+MHA      1024      bf16     cpu     8,388,608     8,388,608   True                 -
+GQA      1024      bf16     cpu     2,097,152     2,097,152   True                 -
+MQA      1024      bf16     cpu       524,288       524,288   True                 -
+MLA      1024      bf16     cpu       589,824       589,824   True                 -
