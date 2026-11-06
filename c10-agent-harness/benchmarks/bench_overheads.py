@@ -21,7 +21,7 @@ from harness import Agent, AgentConfig, ContextBuilder, LocalSandbox, ScriptedMo
 from harness.git_tools import init_repo  # noqa: E402
 from harness.repomap import build_repo_map  # noqa: E402
 from harness.search import SymbolIndex, iter_files, search_gitgrep, search_python  # noqa: E402
-from harness.sandbox import Limits, run_process  # noqa: E402
+from harness.sandbox import DockerSandbox, Limits, docker_unusable_reason, run_process  # noqa: E402
 from harness.tokens import count_tokens  # noqa: E402
 
 
@@ -48,10 +48,15 @@ def main() -> None:
             "subprocess.run": lambda: subprocess.run(["/usr/bin/true"]),
             "run_process (group, capture)": lambda: run_process(["/usr/bin/true"], ws, {}, 10.0),
             "LocalSandbox, no network wrap": lambda: LocalSandbox(ws, Limits(network=True)).run("true"),
-            "LocalSandbox, sandbox-exec": lambda: LocalSandbox(ws).run("true"),
+            "LocalSandbox, network denied": lambda: LocalSandbox(ws).run("true"),
         }
         for name, fn in rows.items():
             print(f"{name:<34}{timed(fn):>8.1f}")
+        # A fresh container per command. Skipped, with the reason, on a machine that cannot run one.
+        if reason := docker_unusable_reason():
+            print(f"{'DockerSandbox, fresh container':<34}skipped: {reason}")
+        else:
+            print(f"{'DockerSandbox, fresh container':<34}{timed(lambda: DockerSandbox(ws).run('true'), 5):>8.1f}")
 
     with tempfile.TemporaryDirectory() as tmp:
         repo = Path(tmp) / "repo"

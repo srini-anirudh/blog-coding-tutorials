@@ -6,7 +6,7 @@ import pytest
 from helpers import make_ctx
 
 from harness.editing import (EditError, apply_hunks, apply_patch, apply_search_replace, edit_file,
-                             make_diff, parse_unified_diff)
+                             make_diff, parse_unified_diff, reindent)
 from harness.fs_tools import read_file
 from harness.tools import ToolError
 
@@ -20,6 +20,19 @@ def test_search_replace_exact():
 
 def test_search_replace_tolerates_trailing_whitespace():
     assert apply_search_replace(SRC, "    x = 1   ", "    x = 10").strategy == "trailing-whitespace"
+
+
+def test_reindent_moves_a_shallower_line_by_the_same_amount():
+    text = "def f():\n    if x:\n        y = 1\n    z = 2\n    return z\n"
+    quote = "            y = 1\n        z = 2"
+    out = apply_search_replace(text, quote, "            y = 1  # edited\n        z = 2").text
+    assert out == "def f():\n    if x:\n        y = 1  # edited\n    z = 2\n    return z\n"
+
+
+def test_reindent_clears_blank_lines_and_refuses_a_negative_indent():
+    assert reindent(["        a", "  ", "    b"], ["        a"], ["    a"]) == ["    a", "", "b"]
+    with pytest.raises(EditError, match="shift"):
+        reindent(["        a", "  b"], ["        a"], ["    a"])
 
 
 def test_search_replace_reindents_when_indent_differs():

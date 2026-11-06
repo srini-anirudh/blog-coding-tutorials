@@ -1,0 +1,56 @@
+200 one-line edits in 20 files, each diff applied by git and by our applier
+
+case                  git ok  strict ok  anchored ok  anchored == git
+clean                    200        200          200              200
+stale line numbers       200          0          200              200
+
+schema from get_json_schema:
+{
+  "function": {
+    "description": "Do a sample thing.",
+    "name": "sample",
+    "parameters": {
+      "properties": {
+        "n": {
+          "description": "How many lines to show.",
+          "type": "integer"
+        },
+        "path": {
+          "description": "Where to look.",
+          "type": "string"
+        },
+        "ratio": {
+          "description": "A fraction.",
+          "type": "number"
+        },
+        "tags": {
+          "description": "Labels to filter by.",
+          "items": {
+            "type": "string"
+          },
+          "nullable": true,
+          "type": "array"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "type": "object"
+    },
+    "return": {
+      "type": "string"
+    }
+  },
+  "type": "function"
+}
+
+keys that differ from ours:
+  description equal: True
+  required equal:    True
+  path   type 'string' vs 'string'; only ours: []; only theirs: []
+  n      type 'integer' vs 'integer'; only ours: ['default']; only theirs: []
+  tags   type 'array' vs 'array'; only ours: []; only theirs: ['nullable']
+  ratio  type 'number' vs 'number'; only ours: ['default']; only theirs: []
+  only ours at parameter level: ['additionalProperties']
+
+hardware: AMD EPYC 7R13, 8 threads

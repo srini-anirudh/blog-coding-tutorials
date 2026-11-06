@@ -1,0 +1,35 @@
+--- limits, each row one fresh container ---
+read a mode-700 workspace              expected: hello
+                                       got:      hello [exit 0, 0.34s]
+write as the host user                 expected: b.txt owned by this uid
+                                       got:      container uid 2008, b.txt uid 2008 [exit 0, 0.40s]
+network none                           expected: blocked
+                                       got:      blocked: [Errno 101] Network is unreachable [exit 0, 0.49s]
+cgroup memory.max                      expected: 134217728
+                                       got:      134217728 [exit 0, 0.40s]
+cgroup cpu.max                         expected: 50000 100000
+                                       got:      50000 100000 [exit 0, 0.44s]
+cgroup pids.max                        expected: 16
+                                       got:      16 [exit 0, 0.38s]
+fork past --pids-limit                 expected: blocked
+                                       got:      blocked after 14 forks: Resource temporarily unavailable [exit 0, 0.79s]
+allocate 512 MB under a 128 MB limit   expected: killed_reason=memory
+                                       got:      killed_reason=memory [exit 137, 0.59s]
+busy loop under --ulimit cpu=1         expected: exit 152 (SIGXCPU)
+                                       got:      killed_reason=None [exit 152, 2.61s]
+write 5 MB under --ulimit fsize=1 MB   expected: at most 1048576 bytes
+                                       got:      1048576 bytes [exit 1, 0.44s]
+sleep 30 with a 2 s timeout            expected: timed out, container removed
+                                       got:      timed_out=True [exit None, 2.71s]
+background child outlives the command  expected: returns at once
+                                       got:      done [exit 0, 0.44s]
+5 MB of output                         expected: captured in bounded memory
+                                       got:      1002630 chars kept of 5000000 bytes [exit 0, 0.46s]
+
+container start to exit, `true`, median of 10: 412 ms
+
+--- agent fixing the toy repo, every run_tests in a container ---
+tests: FAIL (4 passed, 2 failed) in 1.37s
+tests: PASS (6 passed) in 1.27s
+
+hardware: AMD EPYC 7R13, 8 threads; image python:3.12-slim

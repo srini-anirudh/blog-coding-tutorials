@@ -16,3 +16,5 @@
    160      2000          2513       288024          106     94%
 
 per-step prompt sizes for the 80-step run saved to results/compaction_series.json
+
+hardware: AMD EPYC 7R13, 8 threads

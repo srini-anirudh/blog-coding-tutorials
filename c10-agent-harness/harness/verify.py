@@ -132,7 +132,11 @@ def run_tests(ctx: ToolContext, target: str = "", timeout: int = 120) -> ToolOut
     cmd = f"{shlex.quote(ctx.sandbox.python)} -m pytest -q -rfE --tb=short -p no:cacheprovider"
     if target:
         cmd += " " + shlex.quote(target)
-    return parse_pytest(ctx.sandbox.run(cmd, timeout=timeout)).to_output()
+    res = ctx.sandbox.run(cmd, timeout=timeout)
+    if "No module named pytest" in res.stderr:  # not a test failure: nothing ran
+        return CheckResult("tests", "unavailable", details="pytest is not installed in this sandbox",
+                           duration_s=res.duration_s, command=res.command).to_output()
+    return parse_pytest(res).to_output()
 
 
 # ---------------------------------------------------------------- lint

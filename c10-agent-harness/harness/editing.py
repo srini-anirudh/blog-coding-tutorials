@@ -4,7 +4,7 @@ Four ways a model can express an edit:
 
   whole file      write the full new content          simple, expensive, silently drops code
   search/replace  quote the old block, give the new   cheap, needs a unique quote
-  strict diff     unified diff, line numbers exact    what `git apply` does with no fuzz
+  strict diff     unified diff, line numbers exact    stricter than `git apply`, which searches for an offset
   anchored diff   unified diff, numbers are hints     context lines locate the hunk
 
 The applier tries an exact match first, then a whitespace-tolerant one, and when it
@@ -62,17 +62,22 @@ def _indent(line: str) -> str:
 
 
 def reindent(new: list[str], old_block: list[str], matched: list[str]) -> list[str]:
-    """Shift `new` by the indentation difference between what the model quoted and the file."""
+    """Shift all of `new` by the indentation difference between what the model quoted and the file."""
     src = next((_indent(x) for x in old_block if x.strip()), "")
     dst = next((_indent(x) for x in matched if x.strip()), "")
     if src == dst:
         return new
     out = []
     for line in new:
-        if line.strip() and line.startswith(src):
+        if not line.strip():
+            out.append("")  # a blank line keeps no stray whitespace
+        elif line.startswith(src):
             out.append(dst + line[len(src):])
-        else:
-            out.append(line)
+        else:  # shallower than the quote's first line: it moves by the same amount
+            width = len(_indent(line)) + len(dst) - len(src)
+            if width < 0:
+                raise EditError(f"cannot shift this line left by {len(src) - len(dst)} columns: {line!r}")
+            out.append(dst[:width] + line.lstrip())
     return out
 
 

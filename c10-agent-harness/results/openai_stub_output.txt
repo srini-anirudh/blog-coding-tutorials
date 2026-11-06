@@ -1,0 +1,59 @@
+A local stub server replayed five scripted replies over HTTP. No real model and no API key were used. It tests the client and the loop only.
+hardware: AMD EPYC 7R13, 8 threads
+
+[  0] step  0  UserMessage   task
+      The test suite fails on median for even-length lists. Fix the bug and make all tests pass.
+[  1] step  0  Checkpoint    {'sha': 'ce9fb308641f505a58f10a78b729d9ba1f24ff4f', 'label': 'start of run'}
+[  2] step  1  ModelResponse 'Reproduce.' -> run_tests  [context ~3477 tok]
+[  3] step  1  ToolCall      run_tests()
+[  4] step  1  Approval      run_tests risk=WORKSPACE_WRITE allowed=True (auto-approved (WORKSPACE_WRITE <= WORKSPACE_WRITE))
+[  5] step  1  ToolResult    ERROR run_tests
+      tests: FAIL (4 passed, 2 failed) in 0.83s
+        tests/test_stats.py:15 [test_median_even] assert 3 == 2.5
+        tests/test_stats.py:28 [test_summarize] assert 3 == 2.5
+      =================================== FAILURES ===================================
+      _______________________________ test_median_even _______________________________
+      tests/test_stats.py:15: in test_median_even
+      ... (7 more lines)
+[  6] step  1  TestResult    tests fail passed=4 failed=2
+[  7] step  2  ModelResponse 'Read.' -> read_file  [context ~3740 tok]
+[  8] step  2  ToolCall      read_file(path='stats_lib/core.py')
+[  9] step  2  ToolResult    read_file
+          1 | """Small descriptive statistics, written the way real code drifts: mostly right."""
+          2 | 
+          3 | 
+          4 | def mean(xs: list[float]) -> float:
+          5 |     if not xs:
+          6 |         raise ValueError("mean of empty list")
+      ... (14 more lines)
+[ 10] step  3  ModelResponse 'Fix.' -> edit_file  [context ~3958 tok]
+[ 11] step  3  ToolCall      edit_file(path='stats_lib/core.py', search='    mid = len(s) // 2\n    return s[..., replace='    mid = len(s) // 2\n    if len(s)...)
+[ 12] step  3  Approval      edit_file risk=WORKSPACE_WRITE allowed=True (auto-approved (WORKSPACE_WRITE <= WORKSPACE_WRITE))
+[ 13] step  3  ToolResult    edit_file
+      edited stats_lib/core.py (match: exact)
+      --- a/stats_lib/core.py
+      +++ b/stats_lib/core.py
+      @@ -12,6 +12,8 @@
+               raise ValueError("median of empty list")
+           s = sorted(xs)
+      ... (4 more lines)
+[ 14] step  3  Patch         stats_lib/core.py via search_replace
+[ 15] step  4  ModelResponse 'Verify.' -> run_tests  [context ~4173 tok]
+[ 16] step  4  ToolCall      run_tests()
+[ 17] step  4  Approval      run_tests risk=WORKSPACE_WRITE allowed=True (auto-approved (WORKSPACE_WRITE <= WORKSPACE_WRITE))
+[ 18] step  4  ToolResult    run_tests
+      tests: PASS (6 passed) in 0.75s
+[ 19] step  4  TestResult    tests pass passed=6 failed=0
+[ 20] step  5  ModelResponse 'Fixed median for even-length lists.' -> (final answer)  [context ~4198 tok]
+[ 21] step  5  Final         {'text': 'Fixed median for even-length lists.'}
+
+status: done after 5 steps
+model calls          5   latency    0.015s
+tool calls           4   latency    1.584s
+prompt tokens      500   completion tokens 50
+retries              0   failures 1
+
+tool                   calls  fail   latency
+edit_file                  1     0    0.001s
+read_file                  1     0    0.000s
+run_tests                  2     1    1.583s

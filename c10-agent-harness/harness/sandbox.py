@@ -5,9 +5,9 @@ Two backends with one interface (`Sandbox.run(command, timeout) -> ExecResult`):
 * `LocalSandbox`: a temp copy of the workspace, a scrubbed environment, rlimits
   (CPU seconds, file size, open files), a memory watchdog, and network denial via
   macOS `sandbox-exec` or Linux `unshare -n` when available. Good for laptops and CI.
-* `DockerSandbox`: the same contract inside a container with `--network none`,
-  `--cpus`, `--memory`, `--pids-limit` and a bind-mounted workspace. Stronger
-  isolation, needs a Docker daemon.
+* `DockerSandbox`: the same contract inside a throwaway container with `--network none`,
+  `--cpus`, `--memory`, `--pids-limit`, no capabilities, the host user's uid and a
+  bind-mounted workspace. Stronger isolation, needs a Docker daemon.
 
 Both share `run_process`, which owns the hard part: timeouts that kill the whole
 process group, and output capture that cannot run out of memory.
@@ -26,7 +26,7 @@ import time
 import uuid
 from collections import deque
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Callable, Protocol
 
 
@@ -63,6 +63,15 @@ class Sandbox(Protocol):
     python: str
 
     def run(self, command: str, timeout: float | None = None, cwd: str = ".") -> ExecResult: ...
+
+
+def _inside_workspace(workspace: Path, cwd: str) -> Path:
+    """Resolve `cwd` against the workspace and refuse anything that leaves it."""
+    root = Path(workspace).resolve()
+    path = (root / cwd).resolve()
+    if not path.is_relative_to(root):
+        raise ValueError(f"cwd {cwd!r} escapes the workspace")
+    return path
 
 
 # ---------------------------------------------------------------- process core
@@ -234,10 +243,7 @@ class LocalSandbox:
         return env
 
     def resolve_cwd(self, cwd: str) -> Path:
-        path = (self.workspace / cwd).resolve()
-        if not path.is_relative_to(self.workspace.resolve()):
-            raise ValueError(f"cwd {cwd!r} escapes the workspace")
-        return path
+        return _inside_workspace(self.workspace, cwd)
 
     def run(self, command: str, timeout: float | None = None, cwd: str = ".") -> ExecResult:
         argv = ["/bin/sh", "-c", command]
@@ -255,47 +261,115 @@ class LocalSandbox:
 
 # ---------------------------------------------------------------- docker backend
 
-def docker_available() -> bool:
+DEFAULT_IMAGE = "python:3.12-slim"
+
+
+def _remove_container(name: str) -> None:
+    """`rm -f` handles a container that is running or only created. An error means it is already gone."""
+    try:
+        subprocess.run(["docker", "rm", "-f", name], capture_output=True, timeout=30)
+    except (subprocess.TimeoutExpired, OSError):
+        pass
+
+
+def docker_unusable_reason(image: str = DEFAULT_IMAGE) -> str | None:
+    """Why real containers cannot run on this machine, or None if they can.
+
+    It checks the machine and uses none of DockerSandbox's flags, so a bug in
+    `docker_argv` fails the tests instead of skipping them. It never pulls, so an
+    offline test run stays offline.
+    """
     if not shutil.which("docker"):
-        return False
-    return subprocess.run(["docker", "info"], capture_output=True).returncode == 0
+        return "docker is not installed"
+    name = f"ct-c10-probe-{uuid.uuid4().hex[:8]}"
+    checks = (("the Docker daemon is not usable", ["docker", "info"]),
+              (f"image {image} is not present (run: docker pull {image})", ["docker", "image", "inspect", image]),
+              ("a container cannot start", ["docker", "run", "--rm", "--name", name, "--network", "none",
+                                            "--memory", "64m", "--cpus", "0.5", "--pids-limit", "16", image, "true"]))
+    for problem, argv in checks:
+        try:
+            res = subprocess.run(argv, capture_output=True, text=True, timeout=30)
+        except subprocess.TimeoutExpired:
+            _remove_container(name)
+            return f"{problem}: no answer after 30 s"
+        if res.returncode != 0:
+            lines = res.stderr.strip().splitlines()
+            return f"{problem}: {lines[-1] if lines else f'exit code {res.returncode}'}"
+    return None
 
 
 @dataclass
 class DockerSandbox:
-    """Run each command in a fresh container with the workspace bind-mounted at /workspace."""
+    """Run each command in a fresh container with the workspace bind-mounted at /workspace.
+
+    Commands run as the host user, not as the image's root. `--cap-drop ALL` takes away
+    CAP_DAC_OVERRIDE, so a container root is a stranger to files the host user owns: it
+    cannot read a mode-700 workspace or write to a mode-755 one. The host uid fixes both,
+    and whatever the command writes stays owned by whoever owns the workspace.
+    """
 
     workspace: Path
-    image: str = "python:3.12-slim"
+    image: str = DEFAULT_IMAGE
     limits: Limits = field(default_factory=Limits)
     cpus: float = 2.0
     pids_limit: int = 256
     python: str = "python"
+    extra_env: dict[str, str] = field(default_factory=dict)
+    name_prefix: str = "ct-c10-"
+    pull_timeout_s: float = 600.0
+
+    def resolve_cwd(self, cwd: str) -> Path:
+        return _inside_workspace(self.workspace, cwd)
 
     def docker_argv(self, command: str, cwd: str = ".", name: str | None = None) -> list[str]:
         lim = self.limits
+        root = Path(self.workspace).resolve()
+        workdir = PurePosixPath("/workspace") / self.resolve_cwd(cwd).relative_to(root)
         argv = ["docker", "run", "--rm", "-i",
-                "--name", name or f"harness-{uuid.uuid4().hex[:8]}",
+                "--name", name or f"{self.name_prefix}{uuid.uuid4().hex[:8]}",
+                "--user", f"{os.getuid()}:{os.getgid()}",
                 "--network", "bridge" if lim.network else "none",
                 "--cpus", str(self.cpus), "--pids-limit", str(self.pids_limit),
                 "--security-opt", "no-new-privileges", "--cap-drop", "ALL",
-                "-v", f"{Path(self.workspace).resolve()}:/workspace:rw",
-                "-w", f"/workspace/{cwd}".rstrip("/.") or "/workspace",
-                "-e", "HOME=/workspace", "-e", "PYTHONDONTWRITEBYTECODE=1"]
+                "-v", f"{root}:/workspace:rw",
+                "-w", str(workdir),
+                "-e", "HOME=/workspace", "-e", "PYTHONDONTWRITEBYTECODE=1", "-e", "PYTHONUNBUFFERED=1"]
+        for key, value in self.extra_env.items():
+            argv += ["-e", f"{key}={value}"]
         if lim.memory_mb:
             argv += ["--memory", f"{lim.memory_mb}m", "--memory-swap", f"{lim.memory_mb}m"]
         if lim.file_size_mb:
             argv += ["--ulimit", f"fsize={lim.file_size_mb * 2**20}"]
+        if lim.open_files:
+            argv += ["--ulimit", f"nofile={lim.open_files}"]
         if lim.cpu_s:
-            argv += ["--ulimit", f"cpu={lim.cpu_s}"]
+            # A hard limit above the soft one makes a CPU kill exit 152 (SIGXCPU), not
+            # 137 (SIGKILL), so `run` can read 137 as the memory limit.
+            argv += ["--ulimit", f"cpu={lim.cpu_s}:{lim.cpu_s + 5}"]
         return argv + [self.image, "sh", "-c", command]
 
+    def _pull_if_missing(self) -> ExecResult | None:
+        """Download a missing image first, so a slow pull cannot use up the command's timeout."""
+        if subprocess.run(["docker", "image", "inspect", self.image], capture_output=True).returncode == 0:
+            return None
+        res = run_process(["docker", "pull", self.image], Path(self.workspace), dict(os.environ),
+                          timeout_s=self.pull_timeout_s, capture_bytes=self.limits.capture_bytes)
+        return None if res.ok else res
+
     def run(self, command: str, timeout: float | None = None, cwd: str = ".") -> ExecResult:
-        name = f"harness-{uuid.uuid4().hex[:8]}"
+        if not self.resolve_cwd(cwd).is_dir():
+            raise ValueError(f"cwd {cwd!r} is not a directory")  # docker would create it, owned by root
+        if failed_pull := self._pull_if_missing():
+            return failed_pull
+        name = f"{self.name_prefix}{uuid.uuid4().hex[:8]}"
         # Killing the docker CLI does not stop the container, so the kill hook removes it.
-        def stop() -> None:
-            subprocess.run(["docker", "kill", name], capture_output=True)
-        return run_process(self.docker_argv(command, cwd, name), Path(self.workspace),
-                           dict(os.environ), timeout_s=timeout or self.limits.timeout_s,
-                           memory_mb=None,  # the cgroup enforces memory inside docker
-                           capture_bytes=self.limits.capture_bytes, label=command, on_kill=stop)
+        res = run_process(self.docker_argv(command, cwd, name), Path(self.workspace),
+                          dict(os.environ), timeout_s=timeout or self.limits.timeout_s,
+                          memory_mb=None,  # the cgroup enforces memory inside docker
+                          capture_bytes=self.limits.capture_bytes, label=command,
+                          on_kill=lambda: _remove_container(name))
+        # 137 is 128 + SIGKILL. run_process reports its own kills as exit_code None, so this
+        # one came from the cgroup OOM killer. `--rm` already deleted the OOMKilled record.
+        if res.exit_code == 137 and self.limits.memory_mb:
+            res.killed_reason = "memory"
+        return res

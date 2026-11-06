@@ -12,3 +12,5 @@ the whole run dies: TypeError <lambda>() missing 1 required positional argument:
 
 --- break 3: a malformed call (a real model would repeat this forever) ---
 no tool ran, no error reached the model, and the loop called it 5 times until the script ran out
+
+hardware: AMD EPYC 7R13, 8 threads

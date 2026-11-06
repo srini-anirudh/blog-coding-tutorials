@@ -35,7 +35,7 @@ def main() -> None:
     ap.add_argument("--max-new-tokens", type=int, default=256)
     ap.add_argument("--log", default=str(HERE / "results" / "hf_events.jsonl"))
     args = ap.parse_args()
-    torch.set_num_threads(2)
+    torch.set_num_threads(8)
 
     model = HFLocalModel(args.model, device=args.device, max_new_tokens=args.max_new_tokens)
     print(f"model: {args.model} on {model.device}, {sum(p.numel() for p in model.model.parameters()) / 1e6:.0f}M parameters")

@@ -11,8 +11,7 @@ import pytest
 from helpers import make_ctx
 
 from harness.fs_tools import FileTracker, list_dir, read_file, write_file
-from harness.sandbox import (DockerSandbox, Limits, LocalSandbox, _Capture, docker_available,
-                             network_wrapper)
+from harness.sandbox import DockerSandbox, Limits, LocalSandbox, _Capture, network_wrapper
 from harness.shell import run_command
 from harness.tools import ToolError
 
@@ -182,8 +181,7 @@ def test_docker_network_flag_opens_bridge(tmp_path):
     assert argv[argv.index("--network") + 1] == "bridge"
 
 
-@pytest.mark.skipif(not docker_available(), reason="Docker is not installed")
-def test_docker_runs_for_real(tmp_path):
+def test_docker_runs_for_real(docker_ready, tmp_path):
     (tmp_path / "a.txt").write_text("hello")
     assert "hello" in DockerSandbox(tmp_path).run("cat a.txt", timeout=120).stdout
 

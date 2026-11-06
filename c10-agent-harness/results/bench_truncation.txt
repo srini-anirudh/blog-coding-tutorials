@@ -6,3 +6,5 @@ head only                         1808          121           0.5%
 tail only                         1800          120           0.0%
 head + tail                       1222           82           0.0%
 head + tail + rescue              1292           87         100.0%
+
+hardware: AMD EPYC 7R13, 8 threads

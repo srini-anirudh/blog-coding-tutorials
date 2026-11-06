@@ -1,22 +1,25 @@
 --- running `true` (median of 20, ms) ---
-subprocess.run                         6.1
-run_process (group, capture)          58.8
-LocalSandbox, no network wrap         64.6
-LocalSandbox, sandbox-exec            58.7
+subprocess.run                         1.3
+run_process (group, capture)           2.2
+LocalSandbox, no network wrap          5.7
+LocalSandbox, network denied          13.2
+DockerSandbox, fresh container       506.5
 
---- search over this repo's Python code: 491 files, 38434 lines (ms) ---
-git grep                              43.3   (62 matches)
-pure Python                          167.7   (62 matches)
-symbol index build                  1053.0   (2565 symbols)
-definition lookup                     0.47   (58 definitions)
+--- search over this repo's Python code: 506 files, 40868 lines (ms) ---
+git grep                              72.1   (62 matches)
+pure Python                           91.5   (62 matches)
+symbol index build                   666.5   (2707 symbols)
+definition lookup                     0.38   (58 definitions)
 
 --- repo map size against budget ---
-all source code                     472364 tokens
-file names only                       5819 tokens
+all source code                     507771 tokens
+file names only                       6002 tokens
 map at budget 512                      518 tokens
-map at budget 2048                    2060 tokens
-map at budget 8192                    8200 tokens
-unbudgeted map                       59698 tokens
+map at budget 2048                    2059 tokens
+map at budget 8192                    8202 tokens
+unbudgeted map                       62579 tokens
 
 --- harness overhead, scripted model and a no-op tool ---
-200 steps in 0.211s: 1.05 ms per step
+200 steps in 0.223s: 1.11 ms per step
+
+hardware: AMD EPYC 7R13, 8 threads
