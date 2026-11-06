@@ -1,0 +1,20 @@
+task: box (gold = 120 200 220 300 on a 512 canvas)
+  answer                      center_in_box     iou
+  120 200 220 300                      1.00   1.000
+  130 210 230 310                      1.00   0.681
+  0 0 512 512                          1.00   0.038
+  the box is here                      0.00   0.000
+
+task: list colours (truth = red, blue)
+  answer                              recall      f1
+  red and blue                          1.00    1.00
+  red                                   0.50    0.67
+  red, blue, green, yellow, purple      1.00    0.57
+  blue, green                           0.50    0.50
+
+task: count (truth = 3)
+  answer                      contains   exact
+  3                               1.00    1.00
+  three.                          1.00    1.00
+  1 2 3 4 5                       1.00    0.00
+  4                               0.00    0.00

@@ -1,0 +1,10 @@
+=== show_pairs
+exit 0 show_pairs
+=== blind_probe
+exit 0 blind_probe
+=== reward_audit
+exit 0 reward_audit
+=== show_rollouts
+exit 0 show_rollouts
+=== bench_encode_once
+=== dpo_balanced
