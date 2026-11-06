@@ -1,0 +1,32 @@
+device cuda (NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2), seed 0
+trainable 921,600 of 135,436,608 (0.68%)
+  base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight         (8, 576)
+  base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight         (576, 8)
+  base_model.model.model.layers.0.self_attn.k_proj.lora_A.default.weight         (8, 576)
+  base_model.model.model.layers.0.self_attn.k_proj.lora_B.default.weight         (192, 8)
+  ... 240 trainable tensors in total
+
+wrapped layer: peft.tuners.lora.layer.Linear
+lora_B starts at zero: True
+|peft - by hand| max: 0.00e+00, scale = 2.0
+
+trained 150 steps in 33 s (0.22 s/step)
+loss: [(10, 2.52), (20, 1.126), (30, 0.804), (40, 0.627), (50, 0.65), (60, 0.543), (70, 0.487), (80, 0.478), (90, 0.396), (100, 0.448), (110, 0.408), (120, 0.404), (130, 0.347), (140, 0.288), (150, 0.295)]
+
+exact-match accuracy on 182 held-out sums: before 0.000, after 0.593
+  What is 86 + 11?   answer   97 | before 'To add 86 and'                    | after '97'
+  What is 80 + 11?   answer   91 | before 'To add 80 and'                    | after '91'
+  What is 84 - 74?   answer   10 | before 'To find the difference between '  | after '10'
+  What is 93 + 76?   answer  169 | before 'To add 93 and'                    | after '169'
+adapter sha256: 31b1e7195ad46470
+
+adapter checkpoint:
+  README.md                           5,224
+  adapter_config.json                 1,140
+  adapter_model.safetensors       3,717,656
+full model in float32 would be 541,746,432 bytes; the adapter is 0.69% of that
+adapter_config target_modules: ['k_proj', 'o_proj', 'q_proj', 'v_proj']
+|logits after reload - before| max: 0.00e+00
+
+merge_and_unload: type LlamaForCausalLM, |logits merged - adapter| max: 8.20e-05
+q_proj after merge: Linear

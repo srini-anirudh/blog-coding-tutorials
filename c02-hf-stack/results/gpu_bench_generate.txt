@@ -1,0 +1,5 @@
+SmolLM2-135M, prompt 6 tokens, 64 new tokens, NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, float32
+  no cache (recompute history)      2.38 s     26.9 tokens/s
+  our loop with KV cache            2.16 s     29.7 tokens/s
+  model.generate                    3.16 s     20.3 tokens/s
+  all three produced the same tokens: True

@@ -50,7 +50,7 @@ c02-hf-stack/
 | `09_accelerate.py` | The loop under Accelerate, on one process and under DDP on CPU |
 | `10_outputs_and_generate.py` | Model outputs and shapes, KV cache growth, `generate()` as a loop |
 | `11_lora.py` | LoRA: target modules, trainable parameters, adapter checkpoint, merge |
-| `11b_lora_seeds.py` | `11_lora.py` over seeds 0, 1 and 2, plus an exact repeat of seed 0 |
+| `11b_lora_seeds.py` | `11_lora.py` over seeds 0, 1 and 2, plus an exact repeat of seed 0; `--device`, `--prefix` |
 | `12_trl.py` | Dataset format for SFT, DPO, Reward and GRPO, with a very short run of each |
 | `13_hub_and_safetensors.py` | Files on disk and on the Hub, the safetensors layout, shards, index files |
 | `14_custom_model.py` | `nn.Module` against `PreTrainedModel`; a custom model through the whole stack |
@@ -92,7 +92,8 @@ python c02-hf-stack/benchmarks/bench_generate.py --device cpu --new 64
 ## Results
 
 Hardware: AMD EPYC 7R13, 8 threads, CPU only. Library versions: torch 2.15.0, transformers 5.22.2, datasets 5.1.0,
-peft 0.21.2, trl 1.17.1, accelerate 1.15.0. Every file in `results/` comes from this machine.
+peft 0.21.2, trl 1.17.1, accelerate 1.15.0. Every file in `results/` comes from this machine, except the `gpu_*` files
+(see "GPU results" below).
 
 The machine was shared with other jobs (load average above 70 during the benchmarks), and each timing is a single run.
 Treat timings as orders of magnitude. Differences between loops of a few percent are noise. The equivalence numbers do
@@ -140,6 +141,34 @@ How to read the weak or surprising results:
   models with these losses.
 - **`07b` eval loss does not fall** (6.27 to 6.30), because the data is random tokens. That script is about the machinery.
 
+## GPU results
+
+Hardware: one NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, float32, with no other job on the GPU. Nothing in this
+tutorial needs a GPU. These are the same commands with `--device cuda`, and the settings match the CPU runs.
+
+```bash
+python c02-hf-stack/benchmarks/bench_generate.py --device cuda                      # results/gpu_bench_generate.txt
+python c02-hf-stack/scripts/11b_lora_seeds.py --device cuda --prefix gpu_           # results/gpu_11_lora*.txt
+```
+
+| Measurement | CPU (AMD EPYC 7R13, 8 threads) | GPU (NVIDIA H100) |
+|---|---|---|
+| 64 new tokens on SmolLM2-135M, batch 1: no cache / KV-cache loop / `model.generate` | 11.9 / 16.9 / 14.3 tokens/s | 26.9 / 29.7 / 20.3 tokens/s |
+| LoRA, 150 steps, seconds per step, seeds 0 / 1 / 2 | 1.20 / 1.30 / 1.08 | 0.22 / 0.29 / 0.28 |
+| LoRA exact match after training, seeds 0 / 1 / 2 | 0.593 / 0.560 / 0.566 | 0.593 / 0.560 / 0.566 |
+| LoRA final logged loss, seeds 0 / 1 / 2 | 0.295 / 0.326 / 0.267 | 0.295 / 0.326 / 0.267 |
+| LoRA merge gap, seeds 0 / 1 / 2 | 1.03e-04 / 8.39e-05 / 7.82e-05 | 8.20e-05 / 5.91e-05 / 4.72e-05 |
+| Seed 0 run twice on the same device | identical, same adapter hash | identical, same adapter hash |
+
+How to read them:
+
+- **Batch-1 generation on a 135M model barely uses an H100.** Each new token is one small forward pass, so the time goes
+  to kernel launches and Python, not to arithmetic. That is why the cache helps far less on the GPU than on the CPU, and
+  why `model.generate` (which does more bookkeeping per step) is the slowest of the three there.
+- **The two devices agree to the printed digits on accuracy and loss for each seed.** The adapter files differ, as the
+  hash shows, so the weights match only up to float rounding. The merge gap also differs for the same reason.
+- No change was needed for the GPU path. Before this run, `--device cuda` had never been run.
+
 ## Not run, or not measured
 
 - **`push_to_hub`** is shown as code and is not run, because no token was available. `13_hub_and_safetensors.py` reads
@@ -147,13 +176,6 @@ How to read the weak or surprising results:
 - **The Qwen2-VL video processor** is unused, because torchvision is not installed, and `AutoProcessor` raises
   `ImportError` for Qwen2-VL without it. `04_processor.py` loads only the Qwen2-VL image processor. `torchvision` is not
   a dependency of this repo.
-- **GPU numbers: not yet measured.** Nothing in this tutorial needs a GPU. These commands would add GPU numbers:
-
-  ```bash
-  python c02-hf-stack/benchmarks/bench_generate.py --device cuda
-  python c02-hf-stack/scripts/11_lora.py --device cuda --steps 150
-  ```
-
 - **FSDP, DeepSpeed, `bf16` and `fp16`** are named in the ecosystem map and in `TrainingArguments`, and are not run here.
 
 ## Version notes

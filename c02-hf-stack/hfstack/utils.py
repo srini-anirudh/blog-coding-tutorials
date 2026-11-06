@@ -33,7 +33,7 @@ def pick_device() -> torch.device:
 def hardware_label(device: str | torch.device = "cpu") -> str:
     """Name the hardware that produced a timing, by model only: "AMD EPYC 7R13, 8 threads"."""
     if torch.device(device).type == "cuda":
-        return torch.cuda.get_device_name(0)
+        return f"{torch.cuda.get_device_name(0)}, torch {torch.__version__.split('+')[0]}, CUDA {torch.version.cuda}"
     model = platform.processor() or "unknown CPU"
     if platform.system() == "Linux":
         match = re.search(r"model name\s*:\s*(.+)", Path("/proc/cpuinfo").read_text())

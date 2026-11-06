@@ -2,8 +2,8 @@
 
 The held-out sums stay the same in every run. Only the adapter init and the batch order change.
 
-Run: python c02-hf-stack/scripts/11b_lora_seeds.py [--seeds 0 1 2] [--steps 150]
-Writes results/11_lora.txt (first seed) and results/11_lora_seed<N>.txt (the others). Prints the table.
+Run: python c02-hf-stack/scripts/11b_lora_seeds.py [--seeds 0 1 2] [--steps 150] [--device auto] [--prefix gpu_]
+Writes results/<prefix>11_lora.txt (first seed) and results/<prefix>11_lora_seed<N>.txt (the others). Prints the table.
 """
 
 import argparse
@@ -20,11 +20,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2])
 parser.add_argument("--steps", type=int, default=150)
 parser.add_argument("--results", type=Path, default=ROOT / "results")
+parser.add_argument("--device", default="auto")
+parser.add_argument("--prefix", default="", help="prepended to each file name, e.g. gpu_")
 args = parser.parse_args()
 
 
 def run(seed: int) -> tuple[str, dict]:
-    command = [sys.executable, str(ROOT / "scripts" / "11_lora.py"), "--seed", str(seed), "--steps", str(args.steps)]
+    command = [sys.executable, str(ROOT / "scripts" / "11_lora.py"), "--seed", str(seed), "--steps", str(args.steps), "--device", args.device]
     out = subprocess.run(command, capture_output=True, text=True, check=True).stdout
     before, after = re.search(r"before ([\d.]+), after ([\d.]+)", out).groups()
     curve = ast.literal_eval(re.search(r"^loss: (.*)$", out, re.M).group(1))
@@ -42,7 +44,7 @@ def run(seed: int) -> tuple[str, dict]:
 rows = {}
 for position, seed in enumerate(args.seeds):
     out, rows[seed] = run(seed)
-    name = "11_lora.txt" if position == 0 else f"11_lora_seed{seed}.txt"
+    name = args.prefix + ("11_lora.txt" if position == 0 else f"11_lora_seed{seed}.txt")
     (args.results / name).write_text(out)
 
 first = args.seeds[0]
