@@ -22,7 +22,6 @@ def show(name: str, t: torch.Tensor) -> None:
 
 
 def main() -> None:
-    torch.set_num_threads(2)
     torch.manual_seed(0)
     config = get_config("tiny")
     model = TinyLLM(config).eval()

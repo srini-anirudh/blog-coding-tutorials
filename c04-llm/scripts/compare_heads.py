@@ -44,9 +44,11 @@ def main() -> None:
     p.add_argument("--device", default=None)
     args = p.parse_args()
 
-    torch.set_num_threads(2)
     device = pick_device(args.device)
-    text = (ROOT / "data" / "tinyshakespeare.txt").read_text()
+    path = ROOT / "data" / "tinyshakespeare.txt"
+    if not path.exists():
+        sys.exit("run scripts/train_sanity.py once first: it downloads the corpus")
+    text = path.read_text()
     data = torch.tensor(ByteTokenizer().encode(text))
     split = int(0.9 * data.numel())
     train, val = data[:split], data[split:]

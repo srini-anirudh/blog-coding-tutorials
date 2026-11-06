@@ -19,6 +19,13 @@ def pick_device(prefer: str | None = None) -> torch.device:
     return torch.device("cpu")
 
 
+def device_label(device: torch.device) -> str:
+    """What a benchmark ran on, for the first line of its output."""
+    if device.type == "cuda":
+        return f"cuda ({torch.cuda.get_device_name(device)})"
+    return device.type
+
+
 def set_seed(seed: int) -> None:
     random.seed(seed)
     torch.manual_seed(seed)

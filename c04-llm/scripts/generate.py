@@ -42,7 +42,8 @@ def main() -> None:
     p.add_argument("--device", default="cpu")
     args = p.parse_args()
 
-    torch.set_num_threads(2)
+    if not (Path(args.checkpoint) / "model.safetensors").exists():
+        sys.exit("run scripts/train_sanity.py first: this script needs a trained checkpoint")
     device = pick_device(args.device)
     model = load_checkpoint(args.checkpoint, device).eval()
     tok = ByteTokenizer()

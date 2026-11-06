@@ -1,2 +1,18 @@
+# Pytest runs read 2 threads from conftest.py. CPU: AMD EPYC 7R13. PyTorch 2.15.0, transformers 5.22.2
+
+$ python -m pytest c04-llm -m "not slow and not gpu and not network"
 ........................................................................ [ 96%]
 ...                                                                      [100%]
+75 passed, 6 deselected in 17.81s
+
+$ python -m pytest c04-llm -m "network or slow"
+.                                                                        [100%]
+1 passed, 80 deselected in 22.77s
+
+$ python -m pytest c04-llm -m gpu   # no GPU visible, so these skip. They have never run.
+sssss                                                                    [100%]
+5 skipped, 76 deselected in 0.57s
+
+$ python -m pytest c05-pretraining/tests/test_systems.py -k tinyllm   # C5 trains this model
+...                                                                      [100%]
+3 passed, 11 deselected in 14.92s

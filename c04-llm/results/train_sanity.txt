@@ -1,4 +1,22 @@
-device=mps  params=4,295,936  train bytes=1,003,854  val bytes=111,540
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python c04-llm/scripts/train_sanity.py --device cpu
+
+device=cpu  params=4,295,936  train bytes=1,003,854  val bytes=111,540
 step     0  val 5.578  (uniform guess = ln 256 = 5.545)
-sample before training: 'ROMEO:�\x1dj2�\x1d;Brr�!^BBBB�E����u||<�kuu\x00�\x0eD\x1c\x1c�""Bv\x1a\x1a�u���2\x1d���%�^�|�'
-step   200  train 1.603  val 1.766   173.3s  9,455 tok/s
+sample before training: 'ROMEO::�y*37A����hh\x1c\x1c^� �\x1bk�%�ċ�����   \x1aNNj׳���\x1e\x1e[\x0eBB��vv�\x1cggg<\x01'
+step   200  train 1.603  val 1.767   132.9s  12,327 tok/s
+step   400  train 1.411  val 1.610   263.6s  12,432 tok/s
+step   600  train 1.227  val 1.532   401.8s  12,234 tok/s
+step   800  train 1.152  val 1.496   532.9s  12,299 tok/s
+step  1000  train 1.131  val 1.500   670.3s  12,222 tok/s
+
+sample after training:
+ROMEO:
+Is is God fright with holy and more lose
+And thy claim--
+
+BALTHBruptial: thy face and swallow her heart and heaven
+To be whiping as one another seen;
+I will be
+
+saved checkpoint to runs/tiny-shakespeare/

@@ -1,0 +1,17 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python c04-llm/scripts/moe_demo.py --steps 300
+
+device=cpu; a perfectly balanced router gives every expert 0.125 of the load
+model: 1,706,624 params, 526,976 active per token (8 experts, top-2)
+
+router_aux_loss_coef = 0.0
+  step    1  lm loss 5.522  aux 1.041/layer  layer-0 shares [0.18 0.20 0.09 0.07 0.06 0.10 0.24 0.07]  busiest expert 0.24  (0s)
+  step  100  lm loss 2.485  aux 1.837/layer  layer-0 shares [0.00 0.02 0.16 0.03 0.22 0.20 0.27 0.10]  busiest expert 0.46  (7s)
+  step  200  lm loss 2.240  aux 1.733/layer  layer-0 shares [0.00 0.04 0.19 0.05 0.14 0.19 0.24 0.15]  busiest expert 0.48  (14s)
+  step  300  lm loss 2.010  aux 1.835/layer  layer-0 shares [0.01 0.07 0.15 0.07 0.12 0.19 0.27 0.11]  busiest expert 0.49  (20s)
+
+router_aux_loss_coef = 0.01
+  step    1  lm loss 5.522  aux 1.041/layer  layer-0 shares [0.18 0.20 0.09 0.07 0.06 0.10 0.24 0.07]  busiest expert 0.24  (0s)
+  step  100  lm loss 2.426  aux 1.091/layer  layer-0 shares [0.19 0.04 0.15 0.07 0.16 0.18 0.17 0.04]  busiest expert 0.19  (6s)
+  step  200  lm loss 2.112  aux 1.010/layer  layer-0 shares [0.11 0.08 0.13 0.13 0.11 0.14 0.15 0.16]  busiest expert 0.16  (13s)
+  step  300  lm loss 1.912  aux 1.017/layer  layer-0 shares [0.11 0.09 0.11 0.12 0.11 0.17 0.16 0.12]  busiest expert 0.18  (19s)

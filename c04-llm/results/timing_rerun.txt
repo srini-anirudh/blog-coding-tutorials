@@ -1,0 +1,56 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+# A second run of the timed scripts, to show run-to-run variation on a shared machine.
+# Compare with bench_*_cpu.txt, train_sanity.txt and compare_heads.txt. Seeded values match them exactly.
+
+$ python c04-llm/benchmarks/bench_attention.py --device cpu
+device=cpu batch=8  (tiny preset, forward + backward per step)
+   seq   naive ms    sdpa ms  speed-up
+   128      122.5      134.3     0.91x
+   256      300.9      279.8     1.08x
+   512     1277.2      664.6     1.92x
+  1024     5742.4     1266.3     4.53x
+
+$ python c04-llm/benchmarks/bench_generation.py --device cpu
+preset=tiny params=4,295,936 device=cpu batch=1 prompt=16 new=496
+  cache=off  total    7.55s      65.7 tok/s
+  cache=on   total    2.05s     241.6 tok/s
+
+  per-step latency (ms) at sequence length T
+       T   no cache      cache
+      17       4.18       4.72
+      48       6.54       4.14
+      80       6.99       4.19
+     144       9.11       4.07
+     272      15.33       3.93
+     511      26.63       4.74
+
+  speed-up from the cache: 3.7x
+
+$ python c04-llm/benchmarks/bench_generation.py --device cpu --preset smollm2-135m --new-tokens 128
+preset=smollm2-135m params=134,515,008 device=cpu batch=1 prompt=16 new=128
+  cache=off  total   19.91s       6.4 tok/s
+  cache=on   total    9.27s      13.8 tok/s
+
+  per-step latency (ms) at sequence length T
+       T   no cache      cache
+      17      77.87      97.15
+      48     111.17      95.06
+      80     141.52      55.24
+     143     241.19      58.79
+
+  speed-up from the cache: 2.1x
+
+$ python c04-llm/scripts/train_sanity.py --device cpu   # step lines only
+step   200  train 1.603  val 1.767   125.5s  13,051 tok/s
+step   400  train 1.411  val 1.610   256.8s  12,760 tok/s
+step   600  train 1.227  val 1.532   397.4s  12,368 tok/s
+step   800  train 1.152  val 1.496   539.3s  12,153 tok/s
+step  1000  train 1.131  val 1.500   737.2s  11,112 tok/s
+
+$ python c04-llm/scripts/compare_heads.py --steps 400 --device cpu
+device=cpu steps=400  tiny preset, 8 query heads, seed 0
+config         kv heads  attn params  total params  cache/token  val loss    time
+MHA                   8    1,572,864     4,885,760     12,288 B     1.618    447s
+GQA                   4    1,179,648     4,492,544      6,144 B     1.621    369s
+GQA                   2      983,040     4,295,936      3,072 B     1.619    276s
+MQA                   1      884,736     4,197,632      1,536 B     1.622    304s

@@ -71,7 +71,6 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--pretrained", default=None, help="Hub id of a Llama-architecture model")
     args = p.parse_args()
-    torch.set_num_threads(2)
     compare_random()
     if args.pretrained:
         compare_pretrained(args.pretrained)

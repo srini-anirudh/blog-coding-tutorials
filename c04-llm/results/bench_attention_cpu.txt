@@ -1,0 +1,9 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python c04-llm/benchmarks/bench_attention.py --device cpu
+
+device=cpu batch=8  (tiny preset, forward + backward per step)
+   seq   naive ms    sdpa ms  speed-up
+   128      141.7      116.7     1.21x
+   256      276.0      232.1     1.19x
+   512     1361.5      441.1     3.09x
+  1024     4644.9     1097.9     4.23x

@@ -1,0 +1,9 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python c04-llm/scripts/compare_heads.py --steps 400 --device cpu
+
+device=cpu steps=400  tiny preset, 8 query heads, seed 0
+config         kv heads  attn params  total params  cache/token  val loss    time
+MHA                   8    1,572,864     4,885,760     12,288 B     1.618    362s
+GQA                   4    1,179,648     4,492,544      6,144 B     1.621    327s
+GQA                   2      983,040     4,295,936      3,072 B     1.619    287s
+MQA                   1      884,736     4,197,632      1,536 B     1.622    274s

@@ -173,7 +173,11 @@ def step_loss() -> None:
 
 
 def step_sampling() -> None:
-    model = load_checkpoint(ROOT / "runs" / "tiny-shakespeare").eval()
+    ckpt = ROOT / "runs" / "tiny-shakespeare"
+    if not (ckpt / "model.safetensors").exists():
+        print("run scripts/train_sanity.py first: this step needs a trained checkpoint")
+        return
+    model = load_checkpoint(ckpt).eval()
     prompt = "ROMEO:\nI will "
     ids = torch.tensor([TOK.encode(prompt)])
     logits = model(ids).logits[0, -1]
@@ -206,7 +210,6 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--step", default="all", choices=["all", *STEPS])
     args = p.parse_args()
-    torch.set_num_threads(2)
     with torch.no_grad():
         for name, fn in STEPS.items():
             if args.step in ("all", name):

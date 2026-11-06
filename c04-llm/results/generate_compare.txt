@@ -1,0 +1,50 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python c04-llm/scripts/generate.py --compare
+
+[greedy]
+ROMEO:
+The sea that we will be so so sorrow.
+
+GLOUCESTER:
+The gods be so seen to see the sea that will
+I see the sea that will 
+
+[temperature 0.5]
+ROMEO:
+And therefore weep but to thy son I should die.
+
+JULIET:
+I do beseech your grace to thee and my meaning.
+
+Nurse:
+God kee
+
+[temperature 1.0]
+ROMEO:
+And wilt thou what befalled makes his speech
+And seld him cuw'd up: by him:
+Nothing there: it is, I say my six else
+You 
+
+[temperature 1.5]
+ROMEO:
+Joy! alGo
+UsIA:
+I would I think your loss
+And gwarel, heaven 'twas spoken to me,
+And draw not, we should an you the plea
+
+[temperature 1.0, top_k 5]
+ROMEO:
+And wilt thou go, while he will not be seldom.
+
+RICHARD:
+I do beg in a son of those that were in,
+When said we are, my l
+
+[temperature 1.0, top_p 0.5]
+ROMEO:
+And with the strong that he hath spoke to see
+The counterfeit of the people's face, that we have
+To see the wind of my b
+

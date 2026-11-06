@@ -1,0 +1,15 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python c04-llm/benchmarks/bench_generation.py --device cpu --preset smollm2-135m --new-tokens 128
+
+preset=smollm2-135m params=134,515,008 device=cpu batch=1 prompt=16 new=128
+  cache=off  total   16.20s       7.9 tok/s
+  cache=on   total    7.30s      17.5 tok/s
+
+  per-step latency (ms) at sequence length T
+       T   no cache      cache
+      17      65.27      56.90
+      48      90.31      58.13
+      80     124.16      58.09
+     143     169.42      56.90
+
+  speed-up from the cache: 2.2x

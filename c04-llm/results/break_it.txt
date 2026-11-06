@@ -1,0 +1,28 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python c04-llm/scripts/break_it.py --case all --pretrained HuggingFaceTB/SmolLM2-135M --device cpu
+
+[is-causal-with-cache] prefill in 3 chunks of 8 on top of a cache, vs one full forward
+  correct shifted mask: max |diff| = 7.15e-07
+  is_causal=True:       max |diff| = 8.96e-01
+  per-position max diff (first chunk is fine, later chunks are not): [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.88, 0.83, 0.57, 0.54, 0.43, 0.42, 0.39, 0.33, 0.9, 0.8, 0.73, 0.56, 0.62, 0.49, 0.55, 0.62]
+[position-offset] trained tiny model, cached decode with positions restarting at 0
+  identical to uncached generation: False; first wrong new token: 1
+  correct: 'ROMEO:\nI will be so sorry to the sea that see\nThe sea the seas of the sea'
+  buggy:   'ROMEO:\nI will myonononononoraigigisowisisisisisisisisisisisisine aine are'
+[rope-layout] same weights, RoPE pairs channels (2i, 2i+1) instead of (i, i + d/2)
+  loss on a plain English sentence: correct 2.076 nats/token, wrong layout 3.385
+  correct:      'The capital of France is the capital of the country.\n\nThe capital of France'
+  wrong layout: 'The capital of France is the capital of France. The capital of France.\n\n'
+[no-shift] 100 training steps with an unshifted loss, device=cpu
+  step   1  unshifted loss 3.1238
+  step  25  unshifted loss 0.4024
+  step  50  unshifted loss 0.0220
+  step 100  unshifted loss 0.0048
+  sample: 'ROMEO:::::::::::::::::::::::::::::::::::::::::'
+[init] initial loss on random tokens (V = 256, ln V = 5.545)
+  std=0.02  loss    5.611
+  std=0.2   loss   10.418
+  std=1.0   loss   46.022
+[init] residual-stream RMS at the last layer of a 48-layer model, std 0.02, embeddings RMS 0.02
+  std/sqrt(2L) on residual projections: layer 1 0.020, layer 12 0.026, layer 48 0.059
+  same std everywhere            : layer 1 0.040, layer 12 0.333, layer 48 0.690

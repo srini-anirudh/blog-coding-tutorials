@@ -1,0 +1,9 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python c04-llm/scripts/generate.py --prompt "ROMEO:" --temperature 0.8 --top-k 40
+
+ROMEO:
+Is is God fright with holy and more lose
+And thy claim--
+
+BALTHBruptial: thy face and swallow her heart and heaven
+To b

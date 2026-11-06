@@ -69,7 +69,6 @@ def main() -> None:
     p.add_argument("--aux-coefs", type=float, nargs="+", default=[0.0, 0.01])
     p.add_argument("--device", default="cpu")
     args = p.parse_args()
-    torch.set_num_threads(2)
     device = pick_device(args.device)
     path = ROOT / "data" / "tinyshakespeare.txt"
     if not path.exists():

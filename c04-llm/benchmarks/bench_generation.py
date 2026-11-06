@@ -3,7 +3,7 @@
 Without a cache, step t re-runs the whole t-token sequence, so per-token latency grows with t.
 With a cache, step t runs one token against t cached keys, so latency stays nearly flat.
 
-    python c04-llm/benchmarks/bench_generation.py --device mps
+    python c04-llm/benchmarks/bench_generation.py --device cpu
     python c04-llm/benchmarks/bench_generation.py --device cpu --preset smollm2-135m --new-tokens 128
 """
 
@@ -19,7 +19,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tinyllm import KVCache, TinyLLM, get_config  # noqa: E402
-from tinyllm.utils import pick_device, synchronize  # noqa: E402
+from tinyllm.utils import device_label, pick_device, synchronize  # noqa: E402
 
 
 @torch.no_grad()
@@ -51,19 +51,23 @@ def main() -> None:
     p.add_argument("--prompt-len", type=int, default=16)
     p.add_argument("--new-tokens", type=int, default=496)
     p.add_argument("--batch-size", type=int, default=1)
+    p.add_argument("--dtype", default="float32", choices=["float32", "bf16"])
     args = p.parse_args()
 
-    torch.set_num_threads(2)
     torch.manual_seed(0)
     device = pick_device(args.device)
     config = get_config(args.preset, max_seq_len=args.prompt_len + args.new_tokens)
-    model = TinyLLM(config).to(device).eval()  # random weights: speed does not depend on them
+    dtype = torch.float32 if args.dtype == "float32" else torch.bfloat16
+    model = TinyLLM(config).to(device, dtype=dtype).eval()  # random weights: speed does not depend on them
     prompt = torch.randint(0, config.vocab_size, (args.batch_size, args.prompt_len), device=device)
 
-    step_latencies(model, prompt, 8, True)  # warm-up: kernel compilation, allocator
-    step_latencies(model, prompt, 8, False)
+    warmup = min(8, args.new_tokens)  # max_seq_len only leaves room for new_tokens
+    step_latencies(model, prompt, warmup, True)  # warm-up: kernel compilation, allocator
+    step_latencies(model, prompt, warmup, False)
 
-    print(f"preset={args.preset} params={model.num_parameters():,} device={device} batch={args.batch_size} "
+    dtype_note = "" if args.dtype == "float32" else f" dtype={args.dtype}"
+    print(f"preset={args.preset} params={model.num_parameters():,} device={device_label(device)}{dtype_note} "
+          f"batch={args.batch_size} "
           f"prompt={args.prompt_len} new={args.new_tokens}")
     results = {}
     for use_cache in (False, True):

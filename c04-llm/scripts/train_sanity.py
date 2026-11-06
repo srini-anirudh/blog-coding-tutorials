@@ -3,7 +3,7 @@
 This is a sanity check of the architecture, not a training recipe. C5 builds the real trainer
 (packing, schedules, accumulation, mixed precision, checkpoint/resume).
 
-    python c04-llm/scripts/train_sanity.py               # tiny preset, MPS if available
+    python c04-llm/scripts/train_sanity.py               # tiny preset, best device available
     python c04-llm/scripts/train_sanity.py --steps 300 --device cpu
 """
 
@@ -30,7 +30,7 @@ DATA_URL = "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tiny
 def load_corpus(path: Path) -> str:
     if not path.exists():
         path.parent.mkdir(parents=True, exist_ok=True)
-        print(f"downloading Tiny Shakespeare -> {path}")
+        print(f"downloading Tiny Shakespeare to data/{path.name}")
         urllib.request.urlretrieve(DATA_URL, path)
     return path.read_text()
 
@@ -73,7 +73,6 @@ def main() -> None:
     p.add_argument("--out", default=str(ROOT / "runs" / "tiny-shakespeare"))
     args = p.parse_args()
 
-    torch.set_num_threads(2)
     set_seed(0)
     device = pick_device(args.device)
     tok = ByteTokenizer()

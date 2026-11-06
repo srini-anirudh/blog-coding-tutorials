@@ -1,3 +1,6 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python c04-llm/scripts/inspect_shapes.py
+
 text 'The cat sat' -> ids [84, 104, 101, 32, 99, 97, 116, 32, 115, 97, 116]
 
 embeddings x                       (1, 11, 256)         rms=0.020

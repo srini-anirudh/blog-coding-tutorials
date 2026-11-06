@@ -128,7 +128,11 @@ def case_no_shift(device: torch.device) -> None:
     """The bug: score logits[t] against labels[t]. The model learns to copy its input."""
     torch.manual_seed(0)
     tok = ByteTokenizer()
-    text = (ROOT / "data" / "tinyshakespeare.txt").read_text()
+    path = ROOT / "data" / "tinyshakespeare.txt"
+    if not path.exists():
+        print("  run scripts/train_sanity.py first: it downloads the corpus")
+        return
+    text = path.read_text()
     data = torch.tensor(tok.encode(text))
     model = TinyLLM(get_config("tiny", num_layers=2)).to(device).train()
     opt = torch.optim.AdamW(model.parameters(), lr=2e-3)
@@ -182,7 +186,6 @@ def main() -> None:
     p.add_argument("--pretrained", default=None)
     p.add_argument("--device", default=None)
     args = p.parse_args()
-    torch.set_num_threads(2)
     device = pick_device(args.device)
     run = lambda c: args.case in ("all", c)  # noqa: E731
     if run("is-causal-with-cache"):
