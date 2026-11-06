@@ -1,0 +1,70 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/inside-a-training-step/scripts/08_gpu_step.py --layers 8
+## 1. One block, op by op, BF16, B=1, S=4096, H=4096, I=11008. Median of 20 runs
+op                        | ms      | TFLOP/s | GB/s  | model FLOP/byte | bound (model)
+--------------------------+---------+---------+-------+-----------------+--------------
+rmsnorm (attn)            | 0.2722  | 0.2466  | 246.6 | 1               | memory       
+qkv proj                  | 0.5539  | 744.4   | 424   | 1755            | compute      
+attention (flash)         | 0.2924  | 470     | 458.9 | 1024            | compute      
+out proj                  | 0.2061  | 666.8   | 488.4 | 1365            | compute      
+residual add              | 0.03622 | 0.4632  | 2779  | 0.1667          | memory       
+rmsnorm (mlp)             | 0.2715  | 0.2472  | 247.2 | 1               | memory       
+gate proj                 | 0.5238  | 705.2   | 408.4 | 1727            | compute      
+up proj                   | 0.5236  | 705.4   | 408.5 | 1727            | compute      
+silu * mul                | 0.1646  | 1.37    | 1643  | 0.8333          | memory       
+down proj                 | 0.488   | 756.9   | 438.3 | 1727            | compute      
+residual add              | 0.03488 | 0.481   | 2886  | 0.1667          | memory       
+rmsnorm, torch.compile    | 0.06435 | 1.043   | 1043  | 1               | memory       
+silu * mul, torch.compile | 0.1278  | 1.764   | 2117  | 0.8333          | memory       
+forward time of the block: 3.37 ms. Projections 68%, attention 9%, norms + adds + silu*mul 23% of the time (they are 0.022% of the FLOPs)
+
+## 2. Full step, BF16 TinyLLM with L=8 at the post's layer shape, MasterWeightAdam, median of 5
+### activation checkpointing: none
+parameters 1,881,214,976; bytes per parameter: weights 2.00, master + m + v 12.00, grads 2.00
+peak allocated 31.81 GiB, reserved 32.69 GiB; activations + grads + workspace at peak 7.28 GiB
+forward 31.9 ms, backward 65.9 ms (2.07x), optimizer 59.0 ms (38% of the step), step 156.7 ms
+MFU (6ND / step time / 989 TFLOP/s): 27.7%; counting attention too: 32.0%; forward+backward only: 44.5%
+memory curve (GiB allocated):
+    24.53  start of step
+    25.31  after forward of block 0
+    26.02  after forward of block 1
+    26.73  after forward of block 2
+    27.44  after forward of block 3
+    28.15  after forward of block 4
+    28.86  after forward of block 5
+    29.57  after forward of block 6
+    30.29  after forward of block 7
+    30.84  the turn: loss computed
+    30.50  before backward of block 7
+    30.16  before backward of block 6
+    29.83  before backward of block 5
+    29.50  before backward of block 4
+    29.16  before backward of block 3
+    28.83  before backward of block 2
+    28.49  before backward of block 1
+    28.16  before backward of block 0
+    28.03  after backward
+### activation checkpointing: full
+parameters 1,881,214,976; bytes per parameter: weights 2.00, master + m + v 12.00, grads 2.00
+peak allocated 29.50 GiB, reserved 30.70 GiB; activations + grads + workspace at peak 4.97 GiB
+forward 32.1 ms, backward 91.8 ms (2.86x), optimizer 58.9 ms (32% of the step), step 182.9 ms
+MFU (6ND / step time / 989 TFLOP/s): 23.8%; counting attention too: 27.4%; forward+backward only: 35.1%
+post's prediction for the activations of 8 layers: 4.00 GiB (16H per token per layer)
+
+## 3. The memory wall: the 6.7B model's states as flat buffers, one category at a time
+  holding through params (bf16)     12.6 GiB
+  holding through grads (bf16)      25.1 GiB
+  holding through master (fp32)     50.2 GiB
+  holding through adam m (fp32)     75.3 GiB
+failed at: adam v (fp32) (GPU has 79.2 GiB; the ledger needs 100.4 GiB)
+
+## 4. Host to device, 256 MiB
+measurement              | value
+-------------------------+------
+pageable GB/s            | 12.4 
+pinned GB/s              | 14.26
+gemm + pageable copy, ms | 23.1 
+pageable copy alone, ms  | 21.11
+gemm + pinned copy, ms   | 18.83
+pinned copy alone, ms    | 18.82
+gemm alone, ms           | 1.404

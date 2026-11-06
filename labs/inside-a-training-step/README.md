@@ -143,28 +143,85 @@ Notes on what the numbers say:
 - The pure-BF16 run is a worst case, with lr 3e-4 and weights near 1.0. It shows the mechanism, not how every
   BF16 run behaves.
 
-### NVIDIA H100 80GB HBM3: not yet measured
+### NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
 
-The GPU jobs were queued behind other jobs when this README was written, and none had run. These commands
-produce the numbers. They write `results/08_gpu_step.txt`, `results/07_optimizer_gpu.txt` and the GPU test run.
+One GPU per job, so no timing shared the card with another job. `08_gpu_step.py` takes about a minute. Its
+step runs a BF16 TinyLLM (C4) with 8 layers at the post's layer shape (H = 4096, I = 11008, V = 32000,
+S = 4096, B = 1): 1.88B parameters, not the post's 6.74B. Medians of 5 steps (20 for single ops).
+
+| Measurement | Result | File |
+|---|---|---|
+| One block, forward, op by op (eager) | 3.37 ms: projections 68% of the time, attention 9%, norms + adds + SiLU-multiply 23% | `08_gpu_step.txt` |
+| Same ops' share of FLOPs | projections 92%, norms + adds + SiLU-multiply 0.022% | `01_accounting.txt` |
+| Projection GEMMs | 667 to 757 TFLOP/s, 67 to 77% of the 989 TFLOP/s dense peak | `08_gpu_step.txt` |
+| Causal flash attention, S = 4096 | 470 TFLOP/s (counting the causal half) | `08_gpu_step.txt` |
+| Eager RMSNorm / SiLU-multiply | 0.272 ms (247 GB/s) / 0.165 ms (1.64 TB/s) | `08_gpu_step.txt` |
+| Same two ops under `torch.compile` | 0.064 ms (4.2x faster) / 0.128 ms (1.3x faster) | `08_gpu_step.txt` |
+| Allocator bytes per parameter: weights / grads / master + m + v | 2.00 / 2.00 / 12.00 (16 in all) | `08_gpu_step.txt` |
+| Memory at the start of the step / at the loss / after backward | 24.53 / 30.84 / 28.03 GiB | `08_gpu_step.txt` |
+| Peak allocated, no checkpointing / full checkpointing | 31.81 / 29.50 GiB | `08_gpu_step.txt` |
+| Forward / backward / optimizer, no checkpointing | 31.9 / 65.9 (2.07x) / 59.0 ms; step 156.7 ms | `08_gpu_step.txt` |
+| Forward / backward / optimizer, full checkpointing | 32.1 / 91.8 (2.86x) / 58.9 ms; step 182.9 ms | `08_gpu_step.txt` |
+| Forward + backward time with full checkpointing | 1.27x (FLOP count: 1.26x) | `08_gpu_step.txt` |
+| MFU, 6ND over the whole step / forward + backward only (no checkpointing) | 27.7% / 44.5% | `08_gpu_step.txt` |
+| MFU, same two with full checkpointing | 23.8% / 35.1% | `08_gpu_step.txt` |
+| 6.74B model's states on one card, one category at a time | fits through Adam m (75.3 GiB), fails at Adam v; the ledger needs 100.4 GiB of 79.2 GiB | `08_gpu_step.txt` |
+| 256 MiB host-to-device copy, pageable / pinned | 12.4 / 14.3 GB/s | `08_gpu_step.txt` |
+| A GEMM plus a copy on a side stream: pageable / pinned, against the copy alone | 23.1 vs 21.1 ms / 18.8 vs 18.8 ms | `08_gpu_step.txt` |
+| AdamW step, 1.01B params: for-loop / foreach / fused / MasterWeightAdam | 27.7 / 27.8 / 9.8 / 31.8 ms | `07_optimizer_gpu.txt` |
+| Useful rate at 28 bytes per parameter: fused / for-loop | 2.88 / 1.03 TB/s | `07_optimizer_gpu.txt` |
+| The 6.74B step at the fused rate | 66 ms (post: about 75 ms at 2.5 TB/s) | `07_optimizer_gpu.txt` |
+
+What these numbers say about the post:
+
+- The block's cost is where the post puts it. The GEMMs run at 67 to 77% of peak, so they are compute-bound.
+  The norms, adds and SiLU-multiply are 0.022% of the FLOPs but 23% of the block's time, because eager PyTorch
+  runs each as several passes over HBM. `torch.compile` fuses RMSNorm and wins 4.2x. This is the post's fusion
+  argument, measured per op. This lab did not measure the post's end-to-end 10 to 20% from `torch.compile`.
+- The memory curve is the mountain. Memory climbs 0.71 GiB per block through the forward, peaks at the loss
+  and drains in the backward. The peak, 31.81 GiB, is 0.97 GiB above the memory at the loss. It is a transient
+  in the head's backward. This lab did not locate it, but it fits the post's logits and OOM-in-the-backward point.
+- Activations per layer are larger than the post's count. 0.71 GiB per layer is about 22.7H BF16-sized
+  elements per token, against the post's 16H, because C4's blocks are unfused (see the CPU notes above). For 8 layers
+  the post's formula gives 4.00 GiB and the blocks hold 5.76 GiB. The remaining 0.55 GiB at the loss is the head.
+- Full checkpointing here saves less than the post's "about 10x". The peak fell by 2.3 GiB (7%), and the
+  non-weight part of the peak, 7.28 GiB with the 3.5 GiB of gradients inside it, fell to 4.97 GiB. Two reasons:
+  the model has only 8 layers, and the logits and loss are never checkpointed. The post's 10x counts the layers' activations alone,
+  at 32 layers. The compute side matches: +27% time, not +33%.
+- MFU is 44.5% for forward + backward and 27.7% for the whole step. The gap is the optimizer: 59 ms, 38% of
+  the step, against the post's 20% at 6.74B. `MasterWeightAdam` is eager and unfused. It moves 0.89 TB/s
+  against 2.88 TB/s for the fused kernel. The post lists "an optimizer that isn't fused" among the causes of an MFU below 30%, and here it is.
+  Scaling the fused rate to 6.74B gives 66 ms, in line with the post's 75 ms.
+- The memory wall is real on this card. States alone need 100.4 GiB (108 GB) and the card has 79.2 GiB.
+- Pinned memory overlaps the copy with compute and pageable memory does not. The GEMM added nothing to the
+  pinned copy (18.8 ms either way), and a pageable copy plus a GEMM took the sum of the two. The bandwidth gain
+  was small, 14.3 against 12.4 GB/s, and both are far below a modern PCIe link. This lab did not find out why. Other
+  jobs may share the host. Do not read a link speed from these numbers.
+
+Two things in the GPU path had to be fixed after the first run, and they matter if you extend it:
+
+- `memory_allocated()` counts RoPE's cos/sin tables, which are buffers and are cast to BF16 with the weights.
+  At the small test shape they add 0.04 bytes per parameter (2.04 in all). At 1.88B parameters they are invisible.
+  The test now checks `parameter bytes + buffer bytes`.
+- The allocator hands out a whole cached block when the leftover would be under 1 MiB, and `memory_allocated()` counts
+  the block. That made the optimizer state read 12.16 bytes per parameter at the small shape, and building the
+  model under `with torch.device("cuda")` left 0.56 MB live that no tensor accounted for. I dropped the redundant
+  `.clone()` in `MasterWeightAdam` and the device context, and the test allows up to 2 MiB of slack. This
+  is the explanation that fits the measurements, and I did not confirm it in the allocator's source.
 
 ```bash
-python -m pytest labs/inside-a-training-step -m gpu
+python -m pytest labs/inside-a-training-step -m gpu       # 3 passed
 python labs/inside-a-training-step/scripts/07_optimizer.py --device cuda --params 1.07e9 --hidden 4096
 python labs/inside-a-training-step/scripts/08_gpu_step.py --layers 8
 ```
 
-`08_gpu_step.py` measures, at the post's layer shape (H = 4096, I = 11008, V = 32000, S = 4096, B = 1):
-the time of each op of one block, the allocator's bytes per parameter, the memory curve at each block, forward,
-backward and optimizer times, MFU with and without full checkpointing, whether the 6.7B model's states fit on
-one card, and pageable against pinned host-to-device copies. Its code has run on CPU only through the
-accounting helpers. The CUDA paths have never run, so expect to fix a bug or two on the first run.
-
 ## What was not measured
 
-- Everything at the post's scale on CPU. The CPU scripts use a 4-layer, 256-wide model. The post's 7B numbers
+- Anything at the post's scale on CPU. The CPU scripts use a 4-layer, 256-wide model. The post's 7B numbers
   come from arithmetic (`01_accounting.py`), not from running a 7B model.
-- Any H100 number, until the GPU jobs above run.
+- The post's 6.74B model on a GPU. The GPU step uses 8 layers (1.88B parameters), so its absolute times, memory
+  and MFU are not the post's 32-layer numbers. The 6.74B figures here come from arithmetic, or from scaling a rate.
+- A multi-GPU or sharded step (the next post).
 - Data loading, worker processes and double buffering. Only the host-to-device copy is in `08_gpu_step.py`.
 - FP8, selective checkpointing's 4% overhead (Korthikanti et al.) and ZeRO. The lab shows the mechanism of
   selective recompute on one small model. It does not reproduce the paper's figure.

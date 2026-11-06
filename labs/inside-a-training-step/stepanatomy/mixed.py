@@ -21,7 +21,7 @@ class MasterWeightAdam:
 
     def __init__(self, params, lr=3e-4, betas=(0.9, 0.95), eps=1e-8, weight_decay=0.0) -> None:
         self.params = [p for p in params if p.requires_grad]
-        self.master = [p.detach().float().clone() for p in self.params]
+        self.master = [p.detach().to(torch.float32, copy=True) for p in self.params]
         self.m = [torch.zeros_like(w) for w in self.master]
         self.v = [torch.zeros_like(w) for w in self.master]
         self.lr, self.betas, self.eps, self.wd = lr, betas, eps, weight_decay

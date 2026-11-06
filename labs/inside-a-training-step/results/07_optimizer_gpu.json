@@ -1,0 +1,27 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "for-loop": {
+  "params": 1011916800,
+  "tensors": 45,
+  "ms": 27.649753028526902,
+  "useful GB/s": 1024.735026412984
+ },
+ "foreach": {
+  "params": 1011916800,
+  "tensors": 45,
+  "ms": 27.801735908724368,
+  "useful GB/s": 1019.133139492513
+ },
+ "fused": {
+  "params": 1011916800,
+  "tensors": 45,
+  "ms": 9.841540013439953,
+  "useful GB/s": 2878.9874716057184
+ },
+ "master": {
+  "params": 1011916800,
+  "tensors": 45,
+  "ms": 31.80774301290512,
+  "useful GB/s": 890.7790278770924
+ }
+}

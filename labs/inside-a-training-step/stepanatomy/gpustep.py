@@ -85,10 +85,14 @@ def step_report(s: A.Shape, mode: str = "none", steps: int = 5, warmup: int = 2)
     torch.cuda.empty_cache()
     torch.cuda.reset_peak_memory_stats()
     base = torch.cuda.memory_allocated()
-    with torch.device("cuda"):
-        m = models.build(s, dtype=torch.bfloat16, device="cuda")
+    # Not built under `with torch.device("cuda")`: that left 0.56 MB of allocator memory live that no tensor
+    # accounts for (see the README), which would be mistaken for model weight.
+    m = models.build(s, dtype=torch.bfloat16, device="cuda")
     recompute.apply(m, mode)
     n = sum(p.numel() for p in m.parameters())
+    # RoPE's cos/sin tables are buffers, not parameters. The model cast them to BF16 along with the weights.
+    buffer_bytes = sum(b.numel() * b.element_size() for b in m.buffers())
+    param_bytes = sum(p.numel() * p.element_size() for p in m.parameters())
     after_model = torch.cuda.memory_allocated()
     opt = MasterWeightAdam(m.parameters(), lr=3e-4)
     after_opt = torch.cuda.memory_allocated()
@@ -144,8 +148,10 @@ def step_report(s: A.Shape, mode: str = "none", steps: int = 5, warmup: int = 2)
     attn = 12 * s.layers * s.hidden * s.seq * s.tokens
     out = {
         "mode": mode, "params": n, "matmul params": n_mm,
+        "weights delta bytes": after_model - base, "param bytes": param_bytes, "buffer bytes": buffer_bytes,
         "bytes/param weights (bf16)": (after_model - base) / n,
         "bytes/param master+m+v": (after_opt - after_model) / n,
+        "optimizer state delta bytes": after_opt - after_model,
         "bytes/param grads": grads_bytes / n,
         "peak GiB": peak / GiB, "reserved GiB": reserved / GiB,
         "activation+workspace peak GiB": (peak - after_opt) / GiB,

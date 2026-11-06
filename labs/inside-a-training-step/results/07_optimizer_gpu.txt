@@ -1,0 +1,11 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/inside-a-training-step/scripts/07_optimizer.py --device cuda --params 1.07e9 --hidden 4096
+## AdamW step, 1.07e+09 parameters in tensors shaped like H=4096 blocks, median of 5
+variant  | params     | tensors | ms    | useful GB/s (28 B/param)
+---------+------------+---------+-------+-------------------------
+for-loop | 1011916800 | 45      | 27.65 | 1025                    
+foreach  | 1011916800 | 45      | 27.8  | 1019                    
+fused    | 1011916800 | 45      | 9.842 | 2879                    
+master   | 1011916800 | 45      | 31.81 | 890.8                   
+arithmetic intensity: about 12 FLOPs / 28 bytes = 0.43 FLOP/byte
+at the fastest variant's rate, a 6.74B-parameter step would take 66 ms (post: about 75 ms at 2.5 TB/s on an H100)

@@ -1,0 +1,349 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "ops": [
+  {
+   "op": "rmsnorm (attn)",
+   "ms": 0.27215999364852905,
+   "TFLOP/s": 0.24657872415541446,
+   "GB/s": 246.57872415541445,
+   "model FLOP/byte": 1.0,
+   "bound (model)": "memory"
+  },
+  {
+   "op": "qkv proj",
+   "ms": 0.5539199709892273,
+   "TFLOP/s": 744.3617887249254,
+   "GB/s": 424.03422209264954,
+   "model FLOP/byte": 1755.4285714285713,
+   "bound (model)": "compute"
+  },
+  {
+   "op": "attention (flash)",
+   "ms": 0.2924480140209198,
+   "TFLOP/s": 469.9602899753955,
+   "GB/s": 458.94559567909715,
+   "model FLOP/byte": 1024.0,
+   "bound (model)": "compute"
+  },
+  {
+   "op": "out proj",
+   "ms": 0.20611199736595154,
+   "TFLOP/s": 666.8168531110655,
+   "GB/s": 488.3912498372061,
+   "model FLOP/byte": 1365.3333333333333,
+   "bound (model)": "compute"
+  },
+  {
+   "op": "residual add",
+   "ms": 0.03622400015592575,
+   "TFLOP/s": 0.4631519414692658,
+   "GB/s": 2778.911648815595,
+   "model FLOP/byte": 0.16666666666666666,
+   "bound (model)": "memory"
+  },
+  {
+   "op": "rmsnorm (mlp)",
+   "ms": 0.2714880108833313,
+   "TFLOP/s": 0.24718905185407697,
+   "GB/s": 247.18905185407698,
+   "model FLOP/byte": 1.0,
+   "bound (model)": "memory"
+  },
+  {
+   "op": "gate proj",
+   "ms": 0.5237759947776794,
+   "TFLOP/s": 705.2006795629887,
+   "GB/s": 408.398831051422,
+   "model FLOP/byte": 1726.7450980392157,
+   "bound (model)": "compute"
+  },
+  {
+   "op": "up proj",
+   "ms": 0.5236480236053467,
+   "TFLOP/s": 705.3730192904878,
+   "GB/s": 408.498637170863,
+   "model FLOP/byte": 1726.7450980392157,
+   "bound (model)": "compute"
+  },
+  {
+   "op": "silu * mul",
+   "ms": 0.16460800170898438,
+   "TFLOP/s": 1.3695800790934163,
+   "GB/s": 1643.4960949120994,
+   "model FLOP/byte": 0.8333333333333334,
+   "bound (model)": "memory"
+  },
+  {
+   "op": "down proj",
+   "ms": 0.4880320131778717,
+   "TFLOP/s": 756.8503243277562,
+   "GB/s": 438.31039403973887,
+   "model FLOP/byte": 1726.7450980392157,
+   "bound (model)": "compute"
+  },
+  {
+   "op": "residual add",
+   "ms": 0.03488000109791756,
+   "TFLOP/s": 0.4809981499972387,
+   "GB/s": 2885.9888999834325,
+   "model FLOP/byte": 0.16666666666666666,
+   "bound (model)": "memory"
+  },
+  {
+   "op": "rmsnorm, torch.compile",
+   "ms": 0.06435199826955795,
+   "TFLOP/s": 1.0428404059636824,
+   "GB/s": 1042.8404059636823,
+   "model FLOP/byte": 1.0,
+   "bound (model)": "memory"
+  },
+  {
+   "op": "silu * mul, torch.compile",
+   "ms": 0.12780800461769104,
+   "TFLOP/s": 1.7639258251027754,
+   "GB/s": 2116.7109901233307,
+   "model FLOP/byte": 0.8333333333333334,
+   "bound (model)": "memory"
+  }
+ ],
+ "step_none": {
+  "mode": "none",
+  "params": 1881214976,
+  "matmul params": 1750073344,
+  "weights delta bytes": 3764527616,
+  "param bytes": 3762429952,
+  "buffer bytes": 2097280,
+  "bytes/param weights (bf16)": 2.001115058101685,
+  "bytes/param master+m+v": 12.0,
+  "optimizer state delta bytes": 22574579712,
+  "bytes/param grads": 2.0000176906948033,
+  "peak GiB": 31.813706874847412,
+  "reserved GiB": 32.6875,
+  "activation+workspace peak GiB": 7.283501625061035,
+  "ms": {
+   "forward": 31.889503479003906,
+   "backward": 65.86406707763672,
+   "optimizer": 58.96255874633789
+  },
+  "step ms": 156.71612930297852,
+  "backward / forward": 2.0653839004110464,
+  "optimizer share": 0.37623797249577207,
+  "MFU (6ND)": 0.27749646824451835,
+  "MFU (6ND + attention)": 0.32006033635152653,
+  "MFU fwd+bwd only (6ND)": 0.44487553908150884,
+  "curve": [
+   [
+    "start of step",
+    24.53023624420166
+   ],
+   [
+    "after forward of block 0",
+    25.306177139282227
+   ],
+   [
+    "after forward of block 1",
+    26.017634391784668
+   ],
+   [
+    "after forward of block 2",
+    26.72909164428711
+   ],
+   [
+    "after forward of block 3",
+    27.44054889678955
+   ],
+   [
+    "after forward of block 4",
+    28.152006149291992
+   ],
+   [
+    "after forward of block 5",
+    28.863463401794434
+   ],
+   [
+    "after forward of block 6",
+    29.574920654296875
+   ],
+   [
+    "after forward of block 7",
+    30.286377906799316
+   ],
+   [
+    "the turn: loss computed",
+    30.837144374847412
+   ],
+   [
+    "before backward of block 7",
+    30.49924612045288
+   ],
+   [
+    "before backward of block 6",
+    30.164757251739502
+   ],
+   [
+    "before backward of block 5",
+    29.830268383026123
+   ],
+   [
+    "before backward of block 4",
+    29.495779514312744
+   ],
+   [
+    "before backward of block 3",
+    29.161290645599365
+   ],
+   [
+    "before backward of block 2",
+    28.826801776885986
+   ],
+   [
+    "before backward of block 1",
+    28.492312908172607
+   ],
+   [
+    "before backward of block 0",
+    28.15782403945923
+   ],
+   [
+    "after backward",
+    28.03427219390869
+   ]
+  ]
+ },
+ "step_full": {
+  "mode": "full",
+  "params": 1881214976,
+  "matmul params": 1750073344,
+  "weights delta bytes": 3764527616,
+  "param bytes": 3762429952,
+  "buffer bytes": 2097280,
+  "bytes/param weights (bf16)": 2.001115058101685,
+  "bytes/param master+m+v": 12.0,
+  "optimizer state delta bytes": 22574579712,
+  "bytes/param grads": 2.0000176906948033,
+  "peak GiB": 29.499131202697754,
+  "reserved GiB": 30.6953125,
+  "activation+workspace peak GiB": 4.968925952911377,
+  "ms": {
+   "forward": 32.11347198486328,
+   "backward": 91.80083465576172,
+   "optimizer": 58.9376335144043
+  },
+  "step ms": 182.8519401550293,
+  "backward / forward": 2.858639349212447,
+  "optimizer share": 0.3223243541437656,
+  "MFU (6ND)": 0.23783270968662826,
+  "MFU (6ND + attention)": 0.2743127418494664,
+  "MFU fwd+bwd only (6ND)": 0.35095360315941365,
+  "curve": [
+   [
+    "start of step",
+    24.53023624420166
+   ],
+   [
+    "after forward of block 0",
+    24.594719886779785
+   ],
+   [
+    "after forward of block 1",
+    24.625969886779785
+   ],
+   [
+    "after forward of block 2",
+    24.657219886779785
+   ],
+   [
+    "after forward of block 3",
+    24.688469886779785
+   ],
+   [
+    "after forward of block 4",
+    24.719719886779785
+   ],
+   [
+    "after forward of block 5",
+    24.750969886779785
+   ],
+   [
+    "after forward of block 6",
+    24.782219886779785
+   ],
+   [
+    "after forward of block 7",
+    24.813469886779785
+   ],
+   [
+    "the turn: loss computed",
+    25.39548635482788
+   ],
+   [
+    "before backward of block 7",
+    25.05758810043335
+   ],
+   [
+    "before backward of block 6",
+    25.403306484222412
+   ],
+   [
+    "before backward of block 5",
+    25.749024868011475
+   ],
+   [
+    "before backward of block 4",
+    26.094743251800537
+   ],
+   [
+    "before backward of block 3",
+    26.4404616355896
+   ],
+   [
+    "before backward of block 2",
+    26.786180019378662
+   ],
+   [
+    "before backward of block 1",
+    27.131898403167725
+   ],
+   [
+    "before backward of block 0",
+    27.477616786956787
+   ],
+   [
+    "after backward",
+    28.03427219390869
+   ]
+  ]
+ },
+ "wall": {
+  "params": 6738149376,
+  "gpu GiB": 79.1788330078125,
+  "held": [
+   [
+    "params (bf16)",
+    12.55078125
+   ],
+   [
+    "grads (bf16)",
+    25.1015625
+   ],
+   [
+    "master (fp32)",
+    50.203125
+   ],
+   [
+    "adam m (fp32)",
+    75.3046875
+   ]
+  ],
+  "failed at": "adam v (fp32)"
+ },
+ "h2d": {
+  "pageable GB/s": 12.399113418084264,
+  "pinned GB/s": 14.262507416183015,
+  "gemm + pageable copy, ms": 23.096810199785978,
+  "pageable copy alone, ms": 21.108018897939473,
+  "gemm + pinned copy, ms": 18.829002103302628,
+  "pinned copy alone, ms": 18.82212699856609,
+  "gemm alone, ms": 1.403520000167191
+ }
+}
