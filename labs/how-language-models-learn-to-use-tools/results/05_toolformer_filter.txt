@@ -1,0 +1,45 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/how-language-models-learn-to-use-tools/scripts/05_toolformer_filter.py --models openai-community/gpt2 HuggingFaceTB/SmolLM2-135M HuggingFaceTB/SmolLM2-360M
+
+weights w_0..w_4: [0.3333, 0.2667, 0.2, 0.1333, 0.0667]
+32 call sites x 3 candidate calls
+
+== openai-community/gpt2 (124M parameters)
+                                                      |    kept at tau_f     | kept without the min
+tool       candidate       L(empty)  L(call)  L(+res) |     0.5    1.0    2.0 |     0.5    1.0    2.0
+QA         useful              3.95     1.87     1.00 |    7/12   4/12   0/12 |   12/12  12/12  11/12
+QA         answer_in_call      3.95     0.92     0.73 |    0/12   0/12   0/12 |   12/12  12/12  12/12
+QA         irrelevant          3.95     2.63     2.68 |    0/12   0/12   0/12 |   11/12   9/12   2/12
+Calculator useful              3.78     3.40     1.99 |   12/12  12/12   0/12 |   12/12  12/12   0/12
+Calculator answer_in_call      3.78     2.80     2.54 |    0/12   0/12   0/12 |   12/12  12/12   0/12
+Calculator irrelevant          3.78     3.39     3.42 |    0/12   0/12   0/12 |    0/12   0/12   0/12
+Calendar   useful              3.17     3.01     0.58 |     8/8    8/8    8/8 |     8/8    8/8    8/8
+Calendar   answer_in_call      3.17     1.94     2.03 |     0/8    0/8    0/8 |     8/8    7/8    0/8
+Calendar   irrelevant          3.17     3.15     3.19 |     0/8    0/8    0/8 |     0/8    0/8    0/8
+
+== HuggingFaceTB/SmolLM2-135M (135M parameters)
+                                                      |    kept at tau_f     | kept without the min
+tool       candidate       L(empty)  L(call)  L(+res) |     0.5    1.0    2.0 |     0.5    1.0    2.0
+QA         useful              1.08     0.49     0.29 |    1/12   0/12   0/12 |   10/12   3/12   0/12
+QA         answer_in_call      1.08     0.27     0.28 |    0/12   0/12   0/12 |   10/12   3/12   0/12
+QA         irrelevant          1.08     0.77     0.79 |    0/12   0/12   0/12 |    2/12   0/12   0/12
+Calculator useful              1.43     1.11     0.30 |   12/12   0/12   0/12 |   12/12  11/12   0/12
+Calculator answer_in_call      1.43     0.77     0.62 |    0/12   0/12   0/12 |   12/12   0/12   0/12
+Calculator irrelevant          1.43     1.10     1.08 |    0/12   0/12   0/12 |    0/12   0/12   0/12
+Calendar   useful              1.96     2.34     0.61 |     8/8    8/8    0/8 |     8/8    8/8    0/8
+Calendar   answer_in_call      1.96     0.92     0.92 |     0/8    0/8    0/8 |     8/8    4/8    0/8
+Calendar   irrelevant          1.96     2.02     2.26 |     0/8    0/8    0/8 |     0/8    0/8    0/8
+
+== HuggingFaceTB/SmolLM2-360M (362M parameters)
+                                                      |    kept at tau_f     | kept without the min
+tool       candidate       L(empty)  L(call)  L(+res) |     0.5    1.0    2.0 |     0.5    1.0    2.0
+QA         useful              0.44     0.27     0.23 |    0/12   0/12   0/12 |    1/12   0/12   0/12
+QA         answer_in_call      0.44     0.15     0.13 |    0/12   0/12   0/12 |    1/12   1/12   0/12
+QA         irrelevant          0.44     0.41     0.34 |    0/12   0/12   0/12 |    1/12   0/12   0/12
+Calculator useful              1.87     1.69     1.09 |    9/12   0/12   0/12 |   12/12   1/12   0/12
+Calculator answer_in_call      1.87     1.22     1.20 |    0/12   0/12   0/12 |   10/12   0/12   0/12
+Calculator irrelevant          1.87     1.61     1.71 |    0/12   0/12   0/12 |    1/12   0/12   0/12
+Calendar   useful              2.07     2.32     0.59 |     8/8    8/8    0/8 |     8/8    8/8    0/8
+Calendar   answer_in_call      2.07     0.92     1.00 |     0/8    0/8    0/8 |     8/8    4/8    0/8
+Calendar   irrelevant          2.07     2.22     2.15 |     0/8    0/8    0/8 |     0/8    0/8    0/8
+

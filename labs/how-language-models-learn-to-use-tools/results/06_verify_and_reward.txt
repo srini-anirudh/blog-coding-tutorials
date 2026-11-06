@@ -1,0 +1,10 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/how-language-models-learn-to-use-tools/scripts/06_verify_and_reward.py
+
+100 requests over unseen tools x 8 samples at temperature 1
+
+     N | fail format fail exec fail semantic   kept | mean r groups with signal
+    16 |       0.024     0.000         0.886  0.090 |  2.042           4/100
+   128 |       0.170     0.000         0.740  0.090 |  1.750          14/100
+  1024 |       0.491     0.189         0.130  0.190 |  1.019          70/100
+  4000 |       0.774     0.020         0.129  0.077 |  0.510          63/100

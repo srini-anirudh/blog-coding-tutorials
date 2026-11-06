@@ -1,0 +1,74 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/how-language-models-learn-to-use-tools/scripts/06_verify_and_reward.py",
+ "runs": {
+  "16": {
+   "funnel": {
+    "semantic": 709,
+    "kept": 72,
+    "format": 19
+   },
+   "samples": 800,
+   "mean_reward": 2.0425,
+   "groups_with_nonzero_advantage": 4,
+   "groups": 100,
+   "reward_histogram": {
+    "2.0": 709,
+    "3.0": 72,
+    "0.0": 19
+   }
+  },
+  "128": {
+   "funnel": {
+    "semantic": 592,
+    "format": 136,
+    "kept": 72
+   },
+   "samples": 800,
+   "mean_reward": 1.75,
+   "groups_with_nonzero_advantage": 14,
+   "groups": 100,
+   "reward_histogram": {
+    "2.0": 592,
+    "0.0": 136,
+    "3.0": 72
+   }
+  },
+  "1024": {
+   "funnel": {
+    "execution": 151,
+    "kept": 152,
+    "semantic": 104,
+    "format": 393
+   },
+   "samples": 800,
+   "mean_reward": 1.01875,
+   "groups_with_nonzero_advantage": 70,
+   "groups": 100,
+   "reward_histogram": {
+    "1.0": 151,
+    "3.0": 152,
+    "2.0": 104,
+    "0.0": 393
+   }
+  },
+  "4000": {
+   "funnel": {
+    "execution": 16,
+    "format": 619,
+    "kept": 62,
+    "semantic": 103
+   },
+   "samples": 800,
+   "mean_reward": 0.51,
+   "groups_with_nonzero_advantage": 63,
+   "groups": 100,
+   "reward_histogram": {
+    "1.0": 16,
+    "0.0": 619,
+    "3.0": 62,
+    "2.0": 103
+   }
+  }
+ }
+}

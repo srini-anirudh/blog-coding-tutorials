@@ -1,0 +1,105 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/how-language-models-learn-to-use-tools/scripts/01_fold.py
+
+Part 1: a scripted model in the fold
+
+step 0: context  64 chars | model emitted '<tool_call>weather(city=malmoe)</tool_call>'
+        Parse -> {'name': 'weather', 'args': {'city': 'malmoe'}}
+        harness wrote back '\n<result>error: "unknown city \'malmoe\'"</result>\n'
+step 1: context 156 chars | model emitted '<tool_call>weather(city=malmo)</tool_call>'
+        Parse -> {'name': 'weather', 'args': {'city': 'malmo'}}
+        harness wrote back '\n<result>4C, rain</result>\n'
+step 2: context 225 chars | model emitted '<tool_call>convert(celsius=4)</tool_call>'
+        Parse -> {'name': 'convert', 'args': {'celsius': '4'}}
+        harness wrote back '\n<result>39.2F</result>\n'
+step 3: context 290 chars | model emitted 'It is 4C (39.2F) and raining in Malmo.'
+        Parse -> None
+        harness wrote back None
+
+Final context (the agent's entire state):
+<user> What is the weather in Malmo, in Fahrenheit?
+<assistant> <tool_call>weather(city=malmoe)</tool_call>
+<result>error: "unknown city 'malmoe'"</result>
+<tool_call>weather(city=malmo)</tool_call>
+<result>4C, rain</result>
+<tool_call>convert(celsius=4)</tool_call>
+<result>39.2F</result>
+It is 4C (39.2F) and raining in Malmo.
+
+The same first span with no harness is just a string. Nothing ran: '<tool_call>weather(city=malmoe)</tool_call>'
+
+Part 2: the tiny model trained on N = 16 tools, on tools it never saw
+
+context x_0: <bos> <tools> <tool> tu le : remind ( zo gi : count , ba lu : lang ) <tool> vo fe : convert ( pa ze : person , ti ka : count ) <tool> bi ga : list ( li na : lang , va ro : day ) <user> list wednesday spanish <call>
+model span : NONE <eos>
+Parse      : {'none': True}
+Exec, e    : no call
+gold call  : bi ga ( li na = spanish , va ro = wednesday ) <eos>
+
+context x_0: <bos> <tools> <tool> po da : share ( ve la : day , gu re : city , se bu : person ) <tool> su vi : convert ( ri ki : person , gu vi : item ) <tool> su vi : order ( ri ki : person , gu vi : city , lu pi : day ) <user> share ivo saturday riga <call>
+model span : NONE <eos>
+Parse      : {'none': True}
+Exec, e    : no call
+gold call  : po da ( ve la = saturday , gu re = riga , se bu = ivo ) <eos>
+
+context x_0: <bos> <tools> <tool> mi vo : search ( mu bi : day , ke ri : count ) <tool> so ka : order ( ki vi : count ) <tool> ri ze : list ( tu so : count , na ba : city ) <user> list #19 malmo <call>
+model span : NONE <eos>
+Parse      : {'none': True}
+Exec, e    : no call
+gold call  : ri ze ( tu so = #19 , na ba = malmo ) <eos>
+
+context x_0: <bos> <tools> <tool> bu de : translate ( ni pa : day ) <tool> ve mi : delete ( zo ra : day ) <tool> tu mo : list ( tu li : item , le pe : count ) <user> you list please camera #16 <call>
+model span : NONE <eos>
+Parse      : {'none': True}
+Exec, e    : no call
+gold call  : tu mo ( tu li = camera , le pe = #16 ) <eos>
+
+context x_0: <bos> <tools> <tool> ka di : cancel ( vu to : count , ta pu : item ) <tool> ka gi : play ( de nu : item , mo gi : count ) <tool> ko li : translate ( fe fu : city , fa ke : person , pa ko : lang ) <user> cancel table for #10 please <call>
+model span : NONE <eos>
+Parse      : {'none': True}
+Exec, e    : no call
+gold call  : ka di ( vu to = #10 , ta pu = table ) <eos>
+
+context x_0: <bos> <tools> <tool> vu si : cancel ( du zu : lang ) <tool> ni ka : delete ( vi pu : lang , ba su : item , po ti : person ) <tool> ri mo : convert ( ze fe : item ) <user> delete spanish taxi jun <call>
+model span : NONE <eos>
+Parse      : {'none': True}
+Exec, e    : no call
+gold call  : ni ka ( vi pu = spanish , ba su = taxi , po ti = jun ) <eos>
+
+Part 2: the tiny model trained on N = 1024 tools, on tools it never saw
+
+context x_0: <bos> <tools> <tool> tu le : remind ( zo gi : count , ba lu : lang ) <tool> vo fe : convert ( pa ze : person , ti ka : count ) <tool> bi ga : list ( li na : lang , va ro : day ) <user> list wednesday spanish <call>
+model span : NONE <eos>
+Parse      : {'none': True}
+Exec, e    : no call
+gold call  : bi ga ( li na = spanish , va ro = wednesday ) <eos>
+
+context x_0: <bos> <tools> <tool> po da : share ( ve la : day , gu re : city , se bu : person ) <tool> su vi : convert ( ri ki : person , gu vi : item ) <tool> su vi : order ( ri ki : person , gu vi : city , lu pi : day ) <user> share ivo saturday riga <call>
+model span : su vi ( ri ki = saturday , gu vi = riga , lu bu = ivo ) <eos>
+Parse      : {'name': 'suvi', 'args': {'riki': 'saturday', 'guvi': 'riga', 'lubu': 'ivo'}}
+Exec, e    : <result> error: fields ['guvi', 'lubu', 'riki'] do not match schema ['guvi', 'lupi', 'riki'] </result>
+gold call  : po da ( ve la = saturday , gu re = riga , se bu = ivo ) <eos>
+
+context x_0: <bos> <tools> <tool> mi vo : search ( mu bi : day , ke ri : count ) <tool> so ka : order ( ki vi : count ) <tool> ri ze : list ( tu so : count , na ba : city ) <user> list #19 malmo <call>
+model span : ri ka ( lu so = #19 , na ba = malmo ) <eos>
+Parse      : {'name': 'rika', 'args': {'luso': '#19', 'naba': 'malmo'}}
+Exec, e    : <result> error: 'no such tool: rika' </result>
+gold call  : ri ze ( tu so = #19 , na ba = malmo ) <eos>
+
+context x_0: <bos> <tools> <tool> bu de : translate ( ni pa : day ) <tool> ve mi : delete ( zo ra : day ) <tool> tu mo : list ( tu li : item , le pe : count ) <user> you list please camera #16 <call>
+model span : tu mo ( va li = #16 , le pe = camera ) <eos>
+Parse      : {'name': 'tumo', 'args': {'vali': '#16', 'lepe': 'camera'}}
+Exec, e    : <result> error: fields ['lepe', 'vali'] do not match schema ['lepe', 'tuli'] </result>
+gold call  : tu mo ( tu li = camera , le pe = #16 ) <eos>
+
+context x_0: <bos> <tools> <tool> ka di : cancel ( vu to : count , ta pu : item ) <tool> ka gi : play ( de nu : item , mo gi : count ) <tool> ko li : translate ( fe fu : city , fa ke : person , pa ko : lang ) <user> cancel table for #10 please <call>
+model span : ko di ( ba nu = table , re gi = #10 ) <eos>
+Parse      : {'name': 'kodi', 'args': {'banu': 'table', 'regi': '#10'}}
+Exec, e    : <result> error: 'no such tool: kodi' </result>
+gold call  : ka di ( vu to = #10 , ta pu = table ) <eos>
+
+context x_0: <bos> <tools> <tool> vu si : cancel ( du zu : lang ) <tool> ni ka : delete ( vi pu : lang , ba su : item , po ti : person ) <tool> ri mo : convert ( ze fe : item ) <user> delete spanish taxi jun <call>
+model span : be ka ( na pu = taxi , mu su = spanish , mo ti = jun ) <eos>
+Parse      : {'name': 'beka', 'args': {'napu': 'taxi', 'musu': 'spanish', 'moti': 'jun'}}
+Exec, e    : <result> error: 'no such tool: beka' </result>
+gold call  : ni ka ( vi pu = spanish , ba su = taxi , po ti = jun ) <eos>

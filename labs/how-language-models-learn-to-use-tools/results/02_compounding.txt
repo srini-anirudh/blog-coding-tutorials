@@ -1,0 +1,37 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/how-language-models-learn-to-use-tools/scripts/02_compounding.py
+
+Task success p**K, and the approximation exp(-K * eps)
+     p    K     p**K  exp(-K eps)
+  0.95    1   0.9500       0.9512
+  0.95    5   0.7738       0.7788
+  0.95   10   0.5987       0.6065
+  0.95   20   0.3585       0.3679
+  0.95   50   0.0769       0.0821
+  0.99    1   0.9900       0.9900
+  0.99    5   0.9510       0.9512
+  0.99   10   0.9044       0.9048
+  0.99   20   0.8179       0.8187
+  0.99   50   0.6050       0.6065
+
+Per-step accuracy needed to hold task success at 0.9: p >= 0.9 ** (1/K)
+  K = 10: p >= 98.9519%
+  K = 20: p >= 99.4746%
+  K = 50: p >= 99.7895%
+
+Recovery: success after K steps of the T/E/D chain. Exact (matrix power) vs Monte Carlo (100,000 runs).
+     p     q    K    exact       MC
+  0.95   0.0   10   0.5987   0.6017
+  0.95   0.0   50   0.0769   0.0774
+  0.96   0.0   10   0.6648   0.6685
+  0.96   0.0   50   0.1299   0.1310
+  0.95   0.5   10   0.7613   0.7627
+  0.95   0.5   50   0.2837   0.2843
+  0.95   0.8   10   0.8724   0.8728
+  0.95   0.8   50   0.5928   0.5932
+  0.99   0.0   10   0.9044   0.9050
+  0.99   0.0   50   0.6050   0.6047
+
+At K = 50, starting from p = 0.95 with no recovery (success 0.0769):
+  one more point of precision, p = 0.96: 0.1299
+  recover half of all errors, q = 0.5:   0.2837

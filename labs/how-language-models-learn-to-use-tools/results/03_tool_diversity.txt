@@ -1,0 +1,14 @@
+N = 16: AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0+cu132
+  python labs/how-language-models-learn-to-use-tools/scripts/03_tool_diversity.py --n-tools 16 --steps 6000 --batch 32 --hidden 64 --layers 3 --lr 3e-3 --max-tools 3 --n-eval 300 --threads 4
+N = 128: AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0+cu132
+  python labs/how-language-models-learn-to-use-tools/scripts/03_tool_diversity.py --n-tools 128 --steps 6000 --batch 32 --hidden 64 --layers 3 --lr 3e-3 --max-tools 3 --n-eval 300 --threads 4
+N = 1024: AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0+cu132
+  python labs/how-language-models-learn-to-use-tools/scripts/03_tool_diversity.py --n-tools 1024 --steps 6000 --batch 32 --hidden 64 --layers 3 --lr 3e-3 --max-tools 3 --n-eval 300 --threads 4
+N = 4000: AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0+cu132
+  python labs/how-language-models-learn-to-use-tools/scripts/03_tool_diversity.py --n-tools 4000 --steps 6000 --batch 32 --hidden 64 --layers 3 --lr 3e-3 --max-tools 3 --n-eval 300 --threads 4
+
+     N      M/N | exact:   seen  unseen | unseen: decide select   args | unseen wrong names: not in context a training tool
+    16  12000.0 |         0.983   0.167 |          0.203  0.000      - |                              1.000           0.909
+   128   1500.0 |         0.993   0.180 |          0.300  0.000      - |                              1.000           1.000
+  1024    187.5 |         0.327   0.377 |          0.793  0.744  0.548 |                              0.722           0.222
+  4000     48.0 |         0.290   0.253 |          0.697  0.678  0.403 |                              0.915           0.627

@@ -1,0 +1,25 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/how-language-models-learn-to-use-tools/scripts/04_constrained_decoding.py
+
+Part 1: exact distributions over the two valid strings
+string    p(y|valid)  local mask  alpha-corrected
+Ay            0.1364      0.6000           0.1364
+Bx            0.8636      0.4000           0.8636
+alpha after the first token: {'A': 0.1, 'B': 0.95}
+KL(exact || local) = 0.4627 nats
+greedy with a local mask picks Ay; the most likely valid string is Bx
+
+Part 2: 300 requests over unseen tools
+     N  decoding    parse  exact  select   args
+    16  none        1.000  0.210   0.000  0.000
+    16  schema      1.000  0.217   1.000  0.000
+    16  typed       1.000  0.217   1.000  0.000
+   128  none        1.000  0.210   0.000  0.000
+   128  schema      1.000  0.227   0.615  0.625
+   128  typed       1.000  0.230   0.615  0.750
+  1024  none        0.997  0.343   0.691  0.475
+  1024  schema      1.000  0.423   0.768  0.572
+  1024  typed       1.000  0.600   0.768  0.906
+  4000  none        0.993  0.260   0.668  0.344
+  4000  schema      1.000  0.327   0.922  0.367
+  4000  typed       1.000  0.450   0.922  0.590

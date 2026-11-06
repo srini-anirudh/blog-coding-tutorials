@@ -1,0 +1,186 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0+cu132",
+ "command": "python labs/how-language-models-learn-to-use-tools/scripts/03_tool_diversity.py --n-tools 128 --steps 6000 --batch 32 --hidden 64 --layers 3 --lr 3e-3 --max-tools 3 --n-eval 300 --threads 4",
+ "config": {
+  "n_tools": [
+   128
+  ],
+  "steps": 6000,
+  "batch": 32,
+  "hidden": 64,
+  "layers": 3,
+  "n_eval": 300,
+  "seed": 0,
+  "lr": 0.003,
+  "heads": 4,
+  "max_tools": 3,
+  "threads": 4,
+  "device": "cpu",
+  "out": null,
+  "table": null,
+  "ckpt_dir": "runs"
+ },
+ "runs": {
+  "128": {
+   "n_tools": 128,
+   "examples_per_tool": 1500.0,
+   "train_seconds": 710.4,
+   "loss": [
+    [
+     200,
+     2.3627
+    ],
+    [
+     400,
+     1.2352
+    ],
+    [
+     600,
+     0.557
+    ],
+    [
+     800,
+     0.372
+    ],
+    [
+     1000,
+     0.281
+    ],
+    [
+     1200,
+     0.1824
+    ],
+    [
+     1400,
+     0.1233
+    ],
+    [
+     1600,
+     0.0976
+    ],
+    [
+     1800,
+     0.0798
+    ],
+    [
+     2000,
+     0.076
+    ],
+    [
+     2200,
+     0.0567
+    ],
+    [
+     2400,
+     0.0476
+    ],
+    [
+     2600,
+     0.044
+    ],
+    [
+     2800,
+     0.0281
+    ],
+    [
+     3000,
+     0.0243
+    ],
+    [
+     3200,
+     0.021
+    ],
+    [
+     3400,
+     0.0236
+    ],
+    [
+     3600,
+     0.0127
+    ],
+    [
+     3800,
+     0.0083
+    ],
+    [
+     4000,
+     0.009
+    ],
+    [
+     4200,
+     0.0061
+    ],
+    [
+     4400,
+     0.0051
+    ],
+    [
+     4600,
+     0.003
+    ],
+    [
+     4800,
+     0.0033
+    ],
+    [
+     5000,
+     0.0026
+    ],
+    [
+     5200,
+     0.0022
+    ],
+    [
+     5400,
+     0.0017
+    ],
+    [
+     5600,
+     0.0017
+    ],
+    [
+     5800,
+     0.0013
+    ],
+    [
+     6000,
+     0.0009
+    ]
+   ],
+   "seen": {
+    "n": 300,
+    "exact": 0.9933,
+    "parse": 1.0,
+    "decide": 1.0,
+    "abstain_when_none": 1.0,
+    "select_given_call": 0.9959,
+    "args_given_tool": 0.9959,
+    "exact_on_calls": 0.9917,
+    "wrong_name_not_in_context": 1.0,
+    "wrong_name_is_training_tool": 1.0,
+    "exact_on_calls_by_tools_in_context": {
+     "1": 1.0,
+     "2": 0.9885,
+     "3": 0.987
+    }
+   },
+   "unseen": {
+    "n": 300,
+    "exact": 0.18,
+    "parse": 1.0,
+    "decide": 0.3,
+    "abstain_when_none": 1.0,
+    "select_given_call": 0.0,
+    "args_given_tool": null,
+    "exact_on_calls": 0.0,
+    "wrong_name_not_in_context": 1.0,
+    "wrong_name_is_training_tool": 1.0,
+    "exact_on_calls_by_tools_in_context": {
+     "1": 0.0,
+     "2": 0.0,
+     "3": 0.0
+    }
+   }
+  }
+ }
+}
