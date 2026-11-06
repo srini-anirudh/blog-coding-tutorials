@@ -8,8 +8,9 @@ the whole store serialises to JSON and diffs cleanly.
 from __future__ import annotations
 
 import itertools
+import re
 from dataclasses import dataclass, field
-from typing import Any, Literal
+from typing import Any, Iterable, Literal
 
 Kind = Literal["episodic", "semantic", "procedural"]
 Status = Literal["active", "superseded", "deleted"]
@@ -26,6 +27,14 @@ def reset_ids() -> None:
     """Restart id counters so runs and tests produce identical stores."""
     global _ids
     _ids = itertools.count(1)
+
+
+def skip_ids_in(ids: Iterable[str]) -> None:
+    """Move the counter past ids read from disk, so a new process cannot reuse one."""
+    global _ids
+    numbers = [int(m[0]) for i in ids if (m := re.search(r"\d+$", i))]
+    start = next(_ids)
+    _ids = itertools.count(max([start, *(n + 1 for n in numbers)]))
 
 
 @dataclass

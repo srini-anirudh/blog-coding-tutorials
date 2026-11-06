@@ -1,0 +1,312 @@
+{
+ "budget": 1024,
+ "device": "cpu",
+ "hardware": "AMD EPYC 7R13, 8 threads",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "rows": {
+  "full_transcript": {
+   "accuracy": 0.5416666666666666,
+   "after_today": 0.0,
+   "deleted": 0.6666666666666666,
+   "n": 120,
+   "rumor": 0.1,
+   "stated": 0.5306122448979592,
+   "today": 0.4666666666666667,
+   "tokens": 967.9333333333333,
+   "unseen": 0.9047619047619048,
+   "updated": 0.4444444444444444
+  },
+  "full_transcript_unbounded": {
+   "accuracy": 0.55,
+   "after_today": 0.0,
+   "deleted": 0.4166666666666667,
+   "n": 120,
+   "rumor": 0.2,
+   "stated": 0.6938775510204082,
+   "today": 0.3333333333333333,
+   "tokens": 2302.65,
+   "unseen": 0.8095238095238095,
+   "updated": 0.3333333333333333
+  },
+  "no_memory": {
+   "accuracy": 0.44166666666666665,
+   "after_today": 0.0,
+   "deleted": 0.8333333333333334,
+   "n": 120,
+   "rumor": 0.0,
+   "stated": 0.2653061224489796,
+   "today": 0.5333333333333333,
+   "tokens": 517.0916666666667,
+   "unseen": 0.8095238095238095,
+   "updated": 0.5555555555555556
+  },
+  "oracle": {
+   "accuracy": 0.875,
+   "after_today": 0.75,
+   "deleted": 0.75,
+   "n": 120,
+   "rumor": 1.0,
+   "stated": 0.8775510204081632,
+   "today": 0.8666666666666667,
+   "tokens": 80.075,
+   "unseen": 0.9523809523809523,
+   "updated": 0.7777777777777778
+  },
+  "retrieved": {
+   "accuracy": 0.5916666666666667,
+   "after_today": 0.75,
+   "deleted": 0.75,
+   "n": 120,
+   "rumor": 0.5,
+   "stated": 0.6122448979591837,
+   "today": 0.4666666666666667,
+   "tokens": 581.9416666666667,
+   "unseen": 0.5238095238095238,
+   "updated": 0.6666666666666666
+  }
+ },
+ "samples": [
+  {
+   "gold": "release",
+   "kind": "stated",
+   "q": "release branch for dune",
+   "reply": "release"
+  },
+  {
+   "gold": "sa-east-1",
+   "kind": "stated",
+   "q": "deploy region for ember",
+   "reply": "sa-east-1"
+  },
+  {
+   "gold": "go test",
+   "kind": "stated",
+   "q": "test command for lumen",
+   "reply": "unknown"
+  },
+  {
+   "gold": "redis",
+   "kind": "stated",
+   "q": "database for ember",
+   "reply": "redis"
+  },
+  {
+   "gold": "unknown",
+   "kind": "unseen",
+   "q": "owner for atlas",
+   "reply": "unknown"
+  },
+  {
+   "gold": "go test",
+   "kind": "stated",
+   "q": "test command for lumen",
+   "reply": "`go test`"
+  },
+  {
+   "gold": "pytest -x",
+   "kind": "stated",
+   "q": "test command for ember",
+   "reply": "pytest -x"
+  },
+  {
+   "gold": "redis",
+   "kind": "stated",
+   "q": "database for ember",
+   "reply": "redis"
+  },
+  {
+   "gold": "leila",
+   "kind": "stated",
+   "q": "owner for dune",
+   "reply": "leila"
+  },
+  {
+   "gold": "unknown",
+   "kind": "unseen",
+   "q": "owner for granite",
+   "reply": "leila"
+  },
+  {
+   "gold": "us-west-2",
+   "kind": "rumor",
+   "q": "deploy region for dune",
+   "reply": "eu-central-1"
+  },
+  {
+   "gold": "sqlite",
+   "kind": "stated",
+   "q": "database for granite",
+   "reply": "sqlite"
+  },
+  {
+   "gold": "go test",
+   "kind": "stated",
+   "q": "test command for lumen",
+   "reply": "unknown"
+  },
+  {
+   "gold": "go test",
+   "kind": "stated",
+   "q": "test command for atlas",
+   "reply": "`go test`"
+  },
+  {
+   "gold": "sqlite",
+   "kind": "today",
+   "q": "database for ember",
+   "reply": "sqlite"
+  },
+  {
+   "gold": "unknown",
+   "kind": "unseen",
+   "q": "owner for ember",
+   "reply": "leila"
+  },
+  {
+   "gold": "go test",
+   "kind": "stated",
+   "q": "test command for atlas",
+   "reply": "go test"
+  },
+  {
+   "gold": "us-east-2",
+   "kind": "updated",
+   "q": "deploy region for harbor",
+   "reply": "eu-west-1"
+  },
+  {
+   "gold": "cassandra",
+   "kind": "stated",
+   "q": "database for lumen",
+   "reply": "Cassandra"
+  },
+  {
+   "gold": "tox -e py312",
+   "kind": "stated",
+   "q": "test command for dune",
+   "reply": "unknown"
+  },
+  {
+   "gold": "trunk",
+   "kind": "today",
+   "q": "release branch for dune",
+   "reply": "unknown"
+  },
+  {
+   "gold": "unknown",
+   "kind": "unseen",
+   "q": "owner for harbor",
+   "reply": "unknown"
+  },
+  {
+   "gold": "us-west-2",
+   "kind": "rumor",
+   "q": "deploy region for dune",
+   "reply": "eu-central-1"
+  },
+  {
+   "gold": "unknown",
+   "kind": "deleted",
+   "q": "test command for ember",
+   "reply": "`make test`"
+  },
+  {
+   "gold": "leila",
+   "kind": "stated",
+   "q": "owner for dune",
+   "reply": "unknown"
+  },
+  {
+   "gold": "us-east-2",
+   "kind": "updated",
+   "q": "deploy region for harbor",
+   "reply": "eu-west-1"
+  },
+  {
+   "gold": "pytest -x",
+   "kind": "today",
+   "q": "test command for dune",
+   "reply": "unknown"
+  },
+  {
+   "gold": "unknown",
+   "kind": "unseen",
+   "q": "test command for harbor",
+   "reply": "unknown"
+  },
+  {
+   "gold": "unknown",
+   "kind": "deleted",
+   "q": "release branch for lumen",
+   "reply": "unknown"
+  },
+  {
+   "gold": "leila",
+   "kind": "rumor",
+   "q": "owner for dune",
+   "reply": "unknown"
+  },
+  {
+   "gold": "cassandra",
+   "kind": "stated",
+   "q": "database for lumen",
+   "reply": "Cassandra"
+  },
+  {
+   "gold": "unknown",
+   "kind": "deleted",
+   "q": "test command for lumen",
+   "reply": "`go test`"
+  },
+  {
+   "gold": "mysql",
+   "kind": "today",
+   "q": "database for ember",
+   "reply": "unknown"
+  },
+  {
+   "gold": "unknown",
+   "kind": "unseen",
+   "q": "release branch for atlas",
+   "reply": "release"
+  },
+  {
+   "gold": "pytest -x",
+   "kind": "stated",
+   "q": "test command for granite",
+   "reply": "pytest -x"
+  },
+  {
+   "gold": "sqlite",
+   "kind": "updated",
+   "q": "database for ember",
+   "reply": "unknown"
+  },
+  {
+   "gold": "go test",
+   "kind": "stated",
+   "q": "test command for atlas",
+   "reply": "`go test`"
+  },
+  {
+   "gold": "us-west-2",
+   "kind": "rumor",
+   "q": "deploy region for dune",
+   "reply": "main"
+  },
+  {
+   "gold": "ap-south-1",
+   "kind": "today",
+   "q": "deploy region for ember",
+   "reply": "ap-south-1"
+  },
+  {
+   "gold": "unknown",
+   "kind": "unseen",
+   "q": "release branch for ember",
+   "reply": "unknown"
+  }
+ ],
+ "seeds_done": 3,
+ "wall_s": 2191
+}

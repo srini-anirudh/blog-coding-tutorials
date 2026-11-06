@@ -93,10 +93,18 @@ analogy   no rules          0.929   2.92                    4.40
 literal   rules             0.904   3.30                    5.37
 literal   no rules          0.881   3.59                    6.13
 
+DEPLOY  step limit, budget B=1024
+max steps    no_memory  retrieved
+4                0.119      0.529
+6                0.419      0.856
+8                0.713      0.929
+9                1.000      1.000
+12               1.000      1.000
+
 HARNESS  harness.Agent loop, budget B=1024
 condition           success  steps   seen    new  prompt tokens
 no_memory             0.713   5.55   5.20   6.13            828
-retrieved             0.923   3.01   2.06   4.57            909
+retrieved             0.923   3.01   2.06   4.57            910
 oracle                1.000   1.93   1.94   1.90            712
 
 HARNESS  harness.Agent loop, budget B=2048
@@ -105,4 +113,4 @@ no_memory             0.713   5.55   5.20   6.13            894
 retrieved             0.927   2.96   2.02   4.50            956
 oracle                1.000   1.93   1.94   1.90            712
 
-wall time 82s on Apple M5 CPU, 2 threads
+wall time 99s on AMD EPYC 7R13, 8 threads

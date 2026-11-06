@@ -1,0 +1,6 @@
+TensorIndex.search vs. F.cosine_similarity + topk (AMD EPYC 7R13, 8 threads)
+  N=2000, D=384, k=10: same ranking on 50/50 queries, largest score difference 5.96e-08
+
+ContextBudgeter.pack vs. exact knapsack by brute force, 300 random sets of 12 blocks
+  total value, greedy / optimal: mean 0.982, worst 0.788
+  greedy found the optimum on 179/300 sets

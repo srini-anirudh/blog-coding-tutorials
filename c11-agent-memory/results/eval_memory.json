@@ -618,12 +618,12 @@
    "rumor": 1.0,
    "stated": 1.0,
    "today": 0.99,
-   "tokens": 583.525,
+   "tokens": 583.52875,
    "unseen": 1.0,
    "updated": 1.0
   }
  },
- "hardware": "Apple M5 CPU, 2 threads",
+ "hardware": "AMD EPYC 7R13, 8 threads",
  "harness": {
   "1024": {
    "no_memory": {
@@ -632,7 +632,7 @@
     "steps_new": 6.126373626373627,
     "steps_seen": 5.197986577181208,
     "success": 0.7125,
-    "tokens": 827.5408854166667
+    "tokens": 827.8033854166666
    },
    "oracle": {
     "n": 480,
@@ -648,7 +648,7 @@
     "steps_new": 4.565934065934066,
     "steps_seen": 2.063758389261745,
     "success": 0.9229166666666667,
-    "tokens": 909.2381655092593
+    "tokens": 909.8016203703703
    }
   },
   "2048": {
@@ -678,5 +678,27 @@
    }
   }
  },
- "seeds": 20
+ "seeds": 20,
+ "step_limit": {
+  "12": {
+   "no_memory": 1.0,
+   "retrieved": 1.0
+  },
+  "4": {
+   "no_memory": 0.11875,
+   "retrieved": 0.5291666666666667
+  },
+  "6": {
+   "no_memory": 0.41875,
+   "retrieved": 0.85625
+  },
+  "8": {
+   "no_memory": 0.7125,
+   "retrieved": 0.9291666666666667
+  },
+  "9": {
+   "no_memory": 1.0,
+   "retrieved": 1.0
+  }
+ }
 }

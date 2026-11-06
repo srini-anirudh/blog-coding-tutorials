@@ -1,0 +1,2400 @@
+{
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "embedder": "hashing",
+ "hardware": "AMD EPYC 7R13, 8 threads",
+ "budget": 768,
+ "harness": "../c10-agent-harness/harness",
+ "harness_hash": "d359c7783defad33",
+ "harness_unchanged": true,
+ "separate_processes": true,
+ "summary": {
+  "no_memory": {
+   "tasks": 16,
+   "correct": 0,
+   "moved": 8,
+   "correct_on_moved": 0,
+   "stale": 0,
+   "no_deploy": 16,
+   "fact_in_prompt": 0,
+   "first_prompt_tokens": 267.625,
+   "s_per_call": 1.848125,
+   "calls": 16
+  },
+  "full_transcript": {
+   "tasks": 16,
+   "correct": 3,
+   "moved": 8,
+   "correct_on_moved": 2,
+   "stale": 1,
+   "no_deploy": 0,
+   "fact_in_prompt": 16,
+   "first_prompt_tokens": 943.625,
+   "s_per_call": 5.7215625,
+   "calls": 32
+  },
+  "retrieved": {
+   "tasks": 16,
+   "correct": 13,
+   "moved": 8,
+   "correct_on_moved": 8,
+   "stale": 0,
+   "no_deploy": 0,
+   "fact_in_prompt": 16,
+   "first_prompt_tokens": 350.3125,
+   "s_per_call": 4.439375,
+   "calls": 32
+  },
+  "oracle": {
+   "tasks": 16,
+   "correct": 16,
+   "moved": 8,
+   "correct_on_moved": 8,
+   "stale": 0,
+   "no_deploy": 0,
+   "fact_in_prompt": 16,
+   "first_prompt_tokens": 282.9375,
+   "s_per_call": 4.191875,
+   "calls": 32
+  }
+ },
+ "teach_runs": [
+  {
+   "statement": "The deploy region for atlas is eu-west-1.",
+   "status": "done",
+   "reply": "The deploy region for atlas is eu-west-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for cobalt is us-east-2.",
+   "status": "done",
+   "reply": "The deploy region for cobalt is us-east-2.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for dune is ap-south-1.",
+   "status": "done",
+   "reply": "The deploy region for dune is ap-south-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for ember is sa-east-1.",
+   "status": "done",
+   "reply": "The deploy region for ember is sa-east-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for fjord is ca-central-1.",
+   "status": "done",
+   "reply": "The deploy region for fjord is ca-central-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for garnet is me-south-1.",
+   "status": "done",
+   "reply": "The deploy region for garnet is me-south-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for harbor is eu-north-1.",
+   "status": "done",
+   "reply": "The deploy region for harbor is eu-north-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for indigo is af-south-1.",
+   "status": "done",
+   "reply": "The deploy region for indigo is af-south-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for juniper is eu-west-1.",
+   "status": "done",
+   "reply": "The deploy region for juniper is eu-west-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for kestrel is us-east-2.",
+   "status": "done",
+   "reply": "The deploy region for kestrel is us-east-2.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for lumen is ap-south-1.",
+   "status": "done",
+   "reply": "The deploy region for lumen is ap-south-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for meridian is sa-east-1.",
+   "status": "done",
+   "reply": "The deploy region for meridian is sa-east-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for nimbus is ca-central-1.",
+   "status": "done",
+   "reply": "The deploy region for nimbus is ca-central-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for onyx is me-south-1.",
+   "status": "done",
+   "reply": "The deploy region for onyx is me-south-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for pollux is eu-north-1.",
+   "status": "done",
+   "reply": "The deploy region for pollux is eu-north-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "The deploy region for quartz is af-south-1.",
+   "status": "done",
+   "reply": "The deploy region for quartz is af-south-1.",
+   "tool_calls": []
+  },
+  {
+   "statement": "Heads up: we moved the deploy region for atlas to sa-east-1.",
+   "status": "done",
+   "reply": "No change needed.",
+   "tool_calls": []
+  },
+  {
+   "statement": "Heads up: we moved the deploy region for dune to me-south-1.",
+   "status": "done",
+   "reply": "No change needed.",
+   "tool_calls": []
+  },
+  {
+   "statement": "Heads up: we moved the deploy region for fjord to af-south-1.",
+   "status": "done",
+   "reply": "No changes needed; the deployment region is updated accordingly.",
+   "tool_calls": []
+  },
+  {
+   "statement": "Heads up: we moved the deploy region for harbor to us-east-2.",
+   "status": "done",
+   "reply": "No changes needed.",
+   "tool_calls": []
+  },
+  {
+   "statement": "Heads up: we moved the deploy region for juniper to sa-east-1.",
+   "status": "done",
+   "reply": "No change needed.",
+   "tool_calls": []
+  },
+  {
+   "statement": "Heads up: we moved the deploy region for lumen to me-south-1.",
+   "status": "done",
+   "reply": "No change needed; the deployment region remains unchanged.",
+   "tool_calls": []
+  },
+  {
+   "statement": "Heads up: we moved the deploy region for nimbus to af-south-1.",
+   "status": "done",
+   "reply": "No change needed.",
+   "tool_calls": []
+  },
+  {
+   "statement": "Heads up: we moved the deploy region for pollux to us-east-2.",
+   "status": "done",
+   "reply": "1",
+   "tool_calls": []
+  }
+ ],
+ "rows": [
+  {
+   "condition": "no_memory",
+   "project": "atlas",
+   "truth": "sa-east-1",
+   "stale_value": "eu-west-1",
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy atlas to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 266,
+     "completion_tokens": 8,
+     "latency_s": 1.68
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "cobalt",
+   "truth": "us-east-2",
+   "stale_value": null,
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy cobalt to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.96
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "dune",
+   "truth": "me-south-1",
+   "stale_value": "ap-south-1",
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy dune to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.86
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "ember",
+   "truth": "sa-east-1",
+   "stale_value": null,
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy ember to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 266,
+     "completion_tokens": 8,
+     "latency_s": 2.01
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "fjord",
+   "truth": "af-south-1",
+   "stale_value": "ca-central-1",
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy fjord to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.99
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "garnet",
+   "truth": "me-south-1",
+   "stale_value": null,
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy garnet to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.76
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "harbor",
+   "truth": "us-east-2",
+   "stale_value": "eu-north-1",
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy harbor to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 266,
+     "completion_tokens": 8,
+     "latency_s": 2.0
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "indigo",
+   "truth": "af-south-1",
+   "stale_value": null,
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy indigo to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.74
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "juniper",
+   "truth": "sa-east-1",
+   "stale_value": "eu-west-1",
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy juniper to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.95
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "kestrel",
+   "truth": "us-east-2",
+   "stale_value": null,
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy kestrel to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 270,
+     "completion_tokens": 10,
+     "latency_s": 1.97
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "lumen",
+   "truth": "me-south-1",
+   "stale_value": "ap-south-1",
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy lumen to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.77
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "meridian",
+   "truth": "sa-east-1",
+   "stale_value": null,
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy meridian to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 23,
+    "tools": 147,
+    "history": 12
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.81
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "nimbus",
+   "truth": "af-south-1",
+   "stale_value": "ca-central-1",
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy nimbus to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.84
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "onyx",
+   "truth": "me-south-1",
+   "stale_value": null,
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy onyx to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.85
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "pollux",
+   "truth": "us-east-2",
+   "stale_value": "eu-north-1",
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy pollux to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 268,
+     "completion_tokens": 9,
+     "latency_s": 1.82
+    }
+   ]
+  },
+  {
+   "condition": "no_memory",
+   "project": "quartz",
+   "truth": "af-south-1",
+   "stale_value": null,
+   "fact_in_prompt": false,
+   "first_deploy": null,
+   "deploys": 0,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 1,
+   "final_text": "Deploy quartz to its usual region.",
+   "memory_section": "",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 266,
+     "completion_tokens": 8,
+     "latency_s": 1.56
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "atlas",
+   "truth": "sa-east-1",
+   "stale_value": "eu-west-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "atlas",
+    "region": "eu-west-1"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": true,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Atlas has been successfully deployed to the usual region of eu-west-1.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 942,
+     "completion_tokens": 29,
+     "latency_s": 6.8
+    },
+    {
+     "prompt_tokens": 997,
+     "completion_tokens": 16,
+     "latency_s": 4.59
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "cobalt",
+   "truth": "us-east-2",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "cobalt",
+    "region": "eu-west-1"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Cobalt has been successfully deployed to the eu-west-1 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 29,
+     "latency_s": 6.44
+    },
+    {
+     "prompt_tokens": 1000,
+     "completion_tokens": 16,
+     "latency_s": 4.69
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "dune",
+   "truth": "me-south-1",
+   "stale_value": "ap-south-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "dune",
+    "region": "eu-west-1"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Dune has been successfully deployed to the eu-west-1 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 29,
+     "latency_s": 6.74
+    },
+    {
+     "prompt_tokens": 1000,
+     "completion_tokens": 15,
+     "latency_s": 4.21
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "ember",
+   "truth": "sa-east-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "ember",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "The deployment of ember to the sa-east-1 region was successful.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 942,
+     "completion_tokens": 28,
+     "latency_s": 6.35
+    },
+    {
+     "prompt_tokens": 996,
+     "completion_tokens": 15,
+     "latency_s": 4.54
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "fjord",
+   "truth": "af-south-1",
+   "stale_value": "ca-central-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "fjord",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Fjord has been successfully deployed to the us-east-2 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 30,
+     "latency_s": 6.59
+    },
+    {
+     "prompt_tokens": 1001,
+     "completion_tokens": 16,
+     "latency_s": 4.47
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "garnet",
+   "truth": "me-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "garnet",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Garnet has been successfully deployed to the SA-East-1 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 30,
+     "latency_s": 6.56
+    },
+    {
+     "prompt_tokens": 1001,
+     "completion_tokens": 16,
+     "latency_s": 4.62
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "harbor",
+   "truth": "us-east-2",
+   "stale_value": "eu-north-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "harbor",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Harbor has been successfully deployed to the SA-East-1 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 942,
+     "completion_tokens": 29,
+     "latency_s": 6.16
+    },
+    {
+     "prompt_tokens": 997,
+     "completion_tokens": 15,
+     "latency_s": 4.42
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "indigo",
+   "truth": "af-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "indigo",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Indigo has been successfully deployed to the us-east-2 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 29,
+     "latency_s": 7.02
+    },
+    {
+     "prompt_tokens": 1000,
+     "completion_tokens": 15,
+     "latency_s": 5.08
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "juniper",
+   "truth": "sa-east-1",
+   "stale_value": "eu-west-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "juniper",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Junikorn has been successfully deployed to the SA-East-1 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 29,
+     "latency_s": 6.37
+    },
+    {
+     "prompt_tokens": 1000,
+     "completion_tokens": 16,
+     "latency_s": 4.74
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "kestrel",
+   "truth": "us-east-2",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "kestrel",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "The kestrel project has been successfully deployed to the SA-East-1 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 946,
+     "completion_tokens": 29,
+     "latency_s": 6.73
+    },
+    {
+     "prompt_tokens": 1003,
+     "completion_tokens": 18,
+     "latency_s": 5.03
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "lumen",
+   "truth": "me-south-1",
+   "stale_value": "ap-south-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "lumen",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Lumen has been successfully deployed to the SA-East-1 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 29,
+     "latency_s": 6.74
+    },
+    {
+     "prompt_tokens": 1000,
+     "completion_tokens": 15,
+     "latency_s": 4.33
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "meridian",
+   "truth": "sa-east-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "meridian",
+    "region": "us-east-1"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Meridian has been successfully deployed to the us-east-1 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 23,
+    "tools": 147,
+    "history": 12
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 29,
+     "latency_s": 6.79
+    },
+    {
+     "prompt_tokens": 1000,
+     "completion_tokens": 15,
+     "latency_s": 4.7
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "nimbus",
+   "truth": "af-south-1",
+   "stale_value": "ca-central-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "nimbus",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Nimbus has been successfully deployed to the us-east-2 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 29,
+     "latency_s": 7.54
+    },
+    {
+     "prompt_tokens": 1000,
+     "completion_tokens": 15,
+     "latency_s": 5.25
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "onyx",
+   "truth": "me-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "onyx",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Onyx has been successfully deployed to the usual region of sa-east-1.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 29,
+     "latency_s": 6.78
+    },
+    {
+     "prompt_tokens": 1000,
+     "completion_tokens": 17,
+     "latency_s": 4.45
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "pollux",
+   "truth": "us-east-2",
+   "stale_value": "eu-north-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "pollux",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Pollux has been successfully deployed to the us-east-2 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 944,
+     "completion_tokens": 29,
+     "latency_s": 7.09
+    },
+    {
+     "prompt_tokens": 1000,
+     "completion_tokens": 15,
+     "latency_s": 4.9
+    }
+   ]
+  },
+  {
+   "condition": "full_transcript",
+   "project": "quartz",
+   "truth": "af-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "quartz",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Quartz has been successfully deployed to the SA-East-1 region.",
+   "memory_section": "user: The deploy region for atlas is eu-west-1.\nassistant: The deploy region for atlas is eu-west-1.\nuser: The deploy region for cobalt is us-east-2.\nassistant: The deploy region for cobalt is us-east-2.\nuser: The deploy region for dune is ap-south-1.\nassistant: The deploy region for dune is ap-south-1.\nuser: The deploy region for ember is sa-east-1.\nassistant: The deploy region for ember is sa-east-1.\nuser: The deploy region for fjord is ca-central-1.\nassistant: The deploy region for fjord is ca-central-1.\nuser: The deploy region for garnet is me-south-1.\nassistant: The deploy region for garnet is me-south-1.\nuser: The deploy region for harbor is eu-north-1.\nassistant: The deploy region for harbor is eu-north-1.\nuser: The deploy region for indigo is af-south-1.\nassistant: The deploy region for indigo is af-south-1.\nuser: The deploy region for juniper is eu-west-1.\nassistant: The deploy region for juniper is eu-west-1.\nuser: The deploy region for kestrel is us-east-2.\nassistant: The deploy region for kestrel is us-east-2.\nuser: The deploy region for lumen is ap-south-1.\nassistant: The deploy region for lumen is ap-south-1.\nuser: The deploy region for meridian is sa-east-1.\nassistant: The deploy region for meridian is sa-east-1.\nuser: The deploy region for nimbus is ca-central-1.\nassistant: The deploy region for nimbus is ca-central-1.\nuser: The deploy region for onyx is me-south-1.\nassistant: The deploy region for onyx is me-south-1.\nuser: The deploy region for pollux is eu-north-1.\nassistant: The deploy region for pollux is eu-north-1.\nuser: The deploy region for quartz is af-south-1.\nassistant: The deploy region for quartz is af-south-1.\nuser: Heads up: we moved the deploy region for atlas to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for dune to me-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for fjord to af-south-1.\nassistant: No changes needed; the deployment region is updated accordingly.\nuser: Heads up: we moved the deploy region for harbor to us-east-2.\nassistant: No changes needed.\nuser: Heads up: we moved the deploy region for juniper to sa-east-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for lumen to me-south-1.\nassistant: No change needed; the deployment region remains unchanged.\nuser: Heads up: we moved the deploy region for nimbus to af-south-1.\nassistant: No change needed.\nuser: Heads up: we moved the deploy region for pollux to us-east-2.\nassistant: 1",
+   "estimated_context_tokens": {
+    "instructions": 745,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 942,
+     "completion_tokens": 29,
+     "latency_s": 6.95
+    },
+    {
+     "prompt_tokens": 997,
+     "completion_tokens": 15,
+     "latency_s": 5.42
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "atlas",
+   "truth": "sa-east-1",
+   "stale_value": "eu-west-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "atlas",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Atlas has been successfully deployed to the usual region.",
+   "memory_section": "- atlas deploy region: sa-east-1\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- nimbus deploy region: af-south-1",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 65,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 337,
+     "completion_tokens": 29,
+     "latency_s": 5.52
+    },
+    {
+     "prompt_tokens": 392,
+     "completion_tokens": 11,
+     "latency_s": 2.92
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "cobalt",
+   "truth": "us-east-2",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "cobalt",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Cobalt has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- cobalt deploy region: us-east-2\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- episode task1 (session 3): `deploy atlas sa-east-1` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 75,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 348,
+     "completion_tokens": 29,
+     "latency_s": 5.45
+    },
+    {
+     "prompt_tokens": 404,
+     "completion_tokens": 16,
+     "latency_s": 3.01
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "dune",
+   "truth": "me-south-1",
+   "stale_value": "ap-south-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "dune",
+    "region": "me-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Dune has been successfully deployed to the default region of me-south-1.",
+   "memory_section": "- dune deploy region: me-south-1\n- onyx deploy region: me-south-1\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- episode task2 (session 3): `deploy cobalt us-east-2` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 75,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 350,
+     "completion_tokens": 30,
+     "latency_s": 5.34
+    },
+    {
+     "prompt_tokens": 408,
+     "completion_tokens": 18,
+     "latency_s": 3.46
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "ember",
+   "truth": "sa-east-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "ember",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "The ember project has been successfully deployed to the sa-east-1 region.",
+   "memory_section": "- juniper deploy region: sa-east-1\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- ember deploy region: sa-east-1",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 65,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 336,
+     "completion_tokens": 28,
+     "latency_s": 4.87
+    },
+    {
+     "prompt_tokens": 390,
+     "completion_tokens": 16,
+     "latency_s": 3.15
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "fjord",
+   "truth": "af-south-1",
+   "stale_value": "ca-central-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "fjord",
+    "region": "af-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Fjord has been successfully deployed to the default region in Af-South-1.",
+   "memory_section": "- fjord deploy region: af-south-1\n- episode task4 (session 3): `deploy ember sa-east-1` -> ok\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 75,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 349,
+     "completion_tokens": 31,
+     "latency_s": 5.66
+    },
+    {
+     "prompt_tokens": 408,
+     "completion_tokens": 19,
+     "latency_s": 3.79
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "garnet",
+   "truth": "me-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "garnet",
+    "region": "me-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Garnet has been successfully deployed to the me-south-1 region.",
+   "memory_section": "- garnet deploy region: me-south-1\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- episode task2 (session 3): `deploy cobalt us-east-2` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 75,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 350,
+     "completion_tokens": 31,
+     "latency_s": 5.53
+    },
+    {
+     "prompt_tokens": 409,
+     "completion_tokens": 17,
+     "latency_s": 3.64
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "harbor",
+   "truth": "us-east-2",
+   "stale_value": "eu-north-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "harbor",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Harbor has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- harbor deploy region: us-east-2\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- dune deploy region: me-south-1\n- episode task2 (session 3): `deploy cobalt us-east-2` -> ok\n- episode task6 (session 3): `deploy garnet me-south-1` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 85,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 358,
+     "completion_tokens": 29,
+     "latency_s": 5.21
+    },
+    {
+     "prompt_tokens": 413,
+     "completion_tokens": 15,
+     "latency_s": 3.35
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "indigo",
+   "truth": "af-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "indigo",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Indigo has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- indigo deploy region: af-south-1\n- episode task7 (session 3): `deploy harbor us-east-2` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 75,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 349,
+     "completion_tokens": 29,
+     "latency_s": 5.57
+    },
+    {
+     "prompt_tokens": 405,
+     "completion_tokens": 15,
+     "latency_s": 2.98
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "juniper",
+   "truth": "sa-east-1",
+   "stale_value": "eu-west-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "juniper",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Junikorn Juniper has been successfully deployed to the Sa-east-1 region.",
+   "memory_section": "- juniper deploy region: sa-east-1\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- episode task7 (session 3): `deploy harbor us-east-2` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 75,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 348,
+     "completion_tokens": 29,
+     "latency_s": 5.55
+    },
+    {
+     "prompt_tokens": 404,
+     "completion_tokens": 18,
+     "latency_s": 3.62
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "kestrel",
+   "truth": "us-east-2",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "kestrel",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Kestrel has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- kestrel deploy region: us-east-2\n- pollux deploy region: us-east-2\n- harbor deploy region: us-east-2\n- episode task7 (session 3): `deploy harbor us-east-2` -> ok\n- episode task2 (session 3): `deploy cobalt us-east-2` -> ok\n- juniper deploy region: sa-east-1",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 85,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 359,
+     "completion_tokens": 29,
+     "latency_s": 5.63
+    },
+    {
+     "prompt_tokens": 416,
+     "completion_tokens": 16,
+     "latency_s": 3.66
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "lumen",
+   "truth": "me-south-1",
+   "stale_value": "ap-south-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "lumen",
+    "region": "me-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Lumen has been successfully deployed to the me-south-1 region.",
+   "memory_section": "- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- episode task7 (session 3): `deploy harbor us-east-2` -> ok\n- episode task2 (session 3): `deploy cobalt us-east-2` -> ok\n- episode task8 (session 3): `deploy indigo us-east-2` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 95,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 368,
+     "completion_tokens": 30,
+     "latency_s": 5.7
+    },
+    {
+     "prompt_tokens": 426,
+     "completion_tokens": 16,
+     "latency_s": 3.57
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "meridian",
+   "truth": "sa-east-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "meridian",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Meridian has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- kestrel deploy region: us-east-2\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- meridian deploy region: sa-east-1",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 66,
+    "task": 23,
+    "tools": 147,
+    "history": 12
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 340,
+     "completion_tokens": 29,
+     "latency_s": 5.68
+    },
+    {
+     "prompt_tokens": 396,
+     "completion_tokens": 15,
+     "latency_s": 3.22
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "nimbus",
+   "truth": "af-south-1",
+   "stale_value": "ca-central-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "nimbus",
+    "region": "af-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Nimbus has been successfully deployed to the default region in Af-South-1.",
+   "memory_section": "- nimbus deploy region: af-south-1\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- episode task7 (session 3): `deploy harbor us-east-2` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 75,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 349,
+     "completion_tokens": 30,
+     "latency_s": 5.61
+    },
+    {
+     "prompt_tokens": 407,
+     "completion_tokens": 18,
+     "latency_s": 3.96
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "onyx",
+   "truth": "me-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "onyx",
+    "region": "me-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Onyx has been successfully deployed to the usual region.",
+   "memory_section": "- onyx deploy region: me-south-1\n- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- episode task7 (session 3): `deploy harbor us-east-2` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 75,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 349,
+     "completion_tokens": 30,
+     "latency_s": 6.37
+    },
+    {
+     "prompt_tokens": 407,
+     "completion_tokens": 12,
+     "latency_s": 3.03
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "pollux",
+   "truth": "us-east-2",
+   "stale_value": "eu-north-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "pollux",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Pollux has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- pollux deploy region: us-east-2\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- episode task7 (session 3): `deploy harbor us-east-2` -> ok\n- episode task2 (session 3): `deploy cobalt us-east-2` -> ok\n- episode task14 (session 3): `deploy onyx me-south-1` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 95,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 369,
+     "completion_tokens": 29,
+     "latency_s": 5.37
+    },
+    {
+     "prompt_tokens": 425,
+     "completion_tokens": 15,
+     "latency_s": 3.36
+    }
+   ]
+  },
+  {
+   "condition": "retrieved",
+   "project": "quartz",
+   "truth": "af-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "quartz",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": false,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Quartus has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- pollux deploy region: us-east-2\n- lumen deploy region: me-south-1\n- harbor deploy region: us-east-2\n- dune deploy region: me-south-1\n- quartz deploy region: af-south-1\n- episode task7 (session 3): `deploy harbor us-east-2` -> ok",
+   "estimated_context_tokens": {
+    "instructions": 52,
+    "memory": 75,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 346,
+     "completion_tokens": 29,
+     "latency_s": 5.25
+    },
+    {
+     "prompt_tokens": 401,
+     "completion_tokens": 16,
+     "latency_s": 3.03
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "atlas",
+   "truth": "sa-east-1",
+   "stale_value": "eu-west-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "atlas",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Atlas has been successfully deployed to the usual region in Sa-east-1.",
+   "memory_section": "- atlas deploy region: sa-east-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 280,
+     "completion_tokens": 29,
+     "latency_s": 4.7
+    },
+    {
+     "prompt_tokens": 335,
+     "completion_tokens": 16,
+     "latency_s": 2.79
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "cobalt",
+   "truth": "us-east-2",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "cobalt",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Cobalt has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- cobalt deploy region: us-east-2",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 283,
+     "completion_tokens": 29,
+     "latency_s": 4.83
+    },
+    {
+     "prompt_tokens": 339,
+     "completion_tokens": 16,
+     "latency_s": 3.09
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "dune",
+   "truth": "me-south-1",
+   "stale_value": "ap-south-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "dune",
+    "region": "me-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Dune has been successfully deployed to the default region 'me-south-1'.",
+   "memory_section": "- dune deploy region: me-south-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 284,
+     "completion_tokens": 30,
+     "latency_s": 4.96
+    },
+    {
+     "prompt_tokens": 342,
+     "completion_tokens": 18,
+     "latency_s": 3.58
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "ember",
+   "truth": "sa-east-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "ember",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "EMBER has been successfully deployed to the SA-EAST-1 region.",
+   "memory_section": "- ember deploy region: sa-east-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 280,
+     "completion_tokens": 28,
+     "latency_s": 5.12
+    },
+    {
+     "prompt_tokens": 334,
+     "completion_tokens": 15,
+     "latency_s": 2.9
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "fjord",
+   "truth": "af-south-1",
+   "stale_value": "ca-central-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "fjord",
+    "region": "af-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Fjord has been successfully deployed to the default region in Af-South-1.",
+   "memory_section": "- fjord deploy region: af-south-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 284,
+     "completion_tokens": 31,
+     "latency_s": 5.57
+    },
+    {
+     "prompt_tokens": 343,
+     "completion_tokens": 19,
+     "latency_s": 3.67
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "garnet",
+   "truth": "me-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "garnet",
+    "region": "me-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Garnet has been successfully deployed to the default region in South America (ME).",
+   "memory_section": "- garnet deploy region: me-south-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 284,
+     "completion_tokens": 31,
+     "latency_s": 5.43
+    },
+    {
+     "prompt_tokens": 343,
+     "completion_tokens": 18,
+     "latency_s": 3.47
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "harbor",
+   "truth": "us-east-2",
+   "stale_value": "eu-north-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "harbor",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Harbor has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- harbor deploy region: us-east-2",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 280,
+     "completion_tokens": 29,
+     "latency_s": 5.12
+    },
+    {
+     "prompt_tokens": 335,
+     "completion_tokens": 15,
+     "latency_s": 2.94
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "indigo",
+   "truth": "af-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "indigo",
+    "region": "af-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Indigo has been successfully deployed to the default region in Asia Pacific (Southeast Asia).",
+   "memory_section": "- indigo deploy region: af-south-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 284,
+     "completion_tokens": 30,
+     "latency_s": 5.4
+    },
+    {
+     "prompt_tokens": 342,
+     "completion_tokens": 19,
+     "latency_s": 3.51
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "juniper",
+   "truth": "sa-east-1",
+   "stale_value": "eu-west-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "juniper",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "JUNIPER has been successfully deployed to the SA-EAST-1 region.",
+   "memory_section": "- juniper deploy region: sa-east-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 283,
+     "completion_tokens": 29,
+     "latency_s": 5.27
+    },
+    {
+     "prompt_tokens": 339,
+     "completion_tokens": 18,
+     "latency_s": 3.67
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "kestrel",
+   "truth": "us-east-2",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "kestrel",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Kestrel has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- kestrel deploy region: us-east-2",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 286,
+     "completion_tokens": 29,
+     "latency_s": 4.97
+    },
+    {
+     "prompt_tokens": 343,
+     "completion_tokens": 16,
+     "latency_s": 2.95
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "lumen",
+   "truth": "me-south-1",
+   "stale_value": "ap-south-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "lumen",
+    "region": "me-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Lumen has been successfully deployed to the default region 'me-south-1'.",
+   "memory_section": "- lumen deploy region: me-south-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 284,
+     "completion_tokens": 30,
+     "latency_s": 4.99
+    },
+    {
+     "prompt_tokens": 342,
+     "completion_tokens": 18,
+     "latency_s": 3.59
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "meridian",
+   "truth": "sa-east-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "meridian",
+    "region": "sa-east-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Meridian has been successfully deployed to the usual region in Sa-east-1.",
+   "memory_section": "- meridian deploy region: sa-east-1",
+   "estimated_context_tokens": {
+    "instructions": 68,
+    "task": 23,
+    "tools": 147,
+    "history": 12
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 283,
+     "completion_tokens": 29,
+     "latency_s": 5.05
+    },
+    {
+     "prompt_tokens": 339,
+     "completion_tokens": 17,
+     "latency_s": 3.22
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "nimbus",
+   "truth": "af-south-1",
+   "stale_value": "ca-central-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "nimbus",
+    "region": "af-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Nimbus has been successfully deployed to the default region in Af-South-1.",
+   "memory_section": "- nimbus deploy region: af-south-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 284,
+     "completion_tokens": 30,
+     "latency_s": 5.23
+    },
+    {
+     "prompt_tokens": 342,
+     "completion_tokens": 18,
+     "latency_s": 3.3
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "onyx",
+   "truth": "me-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "onyx",
+    "region": "me-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Onyx has been successfully deployed to the default region in South America (me-south-1).",
+   "memory_section": "- onyx deploy region: me-south-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 284,
+     "completion_tokens": 30,
+     "latency_s": 4.82
+    },
+    {
+     "prompt_tokens": 342,
+     "completion_tokens": 21,
+     "latency_s": 3.61
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "pollux",
+   "truth": "us-east-2",
+   "stale_value": "eu-north-1",
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "pollux",
+    "region": "us-east-2"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Pollux has been successfully deployed to the us-east-2 region.",
+   "memory_section": "- pollux deploy region: us-east-2",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 283,
+     "completion_tokens": 29,
+     "latency_s": 4.65
+    },
+    {
+     "prompt_tokens": 339,
+     "completion_tokens": 15,
+     "latency_s": 2.97
+    }
+   ]
+  },
+  {
+   "condition": "oracle",
+   "project": "quartz",
+   "truth": "af-south-1",
+   "stale_value": null,
+   "fact_in_prompt": true,
+   "first_deploy": {
+    "project": "quartz",
+    "region": "af-south-1"
+   },
+   "deploys": 1,
+   "correct": true,
+   "stale": false,
+   "status": "done",
+   "steps": 2,
+   "final_text": "Quartus has been successfully deployed to the default region in Asia Pacific (Southeast Asia).",
+   "memory_section": "- quartz deploy region: af-south-1",
+   "estimated_context_tokens": {
+    "instructions": 67,
+    "task": 22,
+    "tools": 147,
+    "history": 11
+   },
+   "model_calls": [
+    {
+     "prompt_tokens": 281,
+     "completion_tokens": 30,
+     "latency_s": 4.97
+    },
+    {
+     "prompt_tokens": 338,
+     "completion_tokens": 20,
+     "latency_s": 3.8
+    }
+   ]
+  }
+ ]
+}

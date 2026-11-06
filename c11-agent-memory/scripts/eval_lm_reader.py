@@ -5,7 +5,7 @@ to a model. This script swaps only the reader, using the C10 HF client.
 
     python c11-agent-memory/scripts/eval_lm_reader.py --seeds 3 [--device mps]
 
-Appends progress to results/lm_reader.json after every script. Takes several minutes.
+Saves results/lm_reader.json after every script, and prints the final table.
 """
 
 from __future__ import annotations
@@ -19,11 +19,10 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 
-import torch  # noqa: E402
-
 from agentmem import count_tokens  # noqa: E402
 from agentmem.bench.facts_eval import FactsEvaluator, ProbeResult, is_correct, summarise  # noqa: E402
 from agentmem.bench.facts_world import make_script  # noqa: E402
+from agentmem.bench.hardware import hardware_label, use_threads  # noqa: E402
 import agentmem.integration  # noqa: E402,F401  (puts ../c10-agent-harness on sys.path)
 from harness import HFLocalModel  # noqa: E402
 
@@ -37,7 +36,7 @@ def main() -> None:
     ap.add_argument("--device", default=None)
     ap.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
     args = ap.parse_args()
-    torch.set_num_threads(2)
+    use_threads(8)
     model = HFLocalModel(args.model, device=args.device, max_new_tokens=16)
     results: list[ProbeResult] = []
     samples = []
@@ -56,12 +55,13 @@ def main() -> None:
                     samples.append({"q": f"{probe.attribute} for {probe.entity}", "gold": probe.gold, "kind": probe.kind,
                                     "reply": reply[:60]})
         rows = summarise(results)
-        out = {"model": args.model, "device": model.device, "budget": args.budget, "seeds_done": seed + 1,
+        out = {"model": args.model, "device": model.device, "hardware": hardware_label(), "budget": args.budget, "seeds_done": seed + 1,
                "wall_s": round(time.perf_counter() - t0), "rows": rows, "samples": samples}
         (HERE / "results").mkdir(exist_ok=True)
         (HERE / "results" / "lm_reader.json").write_text(json.dumps(out, indent=1, sort_keys=True))
         print(f"seed {seed} done, {time.perf_counter() - t0:.0f}s", flush=True)
     kinds = ["stated", "updated", "rumor", "deleted", "today", "after_today", "unseen"]
+    print(f"{args.model} on {hardware_label()}, budget B={args.budget}, {args.seeds} seeds")
     print(f"{'condition':<28}{'accuracy':>9}{'tokens':>8}" + "".join(f"{k:>12}" for k in kinds))
     for cond, r in summarise(results).items():
         print(f"{cond:<28}{r['accuracy']:>9.3f}{r['tokens']:>8.0f}" + "".join(f"{r.get(k, float('nan')):>12.2f}" for k in kinds))

@@ -17,8 +17,7 @@ from ..memory import AgentMemory
 from .deploy_eval import INSTRUCTIONS, DeployPolicy, TaskResult, oracle_line
 from .deploy_world import DeployWorld
 
-from harness import Agent, AgentConfig, ModelResponse, PermissionPolicy, ToolCall, ToolOutput, ToolRegistry, tool  # noqa: E402,I001
-from harness.permissions import Risk  # noqa: E402
+from harness import Agent, AgentConfig, ModelResponse, PermissionPolicy, Risk, ToolCall, ToolOutput, ToolRegistry, tool  # noqa: E402,I001
 
 _TASK = re.compile(r"\((?P<tid>s\d+t\d+)\) Deploy (?P<project>\w+)\.")
 

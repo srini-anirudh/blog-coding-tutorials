@@ -1,0 +1,78 @@
+model Qwen/Qwen2.5-0.5B-Instruct (494M parameters), AMD EPYC 7R13, 8 threads, budget B=768, embedder hashing
+harness ../c10-agent-harness/harness, source hash d359c7783defad33, unchanged during the run: True
+teach and deploy ran in separate processes: True
+store after teaching: 16 active facts, 8 superseded, 0 tool steps from the teaching runs
+
+condition           correct  moved ok  stale  no deploy  fact in prompt  prompt tokens  s/call
+no_memory             0/16      0/8        0         16            0/16            268     1.8
+full_transcript       3/16      2/8        1          0           16/16            944     5.7
+retrieved            13/16      8/8        0          0           16/16            350     4.4
+oracle               16/16      8/8        0          0           16/16            283     4.2
+
+one line per task: condition, project, what it should deploy to, what landed in the ledger, rank of the right fact in a retrieved prompt
+no_memory       atlas     sa-east-1     (no deploy)                   wrong  
+no_memory       cobalt    us-east-2     (no deploy)                   wrong  
+no_memory       dune      me-south-1    (no deploy)                   wrong  
+no_memory       ember     sa-east-1     (no deploy)                   wrong  
+no_memory       fjord     af-south-1    (no deploy)                   wrong  
+no_memory       garnet    me-south-1    (no deploy)                   wrong  
+no_memory       harbor    us-east-2     (no deploy)                   wrong  
+no_memory       indigo    af-south-1    (no deploy)                   wrong  
+no_memory       juniper   sa-east-1     (no deploy)                   wrong  
+no_memory       kestrel   us-east-2     (no deploy)                   wrong  
+no_memory       lumen     me-south-1    (no deploy)                   wrong  
+no_memory       meridian  sa-east-1     (no deploy)                   wrong  
+no_memory       nimbus    af-south-1    (no deploy)                   wrong  
+no_memory       onyx      me-south-1    (no deploy)                   wrong  
+no_memory       pollux    us-east-2     (no deploy)                   wrong  
+no_memory       quartz    af-south-1    (no deploy)                   wrong  
+full_transcript atlas     sa-east-1     atlas eu-west-1               stale  
+full_transcript cobalt    us-east-2     cobalt eu-west-1              wrong  
+full_transcript dune      me-south-1    dune eu-west-1                wrong  
+full_transcript ember     sa-east-1     ember sa-east-1               ok     
+full_transcript fjord     af-south-1    fjord us-east-2               wrong  
+full_transcript garnet    me-south-1    garnet sa-east-1              wrong  
+full_transcript harbor    us-east-2     harbor sa-east-1              wrong  
+full_transcript indigo    af-south-1    indigo us-east-2              wrong  
+full_transcript juniper   sa-east-1     juniper sa-east-1             ok     
+full_transcript kestrel   us-east-2     kestrel sa-east-1             wrong  
+full_transcript lumen     me-south-1    lumen sa-east-1               wrong  
+full_transcript meridian  sa-east-1     meridian us-east-1            wrong  
+full_transcript nimbus    af-south-1    nimbus us-east-2              wrong  
+full_transcript onyx      me-south-1    onyx sa-east-1                wrong  
+full_transcript pollux    us-east-2     pollux us-east-2              ok     
+full_transcript quartz    af-south-1    quartz sa-east-1              wrong  
+retrieved       atlas     sa-east-1     atlas sa-east-1               ok     rank 1
+retrieved       cobalt    us-east-2     cobalt us-east-2              ok     rank 1
+retrieved       dune      me-south-1    dune me-south-1               ok     rank 1
+retrieved       ember     sa-east-1     ember sa-east-1               ok     rank 6
+retrieved       fjord     af-south-1    fjord af-south-1              ok     rank 1
+retrieved       garnet    me-south-1    garnet me-south-1             ok     rank 1
+retrieved       harbor    us-east-2     harbor us-east-2              ok     rank 1
+retrieved       indigo    af-south-1    indigo us-east-2              wrong  rank 5
+retrieved       juniper   sa-east-1     juniper sa-east-1             ok     rank 1
+retrieved       kestrel   us-east-2     kestrel us-east-2             ok     rank 1
+retrieved       lumen     me-south-1    lumen me-south-1              ok     rank 1
+retrieved       meridian  sa-east-1     meridian us-east-2            wrong  rank 6
+retrieved       nimbus    af-south-1    nimbus af-south-1             ok     rank 1
+retrieved       onyx      me-south-1    onyx me-south-1               ok     rank 1
+retrieved       pollux    us-east-2     pollux us-east-2              ok     rank 1
+retrieved       quartz    af-south-1    quartz us-east-2              wrong  rank 5
+oracle          atlas     sa-east-1     atlas sa-east-1               ok     
+oracle          cobalt    us-east-2     cobalt us-east-2              ok     
+oracle          dune      me-south-1    dune me-south-1               ok     
+oracle          ember     sa-east-1     ember sa-east-1               ok     
+oracle          fjord     af-south-1    fjord af-south-1              ok     
+oracle          garnet    me-south-1    garnet me-south-1             ok     
+oracle          harbor    us-east-2     harbor us-east-2              ok     
+oracle          indigo    af-south-1    indigo af-south-1             ok     
+oracle          juniper   sa-east-1     juniper sa-east-1             ok     
+oracle          kestrel   us-east-2     kestrel us-east-2             ok     
+oracle          lumen     me-south-1    lumen me-south-1              ok     
+oracle          meridian  sa-east-1     meridian sa-east-1            ok     
+oracle          nimbus    af-south-1    nimbus af-south-1             ok     
+oracle          onyx      me-south-1    onyx me-south-1               ok     
+oracle          pollux    us-east-2     pollux us-east-2              ok     
+oracle          quartz    af-south-1    quartz af-south-1             ok     
+
+wall time 590s

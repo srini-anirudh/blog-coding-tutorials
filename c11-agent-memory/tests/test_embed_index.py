@@ -69,7 +69,7 @@ def test_minilm_mean_pooling_ignores_padding():
 
 
 @pytest.mark.network
-def test_minilm_mean_pooling_ignores_padding():
+def test_minilm_batching_keeps_the_answering_memory_on_top():
     e = TransformerEmbedder()
     short = "atlas deploy region"
     alone = e.encode([short])

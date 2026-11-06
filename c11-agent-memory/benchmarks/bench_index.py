@@ -2,7 +2,7 @@
 
     python c11-agent-memory/benchmarks/bench_index.py
 
-Prints tables and saves results/bench_index.json. CPU, 2 threads.
+Prints tables and saves results/bench_index.json. CPU, at most 8 threads.
 """
 
 from __future__ import annotations
@@ -19,8 +19,9 @@ sys.path.insert(0, str(HERE))
 import torch  # noqa: E402
 
 from agentmem import ContextBudgeter, Block, HashingEmbedder, NaiveIndex, TensorIndex, TransformerEmbedder, count_tokens  # noqa: E402
+from agentmem.bench.hardware import hardware_label, use_threads  # noqa: E402
 
-torch.set_num_threads(2)
+use_threads(8)
 D = 384
 
 
@@ -39,8 +40,8 @@ def timed(fn, repeat: int) -> float:
 
 
 def main() -> None:
-    out: dict = {"hardware": "Apple M5 CPU, 2 threads", "index": [], "embed": [], "tokens": {}}
-    print(f"index query latency, D={D}, top-10 (Apple M5 CPU, 2 threads)\n{'N':>8}{'naive ms':>12}{'tensor ms':>12}{'speed-up':>10}{'matrix MB':>11}")
+    out: dict = {"hardware": hardware_label(), "index": [], "embed": [], "tokens": {}}
+    print(f"index query latency, D={D}, top-10 ({hardware_label()})\n{'N':>8}{'naive ms':>12}{'tensor ms':>12}{'speed-up':>10}{'matrix MB':>11}")
     q = unit(1, seed=1)[0]
     for n in (1_000, 10_000, 100_000, 1_000_000):
         vecs = unit(n)
@@ -64,7 +65,7 @@ def main() -> None:
     print(f"\nincremental add of 1,000 single memories\n  tensor index: {timed(lambda: _adds(), 3):.1f} ms total")
 
     texts = [f"The deploy region for project{i} is eu-west-{i % 3}." for i in range(256)]
-    print(f"\nembedding {len(texts)} short memories (Apple M5 CPU, 2 threads)\n{'embedder':<24}{'dim':>5}{'ms total':>10}{'ms/memory':>11}")
+    print(f"\nembedding {len(texts)} short memories ({hardware_label()})\n{'embedder':<24}{'dim':>5}{'ms total':>10}{'ms/memory':>11}")
     embedders = [("HashingEmbedder", HashingEmbedder())]
     try:
         embedders.append(("all-MiniLM-L6-v2", TransformerEmbedder()))

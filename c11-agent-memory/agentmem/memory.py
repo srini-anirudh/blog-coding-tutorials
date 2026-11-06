@@ -20,7 +20,7 @@ from .consolidate import consolidate, error_signature, find_recoveries
 from .embed import Embedder, HashingEmbedder
 from .episodic import EpisodicStore
 from .procedural import Procedure, ProcedureStore
-from .records import Episode, MemoryItem
+from .records import Episode, MemoryItem, skip_ids_in
 from .retrieval import HybridRetriever, HybridWeights, Scored
 from .semantic import Fact, FactStore, Op, RuleFactExtractor
 from .working import TaskState
@@ -187,7 +187,9 @@ class AgentMemory:
     def load(cls, path: str | Path, embedder: Embedder | None = None) -> "AgentMemory":
         state = json.loads(Path(path).read_text())
         mem = cls(embedder)
+        skip_ids_in(x["id"] for key in ("episodes", "procedures", "items") for x in state[key])
         mem.facts = FactStore.from_json(json.dumps(state["facts"]))
+        skip_ids_in(f.id for f in mem.facts.facts)
         for e in state["episodes"]:
             mem.episodes.add(Episode(**e))
         mem.procedures.procedures = [Procedure(**p) for p in state["procedures"]]

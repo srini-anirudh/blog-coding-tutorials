@@ -80,3 +80,34 @@ def test_build_context_stays_under_budget_for_every_budget():
         packed = mem.build_context("Be brief.", "Who owns project3?", 9.0, budget,
                                    recent_events=[f"event {i}" for i in range(20)], observation=log)
         assert count_tokens(packed.render()) <= budget, budget
+
+
+def test_a_new_process_does_not_reuse_ids_from_the_saved_store(tmp_path):
+    """Ids count from 1 in each process, so without care a restart overwrites old memories."""
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    path = tmp_path / "m.json"
+    write = f"""
+import sys; sys.path.insert(0, {str(root)!r})
+from agentmem import AgentMemory, MemoryEvent
+m = AgentMemory()
+for t in ("The deploy region for atlas is eu-west-1.", "The owner for atlas is priya."):
+    m.observe(MemoryEvent(t, "user", 1.0))
+m.save({str(path)!r})
+"""
+    read = f"""
+import sys; sys.path.insert(0, {str(root)!r})
+from agentmem import AgentMemory, MemoryEvent
+m = AgentMemory.load({str(path)!r})
+m.observe(MemoryEvent("The owner for dune is chen.", "user", 2.0))
+m.observe(MemoryEvent("The database for cobalt is postgres.", "user", 2.0))
+print(sorted(i.text for i in m.retriever.items.values()))
+print(len({{f.id for f in m.facts.facts}}))
+"""
+    subprocess.run([sys.executable, "-c", write], check=True)
+    out = subprocess.run([sys.executable, "-c", read], check=True, capture_output=True, text=True).stdout.splitlines()
+    assert out[0] == str(["atlas deploy region: eu-west-1", "atlas owner: priya", "cobalt database: postgres", "dune owner: chen"])
+    assert out[1] == "4"

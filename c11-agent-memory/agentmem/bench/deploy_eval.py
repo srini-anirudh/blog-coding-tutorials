@@ -102,7 +102,7 @@ class TaskResult:
     success: bool
     steps: int
     tokens: float      # mean context tokens per model call
-    seen_before: bool  # this project had a task in an earlier session
+    seen_before: bool  # this project had an earlier task, in this session or a past one
 
 
 def step_line(task_id: str, action: str, observation: str) -> str:

@@ -18,16 +18,14 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 
-import torch  # noqa: E402
-
 from agentmem import AgentMemory, HybridWeights  # noqa: E402
 from agentmem.bench import deploy_eval, facts_eval  # noqa: E402
-from agentmem.bench.deploy_harness import run_deploy_harness  # noqa: E402
 from agentmem.bench.deploy_world import make_world  # noqa: E402
 from agentmem.bench.facts_eval import CorruptedMemory, run_facts  # noqa: E402
 from agentmem.bench.facts_world import make_script  # noqa: E402
+from agentmem.bench.hardware import hardware_label, use_threads  # noqa: E402
 
-torch.set_num_threads(2)
+use_threads(8)
 
 
 def ci95(per_seed: list[float], draws: int = 2000) -> tuple[float, float]:
@@ -123,8 +121,29 @@ def deploy_rules(seeds: int, budget: int) -> dict:
     return out
 
 
+def step_limit(seeds: int, budget: int) -> dict:
+    """The success column depends on the step limit, so read it next to the steps column."""
+    out = {}
+    print(f"\nDEPLOY  step limit, budget B={budget}")
+    print(f"{'max steps':<11}{'no_memory':>11}{'retrieved':>11}")
+    for limit in (4, 6, 8, 9, 12):
+        res = []
+        for s in range(seeds):
+            for cond in ("no_memory", "retrieved"):
+                res += deploy_eval.run_deploy(make_world(s), cond, budget, max_steps=limit)
+        rows = deploy_eval.summarise(res)
+        out[str(limit)] = {c: rows[c]["success"] for c in rows}
+        print(f"{limit:<11}{rows['no_memory']['success']:>11.3f}{rows['retrieved']['success']:>11.3f}")
+    return out
+
+
 def harness_check(seeds: int, budgets: list[int]) -> dict:
     """The same policy through the real C10 Agent. B here also pays for the tool schemas."""
+    try:
+        from agentmem.bench.deploy_harness import run_deploy_harness
+    except ImportError:
+        print("\nHARNESS  skipped: ../c10-agent-harness is not present")
+        return {}
     out: dict = {}
     for b in budgets:
         res = []
@@ -146,16 +165,17 @@ def main() -> None:
     args = ap.parse_args()
     t0 = time.perf_counter()
     budgets = [256, 512, 1024, 2048, 4096]
-    out = {"seeds": args.seeds, "hardware": "Apple M5 CPU, 2 threads"}
+    out = {"seeds": args.seeds, "hardware": hardware_label()}
     out["facts"] = facts_table(args.seeds, budgets)
     facts_kinds(out["facts"]["1024"])
     out["facts_ablations"] = facts_ablations(args.seeds, 1024)
     out["deploy"] = deploy_table(args.seeds, budgets)
     out["deploy_rules"] = deploy_rules(args.seeds, 1024)
+    out["step_limit"] = step_limit(args.seeds, 1024)
     out["harness"] = harness_check(args.seeds, [1024, 2048])
     (HERE / "results").mkdir(exist_ok=True)
     (HERE / "results" / "eval_memory.json").write_text(json.dumps(out, indent=1, sort_keys=True))
-    print(f"\nwall time {time.perf_counter() - t0:.0f}s on Apple M5 CPU, 2 threads")
+    print(f"\nwall time {time.perf_counter() - t0:.0f}s on {hardware_label()}")
 
 
 if __name__ == "__main__":
