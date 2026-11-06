@@ -1,0 +1,18 @@
+# hardware: AMD EPYC 7R13 Processor, 1 threads, torch 2.15.0+cu132
+# command: python scripts/01_linear_collapse.py
+(a) 10 affine layers vs their collapsed single map: max |difference| = 2.22e-16 (float64)
+
+(b) Two spirals, 6 hidden layers of width 64, Adam lr 3e-3, 2000 full-batch steps, seeds [0, 1, 2]
+activation  train acc   test acc
+identity        0.651      0.652
+relu            0.999      0.991
+tanh            0.946      0.941
+gelu            0.998      0.989
+
+(c) One hidden layer, target sin(3 pi x) + 0.5|x| on [-1, 1], Adam, 2000 steps, best of seeds [0, 1, 2]
+Best possible cubic polynomial (least squares): MSE = 0.4140
+ width       relu       tanh      cubic
+     4     0.3751     0.4215     0.4140
+    16     0.1208     0.1174     0.4140
+    64     0.0966     0.2809     0.4140
+   256     0.0943     0.2030     0.4140

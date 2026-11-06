@@ -1,0 +1,24 @@
+# hardware: AMD EPYC 7R13 Processor, 1 threads, torch 2.15.0+cu132
+# command: python scripts/03_dying_relu.py
+(a) 60 units, two spirals, SGD lr 0.1. Bias drift -0.002/step for 600 steps, then 1800 steps without drift. Seeds [0, 1, 2, 3, 4], counts summed over seeds.
+max |dW| is how far the weights of the units inactive at the end of the drift moved afterwards.
+activation   inactive@mid  inactive@end  recovered  max |dW| of mid-inactive  train acc
+relu                  116           117          0                         0      0.704
+leaky_relu            117           118          0                    0.0201      0.666
+leaky_relu_0.1           119           119          2                     0.181      0.819
+elu                   143           141          6                      0.37      0.574
+gelu                  136           131          7                     0.312      0.613
+Inactive fraction over training, seed 0 (step: fraction):
+  relu        0:0.00  200:0.03  400:0.17  600:0.38  800:0.38  1000:0.38  1200:0.38  1400:0.38  1600:0.38  1800:0.38  2000:0.38  2200:0.38  2400:0.38
+  leaky_relu  0:0.00  200:0.03  400:0.17  600:0.38  800:0.38  1000:0.38  1200:0.38  1400:0.38  1600:0.38  1800:0.38  2000:0.38  2200:0.38  2400:0.38
+  leaky_relu_0.1 0:0.00  200:0.05  400:0.20  600:0.38  800:0.38  1000:0.38  1200:0.38  1400:0.38  1600:0.37  1800:0.37  2000:0.37  2200:0.37  2400:0.37
+  elu         0:0.00  200:0.05  400:0.20  600:0.43  800:0.42  1000:0.42  1200:0.42  1400:0.42  1600:0.42  1800:0.42  2000:0.42  2200:0.42  2400:0.42
+  gelu        0:0.00  200:0.05  400:0.20  600:0.42  800:0.42  1000:0.40  1200:0.40  1400:0.40  1600:0.40  1800:0.40  2000:0.40  2200:0.40  2400:0.40
+
+(b) No drift. 3 hidden layers of width 128, plain SGD, 600 steps. Fraction of hidden units inactive on every training input at the end, mean over seeds [0, 1, 2]
+    lr        relu  leaky_relu leaky_relu_0.1         elu        gelu
+  0.05       0.048       0.046       0.041       0.001       0.000
+   0.2       0.030       0.030       0.022       0.001       0.004
+   0.5       0.145       0.069       0.053       0.013       0.008
+   1.0       0.231       0.264       0.090       0.510       0.195
+   2.0       0.780       0.507       0.438       0.460       0.009

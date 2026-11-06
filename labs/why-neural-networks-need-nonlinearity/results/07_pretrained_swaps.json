@@ -1,0 +1,77 @@
+{
+  "hardware": "hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+  "command": "command: python scripts/07_pretrained_swaps.py",
+  "gpt2": {
+    "gelu_tanh": {
+      "perplexity": 31.06822517596388,
+      "max_logit_change": 0.0
+    },
+    "gelu": {
+      "perplexity": 31.071985319578772,
+      "max_logit_change": 0.9561004638671875
+    },
+    "quick_gelu": {
+      "perplexity": 31.106142820397793,
+      "max_logit_change": 50.91154479980469
+    },
+    "silu": {
+      "perplexity": 1321.5748471938953,
+      "max_logit_change": 222.3328399658203
+    },
+    "relu": {
+      "perplexity": 3128.0185923997137,
+      "max_logit_change": 223.70025634765625
+    }
+  },
+  "clip": {
+    "quick_gelu": {
+      "accuracy": 0.8985000252723694,
+      "mean_cos_to_quick_gelu": 1.0,
+      "n_images": 2000
+    },
+    "gelu": {
+      "accuracy": 0.859499990940094,
+      "mean_cos_to_quick_gelu": 0.9363017082214355,
+      "n_images": 2000
+    },
+    "gelu_tanh": {
+      "accuracy": 0.8575000166893005,
+      "mean_cos_to_quick_gelu": 0.9346385598182678,
+      "n_images": 2000
+    }
+  },
+  "real_down_inputs": {
+    "GPT-2 (GELU)": {
+      "exact_zero": 0.0004754066514275716,
+      "near_zero_1e-2_rms": 0.014297035057097673,
+      "kurtosis": 1248.9901136034584,
+      "max_over_rms": 77.67832547606416,
+      "int8_rel_err": 0.1546568777412176,
+      "kurtosis_max_layer": 14270.338541787372
+    },
+    "GPT-2 (GELU), no token 0": {
+      "exact_zero": 0.00047276889699787716,
+      "near_zero_1e-2_rms": 0.0142183608841151,
+      "kurtosis": 57.87244690318764,
+      "max_over_rms": 35.80935485182538,
+      "int8_rel_err": 0.07869558470944564,
+      "kurtosis_max_layer": 85.73446558426387
+    },
+    "SmolLM2-135M (SwiGLU)": {
+      "exact_zero": 4.2385526436798196e-08,
+      "near_zero_1e-2_rms": 0.05540290419012308,
+      "kurtosis": 67839.9225047287,
+      "max_over_rms": 156.07861458963103,
+      "int8_rel_err": 0.1648230756322543,
+      "kurtosis_max_layer": 1215313.462798353
+    },
+    "SmolLM2-135M (SwiGLU), no token 0": {
+      "exact_zero": 4.242695771002521e-08,
+      "near_zero_1e-2_rms": 0.04642198582490285,
+      "kurtosis": 2616.661457168273,
+      "max_over_rms": 80.31385898557814,
+      "int8_rel_err": 0.15263944491744041,
+      "kurtosis_max_layer": 65118.428791793434
+    }
+  }
+}

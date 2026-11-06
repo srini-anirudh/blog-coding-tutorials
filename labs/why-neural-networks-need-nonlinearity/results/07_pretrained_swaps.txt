@@ -1,0 +1,22 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python scripts/07_pretrained_swaps.py
+(a) GPT-2 small (config activation: gelu_new), wikitext-2 test, 40 non-overlapping windows of 1024 tokens, no fine-tuning
+activation in every MLP   perplexity   max |logit change|, 64 tokens
+gelu_tanh                      31.07                               0
+gelu                           31.07                           0.956
+quick_gelu                     31.11                            50.9
+silu                         1321.57                             222
+relu                         3128.02                             224
+
+(b) CLIP ViT-B/32 (vision hidden_act: quick_gelu), zero-shot CIFAR-10, first 2000 test images, prompt 'a photo of a {label}.'; only the vision tower's activation changes
+vision activation   accuracy  mean cos to original embedding
+quick_gelu            0.8985                          1.0000
+gelu                  0.8595                          0.9363
+gelu_tanh             0.8575                          0.9346
+
+(c) The input to W_down in real checkpoints, first 1024 tokens of wikitext-2 validation, mean over layers
+model (FFN)                           exact 0  |a|<0.01rms  kurtosis  max kurt layer  max/rms  INT8 err
+GPT-2 (GELU)                            0.000        0.014    1249.0         14270.3     77.7    0.1547
+GPT-2 (GELU), no token 0                0.000        0.014      57.9            85.7     35.8    0.0787
+SmolLM2-135M (SwiGLU)                   0.000        0.055   67839.9       1215313.5    156.1    0.1648
+SmolLM2-135M (SwiGLU), no token 0       0.000        0.046    2616.7         65118.4     80.3    0.1526

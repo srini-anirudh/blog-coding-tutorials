@@ -1,0 +1,19 @@
+# hardware: AMD EPYC 7R13 Processor, 1 threads, torch 2.15.0+cu132
+# command: python scripts/05_ffn_variants.py --part toy
+(a) The 8d/3 rule: gated width = (2/3) * 4d, rounded up to a multiple of 256
+model            d      8d/3  rounded  config h    h/d
+Llama-2-7B    4096   10922.7    11008     11008   2.69
+Llama-3-8B    4096   10922.7    11008     14336   3.50
+Mistral-7B    4096   10922.7    11008     14336   3.50
+Qwen2.5-7B    3584    9557.3     9728     18944   5.29
+Gemma-2-9B    3584    9557.3     9728     14336   4.00
+Parameters at d=4096: ungated h=4d: 134,217,728; gated h=11008: 135,266,304
+
+(b) y = x1x2 + x3x4 + x5x6 + x7x8, x ~ U[-1,1]^8, Var(y) = 0.444. One FFN layer, Adam, 3000 steps, held-out MSE, best of seeds [0, 1, 2]. Gated width hg, ungated width 1.5*hg (same parameters).
+kind           hg=2      hg=4      hg=8     hg=16
+relu         0.3340    0.1953    0.0170    0.0118
+gelu         0.2826    0.1485    0.0008    0.0004
+relu2        0.3245    0.2587    0.0264    0.0000
+bilinear     0.1260    0.0000    0.0000    0.0000
+reglu        0.2724    0.1200    0.0003    0.0000
+swiglu       0.1271    0.0012    0.0000    0.0000

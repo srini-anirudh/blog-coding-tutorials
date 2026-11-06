@@ -1,0 +1,23 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python scripts/06_sparsity.py
+(a) 6000 float32 pre-activations, gaussian: fraction of outputs with |f| <= eps
+activation   exactly 0  eps=1e-3  eps=1e-2   eps=0.1
+relu            0.5055    0.5060    0.5100    0.5492
+relu2           0.5055    0.5202    0.5492    0.6305
+gelu            0.0000    0.0032    0.0202    0.2398
+gelu_tanh       0.0000    0.0033    0.0205    0.2395
+silu            0.0000    0.0028    0.0170    0.1663
+(a) 6000 float32 pre-activations, student-t(4), unit variance: fraction of outputs with |f| <= eps
+activation   exactly 0  eps=1e-3  eps=1e-2   eps=0.1
+relu            0.5055    0.5065    0.5122    0.5627
+relu2           0.5055    0.5252    0.5627    0.6662
+gelu            0.0008    0.0078    0.0345    0.2738
+gelu_tanh       0.0013    0.0083    0.0347    0.2738
+silu            0.0000    0.0033    0.0238    0.2207
+
+(b) One token through W_down: d=4096, h=11008, float32 (172 MiB), median of 50 runs, 8 threads
+ exact-zero fraction  rows read  MiB read  max |sparse-dense|  dense ms  sparse ms  speed-up
+               0.504       5457      85.3            0.00e+00     13.79      29.62      0.47
+               0.899       1112      17.4            0.00e+00     11.27       2.17      5.20
+               0.989        116       1.8            0.00e+00     11.26       0.26     43.85
+Same trick on a GELU activation: 11008 of 11008 rows read (no exact zeros to skip)

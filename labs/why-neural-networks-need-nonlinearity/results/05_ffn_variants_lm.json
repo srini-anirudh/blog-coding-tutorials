@@ -1,0 +1,152 @@
+{
+  "hardware": "hardware: AMD EPYC 7R13 Processor, 1 threads, torch 2.15.0+cu132",
+  "command": "command: python scripts/05_ffn_variants.py --part lm --workers 21 --threads 1",
+  "lm": {
+    "settings": {
+      "d": 128,
+      "layers": 4,
+      "seq": 128,
+      "batch": 32,
+      "lr": 0.003,
+      "steps": 2000,
+      "val_batches": 40,
+      "threads": 1,
+      "synthetic": false
+    },
+    "by_kind": {
+      "relu": {
+        "h": 512,
+        "ffn_params": 524288,
+        "val_loss": [
+          1.433069396018982,
+          1.4338637113571167,
+          1.4282628774642945
+        ],
+        "val_loss_mean": 1.4317319949467977,
+        "val_loss_std": 0.0030304811985320318,
+        "down_input_stats": {
+          "exact_zero": 0.8981756369272867,
+          "near_zero_1e-2_rms": 0.898561437924703,
+          "kurtosis": 42.516342494320696,
+          "max_over_rms": 19.392819278062163,
+          "int8_rel_err": 0.01346389918277661,
+          "kurtosis_max_layer": 63.00685061614036
+        }
+      },
+      "gelu": {
+        "h": 512,
+        "ffn_params": 524288,
+        "val_loss": [
+          1.4632215231657029,
+          1.4574367910623551,
+          1.461287921667099
+        ],
+        "val_loss_mean": 1.4606487452983856,
+        "val_loss_std": 0.0029448584345629766,
+        "down_input_stats": {
+          "exact_zero": 0.0001251697540283203,
+          "near_zero_1e-2_rms": 0.046146670977274575,
+          "kurtosis": 33.08294549926322,
+          "max_over_rms": 16.868470377274704,
+          "int8_rel_err": 0.037905724408725895,
+          "kurtosis_max_layer": 42.79050950464182
+        }
+      },
+      "relu2": {
+        "h": 512,
+        "ffn_params": 524288,
+        "val_loss": [
+          1.41799858212471,
+          1.4208502978086472,
+          1.4148347079753876
+        ],
+        "val_loss_mean": 1.4178945293029148,
+        "val_loss_std": 0.003009144480213093,
+        "down_input_stats": {
+          "exact_zero": 0.8688546419143677,
+          "near_zero_1e-2_rms": 0.8841801484425863,
+          "kurtosis": 408.04910738863003,
+          "max_over_rms": 62.17651961231118,
+          "int8_rel_err": 0.044011421812077366,
+          "kurtosis_max_layer": 626.3663374481214
+        }
+      },
+      "bilinear": {
+        "h": 344,
+        "ffn_params": 528384,
+        "val_loss": [
+          1.4237256199121475,
+          1.416064241528511,
+          1.4190981090068817
+        ],
+        "val_loss_mean": 1.4196293234825135,
+        "val_loss_std": 0.003858214781301565,
+        "down_input_stats": {
+          "exact_zero": 0.0,
+          "near_zero_1e-2_rms": 0.05222356102118889,
+          "kurtosis": 27.913789546197687,
+          "max_over_rms": 24.26952980267537,
+          "int8_rel_err": 0.05364841315895319,
+          "kurtosis_max_layer": 42.64679450036343
+        }
+      },
+      "reglu": {
+        "h": 344,
+        "ffn_params": 528384,
+        "val_loss": [
+          1.426754355430603,
+          1.420113143324852,
+          1.4121271163225173
+        ],
+        "val_loss_mean": 1.4196648716926574,
+        "val_loss_std": 0.007323915726812458,
+        "down_input_stats": {
+          "exact_zero": 0.8307485630114874,
+          "near_zero_1e-2_rms": 0.8365503897269567,
+          "kurtosis": 244.67601472861668,
+          "max_over_rms": 56.47408124431834,
+          "int8_rel_err": 0.047481171476344265,
+          "kurtosis_max_layer": 394.65848137167995
+        }
+      },
+      "geglu": {
+        "h": 344,
+        "ffn_params": 528384,
+        "val_loss": [
+          1.412541076540947,
+          1.4033825486898421,
+          1.4006465345621109
+        ],
+        "val_loss_mean": 1.4055233865976333,
+        "val_loss_std": 0.0062295603723015935,
+        "down_input_stats": {
+          "exact_zero": 1.3011370375200688e-06,
+          "near_zero_1e-2_rms": 0.0676493685071667,
+          "kurtosis": 129.90247006243743,
+          "max_over_rms": 41.41304202744956,
+          "int8_rel_err": 0.08878783633311589,
+          "kurtosis_max_layer": 178.5156673425181
+        }
+      },
+      "swiglu": {
+        "h": 344,
+        "ffn_params": 528384,
+        "val_loss": [
+          1.4103766083717346,
+          1.4121133863925934,
+          1.4091893553733825
+        ],
+        "val_loss_mean": 1.410559783379237,
+        "val_loss_std": 0.0014705965329950203,
+        "down_input_stats": {
+          "exact_zero": 0.0,
+          "near_zero_1e-2_rms": 0.04907551842431227,
+          "kurtosis": 107.7391853527417,
+          "max_over_rms": 40.22694328364977,
+          "int8_rel_err": 0.08793504101534684,
+          "kurtosis_max_layer": 141.78864402749744
+        }
+      }
+    }
+  }
+}

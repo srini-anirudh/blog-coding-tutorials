@@ -1,0 +1,8 @@
+__pycache__/
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+checkpoints/
+data/
+*.err

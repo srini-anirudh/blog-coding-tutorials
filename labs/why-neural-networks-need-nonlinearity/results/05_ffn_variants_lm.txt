@@ -1,0 +1,23 @@
+# hardware: AMD EPYC 7R13 Processor, 1 threads, torch 2.15.0+cu132
+# command: python scripts/05_ffn_variants.py --part lm --workers 21 --threads 1
+
+(c) Byte-level LM on wikitext-2 bytes: C4 TinyLLM, d=128, 4 layers, 4 heads, seq 128, batch 32, AdamW lr 0.003, 2000 steps, 3 seeds, 1 threads per run
+Validation loss is nats per byte over 40 fixed batches.
+kind         h  FFN params  val loss mean     std     min     max  s/run
+relu       512     524,288         1.4317  0.0030  1.4283  1.4339   1719
+gelu       512     524,288         1.4606  0.0029  1.4574  1.4632   1806
+relu2      512     524,288         1.4179  0.0030  1.4148  1.4209   1736
+bilinear   344     528,384         1.4196  0.0039  1.4161  1.4237   1641
+reglu      344     528,384         1.4197  0.0073  1.4121  1.4268   1732
+geglu      344     528,384         1.4055  0.0062  1.4006  1.4125   1804
+swiglu     344     528,384         1.4106  0.0015  1.4092  1.4121   1800
+
+(d) The tensor fed into W_down, first validation batch, mean over layers and seeds
+kind       exact 0  |a|<0.01rms  kurtosis  max kurt layer  max/rms  INT8 err
+relu         0.898        0.899      42.5            63.0     19.4    0.0135
+gelu         0.000        0.046      33.1            42.8     16.9    0.0379
+relu2        0.869        0.884     408.0           626.4     62.2    0.0440
+bilinear     0.000        0.052      27.9            42.6     24.3    0.0536
+reglu        0.831        0.837     244.7           394.7     56.5    0.0475
+geglu        0.000        0.068     129.9           178.5     41.4    0.0888
+swiglu       0.000        0.049     107.7           141.8     40.2    0.0879

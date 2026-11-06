@@ -1,0 +1,32 @@
+# hardware: AMD EPYC 7R13 Processor, 1 threads, torch 2.15.0+cu132
+# command: python scripts/02_gradient_decay.py
+(a) Backward pass, 18 layers of width 256, Gaussian inputs, 10 random labels, batch 512, mean over seeds [0, 1, 2, 3, 4]
+dL/dz is the gradient at each pre-activation. dL/dW is the weight gradient. Decades per layer is the fitted slope of log10(norm), output side to input side.
+activation init     dL/dz dec/layer  dL/dz first/last  dL/dW dec/layer  dL/dW first/last
+sigmoid   xavier            -0.628            -10.71           -0.634            -10.99
+tanh      xavier            -0.033             -0.68            0.001              0.05
+relu      xavier            -0.151             -2.56            0.003              0.02
+relu      he                 0.001              0.02           -0.033             -0.81
+gelu      he                -0.012             -0.29            0.016              0.12
+silu      he                -0.109             -1.76            0.011              0.18
+
+(b) Forward pass, 18 layers of width 256, unit-variance inputs: E[h^2] at layers 1, 6, 12, 18 and the mean per-layer ratio
+activation init       layer1    layer6   layer12   layer18  ratio/layer
+relu      xavier        0.5    0.0139  0.000182  2.44e-06        0.487
+relu      he              1      0.89     0.747     0.641        0.974
+tanh      xavier      0.393    0.0874    0.0448    0.0306        0.861
+tanh      he          0.519     0.318     0.313     0.312        0.971
+
+(c) Gain g with Var(W) = g^2/fan_in that keeps E[z^2] = q fixed, z ~ N(0, q) (2M samples)
+activation   q=0.25    q=1.0    q=4.0
+relu         1.414    1.414    1.414
+tanh         1.201    1.593    2.509
+gelu         1.730    1.534    1.440
+silu         1.860    1.676    1.508
+sqrt(2) = 1.414
+
+(d) Two spirals, 18 hidden layers of width 64, 1500 full-batch steps, train accuracy, mean over seeds [0, 1, 2]
+activation init     SGD lr 0.1  Adam lr 1e-3
+sigmoid   xavier        0.513         0.500
+tanh      xavier        0.611         0.737
+relu      he            0.829         0.999
