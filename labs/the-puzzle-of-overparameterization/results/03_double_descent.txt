@@ -1,0 +1,58 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4
+command: python labs/the-puzzle-of-overparameterization/scripts/03_double_descent.py
+
+Model-wise: n = 40, min-norm least squares on the first p coordinates
+  p  risk_median  norm_median  smallest_sv_median
+  2       0.1987        1.048              4.2621
+  5       0.1084        1.212              2.4216
+ 10       0.1031        1.413              1.4213
+ 15       0.1469        1.554              0.9530
+ 20       0.2111        1.901              0.6153
+ 30       0.5986        3.427              0.2765
+ 36       1.4937        5.466              0.1104
+ 38       5.1633       10.036              0.0638
+ 40      15.4902       18.298              0.0166
+ 42       3.1694        7.973              0.0647
+ 44       1.9237        6.187              0.1046
+ 50       0.7769        4.336              0.1958
+ 60       0.4691        3.466              0.3125
+ 80       0.2747        2.840              0.4852
+120       0.1962        2.415              0.7009
+200       0.1477        2.158              0.9522
+300       0.1299        2.007              1.1106
+420       0.1217        1.915              1.2386
+classical sweet spot p = 10 (risk 0.1031); peak at p = 40 (risk 15.49); p = 420 reaches 0.1217
+
+Sample-wise: p = 60 fixed, n grows through the threshold n = p
+  n  risk_median
+  8       0.2987
+ 16       0.2264
+ 24       0.2493
+ 32       0.2901
+ 40       0.4513
+ 48       0.9301
+ 54       2.3600
+ 58       6.1733
+ 60      28.0498
+ 62       4.5953
+ 66       1.9355
+ 72       1.0285
+ 80       0.6119
+ 96       0.3296
+108       0.2525
+
+Epoch-wise: n = 40, p = 44 fixed, gradient descent from zero with step 1 / s_max^2
+  steps  risk_median  train_mse_median
+      1       0.1882          2.79e-01
+      3       0.1085          1.84e-01
+     10       0.0894          1.06e-01
+     30       0.1346          6.31e-02
+    100       0.2495          3.14e-02
+    300       0.4544          1.42e-02
+   1000       0.7936          4.58e-03
+   3000       1.2243          1.30e-03
+  10000       1.8021          3.36e-05
+ 100000       1.9839          3.16e-19
+1000000       1.9839          5.40e-30
+best test risk 0.0894 at 10 steps; the min-norm end point is 1.9839
+This linear model shows the descent and the rise. It has no second descent in time.

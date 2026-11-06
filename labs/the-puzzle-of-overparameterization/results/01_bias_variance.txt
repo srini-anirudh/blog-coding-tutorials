@@ -1,0 +1,38 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4
+command: python labs/the-puzzle-of-overparameterization/scripts/01_bias_variance.py
+
+Figure 1 setting: n = 14 equispaced points, sigma = 0.24, g(x) = sin(2.3x) + 0.42x^2, 20 redraws
+degree   bias2  variance   noise    total
+     1  0.0682    0.0081  0.0576   0.1339
+     2  0.0533    0.0120  0.0576   0.1229
+     3  0.0016    0.0175  0.0576   0.0767
+     4  0.0016    0.0215  0.0576   0.0807
+     5  0.0022    0.0286  0.0576   0.0885
+     6  0.0025    0.0333  0.0576   0.0934
+     7  0.0059    0.0508  0.0576   0.1143
+     8  0.0066    0.0938  0.0576   0.1580
+     9  0.0040    0.1560  0.0576   0.2176
+    10  0.0048    0.3887  0.0576   0.4511
+    11  0.0395    3.2452  0.0576   3.3423
+    12  8.6876   43.7643  0.0576  52.5095
+lowest expected test error: degree 3 (0.0767)
+
+Figure 1 setting: n = 14 equispaced points, sigma = 0.24, g(x) = sin(2.3x) + 0.42x^2, 2000 redraws
+degree   bias2  variance   noise    total
+     1  0.0681    0.0080  0.0576   0.1337
+     2  0.0523    0.0123  0.0576   0.1222
+     3  0.0003    0.0169  0.0576   0.0748
+     4  0.0003    0.0219  0.0576   0.0798
+     5  0.0000    0.0277  0.0576   0.0853
+     6  0.0000    0.0351  0.0576   0.0928
+     7  0.0000    0.0490  0.0576   0.1066
+     8  0.0000    0.0790  0.0576   0.1366
+     9  0.0001    0.1839  0.0576   0.2416
+    10  0.0005    0.6820  0.0576   0.7402
+    11  0.0097    4.1716  0.0576   4.2389
+    12  0.0207   45.3280  0.0576  45.4063
+lowest expected test error: degree 3 (0.0748)
+
+VC arithmetic, section 1: W = 11e6 weights, L = 20 layers, n = 50,000 images, VC = W L log2 W
+VC = 5.146e+09   VC / n = 1.029e+05   sqrt(VC / n) = 321
+A bound on a probability that exceeds 1 is vacuous.

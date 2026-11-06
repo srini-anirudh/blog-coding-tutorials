@@ -1,0 +1,69 @@
+{
+ "hardware": "hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4",
+ "command": "command: python labs/the-puzzle-of-overparameterization/scripts/02_random_labels.py",
+ "rows": [
+  {
+   "setting": "labels corrupted 0%",
+   "epochs_to_fit": 37,
+   "steps_to_fit": 1480,
+   "train_acc": 1.0,
+   "test_acc": 0.4195,
+   "params": 1841162,
+   "seconds": 48.8
+  },
+  {
+   "setting": "labels corrupted 20%",
+   "epochs_to_fit": 52,
+   "steps_to_fit": 2080,
+   "train_acc": 1.0,
+   "test_acc": 0.3625,
+   "params": 1841162,
+   "seconds": 95.1
+  },
+  {
+   "setting": "labels corrupted 40%",
+   "epochs_to_fit": 38,
+   "steps_to_fit": 1520,
+   "train_acc": 1.0,
+   "test_acc": 0.311,
+   "params": 1841162,
+   "seconds": 133.0
+  },
+  {
+   "setting": "labels corrupted 60%",
+   "epochs_to_fit": 39,
+   "steps_to_fit": 1560,
+   "train_acc": 1.0,
+   "test_acc": 0.2205,
+   "params": 1841162,
+   "seconds": 119.6
+  },
+  {
+   "setting": "labels corrupted 80%",
+   "epochs_to_fit": 43,
+   "steps_to_fit": 1720,
+   "train_acc": 1.0,
+   "test_acc": 0.166,
+   "params": 1841162,
+   "seconds": 193.4
+  },
+  {
+   "setting": "labels corrupted 100%",
+   "epochs_to_fit": 55,
+   "steps_to_fit": 2200,
+   "train_acc": 1.0,
+   "test_acc": 0.098,
+   "params": 1841162,
+   "seconds": 82.0
+  },
+  {
+   "setting": "Gaussian pixels, random labels",
+   "epochs_to_fit": 3,
+   "steps_to_fit": 120,
+   "train_acc": 1.0,
+   "test_acc": 0.096,
+   "params": 1841162,
+   "seconds": 1.8
+  }
+ ]
+}

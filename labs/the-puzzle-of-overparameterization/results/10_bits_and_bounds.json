@@ -1,0 +1,110 @@
+{
+ "hardware": "hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4",
+ "command": "command: python labs/the-puzzle-of-overparameterization/scripts/10_bits_and_bounds.py",
+ "real_labels": {
+  "params": 1474,
+  "n": 50000,
+  "random_labels": false,
+  "rows": [
+   {
+    "rung": "VC term sqrt(W L log2 W / n)",
+    "bits": null,
+    "train_err": 0.010359999723732471,
+    "test_err": 0.012500000186264515,
+    "bound": 0.9751797032727261
+   },
+   {
+    "rung": "float32, uncompressed",
+    "bits": 47168,
+    "train_err": 0.010359999723732471,
+    "test_err": 0.012500000186264515,
+    "bound": 0.5821901439347341
+   },
+   {
+    "rung": "8-bit quantized + lzma",
+    "bits": 11968,
+    "train_err": 0.010579999536275864,
+    "test_err": 0.01269999984651804,
+    "bound": 0.2986805137171328
+   },
+   {
+    "rung": "4-bit quantized + lzma",
+    "bits": 6880,
+    "train_err": 0.039480000734329224,
+    "test_err": 0.042100001126527786,
+    "bound": 0.2579624433341503
+   },
+   {
+    "rung": "keep 30%, 4-bit + lzma",
+    "bits": 4704,
+    "train_err": 0.08315999805927277,
+    "test_err": 0.08254999667406082,
+    "bound": 0.26385779847587915
+   },
+   {
+    "rung": "keep 20%, 3-bit + lzma",
+    "bits": 3456,
+    "train_err": 0.2503199875354767,
+    "test_err": 0.24690000712871552,
+    "bound": 0.4052432532576128
+   }
+  ]
+ },
+ "random_labels": {
+  "params": 1474,
+  "n": 50000,
+  "random_labels": true,
+  "rows": [
+   {
+    "rung": "VC term sqrt(W L log2 W / n)",
+    "bits": null,
+    "train_err": 0.4460200071334839,
+    "test_err": 0.4993000030517578,
+    "bound": 1.4108397106824775
+   },
+   {
+    "rung": "float32, uncompressed",
+    "bits": 47168,
+    "train_err": 0.4460200071334839,
+    "test_err": 0.4993000030517578,
+    "bound": 1.0178501513444855
+   },
+   {
+    "rung": "8-bit quantized + lzma",
+    "bits": 11904,
+    "train_err": 0.4454199969768524,
+    "test_err": 0.49915000796318054,
+    "bound": 0.7327495848645529
+   },
+   {
+    "rung": "4-bit quantized + lzma",
+    "bits": 6752,
+    "train_err": 0.45493999123573303,
+    "test_err": 0.5008999705314636,
+    "bound": 0.6713824762826096
+   },
+   {
+    "rung": "keep 30%, 4-bit + lzma",
+    "bits": 4800,
+    "train_err": 0.5004799962043762,
+    "test_err": 0.5029500126838684,
+    "bound": 0.6830097646497925
+   },
+   {
+    "rung": "keep 20%, 3-bit + lzma",
+    "bits": 3456,
+    "train_err": 0.5009599924087524,
+    "test_err": 0.503849983215332,
+    "bound": 0.6558832581308885
+   }
+  ]
+ },
+ "capacity": {
+  "capacity_bits": 25200000000.0,
+  "capacity_GB": 3.15,
+  "corpus_bits": 20000000000000.0,
+  "corpus_TB": 2.5,
+  "corpus_over_capacity": 793.6507936507936,
+  "tokens_where_they_match": 12600000000.0
+ }
+}

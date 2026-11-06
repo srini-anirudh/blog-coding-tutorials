@@ -1,0 +1,45 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4
+command: python labs/the-puzzle-of-overparameterization/scripts/10_bits_and_bounds.py
+
+Capacity budget, section 11 (3.6 bits/parameter from Morris et al. 2025; 2 bits/token is the post's assumption)
+7B params x 3.6 bits = 2.52e+10 bits = 3.15 GB
+10T tokens x 2 bits  = 2e+13 bits = 2.50 TB
+corpus / capacity = 794x; the two match at 1.26e+10 tokens
+  params  tokens  corpus_over_capacity
+1.25e+08   1e+09                  4.44
+1.25e+08   1e+11                   444
+1.25e+08   1e+13              4.44e+04
+   1e+09   1e+09                 0.556
+   1e+09   1e+11                  55.6
+   1e+09   1e+13              5.56e+03
+   7e+09   1e+09                0.0794
+   7e+09   1e+11                  7.94
+   7e+09   1e+13                   794
+   7e+10   1e+09               0.00794
+   7e+10   1e+11                 0.794
+   7e+10   1e+13                  79.4
+A ratio below 1 is the memorization regime: the weights could hold the whole corpus.
+
+Compression ladder, section 12: binary task y = 1[x1 x2 + 0.5 x3 > 0], x in R^10, n = 50,000, delta = 0.05
+bound = train error + sqrt((b ln 2 + ln(#rungs / delta)) / 2n). Test error is measured on 20,000 fresh points.
+real labels, MLP 10-32-32-2 with 1,474 parameters
+                        rung   bits  train_err  test_err   bound
+VC term sqrt(W L log2 W / n)      -     0.0104    0.0125  0.9752
+       float32, uncompressed  47168     0.0104    0.0125  0.5822
+      8-bit quantized + lzma  11968     0.0106    0.0127  0.2987
+      4-bit quantized + lzma   6880     0.0395    0.0421  0.2580
+      keep 30%, 4-bit + lzma   4704     0.0832    0.0825  0.2639
+      keep 20%, 3-bit + lzma   3456     0.2503    0.2469  0.4052
+tightest: 4-bit quantized + lzma, bound 0.258 vs measured test error 0.042
+
+random labels, MLP 10-32-32-2 with 1,474 parameters
+                        rung   bits  train_err  test_err   bound
+VC term sqrt(W L log2 W / n)      -     0.4460    0.4993  1.4108
+       float32, uncompressed  47168     0.4460    0.4993  1.0179
+      8-bit quantized + lzma  11904     0.4454    0.4992  0.7327
+      4-bit quantized + lzma   6752     0.4549    0.5009  0.6714
+      keep 30%, 4-bit + lzma   4800     0.5005    0.5030  0.6830
+      keep 20%, 3-bit + lzma   3456     0.5010    0.5038  0.6559
+tightest: keep 20%, 3-bit + lzma, bound 0.656 vs measured test error 0.504
+
+On a two-class task a bound above 0.5 says nothing a coin flip does not.

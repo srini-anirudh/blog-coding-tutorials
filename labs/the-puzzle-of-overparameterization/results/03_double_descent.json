@@ -1,0 +1,267 @@
+{
+ "hardware": "hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4",
+ "command": "command: python labs/the-puzzle-of-overparameterization/scripts/03_double_descent.py",
+ "model_wise": [
+  {
+   "p": 2,
+   "risk_median": 0.19866365023942112,
+   "risk_mean": 0.2033102645497938,
+   "norm_median": 1.0476644156669295,
+   "smallest_sv_median": 4.262147618405965
+  },
+  {
+   "p": 5,
+   "risk_median": 0.10836869855189188,
+   "risk_mean": 0.11226195450186491,
+   "norm_median": 1.2116082405915434,
+   "smallest_sv_median": 2.4215790048683767
+  },
+  {
+   "p": 10,
+   "risk_median": 0.10314571108534815,
+   "risk_mean": 0.11811560288867055,
+   "norm_median": 1.4134076630926513,
+   "smallest_sv_median": 1.4212532114273735
+  },
+  {
+   "p": 15,
+   "risk_median": 0.1468620863684427,
+   "risk_mean": 0.156162601877426,
+   "norm_median": 1.5539851916659666,
+   "smallest_sv_median": 0.952970423634953
+  },
+  {
+   "p": 20,
+   "risk_median": 0.211123845004271,
+   "risk_mean": 0.2401078132520031,
+   "norm_median": 1.9014484931525824,
+   "smallest_sv_median": 0.6153252943832741
+  },
+  {
+   "p": 30,
+   "risk_median": 0.598614640923805,
+   "risk_mean": 0.6468230889076656,
+   "norm_median": 3.42697531545702,
+   "smallest_sv_median": 0.2764529298750859
+  },
+  {
+   "p": 36,
+   "risk_median": 1.4936646746185867,
+   "risk_mean": 2.0006402727544037,
+   "norm_median": 5.466282401909083,
+   "smallest_sv_median": 0.11038142075814072
+  },
+  {
+   "p": 38,
+   "risk_median": 5.1632611546786915,
+   "risk_mean": 10.239861645683595,
+   "norm_median": 10.035661969973582,
+   "smallest_sv_median": 0.06382779372150714
+  },
+  {
+   "p": 40,
+   "risk_median": 15.49023991601431,
+   "risk_mean": 661.7494891893666,
+   "norm_median": 18.29819274957815,
+   "smallest_sv_median": 0.01656609812504368
+  },
+  {
+   "p": 42,
+   "risk_median": 3.169405331268748,
+   "risk_mean": 12.33662872986569,
+   "norm_median": 7.972948741453793,
+   "smallest_sv_median": 0.06468400069591748
+  },
+  {
+   "p": 44,
+   "risk_median": 1.9237144163778002,
+   "risk_mean": 2.3053200299888,
+   "norm_median": 6.187151183319409,
+   "smallest_sv_median": 0.10455871088316585
+  },
+  {
+   "p": 50,
+   "risk_median": 0.7768642978424671,
+   "risk_mean": 0.8637470695446039,
+   "norm_median": 4.3362355805654005,
+   "smallest_sv_median": 0.19584147888091794
+  },
+  {
+   "p": 60,
+   "risk_median": 0.46907350703613965,
+   "risk_mean": 0.47994760509620826,
+   "norm_median": 3.4657457557963034,
+   "smallest_sv_median": 0.31249277027526523
+  },
+  {
+   "p": 80,
+   "risk_median": 0.2747310185276517,
+   "risk_mean": 0.29307551338617654,
+   "norm_median": 2.8397308024302923,
+   "smallest_sv_median": 0.4852277314926601
+  },
+  {
+   "p": 120,
+   "risk_median": 0.19623779961546214,
+   "risk_mean": 0.1988221302518744,
+   "norm_median": 2.415206007399208,
+   "smallest_sv_median": 0.7008826890826734
+  },
+  {
+   "p": 200,
+   "risk_median": 0.1477021169488783,
+   "risk_mean": 0.1524194483070782,
+   "norm_median": 2.1583534304854353,
+   "smallest_sv_median": 0.9521908923553096
+  },
+  {
+   "p": 300,
+   "risk_median": 0.12989496180192628,
+   "risk_mean": 0.1346240659553522,
+   "norm_median": 2.0070067853092786,
+   "smallest_sv_median": 1.110629811819393
+  },
+  {
+   "p": 420,
+   "risk_median": 0.12166268532060867,
+   "risk_mean": 0.12623451415554562,
+   "norm_median": 1.9154616838517555,
+   "smallest_sv_median": 1.2386110196594249
+  }
+ ],
+ "sample_wise": [
+  {
+   "n": 8,
+   "risk_median": 0.2986985036277925,
+   "risk_mean": 0.3171159503870502
+  },
+  {
+   "n": 16,
+   "risk_median": 0.2264152899812053,
+   "risk_mean": 0.22354197878270807
+  },
+  {
+   "n": 24,
+   "risk_median": 0.2493373941624923,
+   "risk_mean": 0.2589633571050677
+  },
+  {
+   "n": 32,
+   "risk_median": 0.29014761612596607,
+   "risk_mean": 0.32176793395820447
+  },
+  {
+   "n": 40,
+   "risk_median": 0.4513378508660585,
+   "risk_mean": 0.5220115506940397
+  },
+  {
+   "n": 48,
+   "risk_median": 0.9301448057607158,
+   "risk_mean": 1.0778828270211385
+  },
+  {
+   "n": 54,
+   "risk_median": 2.360049966016679,
+   "risk_mean": 2.4402907707000083
+  },
+  {
+   "n": 58,
+   "risk_median": 6.173271095260608,
+   "risk_mean": 21.43547901778654
+  },
+  {
+   "n": 60,
+   "risk_median": 28.049829489078107,
+   "risk_mean": 507.07841808903123
+  },
+  {
+   "n": 62,
+   "risk_median": 4.595311789084663,
+   "risk_mean": 8.535611096910653
+  },
+  {
+   "n": 66,
+   "risk_median": 1.9355120212641683,
+   "risk_mean": 2.418296571624257
+  },
+  {
+   "n": 72,
+   "risk_median": 1.0284606378105972,
+   "risk_mean": 1.129509508085709
+  },
+  {
+   "n": 80,
+   "risk_median": 0.6118987621926912,
+   "risk_mean": 0.6443393240497102
+  },
+  {
+   "n": 96,
+   "risk_median": 0.3296197672412709,
+   "risk_mean": 0.33931949001905626
+  },
+  {
+   "n": 108,
+   "risk_median": 0.25252659061681193,
+   "risk_mean": 0.2622402161987404
+  }
+ ],
+ "epoch_wise": [
+  {
+   "steps": 1,
+   "risk_median": 0.18821700557939045,
+   "train_mse_median": 0.2791014257887038
+  },
+  {
+   "steps": 3,
+   "risk_median": 0.1085498539032867,
+   "train_mse_median": 0.18378011113865955
+  },
+  {
+   "steps": 10,
+   "risk_median": 0.08944528659587388,
+   "train_mse_median": 0.1062162471221989
+  },
+  {
+   "steps": 30,
+   "risk_median": 0.1346341966803123,
+   "train_mse_median": 0.06313763335353287
+  },
+  {
+   "steps": 100,
+   "risk_median": 0.24950166352776615,
+   "train_mse_median": 0.03136030748883738
+  },
+  {
+   "steps": 300,
+   "risk_median": 0.45441426361223086,
+   "train_mse_median": 0.014221087181964628
+  },
+  {
+   "steps": 1000,
+   "risk_median": 0.7935774754342423,
+   "train_mse_median": 0.004579951979896555
+  },
+  {
+   "steps": 3000,
+   "risk_median": 1.2243485934947151,
+   "train_mse_median": 0.0013022198664795377
+  },
+  {
+   "steps": 10000,
+   "risk_median": 1.8020856381577322,
+   "train_mse_median": 3.3580830416342475e-05
+  },
+  {
+   "steps": 100000,
+   "risk_median": 1.9838591709381395,
+   "train_mse_median": 3.1635539358487863e-19
+  },
+  {
+   "steps": 1000000,
+   "risk_median": 1.9838591709381515,
+   "train_mse_median": 5.4004520088076384e-30
+  }
+ ],
+ "epoch_wise_min_norm_end": 1.983859170938152
+}

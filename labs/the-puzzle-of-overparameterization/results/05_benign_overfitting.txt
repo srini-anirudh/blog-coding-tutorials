@@ -1,0 +1,25 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4
+command: python labs/the-puzzle-of-overparameterization/scripts/05_benign_overfitting.py
+
+Figure 7 setting: n = 30, sigma = 0.4, six signal directions of variance 1, tail directions of variance 0.05.
+Min-norm interpolant split into its signal piece and its noise piece. Medians over 40 draws.
+    p  train_residual  risk_total  risk_signal_piece  risk_noise_piece  noise_norm2_tail_share  largest_tail_coef
+   31         1.9e-13      3.0277             0.0001            3.0286                   0.989             3.0353
+   40         1.4e-14      0.4111             0.0015            0.4103                   0.985             1.0631
+   60         4.3e-15      0.1990             0.0069            0.1844                   0.978             0.5192
+  100         2.5e-15      0.1182             0.0229            0.0944                   0.967             0.3085
+  200         1.8e-15      0.1232             0.0845            0.0409                   0.968             0.1716
+  460         1.4e-15      0.2670             0.2376            0.0206                   0.941             0.0983
+ 1000         1.6e-15      0.4209             0.4098            0.0075                   0.957             0.0592
+ 3000         1.3e-15      0.6910             0.6952            0.0021                   0.973             0.0278
+10000         8.9e-16      0.9034             0.9034            0.0006                   0.990             0.0095
+noise level sigma^2 = 0.16. Best total risk 0.1182 at p = 100, while fitting every noisy label exactly.
+As p grows the noise piece keeps shrinking, but the tail also soaks up signal: the signal piece grows.
+
+Noise part of the min-norm risk (sigma = 1) as n grows, mean over 5 draws. p = 20,000 unless stated.
+                     spectrum    n=25    n=50   n=100   n=200   n=400
+            isotropic, p = 2n  1.0441  1.0208  1.0024  1.0004  1.0009
+               power law k^-2  0.9809  0.9926  0.9953  1.0035  1.0157
+             k^-1 log^-2(k+1)  0.4904  0.4567  0.4342  0.4178  0.4225
+spike + flat tail of n^2 dims  0.0510  0.0254  0.0126  0.0063  0.0031
+Benign means this column trend goes to 0. Only the spike-plus-wide-flat-tail spectrum gets there at this scale.

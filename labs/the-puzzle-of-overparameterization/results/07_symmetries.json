@@ -1,0 +1,44 @@
+{
+ "hardware": "hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4",
+ "command": "command: python labs/the-puzzle-of-overparameterization/scripts/07_symmetries.py",
+ "train_mse": 0.007175769191235304,
+ "perm_max_diff": 3.5762786865234375e-07,
+ "log10_4096_factorial": 13019.56142774419,
+ "rescale": [
+  {
+   "c": 0.1,
+   "max_abs_function_change": 4.76837158203125e-07,
+   "train_mse": 0.007175208069384098,
+   "param_norm": 21.994815826416016,
+   "top_hessian_eig": 233.70289611816406
+  },
+  {
+   "c": 0.3,
+   "max_abs_function_change": 4.172325134277344e-07,
+   "train_mse": 0.007175206206738949,
+   "param_norm": 7.6608710289001465,
+   "top_hessian_eig": 28.729658126831055
+  },
+  {
+   "c": 1.0,
+   "max_abs_function_change": 0.0,
+   "train_mse": 0.007175208535045385,
+   "param_norm": 7.76826810836792,
+   "top_hessian_eig": 22.543363571166992
+  },
+  {
+   "c": 3.0,
+   "max_abs_function_change": 4.76837158203125e-07,
+   "train_mse": 0.007175206672400236,
+   "param_norm": 22.36385154724121,
+   "top_hessian_eig": 168.5278778076172
+  },
+  {
+   "c": 10.0,
+   "max_abs_function_change": 3.5762786865234375e-07,
+   "train_mse": 0.00717520946636796,
+   "param_norm": 74.50630187988281,
+   "top_hessian_eig": 1850.7205810546875
+  }
+ ]
+}

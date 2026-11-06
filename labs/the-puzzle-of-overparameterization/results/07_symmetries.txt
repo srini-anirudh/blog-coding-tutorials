@@ -1,0 +1,15 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4
+command: python labs/the-puzzle-of-overparameterization/scripts/07_symmetries.py
+
+1 -> 64 -> 1 ReLU MLP trained on 64 noisy points, final training MSE 0.0072
+permuted hidden units: max |f_perm - f| on 1,000 inputs = 3.58e-07
+orderings of one width-4096 layer: 4096! = 10^13020
+
+Layer 1 multiplied by c, layer 2 divided by c
+  c  max_abs_function_change  train_mse  param_norm  top_hessian_eig
+0.1                  4.8e-07   0.007175       21.99              234
+0.3                  4.2e-07   0.007175        7.66             28.7
+  1                  0.0e+00   0.007175        7.77             22.5
+  3                  4.8e-07   0.007175       22.36              169
+ 10                  3.6e-07   0.007175       74.51         1.85e+03
+same function, top Hessian eigenvalue ranges over 82x

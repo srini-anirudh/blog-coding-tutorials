@@ -1,0 +1,25 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4
+command: python labs/the-puzzle-of-overparameterization/scripts/08_lazy_rich.py
+
+Teacher y = relu(x_1) - E[.], x in R^10, n = 200 train / 2,000 test, full-batch GD, lr 1, 4,000 steps.
+lazy limit (kernel interpolation with the initial tangent kernel, width 1024): test MSE 0.0287
+Width 1024, varying the output scale alpha
+alpha  width  train_mse  test_mse  rel_weight_change  kernel_change
+ 0.03   1024    1.5e-04    0.0212             1.7689        4.7e-02
+  0.1   1024    9.7e-06    0.0196             0.6990        2.6e-02
+  0.3   1024    3.0e-06    0.0213             0.2694        3.1e-03
+    1   1024    1.3e-07    0.0267             0.0821        5.2e-04
+    3   1024    6.4e-08    0.0280             0.0270        1.7e-04
+   10   1024    5.4e-08    0.0288             0.0080        5.0e-05
+  100   1024    3.8e-07    0.0287             0.0008        6.9e-06
+
+Width sweep. alpha = 1 is the NTK parameterization; alpha = 8 / sqrt(m) is the mean-field scaling
+alpha  width  train_mse  test_mse  rel_weight_change  kernel_change
+    1     64    1.4e-04    0.0316             0.3466        3.1e-02
+    1    256    7.0e-06    0.0273             0.1738        3.3e-03
+  0.5    256    2.3e-05    0.0215             0.3265        9.0e-03
+    1   1024    1.3e-07    0.0267             0.0821        5.2e-04
+ 0.25   1024    4.4e-06    0.0206             0.3178        4.6e-03
+    1   4096    2.0e-08    0.0266             0.0400        9.6e-05
+0.125   4096    3.6e-06    0.0199             0.3086        6.6e-03
+Under NTK scaling the weight change shrinks like 1 / sqrt(width); under mean-field scaling it does not.

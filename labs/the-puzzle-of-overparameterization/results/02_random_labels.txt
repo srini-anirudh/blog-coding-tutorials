@@ -1,0 +1,21 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4
+command: python labs/the-puzzle-of-overparameterization/scripts/02_random_labels.py
+
+data: CIFAR-10, first 5000 train / first 2000 test images
+labels corrupted 0%             37          1480     1.0000    0.4195     48.8
+labels corrupted 20%             52          2080     1.0000    0.3625     95.1
+labels corrupted 40%             38          1520     1.0000    0.3110    133.0
+labels corrupted 60%             39          1560     1.0000    0.2205    119.6
+labels corrupted 80%             43          1720     1.0000    0.1660    193.4
+labels corrupted 100%             55          2200     1.0000    0.0980     82.0
+
+MLP with 1,841,162 parameters, Adam lr 1e-3, batch 128, no explicit regularization
+                       setting  epochs_to_fit  steps_to_fit  train_acc  test_acc  seconds
+           labels corrupted 0%             37          1480     1.0000    0.4195     48.8
+          labels corrupted 20%             52          2080     1.0000    0.3625     95.1
+          labels corrupted 40%             38          1520     1.0000    0.3110    133.0
+          labels corrupted 60%             39          1560     1.0000    0.2205    119.6
+          labels corrupted 80%             43          1720     1.0000    0.1660    193.4
+         labels corrupted 100%             55          2200     1.0000    0.0980     82.0
+Gaussian pixels, random labels              3           120     1.0000    0.0960      1.8
+random labels took 1.5x the steps of real labels to fit

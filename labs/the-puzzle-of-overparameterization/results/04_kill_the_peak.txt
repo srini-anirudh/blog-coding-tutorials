@@ -1,0 +1,19 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4
+command: python labs/the-puzzle-of-overparameterization/scripts/04_kill_the_peak.py
+
+Median excess risk over 40 draws, n = 40, sigma = 0.45 unless stated. 'tuned ridge' picks, per p, the best
+lambda on a 33-point log grid from 1e-6 to 1e2 by mean true risk (an oracle, as in Nakkiran et al. 2021).
+  p  ridgeless  ridge 0.01  ridge 0.1  tuned ridge  best lambda  sigma 0.1  sigma 0
+  5      0.108       0.108      0.108        0.107            1      0.080    0.080
+ 10      0.103       0.103      0.102        0.094         1.78      0.045    0.043
+ 20      0.211       0.205      0.174        0.099         3.16      0.035    0.026
+ 30      0.599       0.540      0.317        0.103         3.16      0.065    0.036
+ 36      1.494       1.016      0.408        0.105         3.16      0.122    0.063
+ 40     15.490       1.281      0.427        0.105         3.16      1.813    0.734
+ 44      1.924       1.234      0.398        0.105         3.16      0.168    0.068
+ 50      0.777       0.631      0.362        0.105         3.16      0.067    0.036
+ 60      0.469       0.435      0.314        0.105         3.16      0.045    0.026
+120      0.196       0.194      0.174        0.109         1.78      0.038    0.029
+420      0.122       0.122      0.121        0.112         1.78      0.050    0.044
+at p = n = 40: ridgeless 15.49, tuned ridge 0.105, no noise 0.73
+tuned-ridge curve: min 0.094, max 0.112 (no peak; this data is not isotropic, so the monotonicity theorem does not strictly apply)

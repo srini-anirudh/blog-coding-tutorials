@@ -1,0 +1,215 @@
+{
+ "hardware": "hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, numpy 2.5.4",
+ "command": "command: python labs/the-puzzle-of-overparameterization/scripts/05_benign_overfitting.py",
+ "growing_tail": [
+  {
+   "p": 31,
+   "train_residual": 1.91402449445377e-13,
+   "risk_total": 3.0277372707409995,
+   "risk_signal_piece": 0.00012757480835869344,
+   "risk_noise_piece": 3.028559566306107,
+   "noise_norm2_tail_share": 0.9891563420421491,
+   "noise_risk_tail_share": 0.8201822965804986,
+   "largest_tail_coef": 3.035341783508168,
+   "noise_level": 0.16000000000000003
+  },
+  {
+   "p": 40,
+   "train_residual": 1.3877787807814457e-14,
+   "risk_total": 0.4110961033381372,
+   "risk_signal_piece": 0.001483325336748345,
+   "risk_noise_piece": 0.41033176593024046,
+   "noise_norm2_tail_share": 0.9849965480295378,
+   "noise_risk_tail_share": 0.7664953088257696,
+   "largest_tail_coef": 1.0631249706980026,
+   "noise_level": 0.16000000000000003
+  },
+  {
+   "p": 60,
+   "train_residual": 4.3021142204224816e-15,
+   "risk_total": 0.1990012894893341,
+   "risk_signal_piece": 0.006895502892667566,
+   "risk_noise_piece": 0.18443424879437453,
+   "noise_norm2_tail_share": 0.9784779076319274,
+   "noise_risk_tail_share": 0.6945143134141578,
+   "largest_tail_coef": 0.5191589204268517,
+   "noise_level": 0.16000000000000003
+  },
+  {
+   "p": 100,
+   "train_residual": 2.4980018054066022e-15,
+   "risk_total": 0.1182245787849931,
+   "risk_signal_piece": 0.022864709733309244,
+   "risk_noise_piece": 0.09441707634124376,
+   "noise_norm2_tail_share": 0.9673020480942209,
+   "noise_risk_tail_share": 0.5968046415088417,
+   "largest_tail_coef": 0.308500224556937,
+   "noise_level": 0.16000000000000003
+  },
+  {
+   "p": 200,
+   "train_residual": 1.7763568394002505e-15,
+   "risk_total": 0.12317118775458022,
+   "risk_signal_piece": 0.08449782753946511,
+   "risk_noise_piece": 0.04088294509383804,
+   "noise_norm2_tail_share": 0.968139285911733,
+   "noise_risk_tail_share": 0.6031170175058302,
+   "largest_tail_coef": 0.1716390390884229,
+   "noise_level": 0.16000000000000003
+  },
+  {
+   "p": 460,
+   "train_residual": 1.3600232051658168e-15,
+   "risk_total": 0.2669740028148947,
+   "risk_signal_piece": 0.23758039987188267,
+   "risk_noise_piece": 0.020621723433964245,
+   "noise_norm2_tail_share": 0.9413084345720277,
+   "noise_risk_tail_share": 0.44506371914231657,
+   "largest_tail_coef": 0.09828277780179799,
+   "noise_level": 0.16000000000000003
+  },
+  {
+   "p": 1000,
+   "train_residual": 1.5543122344752192e-15,
+   "risk_total": 0.4208840522634137,
+   "risk_signal_piece": 0.4097997322914409,
+   "risk_noise_piece": 0.007476382056476584,
+   "noise_norm2_tail_share": 0.9565425162517518,
+   "noise_risk_tail_share": 0.5240746556437563,
+   "largest_tail_coef": 0.05924263834422694,
+   "noise_level": 0.16000000000000003
+  },
+  {
+   "p": 3000,
+   "train_residual": 1.27675647831893e-15,
+   "risk_total": 0.6910243430854002,
+   "risk_signal_piece": 0.695182471214802,
+   "risk_noise_piece": 0.002104932920862442,
+   "noise_norm2_tail_share": 0.9730144936369574,
+   "noise_risk_tail_share": 0.643790209076381,
+   "largest_tail_coef": 0.027795938169785653,
+   "noise_level": 0.16000000000000003
+  },
+  {
+   "p": 10000,
+   "train_residual": 8.881784197001252e-16,
+   "risk_total": 0.9033590718002578,
+   "risk_signal_piece": 0.9034372743354369,
+   "risk_noise_piece": 0.0005595090250152883,
+   "noise_norm2_tail_share": 0.9896568288156193,
+   "noise_risk_tail_share": 0.8271133764631058,
+   "largest_tail_coef": 0.009547852759775198,
+   "noise_level": 0.16000000000000003
+  }
+ ],
+ "spectrum_sweep": {
+  "isotropic, p = 2n": [
+   {
+    "n": 25,
+    "p": 50,
+    "noise_risk_mean": 1.0440746651755972
+   },
+   {
+    "n": 50,
+    "p": 100,
+    "noise_risk_mean": 1.02076822361562
+   },
+   {
+    "n": 100,
+    "p": 200,
+    "noise_risk_mean": 1.0023771966599093
+   },
+   {
+    "n": 200,
+    "p": 400,
+    "noise_risk_mean": 1.0003553813625412
+   },
+   {
+    "n": 400,
+    "p": 800,
+    "noise_risk_mean": 1.0008785671873544
+   }
+  ],
+  "power law k^-2": [
+   {
+    "n": 25,
+    "p": 20000,
+    "noise_risk_mean": 0.9808862550447165
+   },
+   {
+    "n": 50,
+    "p": 20000,
+    "noise_risk_mean": 0.9925892146783347
+   },
+   {
+    "n": 100,
+    "p": 20000,
+    "noise_risk_mean": 0.9952589081642976
+   },
+   {
+    "n": 200,
+    "p": 20000,
+    "noise_risk_mean": 1.003492336578128
+   },
+   {
+    "n": 400,
+    "p": 20000,
+    "noise_risk_mean": 1.015703100217751
+   }
+  ],
+  "k^-1 log^-2(k+1)": [
+   {
+    "n": 25,
+    "p": 20000,
+    "noise_risk_mean": 0.4903797132885782
+   },
+   {
+    "n": 50,
+    "p": 20000,
+    "noise_risk_mean": 0.4567127480523888
+   },
+   {
+    "n": 100,
+    "p": 20000,
+    "noise_risk_mean": 0.434217061771604
+   },
+   {
+    "n": 200,
+    "p": 20000,
+    "noise_risk_mean": 0.41781011876371954
+   },
+   {
+    "n": 400,
+    "p": 20000,
+    "noise_risk_mean": 0.42252564229555345
+   }
+  ],
+  "spike + flat tail of n^2 dims": [
+   {
+    "n": 25,
+    "p": 626,
+    "noise_risk_mean": 0.05099099226833559
+   },
+   {
+    "n": 50,
+    "p": 2501,
+    "noise_risk_mean": 0.025371263303863262
+   },
+   {
+    "n": 100,
+    "p": 10001,
+    "noise_risk_mean": 0.012571424663484331
+   },
+   {
+    "n": 200,
+    "p": 40001,
+    "noise_risk_mean": 0.0062666657412754605
+   },
+   {
+    "n": 400,
+    "p": 160001,
+    "noise_risk_mean": 0.0031298090271997454
+   }
+  ]
+ }
+}
