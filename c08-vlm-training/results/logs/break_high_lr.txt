@@ -1,0 +1,4 @@
+AMD EPYC 7R13 Processor, 8 threads
+40 Stage 1 steps at the configured learning rate, then at 1000 times that:
+   lr 0.001: logged loss 2.97 -> 0.81, answer-only loss on held-out captions 0.92
+   lr 1: logged loss 2.97 -> 1.99, answer-only loss on held-out captions 2.02

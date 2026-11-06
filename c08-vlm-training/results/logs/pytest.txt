@@ -1,0 +1,7 @@
+$ pytest c08-vlm-training -m "not slow and not gpu and not network"   (AMD EPYC 7R13, 8 threads)
+..........................................................               [100%]
+130 passed, 5 deselected in 35.75s
+
+$ pytest c08-vlm-training -m network   (real SigLIP + SmolLM2 weights)
+.....                                                                    [100%]
+5 passed, 130 deselected in 35.02s

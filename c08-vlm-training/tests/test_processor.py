@@ -68,3 +68,10 @@ def test_image_token_is_one_id(proc):
     assert len(proc.tok(IMAGE_TOKEN, add_special_tokens=False)["input_ids"]) == 1
     assert isinstance(proc.image_token_id, int)
     assert torch.tensor(proc.image_token_id) >= 0
+
+
+def test_two_images_fill_their_slots_in_order(proc):
+    doc, chart = D.make_example("doc", 0)["images"][0], D.make_example("chart", 0)["images"][0]
+    e = proc.encode(D.sample("vqa", [doc, chart], "Compare them.", "No."))
+    assert sum(e.tiles_per_image) == e.pixel_values.shape[0]
+    assert e.input_ids.count(proc.image_token_id) == sum(e.tiles_per_image) * proc.tokens_per_tile

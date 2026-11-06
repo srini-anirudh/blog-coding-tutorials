@@ -1,0 +1,12 @@
+caption    (224, 224)  Q: What is in this picture?
+           A: Two blue triangles.
+vqa        (224, 224)  Q: What color is the square? Answer with one word.
+           A: yellow
+ocr        (336, 224)  Q: What does the text in the image say?
+           A: yellow honey
+doc        (448, 448)  Q: What is the date on the invoice?
+           A: 2026-07-15
+chart      (224, 224)  Q: What is the value of bee?
+           A: 2
+grounding  (224, 224)  Q: Find the orange square. Give its bounding box.
+           A: <loc_3><loc_8><loc_9><loc_14>

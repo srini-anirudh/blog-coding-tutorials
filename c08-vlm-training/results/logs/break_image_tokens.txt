@@ -1,0 +1,4 @@
+AMD EPYC 7R13 Processor, 8 threads
+input_ids (2, 274), pixel_values (6, 3, 224, 224), <image> slots 294
+Dropping the last tile from pixel_values:
+ValueError: 294 <image> placeholders but 245 image feature vectors (5 crops x 49 tokens). The processor and the model disagree about tokens per crop.

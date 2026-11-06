@@ -1,0 +1,256 @@
+{
+ "name": "gpu_stage2_main",
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "n": 128,
+ "seen": {
+  "caption": {
+   "em": 0.9296875
+  },
+  "vqa": {
+   "em": 0.953125
+  },
+  "ocr": {
+   "cer": 0.013256504524886878,
+   "wer": 0.01953125,
+   "em": 0.96875
+  },
+  "doc": {
+   "anls": 0.1914930555555555,
+   "em": 0.0234375
+  },
+  "chart": {
+   "relaxed_acc": 0.1484375
+  },
+  "grounding": {
+   "point_acc": 0.06896551724137931,
+   "parse_fail": 0.0859375,
+   "iou": 0.00046895211400454844,
+   "acc@0.5": 0.0,
+   "mask_iou": 0.0
+  }
+ },
+ "blind": {
+  "caption": {
+   "em": 0.0234375
+  },
+  "vqa": {
+   "em": 0.234375
+  },
+  "ocr": {
+   "cer": 0.8467685651122181,
+   "wer": 0.9830729166666667,
+   "em": 0.0078125
+  },
+  "doc": {
+   "anls": 0.19661458333333334,
+   "em": 0.0234375
+  },
+  "chart": {
+   "relaxed_acc": 0.1171875
+  },
+  "grounding": {
+   "point_acc": 0.0,
+   "parse_fail": 1.0,
+   "iou": 0.0,
+   "acc@0.5": 0.0,
+   "mask_iou": 0.0
+  }
+ },
+ "majority": {
+  "caption": {
+   "answer": "A purple triangle.",
+   "em": 0.046875
+  },
+  "vqa": {
+   "answer": "1",
+   "em": 0.25
+  },
+  "ocr": {
+   "answer": "north",
+   "cer": 0.8907756111546251,
+   "wer": 0.9869791666666666,
+   "em": 0.0078125
+  },
+  "doc": {
+   "answer": "3",
+   "anls": 0.03125,
+   "em": 0.03125
+  },
+  "chart": {
+   "answer": "9",
+   "relaxed_acc": 0.125
+  },
+  "grounding": {
+   "answer": "<loc_13><loc_17>",
+   "point_acc": 0.06896551724137931,
+   "parse_fail": 0.7734375,
+   "iou": 0.0,
+   "acc@0.5": 0.0,
+   "mask_iou": 0.0
+  }
+ },
+ "examples": {
+  "caption": [
+   {
+    "question": "Describe the image.",
+    "gold": "A red circle and a yellow triangle.",
+    "pred": "A red circle and a yellow triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "An orange triangle.",
+    "pred": "An orange triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "A purple triangle.",
+    "pred": "A purple triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "An orange circle, a purple square, an orange square and a purple triangle.",
+    "pred": "An orange circle, a purple square, an orange square and a purple triangle."
+   },
+   {
+    "question": "Describe the image.",
+    "gold": "A purple square.",
+    "pred": "A purple square."
+   }
+  ],
+  "vqa": [
+   {
+    "question": "How many shapes are there? Answer with one word.",
+    "gold": "5",
+    "pred": "5"
+   },
+   {
+    "question": "How many green squares are there? Answer with one word.",
+    "gold": "1",
+    "pred": "1"
+   },
+   {
+    "question": "Is there a blue circle? Answer with one word.",
+    "gold": "no",
+    "pred": "no"
+   },
+   {
+    "question": "How many shapes are there? Answer with one word.",
+    "gold": "2",
+    "pred": "2"
+   },
+   {
+    "question": "What color is the circle? Answer with one word.",
+    "gold": "orange",
+    "pred": "orange"
+   }
+  ],
+  "ocr": [
+   {
+    "question": "What does the text in the image say?",
+    "gold": "pearl oyster",
+    "pred": "pearl oyster"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "square pearl",
+    "pred": "square pearl"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "radio",
+    "pred": "radio"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "morning spring violet",
+    "pred": "morning spring violet"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "rabbit",
+    "pred": "rabbit"
+   }
+  ],
+  "doc": [
+   {
+    "question": "What is the total?",
+    "gold": "79.50",
+    "pred": "32.50"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "5",
+    "pred": "1"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "1",
+    "pred": "1"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "6",
+    "pred": "1"
+   },
+   {
+    "question": "What is the total?",
+    "gold": "21.75",
+    "pred": "32.50"
+   }
+  ],
+  "chart": [
+   {
+    "question": "What is the value of yak?",
+    "gold": "5",
+    "pred": "1"
+   },
+   {
+    "question": "What is the value of fox?",
+    "gold": "4",
+    "pred": "1"
+   },
+   {
+    "question": "What is the value of fox?",
+    "gold": "5",
+    "pred": "9"
+   },
+   {
+    "question": "What is the value of bee?",
+    "gold": "1",
+    "pred": "1"
+   },
+   {
+    "question": "What is the value of yak?",
+    "gold": "8",
+    "pred": "9"
+   }
+  ],
+  "grounding": [
+   {
+    "question": "Point to the green circle.",
+    "gold": "<loc_17><loc_14>",
+    "pred": "<loc_15><loc_15>"
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "<loc_23><loc_15><loc_31><loc_22>",
+    "pred": "<loc_15><loc_15><loc_15><loc_15>"
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "<loc_14><loc_4><loc_19><loc_9>",
+    "pred": "<loc_15><loc_15><loc_15><loc_15>"
+   },
+   {
+    "question": "Find the blue square. Give its bounding box.",
+    "gold": "<loc_9><loc_8><loc_15><loc_14>",
+    "pred": "<loc_15><loc_15><loc_15><loc_15>"
+   },
+   {
+    "question": "Find the purple square. Give its bounding box.",
+    "gold": "<loc_14><loc_5><loc_21><loc_13>",
+    "pred": "<loc_15><loc_15><loc_15><loc_15>"
+   }
+  ]
+ }
+}

@@ -1,0 +1,1362 @@
+{
+ "name": "stage2_main",
+ "config": {
+  "name": "stage2_main",
+  "model": "auto",
+  "steps": 500,
+  "batch_size": 4,
+  "freeze": "lm",
+  "vision_layers_to_train": 0,
+  "lrs": {
+   "vision": 1e-06,
+   "projector": 0.0002,
+   "lm": 5e-05,
+   "lora": 0.0002
+  },
+  "weight_decay": 0.0,
+  "warmup": 20,
+  "grad_clip": 1.0,
+  "loss_norm": "sample",
+  "tasks": [
+   "caption",
+   "vqa",
+   "ocr",
+   "doc",
+   "chart",
+   "grounding"
+  ],
+  "task_sizes": {
+   "caption": 40000,
+   "vqa": 20000,
+   "ocr": 8000,
+   "doc": 1000,
+   "chart": 2000,
+   "grounding": 4000
+  },
+  "mixture": "temperature",
+  "temperature": 2.0,
+  "manual_weights": null,
+  "replay_ratio": 0.1,
+  "replay_max_tokens": 96,
+  "strategy": "tile",
+  "max_tiles": 4,
+  "grounding_format": "tokens",
+  "lora": [],
+  "lora_r": 16,
+  "lora_alpha": 32.0,
+  "train_new_tokens": false,
+  "pack_budget": 0,
+  "init_from": "outputs/stage1_align/trainable.safetensors",
+  "eval_n": 48,
+  "eval_every": 250,
+  "eval_n_mid": 24,
+  "ppl_passages": 64,
+  "save": true,
+  "out_dir": "outputs",
+  "results_dir": "results",
+  "seed": 0,
+  "device": null,
+  "log_every": 10
+ },
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads",
+ "train_sec": 1195.7,
+ "sec_per_step": 2.391,
+ "tokens_per_sec": 167,
+ "peak_rss_mb": 7115,
+ "trainable": {
+  "vision": {
+   "trainable": 0,
+   "total": 85797120
+  },
+  "projector": {
+   "trainable": 2102400,
+   "total": 2102400
+  },
+  "lm": {
+   "trainable": 134551872,
+   "total": 134551872
+  }
+ },
+ "mixture_target": {
+  "caption": 0.3155382804723463,
+  "vqa": 0.22311925784593883,
+  "ocr": 0.14111300892791215,
+  "doc": 0.04989098276328224,
+  "chart": 0.07055650446395607,
+  "grounding": 0.09978196552656449,
+  "text": 0.1
+ },
+ "mixture_observed": {
+  "caption": 0.3,
+  "vqa": 0.2385,
+  "ocr": 0.1365,
+  "doc": 0.049,
+  "chart": 0.071,
+  "grounding": 0.1,
+  "text": 0.105
+ },
+ "supervised_token_share": {
+  "grounding": 0.03853771526402363,
+  "chart": 0.009802276007922387,
+  "vqa": 0.032025244217664235,
+  "caption": 0.20880190674410018,
+  "ocr": 0.03199167477928094,
+  "text": 0.662090033233744,
+  "doc": 0.016751149753264628
+ },
+ "ppl_before": 38.36633088175263,
+ "ppl_after": 28.784005793184857,
+ "metrics": {
+  "caption": {
+   "em": 0.8125
+  },
+  "vqa": {
+   "em": 0.7291666666666666
+  },
+  "ocr": {
+   "cer": 0.4424044379539735,
+   "wer": 0.545138888888889,
+   "em": 0.22916666666666666
+  },
+  "doc": {
+   "anls": 0.1375,
+   "em": 0.020833333333333332
+  },
+  "chart": {
+   "relaxed_acc": 0.14583333333333334
+  },
+  "grounding": {
+   "point_acc": 0.0,
+   "parse_fail": 1.0,
+   "iou": 0.0,
+   "acc@0.5": 0.0,
+   "mask_iou": 0.0
+  }
+ },
+ "examples": {
+  "caption": [
+   {
+    "question": "Describe the image.",
+    "gold": "A red circle and a yellow triangle.",
+    "pred": "A red circle and a yellow triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "An orange triangle.",
+    "pred": "An orange triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "A purple triangle.",
+    "pred": "A purple triangle."
+   }
+  ],
+  "vqa": [
+   {
+    "question": "How many shapes are there? Answer with one word.",
+    "gold": "5",
+    "pred": "5"
+   },
+   {
+    "question": "How many green squares are there? Answer with one word.",
+    "gold": "1",
+    "pred": "1"
+   },
+   {
+    "question": "Is there a blue circle? Answer with one word.",
+    "gold": "no",
+    "pred": "yes"
+   }
+  ],
+  "ocr": [
+   {
+    "question": "What does the text in the image say?",
+    "gold": "pearl oyster",
+    "pred": "pepper pearl"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "square pearl",
+    "pred": "square square square"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "radio",
+    "pred": "rabbit"
+   }
+  ],
+  "doc": [
+   {
+    "question": "What is the total?",
+    "gold": "79.50",
+    "pred": "85.25"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "5",
+    "pred": "2"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "1",
+    "pred": "2"
+   }
+  ],
+  "chart": [
+   {
+    "question": "What is the value of yak?",
+    "gold": "5",
+    "pred": "2"
+   },
+   {
+    "question": "What is the value of fox?",
+    "gold": "4",
+    "pred": "2"
+   },
+   {
+    "question": "What is the value of fox?",
+    "gold": "5",
+    "pred": "2"
+   }
+  ],
+  "grounding": [
+   {
+    "question": "Point to the green circle.",
+    "gold": "<loc_17><loc_14>",
+    "pred": ""
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "<loc_23><loc_15><loc_31><loc_22>",
+    "pred": ""
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "<loc_14><loc_4><loc_19><loc_9>",
+    "pred": ""
+   }
+  ]
+ },
+ "curve": [
+  {
+   "step": 250,
+   "caption": {
+    "em": 0.6666666666666666
+   },
+   "vqa": {
+    "em": 0.5833333333333334
+   },
+   "ocr": {
+    "cer": 0.7460416017304564,
+    "wer": 0.8541666666666666,
+    "em": 0.041666666666666664
+   },
+   "doc": {
+    "anls": 0.18541666666666665,
+    "em": 0.0
+   },
+   "chart": {
+    "relaxed_acc": 0.041666666666666664
+   },
+   "grounding": {
+    "point_acc": 0.0,
+    "parse_fail": 1.0,
+    "iou": 0.0,
+    "acc@0.5": 0.0,
+    "mask_iou": 0.0
+   }
+  },
+  {
+   "step": 500,
+   "caption": {
+    "em": 0.8125
+   },
+   "vqa": {
+    "em": 0.7291666666666666
+   },
+   "ocr": {
+    "cer": 0.4424044379539735,
+    "wer": 0.545138888888889,
+    "em": 0.22916666666666666
+   },
+   "doc": {
+    "anls": 0.1375,
+    "em": 0.020833333333333332
+   },
+   "chart": {
+    "relaxed_acc": 0.14583333333333334
+   },
+   "grounding": {
+    "point_acc": 0.0,
+    "parse_fail": 1.0,
+    "iou": 0.0,
+    "acc@0.5": 0.0,
+    "mask_iou": 0.0
+   }
+  }
+ ],
+ "log": [
+  {
+   "step": 1,
+   "loss": 8.4783,
+   "grad_norm": 119.867,
+   "lr": {
+    "projector": 2e-05,
+    "projector/no_decay": 2e-05,
+    "lm/no_decay": 5e-06,
+    "lm": 5e-06
+   },
+   "task_loss": {
+    "grounding": 17.2344,
+    "chart": 7.7817,
+    "vqa": 8.6196,
+    "caption": 0.2775
+   },
+   "sec": 2.5
+  },
+  {
+   "step": 10,
+   "loss": 8.0716,
+   "grad_norm": 61.899,
+   "lr": {
+    "projector": 0.00011000000000000002,
+    "projector/no_decay": 0.00011000000000000002,
+    "lm/no_decay": 2.7500000000000004e-05,
+    "lm": 2.7500000000000004e-05
+   },
+   "task_loss": {
+    "vqa": 4.7973,
+    "chart": 4.2438,
+    "caption": 0.0935,
+    "ocr": 8.9988,
+    "text": 4.0644,
+    "grounding": 14.2919,
+    "doc": 7.5182
+   },
+   "sec": 30.4
+  },
+  {
+   "step": 20,
+   "loss": 7.5129,
+   "grad_norm": 22.821,
+   "lr": {
+    "projector": 0.0002,
+    "projector/no_decay": 0.0002,
+    "lm/no_decay": 5e-05,
+    "lm": 5e-05
+   },
+   "task_loss": {
+    "caption": 0.3982,
+    "vqa": 0.7973,
+    "grounding": 12.5609,
+    "ocr": 6.4223,
+    "text": 3.9296,
+    "doc": 3.7563,
+    "chart": 1.8415
+   },
+   "sec": 59.0
+  },
+  {
+   "step": 30,
+   "loss": 4.0059,
+   "grad_norm": 35.905,
+   "lr": {
+    "projector": 0.00019980730309147434,
+    "projector/no_decay": 0.00019980730309147434,
+    "lm/no_decay": 4.9951825772868586e-05,
+    "lm": 4.9951825772868586e-05
+   },
+   "task_loss": {
+    "grounding": 12.5279,
+    "text": 3.7742,
+    "ocr": 5.9714,
+    "vqa": 1.6081,
+    "doc": 5.019,
+    "caption": 0.3235,
+    "chart": 1.3735
+   },
+   "sec": 90.2
+  },
+  {
+   "step": 40,
+   "loss": 0.7125,
+   "grad_norm": 21.028,
+   "lr": {
+    "projector": 0.00019923003752364297,
+    "projector/no_decay": 0.00019923003752364297,
+    "lm/no_decay": 4.980750938091074e-05,
+    "lm": 4.980750938091074e-05
+   },
+   "task_loss": {
+    "ocr": 5.0151,
+    "vqa": 0.7709,
+    "text": 3.7688,
+    "caption": 0.1626,
+    "grounding": 12.071,
+    "chart": 1.27
+   },
+   "sec": 115.7
+  },
+  {
+   "step": 50,
+   "loss": 3.1501,
+   "grad_norm": 18.216,
+   "lr": {
+    "projector": 0.00019827067523629075,
+    "projector/no_decay": 0.00019827067523629075,
+    "lm/no_decay": 4.956766880907269e-05,
+    "lm": 4.956766880907269e-05
+   },
+   "task_loss": {
+    "vqa": 0.8543,
+    "ocr": 5.9966,
+    "caption": 0.1946,
+    "grounding": 10.3156,
+    "chart": 1.6138,
+    "text": 3.393,
+    "doc": 3.9147
+   },
+   "sec": 148.7
+  },
+  {
+   "step": 60,
+   "loss": 0.5348,
+   "grad_norm": 11.846,
+   "lr": {
+    "projector": 0.00019693332436601614,
+    "projector/no_decay": 0.00019693332436601614,
+    "lm/no_decay": 4.9233331091504034e-05,
+    "lm": 4.9233331091504034e-05
+   },
+   "task_loss": {
+    "vqa": 0.6334,
+    "caption": 0.3878,
+    "ocr": 4.9613,
+    "chart": 1.1469,
+    "grounding": 9.9957,
+    "text": 3.9889,
+    "doc": 3.7074
+   },
+   "sec": 175.1
+  },
+  {
+   "step": 70,
+   "loss": 1.9881,
+   "grad_norm": 11.471,
+   "lr": {
+    "projector": 0.00019522371165455954,
+    "projector/no_decay": 0.00019522371165455954,
+    "lm/no_decay": 4.8805927913639885e-05,
+    "lm": 4.8805927913639885e-05
+   },
+   "task_loss": {
+    "chart": 1.0147,
+    "grounding": 9.1477,
+    "caption": 0.2444,
+    "vqa": 0.5577,
+    "ocr": 5.2074,
+    "doc": 2.9889,
+    "text": 3.8832
+   },
+   "sec": 204.7
+  },
+  {
+   "step": 80,
+   "loss": 2.5695,
+   "grad_norm": 14.864,
+   "lr": {
+    "projector": 0.00019314915792601581,
+    "projector/no_decay": 0.00019314915792601581,
+    "lm/no_decay": 4.8287289481503954e-05,
+    "lm": 4.8287289481503954e-05
+   },
+   "task_loss": {
+    "vqa": 0.5329,
+    "caption": 0.0618,
+    "text": 3.7116,
+    "grounding": 9.1012,
+    "doc": 1.6926,
+    "chart": 1.0235,
+    "ocr": 6.0453
+   },
+   "sec": 225.8
+  },
+  {
+   "step": 90,
+   "loss": 5.7084,
+   "grad_norm": 10.429,
+   "lr": {
+    "projector": 0.00019071854673794196,
+    "projector/no_decay": 0.00019071854673794196,
+    "lm/no_decay": 4.767963668448549e-05,
+    "lm": 4.767963668448549e-05
+   },
+   "task_loss": {
+    "caption": 0.4094,
+    "chart": 0.4529,
+    "vqa": 0.3568,
+    "grounding": 9.1819,
+    "doc": 1.9503,
+    "text": 3.7121,
+    "ocr": 4.9092
+   },
+   "sec": 249.7
+  },
+  {
+   "step": 100,
+   "loss": 3.2001,
+   "grad_norm": 14.422,
+   "lr": {
+    "projector": 0.0001879422863405995,
+    "projector/no_decay": 0.0001879422863405995,
+    "lm/no_decay": 4.6985571585149876e-05,
+    "lm": 4.6985571585149876e-05
+   },
+   "task_loss": {
+    "caption": 0.3622,
+    "chart": 1.9841,
+    "grounding": 9.1378,
+    "ocr": 4.9029,
+    "doc": 1.6788,
+    "vqa": 1.1055,
+    "text": 3.5319
+   },
+   "sec": 274.3
+  },
+  {
+   "step": 110,
+   "loss": 1.6029,
+   "grad_norm": 13.247,
+   "lr": {
+    "projector": 0.0001848322651072291,
+    "projector/no_decay": 0.0001848322651072291,
+    "lm/no_decay": 4.620806627680727e-05,
+    "lm": 4.620806627680727e-05
+   },
+   "task_loss": {
+    "chart": 1.458,
+    "ocr": 3.974,
+    "caption": 0.2695,
+    "vqa": 1.0226,
+    "grounding": 8.868,
+    "text": 3.8705,
+    "doc": 4.2181
+   },
+   "sec": 301.4
+  },
+  {
+   "step": 120,
+   "loss": 3.1593,
+   "grad_norm": 13.035,
+   "lr": {
+    "projector": 0.00018140180062621117,
+    "projector/no_decay": 0.00018140180062621117,
+    "lm/no_decay": 4.535045015655279e-05,
+    "lm": 4.535045015655279e-05
+   },
+   "task_loss": {
+    "vqa": 0.5299,
+    "grounding": 8.6799,
+    "ocr": 4.0776,
+    "caption": 0.1372,
+    "doc": 1.4899,
+    "chart": 1.428,
+    "text": 3.5813
+   },
+   "sec": 330.0
+  },
+  {
+   "step": 130,
+   "loss": 2.1646,
+   "grad_norm": 6.815,
+   "lr": {
+    "projector": 0.00017766558267310798,
+    "projector/no_decay": 0.00017766558267310798,
+    "lm/no_decay": 4.4416395668276995e-05,
+    "lm": 4.4416395668276995e-05
+   },
+   "task_loss": {
+    "caption": 0.1398,
+    "vqa": 0.4443,
+    "ocr": 4.6097,
+    "text": 3.8536,
+    "chart": 2.647,
+    "doc": 3.2523,
+    "grounding": 8.4103
+   },
+   "sec": 353.0
+  },
+  {
+   "step": 140,
+   "loss": 2.14,
+   "grad_norm": 16.88,
+   "lr": {
+    "projector": 0.00017363961030678927,
+    "projector/no_decay": 0.00017363961030678927,
+    "lm/no_decay": 4.340990257669732e-05,
+    "lm": 4.340990257669732e-05
+   },
+   "task_loss": {
+    "text": 3.5342,
+    "caption": 0.079,
+    "vqa": 0.912,
+    "ocr": 3.7401,
+    "grounding": 8.3651,
+    "chart": 1.3698
+   },
+   "sec": 374.2
+  },
+  {
+   "step": 150,
+   "loss": 1.0021,
+   "grad_norm": 7.886,
+   "lr": {
+    "projector": 0.00016934112335900621,
+    "projector/no_decay": 0.00016934112335900621,
+    "lm/no_decay": 4.2335280839751554e-05,
+    "lm": 4.2335280839751554e-05
+   },
+   "task_loss": {
+    "doc": 1.6855,
+    "vqa": 0.7625,
+    "caption": 0.1421,
+    "text": 3.244,
+    "chart": 1.0558,
+    "ocr": 4.3092
+   },
+   "sec": 402.7
+  },
+  {
+   "step": 160,
+   "loss": 1.9075,
+   "grad_norm": 16.914,
+   "lr": {
+    "projector": 0.00016478852861078486,
+    "projector/no_decay": 0.00016478852861078486,
+    "lm/no_decay": 4.1197132152696215e-05,
+    "lm": 4.1197132152696215e-05
+   },
+   "task_loss": {
+    "caption": 0.1575,
+    "grounding": 8.214,
+    "vqa": 0.729,
+    "ocr": 4.0548,
+    "chart": 2.0013,
+    "text": 3.9303,
+    "doc": 2.3302
+   },
+   "sec": 424.7
+  },
+  {
+   "step": 170,
+   "loss": 2.1686,
+   "grad_norm": 12.986,
+   "lr": {
+    "projector": 0.00016000132097176422,
+    "projector/no_decay": 0.00016000132097176422,
+    "lm/no_decay": 4.0000330242941056e-05,
+    "lm": 4.0000330242941056e-05
+   },
+   "task_loss": {
+    "ocr": 3.7808,
+    "vqa": 0.5036,
+    "doc": 3.1003,
+    "caption": 0.1143,
+    "chart": 1.4674,
+    "grounding": 7.7665,
+    "text": 3.9319
+   },
+   "sec": 452.8
+  },
+  {
+   "step": 180,
+   "loss": 1.5725,
+   "grad_norm": 11.914,
+   "lr": {
+    "projector": 0.000155,
+    "projector/no_decay": 0.000155,
+    "lm/no_decay": 3.875e-05,
+    "lm": 3.875e-05
+   },
+   "task_loss": {
+    "vqa": 0.558,
+    "doc": 2.0985,
+    "caption": 0.2236,
+    "text": 3.4627,
+    "chart": 1.0755,
+    "grounding": 9.4093,
+    "ocr": 3.9363
+   },
+   "sec": 481.5
+  },
+  {
+   "step": 190,
+   "loss": 2.7059,
+   "grad_norm": 10.995,
+   "lr": {
+    "projector": 0.00014980598211971014,
+    "projector/no_decay": 0.00014980598211971014,
+    "lm/no_decay": 3.7451495529927534e-05,
+    "lm": 3.7451495529927534e-05
+   },
+   "task_loss": {
+    "caption": 0.2186,
+    "ocr": 3.3383,
+    "chart": 1.0754,
+    "doc": 1.4431,
+    "text": 3.5887,
+    "vqa": 0.496,
+    "grounding": 8.8281
+   },
+   "sec": 508.6
+  },
+  {
+   "step": 200,
+   "loss": 1.5931,
+   "grad_norm": 12.957,
+   "lr": {
+    "projector": 0.00014444150891285807,
+    "projector/no_decay": 0.00014444150891285807,
+    "lm/no_decay": 3.611037722821452e-05,
+    "lm": 3.611037722821452e-05
+   },
+   "task_loss": {
+    "text": 4.0078,
+    "vqa": 0.4532,
+    "caption": 0.071,
+    "chart": 1.4049,
+    "grounding": 8.8996,
+    "ocr": 3.4802
+   },
+   "sec": 534.0
+  },
+  {
+   "step": 210,
+   "loss": 2.9165,
+   "grad_norm": 16.702,
+   "lr": {
+    "projector": 0.00013892955187728455,
+    "projector/no_decay": 0.00013892955187728455,
+    "lm/no_decay": 3.473238796932114e-05,
+    "lm": 3.473238796932114e-05
+   },
+   "task_loss": {
+    "vqa": 0.523,
+    "grounding": 7.8638,
+    "caption": 0.1602,
+    "ocr": 3.2141,
+    "chart": 1.2902,
+    "doc": 1.1757,
+    "text": 4.6991
+   },
+   "sec": 560.7
+  },
+  {
+   "step": 220,
+   "loss": 1.3794,
+   "grad_norm": 9.466,
+   "lr": {
+    "projector": 0.00013329371405922688,
+    "projector/no_decay": 0.00013329371405922688,
+    "lm/no_decay": 3.332342851480672e-05,
+    "lm": 3.332342851480672e-05
+   },
+   "task_loss": {
+    "ocr": 2.8992,
+    "text": 3.4847,
+    "caption": 0.1483,
+    "grounding": 8.2631,
+    "vqa": 0.3103,
+    "doc": 1.5064,
+    "chart": 1.1521
+   },
+   "sec": 588.6
+  },
+  {
+   "step": 230,
+   "loss": 2.3935,
+   "grad_norm": 11.008,
+   "lr": {
+    "projector": 0.00012755812898145155,
+    "projector/no_decay": 0.00012755812898145155,
+    "lm/no_decay": 3.188953224536289e-05,
+    "lm": 3.188953224536289e-05
+   },
+   "task_loss": {
+    "caption": 0.2521,
+    "ocr": 1.739,
+    "text": 3.6197,
+    "vqa": 1.1672,
+    "grounding": 7.4634,
+    "chart": 1.1884,
+    "doc": 0.9701
+   },
+   "sec": 607.4
+  },
+  {
+   "step": 240,
+   "loss": 0.5693,
+   "grad_norm": 11.978,
+   "lr": {
+    "projector": 0.00012174735729980466,
+    "projector/no_decay": 0.00012174735729980466,
+    "lm/no_decay": 3.0436839324951166e-05,
+    "lm": 3.0436839324951166e-05
+   },
+   "task_loss": {
+    "doc": 1.708,
+    "caption": 0.1735,
+    "text": 3.7021,
+    "ocr": 3.9946,
+    "vqa": 0.4675,
+    "grounding": 8.3816,
+    "chart": 1.0533
+   },
+   "sec": 628.4
+  },
+  {
+   "step": 250,
+   "loss": 2.1776,
+   "grad_norm": 4.402,
+   "lr": {
+    "projector": 0.00011588628163071289,
+    "projector/no_decay": 0.00011588628163071289,
+    "lm/no_decay": 2.897157040767822e-05,
+    "lm": 2.897157040767822e-05
+   },
+   "task_loss": {
+    "doc": 1.7782,
+    "ocr": 3.1955,
+    "chart": 1.0386,
+    "caption": 0.1009,
+    "vqa": 0.2191,
+    "text": 3.7587,
+    "grounding": 6.9485
+   },
+   "sec": 652.3
+  },
+  {
+   "step": 260,
+   "loss": 3.2266,
+   "grad_norm": 15.143,
+   "lr": {
+    "projector": 0.00011000000000000002,
+    "projector/no_decay": 0.00011000000000000002,
+    "lm/no_decay": 2.7500000000000004e-05,
+    "lm": 2.7500000000000004e-05
+   },
+   "task_loss": {
+    "text": 3.3863,
+    "grounding": 6.9416,
+    "chart": 1.6496,
+    "caption": 0.055,
+    "ocr": 3.1772,
+    "vqa": 0.7776,
+    "doc": 0.8055
+   },
+   "sec": 709.9
+  },
+  {
+   "step": 270,
+   "loss": 0.8288,
+   "grad_norm": 11.297,
+   "lr": {
+    "projector": 0.00010411371836928712,
+    "projector/no_decay": 0.00010411371836928712,
+    "lm/no_decay": 2.602842959232178e-05,
+    "lm": 2.602842959232178e-05
+   },
+   "task_loss": {
+    "grounding": 7.5612,
+    "caption": 0.2389,
+    "vqa": 0.5856,
+    "text": 3.6503,
+    "doc": 2.9902,
+    "ocr": 3.3328,
+    "chart": 1.1666
+   },
+   "sec": 728.8
+  },
+  {
+   "step": 280,
+   "loss": 1.9264,
+   "grad_norm": 10.511,
+   "lr": {
+    "projector": 9.825264270019538e-05,
+    "projector/no_decay": 9.825264270019538e-05,
+    "lm/no_decay": 2.4563160675048846e-05,
+    "lm": 2.4563160675048846e-05
+   },
+   "task_loss": {
+    "vqa": 0.3401,
+    "grounding": 7.2849,
+    "caption": 0.1206,
+    "doc": 3.9435,
+    "ocr": 4.4579,
+    "text": 3.4662,
+    "chart": 2.7142
+   },
+   "sec": 747.3
+  },
+  {
+   "step": 290,
+   "loss": 3.3947,
+   "grad_norm": 8.782,
+   "lr": {
+    "projector": 9.244187101854847e-05,
+    "projector/no_decay": 9.244187101854847e-05,
+    "lm/no_decay": 2.3110467754637118e-05,
+    "lm": 2.3110467754637118e-05
+   },
+   "task_loss": {
+    "ocr": 3.1025,
+    "chart": 1.8139,
+    "text": 3.8061,
+    "vqa": 0.9285,
+    "caption": 0.1418,
+    "grounding": 6.6083,
+    "doc": 1.8985
+   },
+   "sec": 769.8
+  },
+  {
+   "step": 300,
+   "loss": 0.1929,
+   "grad_norm": 8.875,
+   "lr": {
+    "projector": 8.670628594077313e-05,
+    "projector/no_decay": 8.670628594077313e-05,
+    "lm/no_decay": 2.1676571485193282e-05,
+    "lm": 2.1676571485193282e-05
+   },
+   "task_loss": {
+    "vqa": 0.2929,
+    "grounding": 7.0494,
+    "text": 3.9443,
+    "caption": 0.0555,
+    "chart": 1.3403,
+    "doc": 0.7145,
+    "ocr": 3.7758
+   },
+   "sec": 785.5
+  },
+  {
+   "step": 310,
+   "loss": 2.7667,
+   "grad_norm": 10.405,
+   "lr": {
+    "projector": 8.10704481227155e-05,
+    "projector/no_decay": 8.10704481227155e-05,
+    "lm/no_decay": 2.0267612030678874e-05,
+    "lm": 2.0267612030678874e-05
+   },
+   "task_loss": {
+    "ocr": 3.2349,
+    "caption": 0.0956,
+    "vqa": 0.3273,
+    "grounding": 7.2834,
+    "chart": 1.2896,
+    "text": 2.8071
+   },
+   "sec": 804.8
+  },
+  {
+   "step": 320,
+   "loss": 0.8445,
+   "grad_norm": 3.531,
+   "lr": {
+    "projector": 7.555849108714192e-05,
+    "projector/no_decay": 7.555849108714192e-05,
+    "lm/no_decay": 1.888962277178548e-05,
+    "lm": 1.888962277178548e-05
+   },
+   "task_loss": {
+    "caption": 0.0957,
+    "grounding": 6.8973,
+    "vqa": 0.6063,
+    "ocr": 2.9399,
+    "text": 3.6101,
+    "chart": 0.9356
+   },
+   "sec": 819.7
+  },
+  {
+   "step": 330,
+   "loss": 1.0676,
+   "grad_norm": 14.094,
+   "lr": {
+    "projector": 7.019401788028993e-05,
+    "projector/no_decay": 7.019401788028993e-05,
+    "lm/no_decay": 1.754850447007248e-05,
+    "lm": 1.754850447007248e-05
+   },
+   "task_loss": {
+    "caption": 0.0879,
+    "vqa": 0.5399,
+    "ocr": 2.8611,
+    "grounding": 7.1549,
+    "text": 3.5152,
+    "chart": 1.2082,
+    "doc": 2.698
+   },
+   "sec": 840.0
+  },
+  {
+   "step": 340,
+   "loss": 5.2327,
+   "grad_norm": 10.886,
+   "lr": {
+    "projector": 6.500000000000002e-05,
+    "projector/no_decay": 6.500000000000002e-05,
+    "lm/no_decay": 1.6250000000000005e-05,
+    "lm": 1.6250000000000005e-05
+   },
+   "task_loss": {
+    "chart": 1.1239,
+    "caption": 0.0849,
+    "text": 3.9485,
+    "ocr": 3.4387,
+    "vqa": 1.1383,
+    "doc": 2.425,
+    "grounding": 7.1356
+   },
+   "sec": 862.4
+  },
+  {
+   "step": 350,
+   "loss": 1.6235,
+   "grad_norm": 14.562,
+   "lr": {
+    "projector": 5.9998679028235824e-05,
+    "projector/no_decay": 5.9998679028235824e-05,
+    "lm/no_decay": 1.4999669757058956e-05,
+    "lm": 1.4999669757058956e-05
+   },
+   "task_loss": {
+    "vqa": 0.698,
+    "doc": 2.4167,
+    "text": 3.5835,
+    "chart": 2.0194,
+    "caption": 0.0671,
+    "grounding": 7.4064,
+    "ocr": 4.4033
+   },
+   "sec": 884.8
+  },
+  {
+   "step": 360,
+   "loss": 3.1384,
+   "grad_norm": 11.349,
+   "lr": {
+    "projector": 5.521147138921514e-05,
+    "projector/no_decay": 5.521147138921514e-05,
+    "lm/no_decay": 1.3802867847303785e-05,
+    "lm": 1.3802867847303785e-05
+   },
+   "task_loss": {
+    "caption": 0.0984,
+    "vqa": 0.3868,
+    "chart": 1.5629,
+    "text": 3.8663,
+    "ocr": 3.1864,
+    "grounding": 6.7782,
+    "doc": 0.7477
+   },
+   "sec": 905.8
+  },
+  {
+   "step": 370,
+   "loss": 0.8288,
+   "grad_norm": 8.602,
+   "lr": {
+    "projector": 5.06588766409938e-05,
+    "projector/no_decay": 5.06588766409938e-05,
+    "lm/no_decay": 1.266471916024845e-05,
+    "lm": 1.266471916024845e-05
+   },
+   "task_loss": {
+    "grounding": 6.7551,
+    "caption": 0.0492,
+    "vqa": 0.4721,
+    "text": 3.3271,
+    "ocr": 3.6725,
+    "chart": 1.114,
+    "doc": 1.0615
+   },
+   "sec": 924.9
+  },
+  {
+   "step": 380,
+   "loss": 3.1756,
+   "grad_norm": 9.815,
+   "lr": {
+    "projector": 4.6360389693210735e-05,
+    "projector/no_decay": 4.6360389693210735e-05,
+    "lm/no_decay": 1.1590097423302684e-05,
+    "lm": 1.1590097423302684e-05
+   },
+   "task_loss": {
+    "vqa": 0.3689,
+    "chart": 1.1847,
+    "caption": 0.137,
+    "text": 3.7343,
+    "grounding": 8.2285,
+    "ocr": 2.7447
+   },
+   "sec": 939.3
+  },
+  {
+   "step": 390,
+   "loss": 1.8757,
+   "grad_norm": 8.805,
+   "lr": {
+    "projector": 4.233441732689205e-05,
+    "projector/no_decay": 4.233441732689205e-05,
+    "lm/no_decay": 1.0583604331723012e-05,
+    "lm": 1.0583604331723012e-05
+   },
+   "task_loss": {
+    "ocr": 2.4701,
+    "vqa": 0.4583,
+    "caption": 0.0842,
+    "doc": 1.9451,
+    "grounding": 6.3489,
+    "text": 3.9091,
+    "chart": 1.0887
+   },
+   "sec": 955.7
+  },
+  {
+   "step": 400,
+   "loss": 1.3948,
+   "grad_norm": 6.933,
+   "lr": {
+    "projector": 3.8598199373788846e-05,
+    "projector/no_decay": 3.8598199373788846e-05,
+    "lm/no_decay": 9.649549843447212e-06,
+    "lm": 9.649549843447212e-06
+   },
+   "task_loss": {
+    "chart": 4.4923,
+    "ocr": 2.2758,
+    "caption": 0.0827,
+    "doc": 1.9681,
+    "grounding": 6.9216,
+    "text": 3.4326,
+    "vqa": 0.6205
+   },
+   "sec": 979.1
+  },
+  {
+   "step": 410,
+   "loss": 2.6698,
+   "grad_norm": 9.552,
+   "lr": {
+    "projector": 3.516773489277092e-05,
+    "projector/no_decay": 3.516773489277092e-05,
+    "lm/no_decay": 8.79193372319273e-06,
+    "lm": 8.79193372319273e-06
+   },
+   "task_loss": {
+    "caption": 0.0811,
+    "vqa": 0.3435,
+    "chart": 1.258,
+    "ocr": 2.9946,
+    "text": 3.4086,
+    "grounding": 6.7827,
+    "doc": 1.4401
+   },
+   "sec": 998.3
+  },
+  {
+   "step": 420,
+   "loss": 1.3882,
+   "grad_norm": 14.686,
+   "lr": {
+    "projector": 3.205771365940052e-05,
+    "projector/no_decay": 3.205771365940052e-05,
+    "lm/no_decay": 8.01442841485013e-06,
+    "lm": 8.01442841485013e-06
+   },
+   "task_loss": {
+    "vqa": 0.7446,
+    "ocr": 2.3371,
+    "grounding": 6.4132,
+    "caption": 0.0303,
+    "text": 3.4457,
+    "doc": 1.6086,
+    "chart": 0.9083
+   },
+   "sec": 1024.2
+  },
+  {
+   "step": 430,
+   "loss": 0.1651,
+   "grad_norm": 7.583,
+   "lr": {
+    "projector": 2.928145326205806e-05,
+    "projector/no_decay": 2.928145326205806e-05,
+    "lm/no_decay": 7.320363315514515e-06,
+    "lm": 7.320363315514515e-06
+   },
+   "task_loss": {
+    "ocr": 3.2879,
+    "grounding": 6.3244,
+    "doc": 0.6435,
+    "caption": 0.06,
+    "vqa": 0.3098,
+    "text": 3.4844,
+    "chart": 1.0818
+   },
+   "sec": 1043.3
+  },
+  {
+   "step": 440,
+   "loss": 1.9938,
+   "grad_norm": 18.858,
+   "lr": {
+    "projector": 2.6850842073984196e-05,
+    "projector/no_decay": 2.6850842073984196e-05,
+    "lm/no_decay": 6.712710518496049e-06,
+    "lm": 6.712710518496049e-06
+   },
+   "task_loss": {
+    "grounding": 6.2739,
+    "caption": 0.0652,
+    "ocr": 2.5908,
+    "text": 3.4126,
+    "vqa": 0.5423,
+    "doc": 1.1631,
+    "chart": 2.4266
+   },
+   "sec": 1066.0
+  },
+  {
+   "step": 450,
+   "loss": 1.2427,
+   "grad_norm": 7.692,
+   "lr": {
+    "projector": 2.4776288345440503e-05,
+    "projector/no_decay": 2.4776288345440503e-05,
+    "lm/no_decay": 6.194072086360126e-06,
+    "lm": 6.194072086360126e-06
+   },
+   "task_loss": {
+    "caption": 0.0272,
+    "ocr": 2.7625,
+    "vqa": 0.1081,
+    "grounding": 6.4168,
+    "chart": 0.8748,
+    "doc": 2.0164,
+    "text": 3.7157
+   },
+   "sec": 1092.0
+  },
+  {
+   "step": 460,
+   "loss": 0.0906,
+   "grad_norm": 6.939,
+   "lr": {
+    "projector": 2.3066675633983865e-05,
+    "projector/no_decay": 2.3066675633983865e-05,
+    "lm/no_decay": 5.766668908495966e-06,
+    "lm": 5.766668908495966e-06
+   },
+   "task_loss": {
+    "vqa": 0.2615,
+    "caption": 0.0247,
+    "text": 3.4248,
+    "doc": 1.3327,
+    "grounding": 6.2425,
+    "ocr": 2.5718,
+    "chart": 1.4573
+   },
+   "sec": 1115.9
+  },
+  {
+   "step": 470,
+   "loss": 0.8682,
+   "grad_norm": 2.18,
+   "lr": {
+    "projector": 2.1729324763709264e-05,
+    "projector/no_decay": 2.1729324763709264e-05,
+    "lm/no_decay": 5.432331190927316e-06,
+    "lm": 5.432331190927316e-06
+   },
+   "task_loss": {
+    "grounding": 6.2905,
+    "vqa": 0.3207,
+    "caption": 0.0513,
+    "text": 3.4862,
+    "chart": 1.4461,
+    "doc": 1.0206,
+    "ocr": 2.3773
+   },
+   "sec": 1135.7
+  },
+  {
+   "step": 480,
+   "loss": 1.3635,
+   "grad_norm": 15.229,
+   "lr": {
+    "projector": 2.0769962476357068e-05,
+    "projector/no_decay": 2.0769962476357068e-05,
+    "lm/no_decay": 5.192490619089267e-06,
+    "lm": 5.192490619089267e-06
+   },
+   "task_loss": {
+    "grounding": 5.7603,
+    "chart": 1.2853,
+    "doc": 1.1906,
+    "caption": 0.0813,
+    "vqa": 0.5169,
+    "text": 4.0841,
+    "ocr": 3.5209
+   },
+   "sec": 1154.4
+  },
+  {
+   "step": 490,
+   "loss": 1.8348,
+   "grad_norm": 13.56,
+   "lr": {
+    "projector": 2.019269690852569e-05,
+    "projector/no_decay": 2.019269690852569e-05,
+    "lm/no_decay": 5.048174227131422e-06,
+    "lm": 5.048174227131422e-06
+   },
+   "task_loss": {
+    "vqa": 0.4421,
+    "caption": 0.0883,
+    "ocr": 1.5171,
+    "text": 4.0074,
+    "doc": 1.3816,
+    "chart": 0.9809,
+    "grounding": 6.3954
+   },
+   "sec": 1175.1
+  },
+  {
+   "step": 500,
+   "loss": 0.243,
+   "grad_norm": 8.174,
+   "lr": {
+    "projector": 2e-05,
+    "projector/no_decay": 2e-05,
+    "lm/no_decay": 5e-06,
+    "lm": 5e-06
+   },
+   "task_loss": {
+    "vqa": 0.263,
+    "ocr": 2.4958,
+    "caption": 0.0551,
+    "doc": 1.0378,
+    "text": 3.3846,
+    "chart": 0.9819,
+    "grounding": 6.4029
+   },
+   "sec": 1195.7
+  }
+ ],
+ "checkpoint_mb": 521.3
+}

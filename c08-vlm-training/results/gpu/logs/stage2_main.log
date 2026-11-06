@@ -1,0 +1,125 @@
+[stage2_main] NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, loaded 4 tensors, lora on 0 linears
+module         trainable         total   share
+vision                 0    85,797,120    0.0%
+projector      2,102,400     2,102,400  100.0%
+lm           134,551,872   134,551,872  100.0%
+all          136,654,272   222,451,392   61.4%
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+mixture: {'caption': 0.316, 'vqa': 0.223, 'ocr': 0.141, 'doc': 0.05, 'chart': 0.071, 'grounding': 0.1, 'text': 0.1}
+epochs over each corpus: {'caption': 0.13, 'vqa': 0.18, 'ocr': 0.28, 'doc': 0.8, 'chart': 0.56, 'grounding': 0.4, 'text': 0.4}
+group                  tensors        params        lr    wd
+projector                    2     2,101,248   2.0e-04   0.0
+projector/no_decay           2         1,152   2.0e-04   0.0
+lm/no_decay                 62    28,383,552   5.0e-05   0.0
+lm                         210   106,168,320   5.0e-05   0.0
+text perplexity before: 35.32
+step     1  loss 9.082  gnorm 118.96  grounding=17.15 chart=6.41 vqa=16.68 caption=0.01 ocr=10.65 text=4.19  1.7s
+step    10  loss 6.750  gnorm 64.88  text=3.90 grounding=18.73 caption=0.00 chart=4.59 doc=9.40 vqa=11.45 ocr=12.22  6.8s
+step    20  loss 3.662  gnorm 26.44  vqa=5.10 ocr=10.05 caption=0.00 grounding=17.06 chart=2.56 text=3.91 doc=5.37  11.9s
+step    30  loss 3.805  gnorm 12.84  caption=0.05 chart=2.11 vqa=1.50 grounding=14.39 doc=3.10 text=3.80 ocr=6.13  16.7s
+step    40  loss 2.479  gnorm 14.78  caption=0.09 vqa=0.92 ocr=5.62 text=3.82 chart=2.53 doc=3.29 grounding=12.47  22.7s
+step    50  loss 1.211  gnorm 7.51  ocr=5.20 vqa=0.69 doc=3.02 caption=0.05 chart=1.58 grounding=12.41 text=3.84  28.3s
+step    60  loss 1.872  gnorm 11.08  vqa=0.71 grounding=11.53 caption=0.03 ocr=4.57 chart=1.23 doc=2.03 text=3.92  34.0s
+step    70  loss 2.707  gnorm 10.42  doc=3.17 ocr=4.81 chart=2.00 caption=0.02 vqa=0.59 text=3.88 grounding=10.90  39.3s
+step    80  loss 1.246  gnorm 12.88  ocr=4.82 chart=2.27 text=3.74 vqa=0.70 caption=0.04 grounding=10.29 doc=1.85  44.1s
+step    90  loss 2.935  gnorm 14.53  caption=0.02 vqa=0.60 ocr=4.84 grounding=10.24 text=3.95 chart=1.67 doc=3.09  49.3s
+step   100  loss 2.217  gnorm 7.66  grounding=9.90 caption=0.02 vqa=0.42 text=3.88 ocr=4.65 chart=1.91 doc=2.67  53.9s
+step   110  loss 3.204  gnorm 15.77  caption=0.02 vqa=0.59 chart=1.36 ocr=4.44 text=3.64 grounding=9.18 doc=1.93  60.0s
+step   120  loss 1.668  gnorm 6.75  caption=0.01 ocr=4.45 vqa=0.42 grounding=8.73 chart=1.30 doc=2.13 text=3.83  64.9s
+step   130  loss 2.684  gnorm 7.33  vqa=0.41 caption=0.02 ocr=3.69 text=3.77 doc=1.73 chart=1.25 grounding=9.00  70.0s
+step   140  loss 1.274  gnorm 6.69  vqa=0.48 ocr=3.85 doc=1.59 grounding=8.47 text=3.62 caption=0.04 chart=1.10  75.1s
+step   150  loss 2.349  gnorm 9.44  ocr=3.89 caption=0.01 vqa=0.27 doc=2.14 text=3.86 grounding=8.97 chart=1.38  81.0s
+step   160  loss 1.108  gnorm 7.91  caption=0.02 grounding=9.14 ocr=3.81 vqa=0.47 chart=1.28 text=3.82 doc=2.25  86.1s
+step   170  loss 2.341  gnorm 7.58  vqa=0.45 caption=0.02 text=3.38 doc=1.60 grounding=8.39 ocr=3.69 chart=1.51  91.1s
+step   180  loss 1.680  gnorm 6.43  text=3.71 ocr=3.97 caption=0.07 vqa=0.47 doc=1.55 grounding=8.01 chart=1.47  96.2s
+step   190  loss 1.323  gnorm 10.50  caption=0.05 chart=1.21 text=3.62 doc=1.62 ocr=3.30 grounding=8.14 vqa=0.40  102.5s
+step   200  loss 2.557  gnorm 7.61  grounding=7.55 ocr=3.73 caption=0.02 text=3.45 vqa=0.35 chart=1.24 doc=0.92  107.8s
+step   210  loss 2.634  gnorm 6.54  ocr=3.36 vqa=0.28 caption=0.01 chart=1.05 grounding=7.73 text=3.78 doc=1.48  113.0s
+step   220  loss 2.099  gnorm 8.45  text=3.54 ocr=3.17 caption=0.01 chart=1.31 vqa=0.45 grounding=7.47 doc=1.28  119.0s
+step   230  loss 1.441  gnorm 6.83  doc=1.88 ocr=3.20 caption=0.02 vqa=0.39 chart=1.55 grounding=6.88 text=3.55  124.3s
+step   240  loss 2.806  gnorm 7.25  vqa=0.66 text=3.73 caption=0.01 ocr=3.35 chart=1.34 grounding=6.70 doc=1.23  129.6s
+step   250  loss 1.394  gnorm 5.16  caption=0.02 grounding=6.59 vqa=0.35 ocr=3.14 doc=1.29 chart=1.18 text=3.46  135.7s
+step   260  loss 0.781  gnorm 5.51  grounding=6.28 vqa=0.53 caption=0.03 ocr=2.68 doc=1.62 text=3.54 chart=1.09  140.8s
+step   270  loss 2.189  gnorm 6.40  caption=0.06 vqa=0.28 doc=2.81 ocr=2.50 grounding=6.03 chart=1.11 text=3.65  145.3s
+step   280  loss 0.666  gnorm 3.30  ocr=3.10 caption=0.01 grounding=5.75 vqa=0.41 chart=1.05 doc=1.60 text=3.51  149.5s
+step   290  loss 2.348  gnorm 5.12  vqa=0.26 caption=0.01 chart=1.22 text=3.57 ocr=2.61 doc=1.20 grounding=5.60  154.9s
+step   300  loss 1.779  gnorm 9.17  vqa=0.21 caption=0.01 grounding=5.22 text=3.49 ocr=2.92 chart=1.31 doc=1.86  159.5s
+step   310  loss 0.902  gnorm 5.14  vqa=0.17 ocr=2.10 caption=0.02 doc=1.80 text=3.37 grounding=5.34 chart=1.11  164.5s
+step   320  loss 1.822  gnorm 4.03  caption=0.05 ocr=1.64 vqa=0.26 grounding=4.93 text=3.55 doc=1.45 chart=1.08  168.9s
+step   330  loss 1.583  gnorm 8.38  caption=0.04 chart=1.09 ocr=1.88 grounding=4.70 vqa=0.47 text=3.57 doc=1.32  174.7s
+step   340  loss 1.365  gnorm 7.36  chart=1.32 ocr=1.44 text=3.37 doc=1.11 grounding=4.69 caption=0.02 vqa=0.29  179.7s
+step   350  loss 1.254  gnorm 6.22  ocr=2.00 caption=0.02 vqa=0.23 text=3.75 grounding=4.26 doc=1.44 chart=1.00  184.2s
+step   360  loss 1.247  gnorm 5.22  caption=0.01 grounding=4.23 vqa=0.52 ocr=1.53 chart=1.04 text=3.46 doc=1.46  190.1s
+step   370  loss 1.023  gnorm 6.19  grounding=4.06 ocr=1.15 caption=0.01 vqa=0.24 chart=1.66 doc=1.80 text=3.37  194.9s
+step   380  loss 1.160  gnorm 5.71  grounding=3.73 caption=0.00 ocr=1.32 doc=1.24 text=3.40 vqa=0.29 chart=1.26  199.1s
+step   390  loss 0.857  gnorm 4.72  caption=0.01 vqa=0.14 grounding=3.56 chart=0.98 doc=1.28 ocr=0.65 text=3.42  204.2s
+step   400  loss 1.065  gnorm 2.83  vqa=0.28 caption=0.01 text=3.42 doc=1.24 ocr=0.93 grounding=3.54 chart=1.53  209.5s
+step   410  loss 1.213  gnorm 6.01  grounding=3.36 ocr=0.59 caption=0.02 vqa=0.24 text=3.51 chart=1.34 doc=1.28  214.4s
+step   420  loss 1.048  gnorm 4.48  ocr=0.84 grounding=3.17 vqa=0.20 caption=0.09 text=3.42 chart=1.31 doc=1.59  218.8s
+step   430  loss 1.077  gnorm 5.26  caption=0.01 ocr=0.70 vqa=0.26 grounding=3.27 chart=1.17 text=3.53 doc=1.41  225.4s
+step   440  loss 1.238  gnorm 3.45  vqa=0.19 ocr=0.63 caption=0.01 grounding=3.11 chart=1.12 text=3.37 doc=1.37  232.0s
+step   450  loss 1.147  gnorm 3.79  caption=0.01 vqa=0.13 grounding=2.95 ocr=0.36 text=3.41 doc=1.12 chart=0.96  236.8s
+step   460  loss 1.098  gnorm 6.68  ocr=0.48 caption=0.04 text=3.03 chart=1.29 vqa=0.35 grounding=3.04 doc=1.74  241.7s
+step   470  loss 1.163  gnorm 3.35  grounding=3.02 vqa=0.18 caption=0.02 chart=1.12 ocr=0.58 doc=1.39 text=3.44  247.5s
+step   480  loss 0.768  gnorm 2.54  text=3.39 caption=0.02 grounding=2.99 vqa=0.28 ocr=0.39 chart=1.04 doc=1.45  252.1s
+step   490  loss 0.942  gnorm 4.49  vqa=0.21 caption=0.01 chart=1.05 doc=1.53 grounding=2.95 ocr=0.38 text=3.47  257.2s
+step   500  loss 0.387  gnorm 2.79  vqa=0.18 ocr=0.38 text=3.64 grounding=3.01 caption=0.02 doc=1.80 chart=1.15  262.8s
+step   510  loss 0.964  gnorm 3.37  caption=0.02 vqa=0.14 ocr=0.29 text=3.61 doc=1.58 grounding=3.00 chart=1.25  296.1s
+step   520  loss 1.049  gnorm 3.12  caption=0.02 vqa=0.17 text=3.44 ocr=0.54 doc=1.22 chart=1.22 grounding=2.79  300.3s
+step   530  loss 0.995  gnorm 5.92  grounding=2.80 ocr=0.45 caption=0.02 doc=1.16 text=3.61 vqa=0.28 chart=1.14  305.3s
+step   540  loss 0.875  gnorm 4.02  vqa=0.27 caption=0.02 text=3.28 ocr=0.36 chart=1.16 grounding=2.99 doc=1.38  312.4s
+step   550  loss 1.042  gnorm 4.71  grounding=2.88 caption=0.02 vqa=0.21 ocr=0.17 chart=1.05 text=3.57 doc=1.32  317.4s
+step   560  loss 0.770  gnorm 6.46  caption=0.03 text=3.50 chart=1.13 ocr=0.37 vqa=0.25 grounding=2.83 doc=0.99  323.0s
+step   570  loss 0.853  gnorm 6.23  ocr=0.22 doc=1.31 vqa=0.13 text=3.09 grounding=2.57 caption=0.08 chart=1.14  327.4s
+step   580  loss 0.553  gnorm 3.26  caption=0.03 chart=1.07 text=3.06 vqa=0.09 doc=1.13 grounding=2.75 ocr=0.23  332.6s
+step   590  loss 0.597  gnorm 4.93  text=3.44 chart=1.11 grounding=2.68 vqa=0.14 caption=0.01 doc=1.08 ocr=0.15  338.4s
+step   600  loss 0.523  gnorm 4.81  vqa=0.14 caption=0.01 ocr=0.27 text=3.30 doc=1.27 grounding=2.96 chart=1.09  344.2s
+step   610  loss 0.864  gnorm 4.13  vqa=0.28 ocr=0.34 caption=0.01 chart=1.13 text=3.51 doc=1.15 grounding=2.83  350.8s
+step   620  loss 0.812  gnorm 4.10  caption=0.01 text=3.36 ocr=0.19 grounding=2.72 chart=1.15 vqa=0.28 doc=1.12  355.4s
+step   630  loss 0.590  gnorm 3.34  ocr=0.05 vqa=0.12 caption=0.01 chart=1.10 grounding=2.83 doc=1.01 text=3.24  360.1s
+step   640  loss 0.184  gnorm 3.64  chart=1.03 caption=0.01 ocr=0.11 grounding=2.62 vqa=0.07 doc=1.39 text=3.65  366.5s
+step   650  loss 0.770  gnorm 5.99  doc=1.05 caption=0.01 grounding=2.69 chart=0.98 vqa=0.19 ocr=0.11 text=3.37  372.3s
+step   660  loss 0.499  gnorm 4.90  ocr=0.05 vqa=0.16 doc=1.32 caption=0.01 grounding=2.79 chart=1.18 text=3.45  378.5s
+step   670  loss 0.606  gnorm 3.27  grounding=2.91 ocr=0.35 caption=0.01 vqa=0.18 text=3.67 doc=1.23 chart=1.09  383.7s
+step   680  loss 0.833  gnorm 3.79  chart=1.13 doc=1.19 caption=0.02 grounding=2.78 vqa=0.20 ocr=0.20 text=3.49  389.4s
+step   690  loss 0.603  gnorm 2.92  grounding=2.81 vqa=0.12 ocr=0.23 caption=0.01 chart=1.08 text=3.53 doc=1.02  394.2s
+step   700  loss 0.643  gnorm 2.75  ocr=0.10 grounding=2.80 vqa=0.04 chart=1.05 text=3.38 caption=0.02 doc=1.13  398.9s
+step   710  loss 0.529  gnorm 1.95  caption=0.01 ocr=0.06 vqa=0.27 chart=1.06 text=3.40 grounding=2.71 doc=1.17  403.1s
+step   720  loss 0.627  gnorm 1.61  caption=0.00 vqa=0.14 ocr=0.06 text=3.49 chart=1.05 doc=1.24 grounding=2.67  407.4s
+step   730  loss 0.427  gnorm 4.20  ocr=0.14 caption=0.00 chart=1.05 text=3.28 vqa=0.12 grounding=2.76 doc=1.03  411.9s
+step   740  loss 0.526  gnorm 4.00  caption=0.01 ocr=0.04 text=3.47 grounding=2.77 vqa=0.12 doc=1.54 chart=1.03  416.6s
+step   750  loss 0.310  gnorm 2.72  caption=0.02 ocr=0.04 vqa=0.13 grounding=2.72 text=3.24 doc=1.22 chart=1.10  422.7s
+step   760  loss 0.839  gnorm 5.16  caption=0.01 vqa=0.15 chart=1.15 grounding=2.72 text=3.50 doc=0.93 ocr=0.04  427.9s
+step   770  loss 0.896  gnorm 3.46  vqa=0.09 caption=0.00 grounding=2.82 text=3.44 chart=1.07 ocr=0.02 doc=1.40  432.3s
+step   780  loss 0.935  gnorm 2.41  caption=0.01 text=3.31 vqa=0.06 grounding=2.77 ocr=0.02 chart=1.12 doc=1.43  437.0s
+step   790  loss 0.768  gnorm 3.70  vqa=0.21 grounding=2.66 ocr=0.09 chart=1.14 text=3.39 doc=1.31 caption=0.00  442.2s
+step   800  loss 1.098  gnorm 5.09  vqa=0.12 text=3.60 caption=0.00 doc=1.57 grounding=2.67 ocr=0.01 chart=1.04  447.4s
+step   810  loss 0.659  gnorm 2.13  caption=0.00 ocr=0.01 vqa=0.05 grounding=2.65 doc=1.38 chart=1.03 text=3.12  452.2s
+step   820  loss 0.552  gnorm 1.91  caption=0.00 doc=1.18 vqa=0.11 chart=1.05 ocr=0.01 text=3.35 grounding=2.70  457.8s
+step   830  loss 0.874  gnorm 5.40  vqa=0.11 caption=0.01 ocr=0.10 chart=0.99 text=3.40 grounding=2.92 doc=1.27  463.3s
+step   840  loss 0.652  gnorm 3.00  vqa=0.05 caption=0.01 grounding=2.86 text=3.35 ocr=0.02 chart=1.13 doc=1.02  468.2s
+step   850  loss 0.737  gnorm 2.66  ocr=0.05 text=3.45 doc=1.31 grounding=2.75 vqa=0.06 caption=0.01 chart=1.04  472.9s
+step   860  loss 0.955  gnorm 3.12  ocr=0.01 caption=0.00 chart=1.04 vqa=0.12 grounding=2.79 doc=1.39 text=3.13  478.3s
+step   870  loss 0.814  gnorm 3.39  vqa=0.14 ocr=0.04 caption=0.00 grounding=2.71 text=3.38 chart=1.10 doc=1.05  483.6s
+step   880  loss 0.329  gnorm 2.88  vqa=0.03 caption=0.01 ocr=0.02 doc=1.23 text=3.38 grounding=2.81 chart=0.97  488.3s
+step   890  loss 0.615  gnorm 2.13  caption=0.00 vqa=0.02 ocr=0.01 chart=1.11 grounding=2.77 text=3.57 doc=1.07  492.1s
+step   900  loss 0.608  gnorm 3.52  grounding=2.65 vqa=0.14 caption=0.02 ocr=0.03 chart=1.08 text=3.12 doc=1.43  498.2s
+step   910  loss 0.997  gnorm 3.75  caption=0.00 vqa=0.09 ocr=0.03 grounding=2.68 chart=1.04 text=3.14 doc=1.13  503.3s
+step   920  loss 0.555  gnorm 2.74  ocr=0.03 caption=0.01 grounding=2.74 chart=1.06 text=3.36 vqa=0.14 doc=1.32  508.2s
+step   930  loss 1.319  gnorm 3.38  grounding=2.75 vqa=0.16 ocr=0.06 caption=0.01 text=3.19 doc=1.43 chart=1.03  513.3s
+step   940  loss 0.612  gnorm 4.42  caption=0.01 text=3.53 grounding=2.67 chart=1.04 doc=1.14 vqa=0.11 ocr=0.05  518.8s
+step   950  loss 1.370  gnorm 2.87  chart=1.06 caption=0.01 vqa=0.05 doc=1.42 grounding=2.83 ocr=0.02 text=3.35  523.8s
+step   960  loss 0.846  gnorm 3.17  caption=0.01 grounding=2.71 ocr=0.07 vqa=0.02 chart=1.09 text=3.31 doc=1.26  528.4s
+step   970  loss 0.449  gnorm 2.06  caption=0.00 grounding=2.79 doc=1.38 text=3.72 ocr=0.04 chart=0.98 vqa=0.08  532.9s
+step   980  loss 1.226  gnorm 3.52  caption=0.01 ocr=0.02 vqa=0.08 doc=1.06 chart=1.01 grounding=2.84 text=3.46  538.7s
+step   990  loss 0.934  gnorm 0.95  ocr=0.03 text=3.27 vqa=0.12 caption=0.01 chart=1.08 doc=1.18 grounding=2.75  543.6s
+step  1000  loss 1.117  gnorm 3.97  caption=0.00 vqa=0.03 text=3.04 chart=1.00 grounding=2.86 doc=1.36 ocr=0.05  548.7s
+task       metric          value   other
+caption    em              0.930   
+vqa        em              0.953   
+ocr        cer             0.013   wer=0.020, em=0.969
+doc        anls            0.191   em=0.023
+chart      relaxed_acc     0.148   
+grounding  acc@0.5         0.000   point_acc=0.069, parse_fail=0.086, iou=0.000, mask_iou=0.000
+text perplexity after: 23.19 (before 35.32)
+saved 136,654,272 trainable parameters (521.3 MB) to outputs/gpu/stage2_main/

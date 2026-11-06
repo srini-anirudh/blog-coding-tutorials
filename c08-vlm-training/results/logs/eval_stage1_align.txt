@@ -1,0 +1,3 @@
+AMD EPYC 7R13 Processor, 8 threads, n=64 per task
+task       metric           seen   blind  majority
+caption    em              0.797   0.000     0.062

@@ -1,0 +1,40 @@
+{
+ "tokens": {
+  "scene 224x224": {
+   "resize": 49,
+   "pad": 49,
+   "tile": 49
+  },
+  "ocr 336x224": {
+   "resize": 49,
+   "pad": 49,
+   "tile": 147
+  },
+  "ocr 448x160": {
+   "resize": 49,
+   "pad": 49,
+   "tile": 196
+  },
+  "ocr 448x224": {
+   "resize": 49,
+   "pad": 49,
+   "tile": 147
+  },
+  "document 448x448": {
+   "resize": 49,
+   "pad": 49,
+   "tile": 245
+  }
+ },
+ "timed": {
+  "resize": {
+   "tiles": 1,
+   "ms": 9.712743759155273
+  },
+  "tile": {
+   "tiles": 5,
+   "ms": 7.4680328369140625
+  }
+ },
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2"
+}

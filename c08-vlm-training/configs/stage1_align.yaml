@@ -2,10 +2,10 @@
 name: stage1_align
 freeze: align
 tasks: [caption]
-steps: 300
-batch_size: 4
+steps: 600
+batch_size: 8
 lrs: {projector: 1.0e-3}
 warmup: 20
 ppl_passages: 0
-eval_n: 32
+eval_n: 64
 save: true

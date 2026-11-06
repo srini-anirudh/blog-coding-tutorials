@@ -1,0 +1,20 @@
+
+[transformers] The new embeddings will be initialized from a multivariate normal distribution that has old embeddings' mean and covariance. As described in this article: https://nlp.stanford.edu/~johnhew/vocab-expansion.html. To disable this, use `mean_resizing=False`
+[own_smoke] AMD EPYC 7R13 Processor, 8 threads, loaded 0 tensors, lora on 0 linears
+module         trainable         total   share
+vision                 0    85,797,120    0.0%
+projector      2,102,400     2,102,400  100.0%
+lm                     0   134,534,016    0.0%
+all            2,102,400   222,433,536    0.9%
+mixture: {'caption': 1.0}
+epochs over each corpus: {'caption': 0.0}
+group                  tensors        params        lr    wd
+projector                    2     2,101,248   1.0e-03   0.0
+projector/no_decay           2         1,152   1.0e-03   0.0
+step     1  loss 2.820  gnorm 17.20  caption=2.86  1.3s
+step     5  loss 2.622  gnorm 10.79  caption=2.71  6.3s
+step    10  loss 1.640  gnorm 3.50  caption=1.87  11.9s
+step    15  loss 1.324  gnorm 4.38  caption=1.45  17.3s
+step    20  loss 1.138  gnorm 4.33  caption=1.30  22.0s
+task       metric          value   other
+caption    em              0.000   

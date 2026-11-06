@@ -1,0 +1,41 @@
+[ground_tokens] NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, loaded 4 tensors, lora on 0 linears
+module         trainable         total   share
+vision                 0    85,797,120    0.0%
+projector      2,102,400     2,102,400  100.0%
+lm           134,551,872   134,551,872  100.0%
+all          136,654,272   222,451,392   61.4%
+mixture: {'grounding': 1.0}
+epochs over each corpus: {'grounding': 1.0}
+group                  tensors        params        lr    wd
+projector                    2     2,101,248   2.0e-04   0.0
+projector/no_decay           2         1,152   2.0e-04   0.0
+lm/no_decay                 62    28,383,552   5.0e-05   0.0
+lm                         210   106,168,320   5.0e-05   0.0
+step     1  loss 19.284  gnorm 196.30  grounding=19.28  1.5s
+step    10  loss 15.799  gnorm 102.41  grounding=18.12  5.6s
+step    20  loss 11.775  gnorm 39.58  grounding=13.35  11.0s
+step    30  loss 10.282  gnorm 16.36  grounding=11.04  14.9s
+step    40  loss 9.789  gnorm 12.01  grounding=9.99  19.3s
+step    50  loss 9.257  gnorm 9.62  grounding=9.27  24.4s
+step    60  loss 8.481  gnorm 11.78  grounding=8.85  29.9s
+step    70  loss 8.515  gnorm 11.16  grounding=8.33  33.2s
+step    80  loss 7.963  gnorm 9.24  grounding=8.16  36.9s
+step    90  loss 7.713  gnorm 10.10  grounding=7.79  40.6s
+step   100  loss 7.437  gnorm 9.08  grounding=7.45  45.2s
+step   110  loss 6.642  gnorm 9.46  grounding=6.96  50.3s
+step   120  loss 5.963  gnorm 8.78  grounding=6.33  55.1s
+step   130  loss 5.408  gnorm 8.66  grounding=5.75  59.2s
+step   140  loss 4.932  gnorm 8.41  grounding=5.20  63.0s
+step   150  loss 4.436  gnorm 7.88  grounding=4.67  67.7s
+step   160  loss 3.930  gnorm 7.47  grounding=4.23  71.4s
+step   170  loss 3.556  gnorm 6.72  grounding=3.85  75.6s
+step   180  loss 3.450  gnorm 7.42  grounding=3.56  80.1s
+step   190  loss 3.336  gnorm 7.30  grounding=3.39  84.5s
+step   200  loss 3.331  gnorm 6.82  grounding=3.26  88.6s
+step   210  loss 2.981  gnorm 6.54  grounding=3.15  92.0s
+step   220  loss 3.048  gnorm 5.23  grounding=3.15  97.3s
+step   230  loss 3.073  gnorm 5.29  grounding=3.05  101.0s
+step   240  loss 3.093  gnorm 4.96  grounding=3.02  104.6s
+step   250  loss 3.085  gnorm 4.52  grounding=2.99  108.3s
+task       metric          value   other
+grounding  acc@0.5         0.000   point_acc=0.103, parse_fail=0.047, iou=0.002, mask_iou=0.000

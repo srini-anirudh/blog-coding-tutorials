@@ -1,0 +1,44 @@
+[lora_vision] NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, loaded 4 tensors, lora on 72 linears
+module         trainable         total   share
+vision         2,654,208    88,451,328    3.0%
+projector              0     2,102,400    0.0%
+lm            28,348,416   134,551,872   21.1%
+all           31,002,624   225,105,600   13.8%
+mixture: {'caption': 0.351, 'vqa': 0.248, 'ocr': 0.157, 'doc': 0.055, 'chart': 0.078, 'grounding': 0.111}
+epochs over each corpus: {'caption': 0.04, 'vqa': 0.05, 'ocr': 0.08, 'doc': 0.22, 'chart': 0.16, 'grounding': 0.11}
+group                  tensors        params        lr    wd
+lora                       144     2,654,208   2.0e-04   0.0
+lm/no_decay                  1    28,348,416   5.0e-05   0.0
+step     1  loss 9.712  gnorm 18.07  chart=9.03 doc=9.80 vqa=15.16 caption=0.01 grounding=17.15 ocr=8.81  1.5s
+step    10  loss 8.824  gnorm 20.64  grounding=19.46 doc=9.62 caption=0.00 ocr=12.77 vqa=13.66 chart=6.08  5.4s
+step    20  loss 10.338  gnorm 20.01  vqa=13.61 caption=0.00 chart=5.69 ocr=13.03 grounding=18.51 doc=5.50  9.1s
+step    30  loss 6.108  gnorm 26.21  caption=0.16 doc=6.46 vqa=8.69 chart=5.58 ocr=9.49 grounding=17.32  13.2s
+step    40  loss 4.310  gnorm 8.52  caption=0.97 vqa=4.29 grounding=15.31 doc=4.89 ocr=8.59 chart=5.03  16.7s
+step    50  loss 3.341  gnorm 6.06  ocr=8.39 vqa=3.42 caption=0.77 chart=2.99 grounding=14.25 doc=3.90  20.5s
+step    60  loss 4.900  gnorm 7.97  vqa=3.32 chart=3.56 caption=0.34 ocr=7.41 doc=4.80 grounding=13.71  24.1s
+step    70  loss 3.006  gnorm 9.30  ocr=8.33 vqa=3.38 doc=4.37 caption=0.40 grounding=14.04 chart=2.77  28.1s
+step    80  loss 3.740  gnorm 9.93  vqa=2.63 ocr=7.72 grounding=13.83 caption=0.25 chart=3.29 doc=4.05  32.7s
+step    90  loss 3.406  gnorm 7.63  caption=0.26 vqa=2.32 ocr=7.73 chart=4.65 grounding=13.53 doc=2.88  36.9s
+step   100  loss 3.310  gnorm 5.84  chart=3.75 caption=0.24 vqa=2.29 grounding=12.96 doc=4.02 ocr=7.59  40.6s
+step   110  loss 2.347  gnorm 7.80  caption=0.32 vqa=1.82 doc=2.84 ocr=7.20 grounding=13.03 chart=2.72  44.6s
+step   120  loss 3.179  gnorm 4.77  caption=0.35 vqa=1.89 chart=2.29 doc=3.14 ocr=6.61 grounding=13.03  48.6s
+step   130  loss 3.476  gnorm 6.72  vqa=1.64 caption=0.33 ocr=6.65 grounding=13.35 chart=1.55 doc=3.87  53.3s
+step   140  loss 4.591  gnorm 6.04  vqa=1.59 ocr=6.60 grounding=13.21 caption=0.27 chart=3.46 doc=2.75  57.2s
+step   150  loss 3.072  gnorm 10.56  ocr=7.25 caption=0.33 vqa=1.50 grounding=12.82 chart=2.23 doc=2.97  61.0s
+step   160  loss 2.237  gnorm 9.04  caption=0.25 doc=2.29 ocr=7.05 grounding=13.02 vqa=1.40 chart=2.07  64.7s
+step   170  loss 2.942  gnorm 9.53  vqa=1.11 caption=0.23 grounding=12.47 ocr=6.20 chart=2.76 doc=2.83  68.6s
+step   180  loss 3.512  gnorm 6.04  grounding=12.85 vqa=1.12 ocr=6.16 caption=0.24 chart=2.16 doc=2.21  72.7s
+step   190  loss 1.640  gnorm 8.26  caption=0.23 doc=3.18 grounding=12.62 ocr=6.34 chart=2.18 vqa=1.21  76.5s
+step   200  loss 3.074  gnorm 13.04  chart=2.22 ocr=6.47 caption=0.24 grounding=12.46 vqa=1.13 doc=2.79  80.9s
+step   210  loss 3.396  gnorm 7.53  ocr=6.03 vqa=0.90 caption=0.15 chart=1.90 doc=2.25 grounding=12.34  85.1s
+step   220  loss 2.558  gnorm 7.66  grounding=12.16 ocr=6.08 caption=0.28 doc=3.15 vqa=0.91 chart=1.81  89.5s
+step   230  loss 2.876  gnorm 9.11  ocr=5.55 vqa=1.10 caption=0.19 doc=2.35 chart=3.11 grounding=12.14  93.2s
+step   240  loss 1.876  gnorm 6.35  vqa=1.07 grounding=12.05 caption=0.15 doc=2.69 chart=1.20 ocr=5.53  97.2s
+step   250  loss 1.713  gnorm 4.27  caption=0.18 grounding=11.96 chart=2.29 vqa=1.07 ocr=5.99 doc=3.50  101.0s
+task       metric          value   other
+caption    em              0.586   
+vqa        em              0.445   
+ocr        cer             1.997   wer=2.771, em=0.008
+doc        anls            0.005   em=0.000
+chart      relaxed_acc     0.078   
+grounding  acc@0.5         0.000   point_acc=0.000, parse_fail=1.000, iou=0.000, mask_iou=0.000

@@ -193,3 +193,22 @@ def test_a_tiny_vlm_can_overfit_one_task():
     r = _tiny_run(steps=60, batch_size=8, tasks=["vqa"], task_sizes={"vqa": 8}, eval_n=1, freeze="full",
                   lrs={"vision": 1e-3, "projector": 3e-3, "lm": 3e-3}, log_every=5)
     assert r["log"][-1]["loss"] < r["log"][0]["loss"] * 0.75
+
+
+def test_spread_new_rows_makes_new_tokens_distinct_and_leaves_old_rows(setup):
+    from vlmtrain.grounding import loc_tokens
+    from vlmtrain.tokenizer import spread_new_rows
+
+    model, proc = setup
+    ids = proc.tok.convert_tokens_to_ids(loc_tokens())
+    emb = model.lm.get_input_embeddings().weight
+    before = emb.detach().clone()
+    spread_new_rows(model, ids)
+    assert torch.equal(emb[: min(ids)], before[: min(ids)])
+    old_std = before[: min(ids)].std(0).mean().item()
+    assert emb[ids].std(0).mean().item() == pytest.approx(old_std, rel=0.3)
+
+
+def test_loc_init_spread_runs():
+    r = _tiny_run(loc_init="spread", tasks=["grounding"])
+    assert r["config"]["loc_init"] == "spread"

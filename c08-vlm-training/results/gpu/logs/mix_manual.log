@@ -1,0 +1,46 @@
+[mix_manual] NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, loaded 4 tensors, lora on 0 linears
+module         trainable         total   share
+vision                 0    85,797,120    0.0%
+projector      2,102,400     2,102,400  100.0%
+lm           134,551,872   134,551,872  100.0%
+all          136,654,272   222,451,392   61.4%
+mixture: {'caption': 0.083, 'vqa': 0.083, 'ocr': 0.167, 'doc': 0.25, 'chart': 0.167, 'grounding': 0.25}
+epochs over each corpus: {'caption': 0.01, 'vqa': 0.02, 'ocr': 0.08, 'doc': 1.0, 'chart': 0.33, 'grounding': 0.25}
+group                  tensors        params        lr    wd
+projector                    2     2,101,248   2.0e-04   0.0
+projector/no_decay           2         1,152   2.0e-04   0.0
+lm/no_decay                 62    28,383,552   5.0e-05   0.0
+lm                         210   106,168,320   5.0e-05   0.0
+step     1  loss 12.626  gnorm 109.66  grounding=18.56 doc=10.11 ocr=11.19 chart=6.94  2.2s
+step    10  loss 8.462  gnorm 66.76  grounding=18.54 ocr=11.24 chart=4.38 doc=6.65 vqa=12.33 caption=0.00  9.2s
+step    20  loss 3.833  gnorm 21.20  doc=3.76 ocr=8.58 grounding=14.80 caption=0.06 chart=2.64 vqa=2.39  17.4s
+step    30  loss 6.405  gnorm 24.45  ocr=6.57 grounding=12.03 doc=2.57 caption=0.31 chart=1.73 vqa=1.74  25.8s
+step    40  loss 2.827  gnorm 8.16  ocr=5.32 vqa=0.82 doc=1.89 grounding=11.09 chart=2.37 caption=0.42  32.7s
+step    50  loss 3.029  gnorm 12.74  chart=1.81 doc=2.09 ocr=4.67 caption=0.25 grounding=9.88 vqa=1.05  39.8s
+step    60  loss 3.430  gnorm 12.65  doc=1.90 grounding=9.60 vqa=0.83 chart=1.29 ocr=4.44 caption=0.11  48.3s
+step    70  loss 3.409  gnorm 8.70  chart=1.42 doc=1.62 grounding=9.51 ocr=4.57 caption=0.13 vqa=0.64  56.4s
+step    80  loss 2.539  gnorm 7.16  doc=1.61 chart=1.26 grounding=8.61 caption=0.05 ocr=4.25 vqa=0.79  62.2s
+step    90  loss 2.799  gnorm 6.36  ocr=4.76 doc=1.58 chart=1.07 grounding=8.72 caption=0.02 vqa=0.91  70.4s
+step   100  loss 2.833  gnorm 6.85  grounding=8.07 vqa=0.60 caption=0.03 doc=1.66 ocr=4.20 chart=1.61  76.2s
+step   110  loss 3.678  gnorm 8.26  caption=0.04 doc=1.34 grounding=7.77 ocr=4.35 chart=1.25 vqa=0.64  82.1s
+step   120  loss 2.975  gnorm 7.66  caption=0.04 doc=1.24 grounding=7.45 chart=1.12 ocr=3.79 vqa=0.81  87.5s
+step   130  loss 2.872  gnorm 5.95  doc=1.28 caption=0.03 vqa=0.47 chart=1.27 grounding=7.20 ocr=3.92  93.6s
+step   140  loss 2.014  gnorm 7.26  doc=1.32 chart=1.15 grounding=7.09 caption=0.02 vqa=0.72 ocr=3.28  99.3s
+step   150  loss 1.964  gnorm 7.04  chart=1.17 vqa=0.61 doc=1.49 caption=0.04 ocr=3.40 grounding=6.81  106.2s
+step   160  loss 1.760  gnorm 6.64  ocr=3.28 grounding=6.46 chart=1.17 caption=0.03 doc=1.30 vqa=0.48  114.9s
+step   170  loss 2.802  gnorm 6.80  doc=1.22 vqa=0.73 grounding=6.28 ocr=3.27 caption=0.03 chart=1.20  122.9s
+step   180  loss 3.269  gnorm 8.56  grounding=5.92 doc=1.30 chart=1.04 vqa=0.62 ocr=3.00 caption=0.03  130.4s
+step   190  loss 1.369  gnorm 6.25  ocr=3.05 grounding=5.74 caption=0.01 chart=1.09 doc=1.35 vqa=0.73  137.8s
+step   200  loss 2.582  gnorm 6.78  grounding=5.60 chart=1.08 vqa=0.56 doc=1.30 ocr=3.04 caption=0.04  145.7s
+step   210  loss 2.793  gnorm 6.09  chart=1.19 doc=1.29 caption=0.02 grounding=5.40 ocr=2.92 vqa=0.43  153.0s
+step   220  loss 2.648  gnorm 6.12  grounding=5.19 chart=1.12 ocr=2.81 doc=1.37 caption=0.01 vqa=0.67  159.8s
+step   230  loss 2.129  gnorm 7.86  chart=1.11 doc=1.21 vqa=0.40 caption=0.06 grounding=5.31 ocr=2.90  167.2s
+step   240  loss 2.848  gnorm 7.37  doc=1.19 grounding=4.85 caption=0.01 ocr=2.84 vqa=0.48 chart=1.04  173.9s
+step   250  loss 2.441  gnorm 7.54  ocr=2.70 grounding=4.92 caption=0.02 vqa=0.59 doc=1.20 chart=1.10  179.6s
+task       metric          value   other
+caption    em              0.930   
+vqa        em              0.680   
+ocr        cer             0.668   wer=0.828, em=0.094
+doc        anls            0.173   em=0.008
+chart      relaxed_acc     0.133   
+grounding  acc@0.5         0.000   point_acc=0.000, parse_fail=1.000, iou=0.000, mask_iou=0.000

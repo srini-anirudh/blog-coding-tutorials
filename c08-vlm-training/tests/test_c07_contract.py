@@ -7,7 +7,8 @@ from vlmtrain import data as D
 from vlmtrain.c07_adapter import build_c07_tiny, c07_available
 from vlmtrain.freeze import set_trainable, trainable_report
 from vlmtrain.model import Projector, pixel_shuffle
-from vlmtrain.train import TrainConfig, run
+from vlmtrain.packing import pack
+from vlmtrain.train import TrainConfig, per_sample_loss, run
 
 pytestmark = pytest.mark.skipif(not c07_available(), reason="../c07-vlm not present")
 
@@ -28,6 +29,22 @@ def test_processor_and_c07_model_agree_on_visual_tokens(built):
     out = model(b["input_ids"], b["pixel_values"], attention_mask=b["attention_mask"], labels=b["labels"])
     assert out.logits.shape[:2] == b["input_ids"].shape
     assert out.loss.isfinite()
+
+
+@torch.no_grad()
+def test_c07_accepts_a_packed_batch_and_matches_separate_samples(built):
+    _, model, proc = built
+    enc = [proc.encode(D.make_example("vqa", 1)), proc.encode(D.make_example("caption", 1))]
+    alone = []
+    for e in enc:
+        b = proc.collate([e])
+        alone.append(model(b["input_ids"], b["pixel_values"], attention_mask=b["attention_mask"],
+                           labels=b["labels"]).loss.item())
+    b = pack(enc, 400, proc.pad_id)
+    out = model(b["input_ids"], b["pixel_values"], attention_mask=b["attention_mask"], position_ids=b["position_ids"])
+    sums, counts = per_sample_loss(out.logits, b["labels"], b["seg_ids"], len(enc))
+    for k, i in enumerate(b["rows"][0]):
+        assert (sums[k] / counts[k]).item() == pytest.approx(alone[i], rel=1e-4)
 
 
 def test_c07_understands_our_freeze_presets(built):

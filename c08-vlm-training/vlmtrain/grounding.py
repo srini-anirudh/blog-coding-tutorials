@@ -15,6 +15,7 @@ from __future__ import annotations
 import re
 
 import numpy as np
+from PIL import Image, ImageDraw
 
 from .metrics import Box
 
@@ -151,3 +152,20 @@ def encode_polygon(points: list[tuple[float, float]], width: float, height: floa
     for x, y in points:
         q += [quantize(x, width, bins), quantize(y, height, bins)]
     return _format(q, fmt)
+
+
+def decode_polygon(text: str, width: float, height: float, fmt: str = "tokens",
+                   bins: int = LOC_BINS) -> list[tuple[float, float]] | None:
+    """Grounding string -> polygon vertices at bin centres, or None when there are fewer than 3 vertices."""
+    q = parse_coords(text, fmt)
+    if len(q) < 6:
+        return None
+    q = q[:len(q) // 2 * 2]
+    return [(dequantize(q[i], width, bins), dequantize(q[i + 1], height, bins)) for i in range(0, len(q), 2)]
+
+
+def polygon_to_mask(points: list[tuple[float, float]], width: int, height: int) -> np.ndarray:
+    """Rasterise a polygon to a binary mask (H, W), so a generated outline can be scored with mask IoU."""
+    m = Image.new("L", (width, height), 0)
+    ImageDraw.Draw(m).polygon(points, fill=255)
+    return np.array(m) > 0

@@ -1,0 +1,743 @@
+{
+ "name": "lora_all",
+ "config": {
+  "name": "lora_all",
+  "model": "auto",
+  "steps": 250,
+  "batch_size": 16,
+  "freeze": "none",
+  "vision_layers_to_train": 0,
+  "lrs": {
+   "vision": 1e-06,
+   "projector": 0.0002,
+   "lm": 5e-05,
+   "lora": 0.0002
+  },
+  "weight_decay": 0.0,
+  "warmup": 100,
+  "grad_clip": 1.0,
+  "loss_norm": "sample",
+  "tasks": [
+   "caption",
+   "vqa",
+   "ocr",
+   "doc",
+   "chart",
+   "grounding"
+  ],
+  "task_sizes": {
+   "caption": 40000,
+   "vqa": 20000,
+   "ocr": 8000,
+   "doc": 1000,
+   "chart": 2000,
+   "grounding": 4000
+  },
+  "mixture": "temperature",
+  "temperature": 2.0,
+  "manual_weights": null,
+  "replay_ratio": 0,
+  "replay_max_tokens": 96,
+  "strategy": "tile",
+  "max_tiles": 4,
+  "grounding_format": "tokens",
+  "loc_init": "mean",
+  "lora": [
+   "lm",
+   "vision",
+   "projector"
+  ],
+  "lora_r": 16,
+  "lora_alpha": 32.0,
+  "train_new_tokens": true,
+  "pack_budget": 0,
+  "init_from": "outputs/gpu/stage1_align/trainable.safetensors",
+  "eval_n": 128,
+  "eval_every": 0,
+  "eval_n_mid": 24,
+  "ppl_passages": 0,
+  "save": false,
+  "out_dir": "outputs/gpu",
+  "results_dir": "results/gpu",
+  "seed": 0,
+  "device": null,
+  "log_every": 10
+ },
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "train_sec": 120.8,
+ "sec_per_step": 0.483,
+ "tokens_per_sec": 3376,
+ "peak_rss_mb": 2139,
+ "peak_device_mb": 15317,
+ "trainable": {
+  "vision": {
+   "trainable": 2654208,
+   "total": 88451328
+  },
+  "projector": {
+   "trainable": 76800,
+   "total": 2179200
+  },
+  "lm": {
+   "trainable": 33232896,
+   "total": 139436352
+  }
+ },
+ "mixture_target": {
+  "caption": 0.35059808941371806,
+  "vqa": 0.24791028649548758,
+  "ocr": 0.1567922321421246,
+  "doc": 0.055434425292535824,
+  "chart": 0.0783961160710623,
+  "grounding": 0.11086885058507165
+ },
+ "mixture_observed": {
+  "caption": 0.33775,
+  "vqa": 0.25275,
+  "ocr": 0.15875,
+  "doc": 0.0575,
+  "chart": 0.07825,
+  "grounding": 0.115
+ },
+ "supervised_token_share": {
+  "chart": 0.027990597248824658,
+  "doc": 0.05458819432352429,
+  "vqa": 0.08802019850252481,
+  "caption": 0.6123541702942713,
+  "grounding": 0.12023332752916593,
+  "ocr": 0.09681351210168901
+ },
+ "ppl_before": null,
+ "ppl_after": null,
+ "metrics": {
+  "caption": {
+   "em": 0.9609375
+  },
+  "vqa": {
+   "em": 0.8125
+  },
+  "ocr": {
+   "cer": 0.7812902235793101,
+   "wer": 0.9505208333333335,
+   "em": 0.015625
+  },
+  "doc": {
+   "anls": 0.11562499999999996,
+   "em": 0.0078125
+  },
+  "chart": {
+   "relaxed_acc": 0.1328125
+  },
+  "grounding": {
+   "point_acc": 0.0,
+   "parse_fail": 1.0,
+   "iou": 0.0,
+   "acc@0.5": 0.0,
+   "mask_iou": 0.0
+  }
+ },
+ "examples": {
+  "caption": [
+   {
+    "question": "Describe the image.",
+    "gold": "A red circle and a yellow triangle.",
+    "pred": "A red circle and a yellow triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "An orange triangle.",
+    "pred": "An orange triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "A purple triangle.",
+    "pred": "A purple triangle."
+   }
+  ],
+  "vqa": [
+   {
+    "question": "How many shapes are there? Answer with one word.",
+    "gold": "5",
+    "pred": "5"
+   },
+   {
+    "question": "How many green squares are there? Answer with one word.",
+    "gold": "1",
+    "pred": "2"
+   },
+   {
+    "question": "Is there a blue circle? Answer with one word.",
+    "gold": "no",
+    "pred": "yes"
+   }
+  ],
+  "ocr": [
+   {
+    "question": "What does the text in the image say?",
+    "gold": "pearl oyster",
+    "pred": "apple apple"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "square pearl",
+    "pred": "apple square"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "radio",
+    "pred": "apple"
+   }
+  ],
+  "doc": [
+   {
+    "question": "What is the total?",
+    "gold": "79.50",
+    "pred": "15.50"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "5",
+    "pred": "5"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "1",
+    "pred": "5"
+   }
+  ],
+  "chart": [
+   {
+    "question": "What is the value of yak?",
+    "gold": "5",
+    "pred": "2"
+   },
+   {
+    "question": "What is the value of fox?",
+    "gold": "4",
+    "pred": "9"
+   },
+   {
+    "question": "What is the value of fox?",
+    "gold": "5",
+    "pred": "5"
+   }
+  ],
+  "grounding": [
+   {
+    "question": "Point to the green circle.",
+    "gold": "<loc_17><loc_14>",
+    "pred": ""
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "<loc_23><loc_15><loc_31><loc_22>",
+    "pred": "-   red   -   -   -   -   -   -   -   -   -   -"
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "<loc_14><loc_4><loc_19><loc_9>",
+    "pred": "red, green, green"
+   }
+  ]
+ },
+ "curve": [
+  {
+   "step": 250,
+   "caption": {
+    "em": 0.9609375
+   },
+   "vqa": {
+    "em": 0.8125
+   },
+   "ocr": {
+    "cer": 0.7812902235793101,
+    "wer": 0.9505208333333335,
+    "em": 0.015625
+   },
+   "doc": {
+    "anls": 0.11562499999999996,
+    "em": 0.0078125
+   },
+   "chart": {
+    "relaxed_acc": 0.1328125
+   },
+   "grounding": {
+    "point_acc": 0.0,
+    "parse_fail": 1.0,
+    "iou": 0.0,
+    "acc@0.5": 0.0,
+    "mask_iou": 0.0
+   }
+  }
+ ],
+ "log": [
+  {
+   "step": 1,
+   "loss": 9.7116,
+   "grad_norm": 24.539,
+   "lr": {
+    "lora": 4.000000000000001e-06,
+    "lm/no_decay": 1.0000000000000002e-06
+   },
+   "task_loss": {
+    "chart": 9.0319,
+    "doc": 9.7967,
+    "vqa": 15.1596,
+    "caption": 0.0118,
+    "grounding": 17.1468,
+    "ocr": 8.8125
+   },
+   "sec": 1.6
+  },
+  {
+   "step": 10,
+   "loss": 8.2568,
+   "grad_norm": 22.4,
+   "lr": {
+    "lora": 2.2000000000000003e-05,
+    "lm/no_decay": 5.500000000000001e-06
+   },
+   "task_loss": {
+    "grounding": 19.3329,
+    "doc": 9.4603,
+    "caption": 0.0009,
+    "ocr": 12.515,
+    "vqa": 13.1287,
+    "chart": 5.7683
+   },
+   "sec": 6.2
+  },
+  {
+   "step": 20,
+   "loss": 7.8826,
+   "grad_norm": 19.24,
+   "lr": {
+    "lora": 4.2e-05,
+    "lm/no_decay": 1.05e-05
+   },
+   "task_loss": {
+    "vqa": 9.4883,
+    "caption": 0.0026,
+    "chart": 4.0577,
+    "ocr": 11.6372,
+    "grounding": 17.5053,
+    "doc": 5.1368
+   },
+   "sec": 10.8
+  },
+  {
+   "step": 30,
+   "loss": 4.6537,
+   "grad_norm": 9.223,
+   "lr": {
+    "lora": 6.2e-05,
+    "lm/no_decay": 1.55e-05
+   },
+   "task_loss": {
+    "caption": 0.0586,
+    "doc": 4.2843,
+    "vqa": 3.1491,
+    "chart": 4.0301,
+    "ocr": 7.097,
+    "grounding": 15.6794
+   },
+   "sec": 15.8
+  },
+  {
+   "step": 40,
+   "loss": 2.5654,
+   "grad_norm": 4.778,
+   "lr": {
+    "lora": 8.2e-05,
+    "lm/no_decay": 2.05e-05
+   },
+   "task_loss": {
+    "caption": 0.1638,
+    "vqa": 1.9654,
+    "grounding": 14.1339,
+    "doc": 3.2908,
+    "ocr": 6.4327,
+    "chart": 2.9609
+   },
+   "sec": 20.0
+  },
+  {
+   "step": 50,
+   "loss": 2.0658,
+   "grad_norm": 3.902,
+   "lr": {
+    "lora": 0.00010200000000000001,
+    "lm/no_decay": 2.5500000000000003e-05
+   },
+   "task_loss": {
+    "ocr": 5.6517,
+    "vqa": 1.091,
+    "caption": 0.117,
+    "chart": 1.4907,
+    "grounding": 13.1919,
+    "doc": 2.775
+   },
+   "sec": 24.9
+  },
+  {
+   "step": 60,
+   "loss": 2.8183,
+   "grad_norm": 4.966,
+   "lr": {
+    "lora": 0.000122,
+    "lm/no_decay": 3.05e-05
+   },
+   "task_loss": {
+    "vqa": 0.9465,
+    "chart": 1.9893,
+    "caption": 0.073,
+    "ocr": 5.3788,
+    "doc": 3.5665,
+    "grounding": 11.8162
+   },
+   "sec": 29.5
+  },
+  {
+   "step": 70,
+   "loss": 1.7385,
+   "grad_norm": 3.589,
+   "lr": {
+    "lora": 0.000142,
+    "lm/no_decay": 3.55e-05
+   },
+   "task_loss": {
+    "ocr": 5.9463,
+    "vqa": 0.8691,
+    "doc": 3.2958,
+    "caption": 0.0756,
+    "grounding": 12.1087,
+    "chart": 1.308
+   },
+   "sec": 34.2
+  },
+  {
+   "step": 80,
+   "loss": 2.1911,
+   "grad_norm": 5.081,
+   "lr": {
+    "lora": 0.000162,
+    "lm/no_decay": 4.05e-05
+   },
+   "task_loss": {
+    "vqa": 0.7117,
+    "ocr": 5.4713,
+    "grounding": 11.3553,
+    "caption": 0.0732,
+    "chart": 1.779,
+    "doc": 3.1595
+   },
+   "sec": 39.1
+  },
+  {
+   "step": 90,
+   "loss": 1.6546,
+   "grad_norm": 2.709,
+   "lr": {
+    "lora": 0.000182,
+    "lm/no_decay": 4.55e-05
+   },
+   "task_loss": {
+    "caption": 0.0445,
+    "vqa": 0.5845,
+    "ocr": 5.2886,
+    "chart": 2.4975,
+    "grounding": 10.4899,
+    "doc": 2.2522
+   },
+   "sec": 44.1
+  },
+  {
+   "step": 100,
+   "loss": 1.9067,
+   "grad_norm": 2.732,
+   "lr": {
+    "lora": 0.0002,
+    "lm/no_decay": 5e-05
+   },
+   "task_loss": {
+    "chart": 2.259,
+    "caption": 0.0415,
+    "vqa": 0.6045,
+    "grounding": 9.9635,
+    "doc": 2.5332,
+    "ocr": 4.6012
+   },
+   "sec": 48.9
+  },
+  {
+   "step": 110,
+   "loss": 1.3243,
+   "grad_norm": 2.502,
+   "lr": {
+    "lora": 0.00019803328406604252,
+    "lm/no_decay": 4.950832101651063e-05
+   },
+   "task_loss": {
+    "caption": 0.0289,
+    "vqa": 0.5724,
+    "doc": 1.9631,
+    "ocr": 4.7245,
+    "grounding": 9.6752,
+    "chart": 1.5788
+   },
+   "sec": 53.6
+  },
+  {
+   "step": 120,
+   "loss": 1.8607,
+   "grad_norm": 2.49,
+   "lr": {
+    "lora": 0.00019221909118783407,
+    "lm/no_decay": 4.805477279695852e-05
+   },
+   "task_loss": {
+    "caption": 0.0331,
+    "vqa": 0.5854,
+    "chart": 1.4102,
+    "doc": 2.1001,
+    "ocr": 4.3442,
+    "grounding": 9.4822
+   },
+   "sec": 58.4
+  },
+  {
+   "step": 130,
+   "loss": 2.37,
+   "grad_norm": 3.733,
+   "lr": {
+    "lora": 0.00018281152949374527,
+    "lm/no_decay": 4.570288237343632e-05
+   },
+   "task_loss": {
+    "vqa": 0.4943,
+    "caption": 0.0349,
+    "ocr": 4.2795,
+    "grounding": 9.8528,
+    "chart": 1.1161,
+    "doc": 2.7719
+   },
+   "sec": 63.1
+  },
+  {
+   "step": 140,
+   "loss": 3.0172,
+   "grad_norm": 4.384,
+   "lr": {
+    "lora": 0.00017022175457229725,
+    "lm/no_decay": 4.255543864307431e-05
+   },
+   "task_loss": {
+    "vqa": 0.4714,
+    "ocr": 4.098,
+    "grounding": 9.5857,
+    "caption": 0.0196,
+    "chart": 1.5524,
+    "doc": 1.6454
+   },
+   "sec": 67.5
+  },
+  {
+   "step": 150,
+   "loss": 1.6343,
+   "grad_norm": 3.601,
+   "lr": {
+    "lora": 0.000155,
+    "lm/no_decay": 3.875e-05
+   },
+   "task_loss": {
+    "ocr": 4.4618,
+    "caption": 0.0135,
+    "vqa": 0.4482,
+    "grounding": 9.0426,
+    "chart": 1.3699,
+    "doc": 1.5595
+   },
+   "sec": 72.3
+  },
+  {
+   "step": 160,
+   "loss": 1.0006,
+   "grad_norm": 2.349,
+   "lr": {
+    "lora": 0.00013781152949374526,
+    "lm/no_decay": 3.4452882373436316e-05
+   },
+   "task_loss": {
+    "caption": 0.0399,
+    "doc": 1.6263,
+    "ocr": 4.3999,
+    "grounding": 9.1283,
+    "vqa": 0.397,
+    "chart": 1.3317
+   },
+   "sec": 76.8
+  },
+  {
+   "step": 170,
+   "loss": 1.806,
+   "grad_norm": 2.194,
+   "lr": {
+    "lora": 0.00011940756169408881,
+    "lm/no_decay": 2.9851890423522204e-05
+   },
+   "task_loss": {
+    "vqa": 0.43,
+    "caption": 0.0151,
+    "grounding": 8.5089,
+    "ocr": 3.8478,
+    "chart": 1.4701,
+    "doc": 1.9021
+   },
+   "sec": 81.4
+  },
+  {
+   "step": 180,
+   "loss": 2.4748,
+   "grad_norm": 3.017,
+   "lr": {
+    "lora": 0.00010059243830591121,
+    "lm/no_decay": 2.5148109576477802e-05
+   },
+   "task_loss": {
+    "grounding": 9.1163,
+    "vqa": 0.372,
+    "ocr": 3.975,
+    "caption": 0.0141,
+    "chart": 1.3197,
+    "doc": 1.4987
+   },
+   "sec": 86.6
+  },
+  {
+   "step": 190,
+   "loss": 0.8695,
+   "grad_norm": 2.052,
+   "lr": {
+    "lora": 8.218847050625476e-05,
+    "lm/no_decay": 2.054711762656369e-05
+   },
+   "task_loss": {
+    "caption": 0.0306,
+    "doc": 1.7076,
+    "grounding": 8.9543,
+    "ocr": 3.7754,
+    "chart": 1.1665,
+    "vqa": 0.301
+   },
+   "sec": 91.1
+  },
+  {
+   "step": 200,
+   "loss": 1.8445,
+   "grad_norm": 4.41,
+   "lr": {
+    "lora": 6.500000000000002e-05,
+    "lm/no_decay": 1.6250000000000005e-05
+   },
+   "task_loss": {
+    "chart": 1.1863,
+    "ocr": 3.8179,
+    "caption": 0.0235,
+    "grounding": 8.7831,
+    "vqa": 0.5343,
+    "doc": 1.6936
+   },
+   "sec": 95.8
+  },
+  {
+   "step": 210,
+   "loss": 2.2803,
+   "grad_norm": 3.398,
+   "lr": {
+    "lora": 4.977824542770279e-05,
+    "lm/no_decay": 1.2444561356925697e-05
+   },
+   "task_loss": {
+    "ocr": 4.079,
+    "vqa": 0.3585,
+    "caption": 0.0078,
+    "chart": 1.2399,
+    "doc": 1.5515,
+    "grounding": 8.6575
+   },
+   "sec": 101.1
+  },
+  {
+   "step": 220,
+   "loss": 1.5857,
+   "grad_norm": 4.152,
+   "lr": {
+    "lora": 3.718847050625475e-05,
+    "lm/no_decay": 9.297117626563687e-06
+   },
+   "task_loss": {
+    "grounding": 8.6217,
+    "ocr": 3.9223,
+    "caption": 0.0125,
+    "doc": 2.4546,
+    "vqa": 0.4263,
+    "chart": 1.1603
+   },
+   "sec": 106.4
+  },
+  {
+   "step": 230,
+   "loss": 1.8155,
+   "grad_norm": 2.719,
+   "lr": {
+    "lora": 2.778090881216592e-05,
+    "lm/no_decay": 6.94522720304148e-06
+   },
+   "task_loss": {
+    "ocr": 3.9492,
+    "vqa": 0.3561,
+    "caption": 0.0078,
+    "doc": 1.7163,
+    "chart": 1.2513,
+    "grounding": 8.5351
+   },
+   "sec": 110.8
+  },
+  {
+   "step": 240,
+   "loss": 1.2789,
+   "grad_norm": 2.283,
+   "lr": {
+    "lora": 2.196671593395749e-05,
+    "lm/no_decay": 5.491678983489372e-06
+   },
+   "task_loss": {
+    "vqa": 0.3047,
+    "grounding": 8.5522,
+    "caption": 0.0156,
+    "doc": 2.0078,
+    "chart": 1.0596,
+    "ocr": 3.7752
+   },
+   "sec": 115.8
+  },
+  {
+   "step": 250,
+   "loss": 1.0844,
+   "grad_norm": 1.913,
+   "lr": {
+    "lora": 2e-05,
+    "lm/no_decay": 5e-06
+   },
+   "task_loss": {
+    "caption": 0.0084,
+    "grounding": 8.4809,
+    "chart": 1.0413,
+    "vqa": 0.3152,
+    "ocr": 3.6351,
+    "doc": 2.3354
+   },
+   "sec": 120.8
+  }
+ ]
+}

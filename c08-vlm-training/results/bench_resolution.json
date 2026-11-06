@@ -1,0 +1,40 @@
+{
+ "tokens": {
+  "scene 224x224": {
+   "resize": 49,
+   "pad": 49,
+   "tile": 49
+  },
+  "ocr 336x224": {
+   "resize": 49,
+   "pad": 49,
+   "tile": 147
+  },
+  "ocr 448x160": {
+   "resize": 49,
+   "pad": 49,
+   "tile": 196
+  },
+  "ocr 448x224": {
+   "resize": 49,
+   "pad": 49,
+   "tile": 147
+  },
+  "document 448x448": {
+   "resize": 49,
+   "pad": 49,
+   "tile": 245
+  }
+ },
+ "timed": {
+  "resize": {
+   "tiles": 1,
+   "ms": 81.98223114013672
+  },
+  "tile": {
+   "tiles": 5,
+   "ms": 346.3137626647949
+  }
+ },
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads"
+}

@@ -1,0 +1,4 @@
+AMD EPYC 7R13 Processor, 8 threads
+embedding std per dimension: pretrained vocabulary 9.95e-02, the 32 <loc_k> rows 3.23e-06
+next-token logits on a real grounding prompt: spread over the whole vocabulary 32.80, spread over the 32 <loc_k> tokens 5.26e-04
+The output head is tied to these rows. Until they move apart, the model cannot prefer one bin over another.

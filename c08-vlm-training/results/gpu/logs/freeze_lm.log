@@ -1,0 +1,46 @@
+[freeze_lm] NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, loaded 4 tensors, lora on 0 linears
+module         trainable         total   share
+vision                 0    85,797,120    0.0%
+projector      2,102,400     2,102,400  100.0%
+lm           134,551,872   134,551,872  100.0%
+all          136,654,272   222,451,392   61.4%
+mixture: {'caption': 0.351, 'vqa': 0.248, 'ocr': 0.157, 'doc': 0.055, 'chart': 0.078, 'grounding': 0.111}
+epochs over each corpus: {'caption': 0.04, 'vqa': 0.05, 'ocr': 0.08, 'doc': 0.22, 'chart': 0.16, 'grounding': 0.11}
+group                  tensors        params        lr    wd
+projector                    2     2,101,248   2.0e-04   0.0
+projector/no_decay           2         1,152   2.0e-04   0.0
+lm/no_decay                 62    28,383,552   5.0e-05   0.0
+lm                         210   106,168,320   5.0e-05   0.0
+step     1  loss 9.712  gnorm 113.24  chart=9.03 doc=9.80 vqa=15.16 caption=0.01 grounding=17.15 ocr=8.81  8.1s
+step    10  loss 5.871  gnorm 77.33  grounding=18.63 doc=8.78 caption=0.00 ocr=11.36 vqa=10.42 chart=4.35  14.3s
+step    20  loss 4.118  gnorm 24.48  vqa=2.53 caption=0.02 chart=1.93 ocr=8.75 grounding=14.52 doc=4.26  20.0s
+step    30  loss 3.641  gnorm 15.13  caption=0.12 doc=2.77 vqa=0.83 chart=2.56 ocr=5.74 grounding=12.69  25.5s
+step    40  loss 1.788  gnorm 9.32  caption=0.08 vqa=0.79 grounding=11.97 doc=2.61 ocr=5.20 chart=2.19  30.0s
+step    50  loss 1.506  gnorm 7.39  ocr=4.48 vqa=0.62 caption=0.03 chart=1.25 grounding=10.85 doc=2.24  34.7s
+step    60  loss 2.257  gnorm 8.25  vqa=0.75 chart=1.52 caption=0.03 ocr=4.42 doc=2.97 grounding=9.78  39.5s
+step    70  loss 1.467  gnorm 8.79  ocr=4.66 vqa=0.63 doc=2.95 caption=0.03 grounding=10.02 chart=1.22  44.6s
+step    80  loss 1.821  gnorm 7.23  vqa=0.65 ocr=4.61 grounding=9.54 caption=0.01 chart=1.45 doc=2.41  53.2s
+step    90  loss 1.259  gnorm 5.90  caption=0.03 vqa=0.46 ocr=4.35 chart=1.74 grounding=8.99 doc=1.77  60.6s
+step   100  loss 1.569  gnorm 5.74  chart=1.64 caption=0.02 vqa=0.40 grounding=8.50 doc=1.92 ocr=3.96  66.8s
+step   110  loss 1.061  gnorm 6.90  caption=0.05 vqa=0.52 doc=1.46 ocr=3.95 grounding=8.22 chart=1.33  72.4s
+step   120  loss 1.547  gnorm 6.20  caption=0.03 vqa=0.45 chart=1.26 doc=1.61 ocr=3.69 grounding=8.11  78.2s
+step   130  loss 2.009  gnorm 5.93  vqa=0.40 caption=0.02 ocr=3.44 grounding=8.33 chart=1.15 doc=2.23  84.9s
+step   140  loss 2.760  gnorm 12.08  vqa=0.47 ocr=3.22 grounding=8.02 caption=0.03 chart=1.15 doc=1.47  89.8s
+step   150  loss 1.363  gnorm 7.92  ocr=3.80 caption=0.03 vqa=0.52 grounding=7.45 chart=1.35 doc=1.16  94.7s
+step   160  loss 0.921  gnorm 8.24  caption=0.05 doc=1.51 ocr=3.32 grounding=7.38 vqa=0.38 chart=1.35  99.5s
+step   170  loss 1.441  gnorm 7.08  vqa=0.32 caption=0.02 grounding=6.76 ocr=3.11 chart=1.26 doc=1.62  104.3s
+step   180  loss 1.870  gnorm 4.63  grounding=7.16 vqa=0.34 ocr=3.14 caption=0.01 chart=1.23 doc=1.00  109.8s
+step   190  loss 0.692  gnorm 3.22  caption=0.02 doc=1.39 grounding=6.89 ocr=2.87 chart=0.98 vqa=0.25  115.7s
+step   200  loss 1.478  gnorm 6.22  chart=1.16 ocr=2.86 caption=0.01 grounding=6.68 vqa=0.43 doc=1.40  121.0s
+step   210  loss 1.896  gnorm 6.33  ocr=3.03 vqa=0.28 caption=0.01 chart=1.21 doc=1.44 grounding=6.48  126.9s
+step   220  loss 1.196  gnorm 6.22  grounding=6.41 ocr=2.87 caption=0.01 doc=2.07 vqa=0.27 chart=1.08  133.0s
+step   230  loss 1.359  gnorm 5.64  ocr=2.81 vqa=0.20 caption=0.00 doc=1.56 chart=1.14 grounding=6.30  137.3s
+step   240  loss 1.028  gnorm 4.11  vqa=0.22 grounding=6.28 caption=0.01 doc=1.62 chart=1.05 ocr=2.75  143.5s
+step   250  loss 0.824  gnorm 4.39  caption=0.01 grounding=6.18 chart=1.06 vqa=0.25 ocr=2.54 doc=1.77  148.8s
+task       metric          value   other
+caption    em              0.953   
+vqa        em              0.844   
+ocr        cer             0.692   wer=0.831, em=0.094
+doc        anls            0.196   em=0.016
+chart      relaxed_acc     0.117   
+grounding  acc@0.5         0.000   point_acc=0.000, parse_fail=1.000, iou=0.000, mask_iou=0.000

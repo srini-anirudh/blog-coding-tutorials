@@ -1,0 +1,75 @@
+[stage1_align] AMD EPYC 7R13 Processor, 8 threads, loaded 0 tensors, lora on 0 linears
+module         trainable         total   share
+vision                 0    85,797,120    0.0%
+projector      2,102,400     2,102,400  100.0%
+lm                     0   134,551,872    0.0%
+all            2,102,400   222,451,392    0.9%
+mixture: {'caption': 1.0}
+epochs over each corpus: {'caption': 0.12}
+group                  tensors        params        lr    wd
+projector                    2     2,101,248   1.0e-03   0.0
+projector/no_decay           2         1,152   1.0e-03   0.0
+step     1  loss 2.985  gnorm 16.49  caption=3.09  2.3s
+step    10  loss 1.758  gnorm 6.66  caption=2.45  20.0s
+step    20  loss 1.291  gnorm 4.86  caption=1.57  38.4s
+step    30  loss 0.805  gnorm 3.31  caption=1.05  58.0s
+step    40  loss 0.726  gnorm 2.95  caption=0.83  76.3s
+step    50  loss 0.670  gnorm 3.15  caption=0.69  93.8s
+step    60  loss 0.646  gnorm 3.85  caption=0.63  111.5s
+step    70  loss 0.418  gnorm 2.15  caption=0.53  128.8s
+step    80  loss 0.645  gnorm 4.94  caption=0.56  146.3s
+step    90  loss 0.562  gnorm 2.04  caption=0.56  164.7s
+step   100  loss 0.511  gnorm 2.19  caption=0.47  181.6s
+step   110  loss 0.669  gnorm 2.25  caption=0.49  199.6s
+step   120  loss 0.548  gnorm 2.14  caption=0.38  216.8s
+step   130  loss 0.356  gnorm 2.83  caption=0.35  233.7s
+step   140  loss 0.385  gnorm 1.99  caption=0.36  250.0s
+step   150  loss 0.340  gnorm 1.54  caption=0.32  267.4s
+step   160  loss 0.317  gnorm 1.88  caption=0.25  284.8s
+step   170  loss 0.284  gnorm 2.29  caption=0.27  303.1s
+step   180  loss 0.194  gnorm 1.47  caption=0.20  321.4s
+step   190  loss 0.180  gnorm 1.63  caption=0.25  339.8s
+step   200  loss 0.224  gnorm 1.70  caption=0.25  357.0s
+step   210  loss 0.284  gnorm 2.01  caption=0.19  377.8s
+step   220  loss 0.093  gnorm 1.15  caption=0.19  398.5s
+step   230  loss 0.181  gnorm 1.80  caption=0.19  418.7s
+step   240  loss 0.248  gnorm 1.63  caption=0.18  439.3s
+step   250  loss 0.274  gnorm 2.21  caption=0.13  458.1s
+step   260  loss 0.266  gnorm 2.70  caption=0.21  477.8s
+step   270  loss 0.153  gnorm 1.19  caption=0.17  497.3s
+step   280  loss 0.114  gnorm 0.92  caption=0.16  516.8s
+step   290  loss 0.305  gnorm 2.63  caption=0.19  535.8s
+step   300  loss 0.152  gnorm 1.68  caption=0.12  553.0s
+step   310  loss 0.170  gnorm 1.35  caption=0.15  570.8s
+step   320  loss 0.182  gnorm 2.11  caption=0.14  589.0s
+step   330  loss 0.254  gnorm 1.35  caption=0.16  606.4s
+step   340  loss 0.127  gnorm 1.00  caption=0.13  624.1s
+step   350  loss 0.129  gnorm 1.22  caption=0.12  642.4s
+step   360  loss 0.137  gnorm 1.46  caption=0.14  662.0s
+step   370  loss 0.031  gnorm 0.45  caption=0.11  678.7s
+step   380  loss 0.108  gnorm 1.53  caption=0.12  695.4s
+step   390  loss 0.166  gnorm 1.35  caption=0.10  711.6s
+step   400  loss 0.139  gnorm 1.21  caption=0.10  728.5s
+step   410  loss 0.062  gnorm 0.65  caption=0.10  745.3s
+step   420  loss 0.096  gnorm 0.89  caption=0.13  762.5s
+step   430  loss 0.097  gnorm 1.33  caption=0.08  781.0s
+step   440  loss 0.074  gnorm 0.90  caption=0.07  799.2s
+step   450  loss 0.003  gnorm 0.04  caption=0.06  816.8s
+step   460  loss 0.099  gnorm 0.91  caption=0.08  834.9s
+step   470  loss 0.024  gnorm 0.41  caption=0.07  855.0s
+step   480  loss 0.039  gnorm 0.95  caption=0.06  873.3s
+step   490  loss 0.034  gnorm 0.49  caption=0.07  891.6s
+step   500  loss 0.113  gnorm 0.74  caption=0.08  913.3s
+step   510  loss 0.048  gnorm 0.93  caption=0.06  934.6s
+step   520  loss 0.079  gnorm 1.16  caption=0.07  955.2s
+step   530  loss 0.052  gnorm 0.57  caption=0.06  977.3s
+step   540  loss 0.037  gnorm 0.66  caption=0.06  998.9s
+step   550  loss 0.039  gnorm 0.89  caption=0.06  1019.9s
+step   560  loss 0.157  gnorm 1.14  caption=0.08  1039.9s
+step   570  loss 0.061  gnorm 0.75  caption=0.05  1060.4s
+step   580  loss 0.061  gnorm 1.41  caption=0.07  1082.4s
+step   590  loss 0.043  gnorm 1.22  caption=0.06  1103.4s
+step   600  loss 0.035  gnorm 0.68  caption=0.05  1123.2s
+task       metric          value   other
+caption    em              0.797   
+saved 2,102,400 trainable parameters (8.0 MB) to outputs/stage1_align/

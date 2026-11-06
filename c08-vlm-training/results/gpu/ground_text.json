@@ -1,0 +1,520 @@
+{
+ "name": "ground_text",
+ "config": {
+  "name": "ground_text",
+  "model": "auto",
+  "steps": 250,
+  "batch_size": 16,
+  "freeze": "lm",
+  "vision_layers_to_train": 0,
+  "lrs": {
+   "vision": 1e-06,
+   "projector": 0.0002,
+   "lm": 5e-05,
+   "lora": 0.0002
+  },
+  "weight_decay": 0.0,
+  "warmup": 100,
+  "grad_clip": 1.0,
+  "loss_norm": "sample",
+  "tasks": [
+   "grounding"
+  ],
+  "task_sizes": {
+   "caption": 40000,
+   "vqa": 20000,
+   "ocr": 8000,
+   "doc": 1000,
+   "chart": 2000,
+   "grounding": 4000
+  },
+  "mixture": "temperature",
+  "temperature": 2.0,
+  "manual_weights": null,
+  "replay_ratio": 0,
+  "replay_max_tokens": 96,
+  "strategy": "tile",
+  "max_tiles": 4,
+  "grounding_format": "text",
+  "loc_init": "mean",
+  "lora": [],
+  "lora_r": 16,
+  "lora_alpha": 32.0,
+  "train_new_tokens": false,
+  "pack_budget": 0,
+  "init_from": "outputs/gpu/stage1_align/trainable.safetensors",
+  "eval_n": 128,
+  "eval_every": 0,
+  "eval_n_mid": 24,
+  "ppl_passages": 0,
+  "save": false,
+  "out_dir": "outputs/gpu",
+  "results_dir": "results/gpu",
+  "seed": 0,
+  "device": null,
+  "log_every": 10
+ },
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "train_sec": 97.3,
+ "sec_per_step": 0.389,
+ "tokens_per_sec": 3634,
+ "peak_rss_mb": 2034,
+ "peak_device_mb": 7785,
+ "trainable": {
+  "vision": {
+   "trainable": 0,
+   "total": 85797120
+  },
+  "projector": {
+   "trainable": 2102400,
+   "total": 2102400
+  },
+  "lm": {
+   "trainable": 134551872,
+   "total": 134551872
+  }
+ },
+ "mixture_target": {
+  "grounding": 1.0
+ },
+ "mixture_observed": {
+  "grounding": 1.0
+ },
+ "supervised_token_share": {
+  "grounding": 1.0
+ },
+ "ppl_before": null,
+ "ppl_after": null,
+ "metrics": {
+  "grounding": {
+   "point_acc": 0.06896551724137931,
+   "parse_fail": 0.0,
+   "iou": 0.04507017519833091,
+   "acc@0.5": 0.0,
+   "mask_iou": 0.039739886535601315
+  }
+ },
+ "examples": {
+  "grounding": [
+   {
+    "question": "Point to the green circle.",
+    "gold": "[17, 14]",
+    "pred": "[17, 14]"
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "[23, 15, 31, 22]",
+    "pred": "[1, 14, 6, 21]"
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "[14, 4, 19, 9]",
+    "pred": "[14, 17, 21, 23]"
+   }
+  ]
+ },
+ "curve": [
+  {
+   "step": 250,
+   "grounding": {
+    "point_acc": 0.06896551724137931,
+    "parse_fail": 0.0,
+    "iou": 0.04507017519833091,
+    "acc@0.5": 0.0,
+    "mask_iou": 0.039739886535601315
+   }
+  }
+ ],
+ "log": [
+  {
+   "step": 1,
+   "loss": 5.0094,
+   "grad_norm": 64.438,
+   "lr": {
+    "projector": 4.000000000000001e-06,
+    "projector/no_decay": 4.000000000000001e-06,
+    "lm/no_decay": 1.0000000000000002e-06,
+    "lm": 1.0000000000000002e-06
+   },
+   "task_loss": {
+    "grounding": 5.0094
+   },
+   "sec": 1.6
+  },
+  {
+   "step": 10,
+   "loss": 2.4914,
+   "grad_norm": 24.004,
+   "lr": {
+    "projector": 2.2000000000000003e-05,
+    "projector/no_decay": 2.2000000000000003e-05,
+    "lm/no_decay": 5.500000000000001e-06,
+    "lm": 5.500000000000001e-06
+   },
+   "task_loss": {
+    "grounding": 3.8176
+   },
+   "sec": 6.0
+  },
+  {
+   "step": 20,
+   "loss": 1.2059,
+   "grad_norm": 6.233,
+   "lr": {
+    "projector": 4.2e-05,
+    "projector/no_decay": 4.2e-05,
+    "lm/no_decay": 1.05e-05,
+    "lm": 1.05e-05
+   },
+   "task_loss": {
+    "grounding": 1.6975
+   },
+   "sec": 10.0
+  },
+  {
+   "step": 30,
+   "loss": 0.8854,
+   "grad_norm": 2.721,
+   "lr": {
+    "projector": 6.2e-05,
+    "projector/no_decay": 6.2e-05,
+    "lm/no_decay": 1.55e-05,
+    "lm": 1.55e-05
+   },
+   "task_loss": {
+    "grounding": 0.9846
+   },
+   "sec": 13.6
+  },
+  {
+   "step": 40,
+   "loss": 0.8062,
+   "grad_norm": 2.39,
+   "lr": {
+    "projector": 8.2e-05,
+    "projector/no_decay": 8.2e-05,
+    "lm/no_decay": 2.05e-05,
+    "lm": 2.05e-05
+   },
+   "task_loss": {
+    "grounding": 0.8568
+   },
+   "sec": 17.8
+  },
+  {
+   "step": 50,
+   "loss": 0.7677,
+   "grad_norm": 2.201,
+   "lr": {
+    "projector": 0.00010200000000000001,
+    "projector/no_decay": 0.00010200000000000001,
+    "lm/no_decay": 2.5500000000000003e-05,
+    "lm": 2.5500000000000003e-05
+   },
+   "task_loss": {
+    "grounding": 0.7835
+   },
+   "sec": 21.9
+  },
+  {
+   "step": 60,
+   "loss": 0.7002,
+   "grad_norm": 2.276,
+   "lr": {
+    "projector": 0.000122,
+    "projector/no_decay": 0.000122,
+    "lm/no_decay": 3.05e-05,
+    "lm": 3.05e-05
+   },
+   "task_loss": {
+    "grounding": 0.7253
+   },
+   "sec": 26.1
+  },
+  {
+   "step": 70,
+   "loss": 0.7145,
+   "grad_norm": 2.509,
+   "lr": {
+    "projector": 0.000142,
+    "projector/no_decay": 0.000142,
+    "lm/no_decay": 3.55e-05,
+    "lm": 3.55e-05
+   },
+   "task_loss": {
+    "grounding": 0.719
+   },
+   "sec": 29.5
+  },
+  {
+   "step": 80,
+   "loss": 0.7213,
+   "grad_norm": 3.107,
+   "lr": {
+    "projector": 0.000162,
+    "projector/no_decay": 0.000162,
+    "lm/no_decay": 4.05e-05,
+    "lm": 4.05e-05
+   },
+   "task_loss": {
+    "grounding": 0.6971
+   },
+   "sec": 33.2
+  },
+  {
+   "step": 90,
+   "loss": 0.6921,
+   "grad_norm": 4.173,
+   "lr": {
+    "projector": 0.000182,
+    "projector/no_decay": 0.000182,
+    "lm/no_decay": 4.55e-05,
+    "lm": 4.55e-05
+   },
+   "task_loss": {
+    "grounding": 0.6874
+   },
+   "sec": 36.8
+  },
+  {
+   "step": 100,
+   "loss": 0.6307,
+   "grad_norm": 1.699,
+   "lr": {
+    "projector": 0.0002,
+    "projector/no_decay": 0.0002,
+    "lm/no_decay": 5e-05,
+    "lm": 5e-05
+   },
+   "task_loss": {
+    "grounding": 0.672
+   },
+   "sec": 40.5
+  },
+  {
+   "step": 110,
+   "loss": 0.678,
+   "grad_norm": 2.222,
+   "lr": {
+    "projector": 0.00019803328406604252,
+    "projector/no_decay": 0.00019803328406604252,
+    "lm/no_decay": 4.950832101651063e-05,
+    "lm": 4.950832101651063e-05
+   },
+   "task_loss": {
+    "grounding": 0.6723
+   },
+   "sec": 44.4
+  },
+  {
+   "step": 120,
+   "loss": 0.6939,
+   "grad_norm": 1.464,
+   "lr": {
+    "projector": 0.00019221909118783407,
+    "projector/no_decay": 0.00019221909118783407,
+    "lm/no_decay": 4.805477279695852e-05,
+    "lm": 4.805477279695852e-05
+   },
+   "task_loss": {
+    "grounding": 0.669
+   },
+   "sec": 48.1
+  },
+  {
+   "step": 130,
+   "loss": 0.6923,
+   "grad_norm": 1.907,
+   "lr": {
+    "projector": 0.00018281152949374527,
+    "projector/no_decay": 0.00018281152949374527,
+    "lm/no_decay": 4.570288237343632e-05,
+    "lm": 4.570288237343632e-05
+   },
+   "task_loss": {
+    "grounding": 0.6621
+   },
+   "sec": 51.8
+  },
+  {
+   "step": 140,
+   "loss": 0.668,
+   "grad_norm": 2.641,
+   "lr": {
+    "projector": 0.00017022175457229725,
+    "projector/no_decay": 0.00017022175457229725,
+    "lm/no_decay": 4.255543864307431e-05,
+    "lm": 4.255543864307431e-05
+   },
+   "task_loss": {
+    "grounding": 0.6384
+   },
+   "sec": 55.6
+  },
+  {
+   "step": 150,
+   "loss": 0.6785,
+   "grad_norm": 2.58,
+   "lr": {
+    "projector": 0.000155,
+    "projector/no_decay": 0.000155,
+    "lm/no_decay": 3.875e-05,
+    "lm": 3.875e-05
+   },
+   "task_loss": {
+    "grounding": 0.6491
+   },
+   "sec": 59.8
+  },
+  {
+   "step": 160,
+   "loss": 0.6745,
+   "grad_norm": 1.667,
+   "lr": {
+    "projector": 0.00013781152949374526,
+    "projector/no_decay": 0.00013781152949374526,
+    "lm/no_decay": 3.4452882373436316e-05,
+    "lm": 3.4452882373436316e-05
+   },
+   "task_loss": {
+    "grounding": 0.6346
+   },
+   "sec": 63.7
+  },
+  {
+   "step": 170,
+   "loss": 0.6674,
+   "grad_norm": 1.668,
+   "lr": {
+    "projector": 0.00011940756169408881,
+    "projector/no_decay": 0.00011940756169408881,
+    "lm/no_decay": 2.9851890423522204e-05,
+    "lm": 2.9851890423522204e-05
+   },
+   "task_loss": {
+    "grounding": 0.6301
+   },
+   "sec": 67.5
+  },
+  {
+   "step": 180,
+   "loss": 0.6653,
+   "grad_norm": 3.061,
+   "lr": {
+    "projector": 0.00010059243830591121,
+    "projector/no_decay": 0.00010059243830591121,
+    "lm/no_decay": 2.5148109576477802e-05,
+    "lm": 2.5148109576477802e-05
+   },
+   "task_loss": {
+    "grounding": 0.6305
+   },
+   "sec": 71.3
+  },
+  {
+   "step": 190,
+   "loss": 0.596,
+   "grad_norm": 1.393,
+   "lr": {
+    "projector": 8.218847050625476e-05,
+    "projector/no_decay": 8.218847050625476e-05,
+    "lm/no_decay": 2.054711762656369e-05,
+    "lm": 2.054711762656369e-05
+   },
+   "task_loss": {
+    "grounding": 0.6269
+   },
+   "sec": 75.2
+  },
+  {
+   "step": 200,
+   "loss": 0.5938,
+   "grad_norm": 1.615,
+   "lr": {
+    "projector": 6.500000000000002e-05,
+    "projector/no_decay": 6.500000000000002e-05,
+    "lm/no_decay": 1.6250000000000005e-05,
+    "lm": 1.6250000000000005e-05
+   },
+   "task_loss": {
+    "grounding": 0.6189
+   },
+   "sec": 79.2
+  },
+  {
+   "step": 210,
+   "loss": 0.6863,
+   "grad_norm": 1.704,
+   "lr": {
+    "projector": 4.977824542770279e-05,
+    "projector/no_decay": 4.977824542770279e-05,
+    "lm/no_decay": 1.2444561356925697e-05,
+    "lm": 1.2444561356925697e-05
+   },
+   "task_loss": {
+    "grounding": 0.6258
+   },
+   "sec": 82.6
+  },
+  {
+   "step": 220,
+   "loss": 0.6336,
+   "grad_norm": 1.63,
+   "lr": {
+    "projector": 3.718847050625475e-05,
+    "projector/no_decay": 3.718847050625475e-05,
+    "lm/no_decay": 9.297117626563687e-06,
+    "lm": 9.297117626563687e-06
+   },
+   "task_loss": {
+    "grounding": 0.5804
+   },
+   "sec": 86.9
+  },
+  {
+   "step": 230,
+   "loss": 0.6502,
+   "grad_norm": 1.915,
+   "lr": {
+    "projector": 2.778090881216592e-05,
+    "projector/no_decay": 2.778090881216592e-05,
+    "lm/no_decay": 6.94522720304148e-06,
+    "lm": 6.94522720304148e-06
+   },
+   "task_loss": {
+    "grounding": 0.6273
+   },
+   "sec": 90.2
+  },
+  {
+   "step": 240,
+   "loss": 0.5906,
+   "grad_norm": 1.889,
+   "lr": {
+    "projector": 2.196671593395749e-05,
+    "projector/no_decay": 2.196671593395749e-05,
+    "lm/no_decay": 5.491678983489372e-06,
+    "lm": 5.491678983489372e-06
+   },
+   "task_loss": {
+    "grounding": 0.6195
+   },
+   "sec": 93.7
+  },
+  {
+   "step": 250,
+   "loss": 0.5652,
+   "grad_norm": 1.769,
+   "lr": {
+    "projector": 2e-05,
+    "projector/no_decay": 2e-05,
+    "lm/no_decay": 5e-06,
+    "lm": 5e-06
+   },
+   "task_loss": {
+    "grounding": 0.6119
+   },
+   "sec": 97.3
+  }
+ ]
+}

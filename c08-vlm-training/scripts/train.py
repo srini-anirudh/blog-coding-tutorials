@@ -25,8 +25,19 @@ def parse_overrides(args: list[str]) -> dict:
         *parents, leaf = key.split(".")
         for k in parents:
             node = node.setdefault(k, {})
-        node[leaf] = yaml.safe_load(val)
+        node[leaf] = parse_value(val)
     return out
+
+
+def parse_value(val: str):
+    """YAML for lists and dicts, but numbers like 1e-5 are floats. YAML 1.1 reads them as strings (it wants 1.0e-5)."""
+    parsed = yaml.safe_load(val)
+    if isinstance(parsed, str):
+        try:
+            return float(parsed)
+        except ValueError:
+            pass
+    return parsed
 
 
 def merge(base: dict, over: dict) -> dict:

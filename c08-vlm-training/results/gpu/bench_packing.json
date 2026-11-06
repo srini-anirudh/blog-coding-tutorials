@@ -1,0 +1,21 @@
+{
+ "n": 480,
+ "budget": 512,
+ "real_tokens": 49251,
+ "pad_random": 0.5024347369271801,
+ "pad_grouped": 0.015767386091127097,
+ "pack_waste": 0.03806640625000002,
+ "rows": 100,
+ "min": 68,
+ "max": 274,
+ "mean": 102.60625,
+ "timed": {
+  "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+  "samples": 64,
+  "real": 6734,
+  "pad_sec": 1.5863535404205322,
+  "pack_sec": 1.7224528789520264,
+  "mem_mb": 4477.4912109375,
+  "peak_rss_mb": 2199
+ }
+}

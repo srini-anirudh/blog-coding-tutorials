@@ -99,15 +99,20 @@ def gen_chart(rng: random.Random, **_) -> dict:
 
 
 def gen_grounding(rng: random.Random, fmt: str = "tokens", **_) -> dict:
-    """Boxes three times in four, points otherwise. Targets are exact because we drew the shapes."""
+    """Boxes 60% of the time, points 20%, mask outlines 20%. Targets are exact because we drew the shapes."""
     img, objs = shapes.make_scene(rng, 2, 4, distinct=True)
     o = rng.choice(objs)
     w, h = img.size
-    if rng.random() < 0.75:
+    r = rng.random()
+    if r < 0.6:
         return sample("grounding", [img], f"Find the {o.color} {o.shape}. Give its bounding box.",
                       G.encode_box(o.box, w, h, fmt), kind="box", box=o.box, size=(w, h), fmt=fmt)
-    return sample("grounding", [img], f"Point to the {o.color} {o.shape}.",
-                  G.encode_point(o.center, w, h, fmt), kind="point", box=o.box, size=(w, h), fmt=fmt)
+    if r < 0.8:
+        return sample("grounding", [img], f"Point to the {o.color} {o.shape}.",
+                      G.encode_point(o.center, w, h, fmt), kind="point", box=o.box, size=(w, h), fmt=fmt)
+    return sample("grounding", [img], f"Trace the outline of the {o.color} {o.shape}.",
+                  G.encode_polygon(o.polygon(), w, h, fmt), kind="mask", box=o.box, size=(w, h), fmt=fmt,
+                  rle=G.mask_to_rle(shapes.object_mask(o, w)))
 
 
 GENERATORS: dict[str, Callable[..., dict]] = {

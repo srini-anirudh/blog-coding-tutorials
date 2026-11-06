@@ -3,6 +3,7 @@
 import math
 
 import pytest
+import torch
 
 from vlmtrain import metrics as M
 
@@ -60,3 +61,22 @@ def test_box_iou():
     assert M.point_in_box((5, 5), (0, 0, 10, 10)) == 1.0
     assert M.point_in_box((11, 5), (0, 0, 10, 10)) == 0.0
     assert not math.isnan(M.box_iou((0, 0, 0, 0), (0, 0, 0, 0)))
+
+
+@pytest.mark.parametrize("fmt,limit", [("tokens", 24), ("text", 100)])
+def test_evaluate_gives_each_grounding_format_its_own_limit(fmt, limit):
+    from vlmtrain.c07_adapter import build_c07_tiny
+    from vlmtrain.evaluate import evaluate
+
+    _, model, proc = build_c07_tiny()
+    seen = []
+    real_generate = model.generate
+
+    def spy(*args, **kwargs):
+        seen.append(kwargs["max_new_tokens"])
+        kwargs["max_new_tokens"] = 1
+        return real_generate(*args, **kwargs)
+
+    model.generate = spy
+    evaluate(model, proc, torch.device("cpu"), ["vqa", "grounding"], n=1, grounding_format=fmt)
+    assert seen == [24, limit]

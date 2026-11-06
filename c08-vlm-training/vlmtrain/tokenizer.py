@@ -10,6 +10,7 @@ unit tests run without downloading anything.
 
 from __future__ import annotations
 
+import torch
 from transformers import AutoTokenizer, PreTrainedTokenizerFast
 
 from .grounding import LOC_BINS, loc_tokens
@@ -24,6 +25,20 @@ def add_vlm_tokens(tok, bins: int = LOC_BINS):
                            replace_extra_special_tokens=False)
     tok.padding_side = "right"
     return tok
+
+
+@torch.no_grad()
+def spread_new_rows(model, new_ids: list[int], seed: int = 0) -> None:
+    """Give new tokens distinct embedding rows with the statistics of the old vocabulary.
+
+    resize_token_embeddings(mean_resizing=True) puts every new row within about 1e-3 of the mean row,
+    so the 32 <loc_k> tokens start out indistinguishable, in the input and (tied) in the output head.
+    Here each row becomes the old mean plus noise with the old per-dimension std: 32 ordinary, different words.
+    """
+    emb = model.lm.get_input_embeddings().weight
+    old = emb[: min(new_ids)].float()
+    noise = torch.randn(len(new_ids), emb.shape[1], generator=torch.Generator().manual_seed(seed))
+    emb[new_ids] = (old.mean(0) + noise.to(emb.device) * old.std(0)).to(emb.dtype)
 
 
 def build_tokenizer(name: str = "HuggingFaceTB/SmolLM2-135M-Instruct", bins: int = LOC_BINS):

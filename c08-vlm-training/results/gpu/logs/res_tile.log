@@ -1,0 +1,42 @@
+[res_tile] NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, loaded 4 tensors, lora on 0 linears
+module         trainable         total   share
+vision                 0    85,797,120    0.0%
+projector      2,102,400     2,102,400  100.0%
+lm           134,551,872   134,551,872  100.0%
+all          136,654,272   222,451,392   61.4%
+mixture: {'doc': 0.261, 'ocr': 0.739}
+epochs over each corpus: {'doc': 1.04, 'ocr': 0.37}
+group                  tensors        params        lr    wd
+projector                    2     2,101,248   2.0e-04   0.0
+projector/no_decay           2         1,152   2.0e-04   0.0
+lm/no_decay                 62    28,383,552   5.0e-05   0.0
+lm                         210   106,168,320   5.0e-05   0.0
+step     1  loss 12.921  gnorm 146.59  ocr=13.15 doc=11.33  1.5s
+step    10  loss 5.855  gnorm 56.75  ocr=9.77 doc=6.22  5.5s
+step    20  loss 5.117  gnorm 26.74  ocr=6.52 doc=3.72  9.8s
+step    30  loss 4.375  gnorm 14.72  doc=2.93 ocr=5.27  13.9s
+step    40  loss 4.291  gnorm 15.79  ocr=4.80 doc=2.08  18.1s
+step    50  loss 2.899  gnorm 10.39  ocr=4.50 doc=2.05  22.2s
+step    60  loss 3.887  gnorm 13.19  ocr=4.21 doc=1.83  26.5s
+step    70  loss 2.658  gnorm 12.45  ocr=3.66 doc=1.76  30.8s
+step    80  loss 2.705  gnorm 13.19  ocr=3.60 doc=1.63  35.6s
+step    90  loss 2.895  gnorm 10.80  doc=1.68 ocr=3.18  40.2s
+step   100  loss 2.463  gnorm 7.36  ocr=3.15 doc=1.55  44.5s
+step   110  loss 2.599  gnorm 9.35  doc=1.36 ocr=2.80  48.9s
+step   120  loss 1.911  gnorm 8.49  doc=1.25 ocr=2.35  53.3s
+step   130  loss 1.838  gnorm 8.53  ocr=2.10 doc=1.25  57.6s
+step   140  loss 1.172  gnorm 8.74  ocr=1.68 doc=1.35  62.0s
+step   150  loss 1.105  gnorm 8.60  ocr=1.39 doc=1.44  66.4s
+step   160  loss 0.961  gnorm 7.66  ocr=0.91 doc=1.24  70.7s
+step   170  loss 0.667  gnorm 7.48  ocr=0.79 doc=1.25  74.9s
+step   180  loss 0.819  gnorm 8.82  ocr=0.40 doc=1.37  79.5s
+step   190  loss 0.976  gnorm 9.10  ocr=0.54 doc=1.34  84.3s
+step   200  loss 0.581  gnorm 5.26  ocr=0.38 doc=1.36  88.9s
+step   210  loss 0.539  gnorm 7.44  ocr=0.35 doc=1.26  93.2s
+step   220  loss 0.389  gnorm 4.86  ocr=0.22 doc=1.31  97.5s
+step   230  loss 0.389  gnorm 8.95  ocr=0.34 doc=1.28  101.9s
+step   240  loss 0.286  gnorm 3.58  ocr=0.18 doc=1.20  105.9s
+step   250  loss 0.419  gnorm 3.51  doc=1.21 ocr=0.20  110.1s
+task       metric          value   other
+doc        anls            0.188   em=0.031
+ocr        cer             0.055   wer=0.060, em=0.867

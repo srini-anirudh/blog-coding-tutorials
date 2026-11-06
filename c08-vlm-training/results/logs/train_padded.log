@@ -1,0 +1,27 @@
+[train_padded] AMD EPYC 7R13 Processor, 8 threads, loaded 4 tensors, lora on 0 linears
+module         trainable         total   share
+vision                 0    85,797,120    0.0%
+projector      2,102,400     2,102,400  100.0%
+lm           134,551,872   134,551,872  100.0%
+all          136,654,272   222,451,392   61.4%
+mixture: {'caption': 0.351, 'vqa': 0.248, 'ocr': 0.157, 'doc': 0.055, 'chart': 0.078, 'grounding': 0.111}
+epochs over each corpus: {'caption': 0.0, 'vqa': 0.01, 'ocr': 0.01, 'doc': 0.03, 'chart': 0.02, 'grounding': 0.01}
+group                  tensors        params        lr    wd
+projector                    2     2,101,248   2.0e-04   0.0
+projector/no_decay           2         1,152   2.0e-04   0.0
+lm/no_decay                 62    28,383,552   5.0e-05   0.0
+lm                         210   106,168,320   5.0e-05   0.0
+step     1  loss 7.029  gnorm 115.05  chart=7.78 doc=8.32 vqa=10.51 caption=0.15  5.7s
+step    10  loss 4.172  gnorm 48.23  vqa=2.27 grounding=16.20 caption=0.16 doc=4.87 ocr=8.47 chart=2.86  40.9s
+step    20  loss 1.276  gnorm 9.75  grounding=12.83 vqa=0.63 ocr=6.81 caption=0.24 chart=1.14 doc=6.02  79.5s
+step    30  loss 1.750  gnorm 9.54  vqa=0.62 caption=0.13 chart=1.25 ocr=6.81 grounding=11.55 doc=3.77  114.3s
+step    40  loss 2.491  gnorm 9.52  doc=1.68 chart=1.32 caption=0.14 vqa=0.61 ocr=5.97 grounding=10.17  148.4s
+step    50  loss 1.857  gnorm 12.13  caption=0.15 doc=1.93 vqa=0.73 chart=1.93 ocr=4.88 grounding=9.80  184.7s
+step    60  loss 1.079  gnorm 10.66  doc=2.13 ocr=4.07 caption=0.07 vqa=0.53 chart=1.33 grounding=9.37  231.8s
+task       metric          value   other
+caption    em              0.625   
+vqa        em              0.500   
+ocr        cer             0.845   wer=1.000, em=0.000
+doc        anls            0.125   em=0.125
+chart      relaxed_acc     0.125   
+grounding  acc@0.5         0.000   point_acc=0.000, parse_fail=1.000, iou=0.000, mask_iou=0.000

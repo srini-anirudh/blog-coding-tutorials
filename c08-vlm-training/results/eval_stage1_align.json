@@ -1,0 +1,50 @@
+{
+ "name": "stage1_align",
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads",
+ "n": 64,
+ "seen": {
+  "caption": {
+   "em": 0.796875
+  }
+ },
+ "blind": {
+  "caption": {
+   "em": 0.0
+  }
+ },
+ "majority": {
+  "caption": {
+   "answer": "A purple triangle.",
+   "em": 0.0625
+  }
+ },
+ "examples": {
+  "caption": [
+   {
+    "question": "Describe the image.",
+    "gold": "A red circle and a yellow triangle.",
+    "pred": "A red circle and a yellow triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "An orange triangle.",
+    "pred": "An orange triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "A purple triangle.",
+    "pred": "A purple triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "An orange circle, a purple square, an orange square and a purple triangle.",
+    "pred": "An orange circle, a purple square, an orange square and a purple triangle."
+   },
+   {
+    "question": "Describe the image.",
+    "gold": "A purple square.",
+    "pred": "A purple square."
+   }
+  ]
+ }
+}

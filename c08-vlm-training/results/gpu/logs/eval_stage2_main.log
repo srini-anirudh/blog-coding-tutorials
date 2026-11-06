@@ -1,0 +1,8 @@
+NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, n=128 per task
+task       metric           seen   blind  majority
+caption    em              0.930   0.023     0.047
+vqa        em              0.953   0.234     0.250
+ocr        cer             0.013   0.847     0.891
+doc        anls            0.191   0.197     0.031
+chart      relaxed_acc     0.148   0.117     0.125
+grounding  acc@0.5         0.000   0.000     0.000

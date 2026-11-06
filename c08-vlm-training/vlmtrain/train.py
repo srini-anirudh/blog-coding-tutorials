@@ -22,7 +22,7 @@ import torch.nn.functional as F
 
 from .c07_adapter import build_c07, build_c07_tiny, c07_available
 from .data import TASK_SIZES, TASKS, make_example
-from .device import laptop_threads, pick_device, seed_everything, sync
+from .device import cap_threads, describe_hardware, memory_mb, peak_rss_mb, pick_device, seed_everything, sync
 from .evaluate import evaluate, format_results
 from .freeze import format_report, set_trainable, train_new_token_rows, trainable_report
 from .lora import apply_lora
@@ -32,7 +32,8 @@ from .optim import build_optimizer, describe, warmup_cosine
 from .packing import pack
 from .processor import IGNORE, TinyVLMProcessor
 from .replay import ReplayCorpus, load_passages, perplexity
-from .tokenizer import IMAGE_TOKEN, build_tokenizer
+from .grounding import loc_tokens
+from .tokenizer import IMAGE_TOKEN, build_tokenizer, spread_new_rows
 
 HERE = Path(__file__).resolve().parent.parent
 
@@ -60,6 +61,7 @@ class TrainConfig:
     strategy: str = "tile"
     max_tiles: int = 4
     grounding_format: str = "tokens"
+    loc_init: str = "mean"                 # mean: HF mean-resizing (rows nearly identical) | spread: spread_new_rows
     lora: list = field(default_factory=list)
     lora_r: int = 16
     lora_alpha: float = 32.0
@@ -135,9 +137,11 @@ def make_batch(cfg: TrainConfig, proc: TinyVLMProcessor, samples: list[dict]) ->
 
 def run(cfg: TrainConfig) -> dict:
     seed_everything(cfg.seed)
-    laptop_threads(2)
+    cap_threads()
     device = pick_device(cfg.device)
     tok, model, proc = build_model(cfg)
+    if cfg.loc_init == "spread":
+        spread_new_rows(model, tok.convert_tokens_to_ids(loc_tokens()), cfg.seed)
     loaded = load_partial(model, HERE / cfg.init_from) if cfg.init_from else []
     set_trainable(model, cfg.freeze, cfg.vision_layers_to_train)
     lora_names = apply_lora(model, cfg.lora, cfg.lora_r, cfg.lora_alpha) if cfg.lora else []
@@ -145,7 +149,8 @@ def run(cfg: TrainConfig) -> dict:
         train_new_token_rows(model, tok.convert_tokens_to_ids(IMAGE_TOKEN))
     model.to(device).train()
     report = trainable_report(model)
-    print(f"[{cfg.name}] device={device} loaded={len(loaded)} tensors, lora on {len(lora_names)} linears")
+    hardware = describe_hardware(device)
+    print(f"[{cfg.name}] {hardware}, loaded {len(loaded)} tensors, lora on {len(lora_names)} linears")
     print(format_report(report))
 
     replay = None
@@ -199,7 +204,7 @@ def run(cfg: TrainConfig) -> dict:
             win_loss[task] += l
             win_n[task] += 1
             tok_by_task[task] += int(c)
-        tokens_seen += int(dev["attention_mask"].shape[-1] * dev["input_ids"].shape[0])
+        tokens_seen += int((dev["sample_index"] >= 0).sum())  # real tokens: padding does not count
         if (step + 1) % cfg.log_every == 0 or step == 0:
             sync(device)
             rec = {"step": step + 1, "loss": round(loss.item(), 4), "grad_norm": round(gnorm.item(), 3),
@@ -225,16 +230,18 @@ def run(cfg: TrainConfig) -> dict:
         print(f"text perplexity after: {ppl_after:.2f} (before {ppl_before:.2f})")
     total_sup = sum(tok_by_task.values())
     summary = {
-        "name": cfg.name, "config": asdict(cfg), "device": str(device), "train_sec": round(train_sec, 1),
+        "name": cfg.name, "config": asdict(cfg), "hardware": hardware, "train_sec": round(train_sec, 1),
         "sec_per_step": round(train_sec / cfg.steps, 3), "tokens_per_sec": round(tokens_seen / train_sec),
-        "trainable": report, "mixture_target": weights, "mixture_observed": sampler.observed(),
+        "peak_rss_mb": round(peak_rss_mb()), "peak_device_mb": round(memory_mb(device)), "trainable": report, "mixture_target": weights, "mixture_observed": sampler.observed(),
         "supervised_token_share": {k: v / total_sup for k, v in tok_by_task.items()},
         "ppl_before": ppl_before, "ppl_after": ppl_after,
         "metrics": res["metrics"], "examples": res["examples"], "curve": mid_evals, "log": log,
     }
     if cfg.save:
-        n = save_trainable(model, HERE / cfg.out_dir / cfg.name / "trainable.safetensors")
-        print(f"saved {n:,} trainable parameters to {cfg.out_dir}/{cfg.name}/")
+        path = HERE / cfg.out_dir / cfg.name / "trainable.safetensors"
+        n = save_trainable(model, path)
+        summary["checkpoint_mb"] = round(path.stat().st_size / 2**20, 1)
+        print(f"saved {n:,} trainable parameters ({summary['checkpoint_mb']} MB) to {cfg.out_dir}/{cfg.name}/")
     if cfg.results_dir:
         p = HERE / cfg.results_dir / f"{cfg.name}.json"
         p.parent.mkdir(parents=True, exist_ok=True)

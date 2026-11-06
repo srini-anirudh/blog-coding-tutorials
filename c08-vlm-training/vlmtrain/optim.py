@@ -23,7 +23,7 @@ from .freeze import MODULES
 
 def _no_decay(name: str, p: nn.Parameter) -> bool:
     # Biases and norm gains are not weights that overfit by growing. Embeddings are excluded too:
-    # decoupled decay would shrink rows that receive no gradient (all the old vocabulary).
+    # decoupled decay would shrink the rows of words the data never uses.
     return p.ndim < 2 or "norm" in name or "embed" in name
 
 

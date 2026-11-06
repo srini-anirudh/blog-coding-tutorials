@@ -1,0 +1,10 @@
+480 samples, 49,251 real tokens, length min 68 / mean 103 / max 274
+layout                      rows  positions   wasted
+pad, random (B=8)            480     98,984    50.2%
+pad, grouped (B=8)           480     50,040     1.6%
+pack (budget 512)            100     51,200     3.8%
+
+Timed forward + backward on AMD EPYC 7R13 Processor, 8 threads, 64 samples, 6,734 real tokens
+layout                      seconds  real tok/s
+pad, random                    29.3         230
+pack                           21.3         316

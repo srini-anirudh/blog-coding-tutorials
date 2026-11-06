@@ -1,0 +1,8 @@
+AMD EPYC 7R13 Processor, 8 threads, n=64 per task
+task       metric           seen   blind  majority
+caption    em              0.828   0.031     0.062
+vqa        em              0.719   0.438     0.281
+ocr        cer             0.469   0.830     0.896
+doc        anls            0.167   0.202     0.016
+chart      relaxed_acc     0.125   0.031     0.125
+grounding  acc@0.5         0.000   0.000     0.000

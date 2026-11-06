@@ -1,0 +1,5 @@
+AMD EPYC 7R13 Processor, 8 threads
+one packed row: first sample 217 tokens, second sample 72 tokens
+largest logit change, first sample:  0.00e+00
+largest logit change, second sample: 30.65
+loss of the second sample: block mask 3.552, plain causal mask 9.035

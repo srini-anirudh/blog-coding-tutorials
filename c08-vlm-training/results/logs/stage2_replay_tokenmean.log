@@ -1,0 +1,33 @@
+[stage2_replay_tokenmean] AMD EPYC 7R13 Processor, 8 threads, loaded 4 tensors, lora on 0 linears
+module         trainable         total   share
+vision                 0    85,797,120    0.0%
+projector      2,102,400     2,102,400  100.0%
+lm           134,551,872   134,551,872  100.0%
+all          136,654,272   222,451,392   61.4%
+mixture: {'caption': 0.316, 'vqa': 0.223, 'ocr': 0.141, 'doc': 0.05, 'chart': 0.071, 'grounding': 0.1, 'text': 0.1}
+epochs over each corpus: {'caption': 0.0, 'vqa': 0.0, 'ocr': 0.01, 'doc': 0.02, 'chart': 0.01, 'grounding': 0.01, 'text': 0.01}
+group                  tensors        params        lr    wd
+projector                    2     2,101,248   2.0e-04   0.0
+projector/no_decay           2         1,152   2.0e-04   0.0
+lm/no_decay                 62    28,383,552   5.0e-05   0.0
+lm                         210   106,168,320   5.0e-05   0.0
+text perplexity before: 38.37
+step     1  loss 5.572  gnorm 57.61  grounding=17.23 chart=7.78 vqa=8.62 caption=0.28  2.2s
+step    10  loss 7.736  gnorm 42.41  vqa=4.90 chart=4.33 caption=0.08 ocr=8.92 text=4.06 grounding=14.36 doc=7.51  25.8s
+step    20  loss 5.381  gnorm 9.66  caption=0.33 vqa=0.86 grounding=13.24 ocr=6.56 text=3.90 doc=3.92 chart=1.95  48.1s
+step    30  loss 3.239  gnorm 26.86  grounding=12.85 text=3.71 ocr=6.42 vqa=1.06 doc=4.89 caption=0.22 chart=1.54  73.8s
+step    40  loss 0.232  gnorm 8.81  ocr=5.11 vqa=0.68 text=3.71 caption=0.12 grounding=12.08 chart=1.18  90.6s
+step    50  loss 3.523  gnorm 20.14  vqa=0.62 ocr=6.15 caption=0.14 grounding=10.04 chart=1.52 text=3.31 doc=3.91  116.0s
+step    60  loss 0.249  gnorm 8.62  vqa=0.79 caption=0.15 ocr=5.06 chart=1.11 grounding=10.02 text=3.87 doc=4.18  135.5s
+step    70  loss 1.238  gnorm 7.13  chart=1.01 grounding=9.61 caption=0.20 vqa=0.52 ocr=5.48 doc=2.73 text=3.77  160.8s
+step    80  loss 3.270  gnorm 7.20  vqa=0.63 caption=0.04 text=3.64 grounding=9.08 doc=1.16 chart=0.94 ocr=5.68  179.6s
+step    90  loss 4.709  gnorm 7.50  caption=0.25 chart=0.82 vqa=0.43 grounding=9.71 doc=1.47 text=3.65 ocr=5.00  200.2s
+step   100  loss 3.428  gnorm 15.65  caption=0.23 chart=1.38 grounding=9.61 ocr=4.61 doc=1.90 vqa=0.47 text=3.48  218.5s
+task       metric          value   other
+caption    em              0.708   
+vqa        em              0.562   
+ocr        cer             0.830   wer=0.986, em=0.000
+doc        anls            0.135   em=0.021
+chart      relaxed_acc     0.104   
+grounding  acc@0.5         0.000   point_acc=0.000, parse_fail=1.000, iou=0.000, mask_iou=0.000
+text perplexity after: 31.61 (before 38.37)

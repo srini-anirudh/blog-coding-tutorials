@@ -1,0 +1,21 @@
+{
+ "n": 480,
+ "budget": 512,
+ "real_tokens": 49251,
+ "pad_random": 0.5024347369271801,
+ "pad_grouped": 0.015767386091127097,
+ "pack_waste": 0.03806640625000002,
+ "rows": 100,
+ "min": 68,
+ "max": 274,
+ "mean": 102.60625,
+ "timed": {
+  "hardware": "AMD EPYC 7R13 Processor, 8 threads",
+  "samples": 64,
+  "real": 6734,
+  "pad_sec": 29.313429355621338,
+  "pack_sec": 21.319045066833496,
+  "mem_mb": 0.0,
+  "peak_rss_mb": 6047
+ }
+}

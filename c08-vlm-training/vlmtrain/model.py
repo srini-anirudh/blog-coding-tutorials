@@ -8,7 +8,7 @@
     forward(input_ids, pixel_values, attention_mask=None, labels=None) -> .loss, .logits
 
 C7 builds this model step by step, and the trainer uses C7's package whenever `../c07-vlm` exists. This
-file is the fallback that lets the folder run alone. tests/test_c07_contract.py checks that the two
+file is the fallback that lets the folder run alone. tests/test_real_weights.py checks that the two
 compute the same logits from the same weights.
 
 Shapes for one 224 px tile:
@@ -84,11 +84,13 @@ class TinyVLM(nn.Module):
             self.vision = SiglipVisionModel(SiglipVisionConfig(**config.vision_config, vision_use_head=False))
         else:
             # The attention-pooling head is only used for CLIP-style retrieval. A VLM reads every patch.
-            self.vision = SiglipVisionModel.from_pretrained(config.vision_name, vision_use_head=False)
+            vision_config = SiglipVisionConfig.from_pretrained(config.vision_name)
+            vision_config.vision_use_head = False
+            self.vision = SiglipVisionModel.from_pretrained(config.vision_name, config=vision_config, dtype=torch.float32)
         if config.lm_config is not None:
             self.lm = LlamaForCausalLM(LlamaConfig(**config.lm_config))
         else:
-            self.lm = AutoModelForCausalLM.from_pretrained(config.lm_name)
+            self.lm = AutoModelForCausalLM.from_pretrained(config.lm_name, dtype=torch.float32)  # SmolLM2 ships as bf16
         self.projector = Projector(self.vision.config.hidden_size, self.lm.config.hidden_size,
                                    config.pixel_shuffle, config.projector)
 

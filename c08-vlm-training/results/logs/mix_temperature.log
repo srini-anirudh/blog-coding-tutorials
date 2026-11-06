@@ -1,0 +1,41 @@
+[mix_temperature] AMD EPYC 7R13 Processor, 8 threads, loaded 4 tensors, lora on 0 linears
+module         trainable         total   share
+vision                 0    85,797,120    0.0%
+projector      2,102,400     2,102,400  100.0%
+lm           134,551,872   134,551,872  100.0%
+all          136,654,272   222,451,392   61.4%
+mixture: {'caption': 0.351, 'vqa': 0.248, 'ocr': 0.157, 'doc': 0.055, 'chart': 0.078, 'grounding': 0.111}
+epochs over each corpus: {'caption': 0.01, 'vqa': 0.01, 'ocr': 0.02, 'doc': 0.04, 'chart': 0.03, 'grounding': 0.02}
+group                  tensors        params        lr    wd
+projector                    2     2,101,248   2.0e-04   0.0
+projector/no_decay           2         1,152   2.0e-04   0.0
+lm/no_decay                 62    28,383,552   5.0e-05   0.0
+lm                         210   106,168,320   5.0e-05   0.0
+step     1  loss 6.835  gnorm 116.49  chart=7.78 doc=10.66 vqa=8.62 caption=0.28  3.7s
+step    10  loss 5.084  gnorm 41.28  vqa=4.47 doc=5.95 caption=0.09 grounding=15.76 ocr=8.04 chart=2.45  32.7s
+step    20  loss 4.268  gnorm 22.44  caption=0.52 vqa=0.81 chart=1.57 grounding=14.66 doc=1.58 ocr=5.57  58.9s
+step    30  loss 4.685  gnorm 20.76  grounding=12.74 vqa=0.65 ocr=5.72 caption=0.33 chart=1.22 doc=5.85  90.5s
+step    40  loss 0.418  gnorm 8.71  vqa=1.18 grounding=12.13 caption=0.12 doc=3.34 ocr=6.27 chart=1.26  120.3s
+step    50  loss 3.028  gnorm 22.43  vqa=0.65 caption=0.09 chart=0.98 ocr=5.42 grounding=10.41  155.3s
+step    60  loss 0.328  gnorm 8.17  vqa=0.52 caption=0.22 doc=4.01 chart=1.35 grounding=9.76 ocr=5.91  197.1s
+step    70  loss 0.205  gnorm 7.03  doc=1.72 chart=1.44 caption=0.08 vqa=0.53 ocr=5.49 grounding=8.94  241.9s
+step    80  loss 4.437  gnorm 13.04  vqa=0.60 caption=0.24 grounding=9.54 chart=0.82 ocr=6.03  277.0s
+step    90  loss 5.084  gnorm 14.08  caption=0.26 doc=1.47 vqa=0.60 chart=1.71 ocr=4.75 grounding=9.02  314.5s
+step   100  loss 0.871  gnorm 10.16  caption=0.19 doc=2.00 chart=2.04 vqa=0.88 ocr=5.13 grounding=8.91  341.2s
+step   110  loss 0.844  gnorm 14.83  doc=1.50 ocr=3.69 caption=0.15 vqa=0.54 chart=1.17 grounding=8.72  367.1s
+step   120  loss 2.192  gnorm 32.06  vqa=0.40 chart=1.39 ocr=3.86 caption=0.09 doc=2.45 grounding=8.23  395.1s
+step   130  loss 0.423  gnorm 7.89  caption=0.10 vqa=1.39 grounding=7.80 doc=4.02 ocr=4.44 chart=1.14  414.4s
+step   140  loss 2.240  gnorm 13.07  grounding=9.31 caption=0.13 vqa=0.57 ocr=4.37 doc=3.40  432.0s
+step   150  loss 2.583  gnorm 11.60  ocr=3.69 caption=0.11 vqa=0.49 grounding=8.69 doc=1.86  462.0s
+step   160  loss 0.706  gnorm 9.06  caption=0.18 chart=5.23 vqa=0.39 ocr=4.41 grounding=9.11 doc=1.41  485.1s
+step   170  loss 2.082  gnorm 9.70  ocr=3.45 vqa=0.67 caption=0.16 chart=1.32 grounding=7.67  509.7s
+step   180  loss 0.934  gnorm 11.73  vqa=0.46 ocr=3.35 caption=0.10 grounding=8.20 doc=1.19 chart=1.37  531.6s
+step   190  loss 1.391  gnorm 12.23  caption=0.11 ocr=3.42 doc=1.48 grounding=8.13 vqa=0.44 chart=1.07  553.4s
+step   200  loss 2.653  gnorm 16.20  grounding=8.21 vqa=0.36 caption=0.11 doc=1.33 ocr=3.02 chart=1.11  576.7s
+task       metric          value   other
+caption    em              0.729   
+vqa        em              0.646   
+ocr        cer             0.787   wer=0.896, em=0.042
+doc        anls            0.152   em=0.021
+chart      relaxed_acc     0.104   
+grounding  acc@0.5         0.000   point_acc=0.000, parse_fail=1.000, iou=0.000, mask_iou=0.000

@@ -1,0 +1,13 @@
+image                 resize     pad    tile   (visual tokens)
+scene 224x224             49      49      49
+ocr 336x224               49      49     147
+ocr 448x160               49      49     196
+ocr 448x224               49      49     147
+document 448x448          49      49     245
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 5812.27it/s]
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 3423.11it/s]
+
+Encoding one 448x448 document on NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+strategy    tiles  ms/image
+resize          1        10
+tile            5         7

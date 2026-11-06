@@ -1,0 +1,790 @@
+{
+ "name": "mix_uniform",
+ "config": {
+  "name": "mix_uniform",
+  "model": "auto",
+  "steps": 250,
+  "batch_size": 16,
+  "freeze": "lm",
+  "vision_layers_to_train": 0,
+  "lrs": {
+   "vision": 1e-06,
+   "projector": 0.0002,
+   "lm": 5e-05,
+   "lora": 0.0002
+  },
+  "weight_decay": 0.0,
+  "warmup": 100,
+  "grad_clip": 1.0,
+  "loss_norm": "sample",
+  "tasks": [
+   "caption",
+   "vqa",
+   "ocr",
+   "doc",
+   "chart",
+   "grounding"
+  ],
+  "task_sizes": {
+   "caption": 40000,
+   "vqa": 20000,
+   "ocr": 8000,
+   "doc": 1000,
+   "chart": 2000,
+   "grounding": 4000
+  },
+  "mixture": "uniform",
+  "temperature": 2.0,
+  "manual_weights": null,
+  "replay_ratio": 0,
+  "replay_max_tokens": 96,
+  "strategy": "tile",
+  "max_tiles": 4,
+  "grounding_format": "tokens",
+  "loc_init": "mean",
+  "lora": [],
+  "lora_r": 16,
+  "lora_alpha": 32.0,
+  "train_new_tokens": false,
+  "pack_budget": 0,
+  "init_from": "outputs/gpu/stage1_align/trainable.safetensors",
+  "eval_n": 128,
+  "eval_every": 0,
+  "eval_n_mid": 24,
+  "ppl_passages": 0,
+  "save": false,
+  "out_dir": "outputs/gpu",
+  "results_dir": "results/gpu",
+  "seed": 0,
+  "device": null,
+  "log_every": 10
+ },
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "train_sec": 200.0,
+ "sec_per_step": 0.8,
+ "tokens_per_sec": 2496,
+ "peak_rss_mb": 2049,
+ "peak_device_mb": 11618,
+ "trainable": {
+  "vision": {
+   "trainable": 0,
+   "total": 85797120
+  },
+  "projector": {
+   "trainable": 2102400,
+   "total": 2102400
+  },
+  "lm": {
+   "trainable": 134551872,
+   "total": 134551872
+  }
+ },
+ "mixture_target": {
+  "caption": 0.16666666666666666,
+  "vqa": 0.16666666666666666,
+  "ocr": 0.16666666666666666,
+  "doc": 0.16666666666666666,
+  "chart": 0.16666666666666666,
+  "grounding": 0.16666666666666666
+ },
+ "mixture_observed": {
+  "caption": 0.16875,
+  "vqa": 0.14975,
+  "ocr": 0.173,
+  "doc": 0.17,
+  "chart": 0.17025,
+  "grounding": 0.16825
+ },
+ "supervised_token_share": {
+  "grounding": 0.2086107634543179,
+  "chart": 0.07063829787234042,
+  "ocr": 0.12135168961201502,
+  "vqa": 0.05997496871088861,
+  "doc": 0.18983729662077597,
+  "caption": 0.34958698372966207
+ },
+ "ppl_before": null,
+ "ppl_after": null,
+ "metrics": {
+  "caption": {
+   "em": 0.9609375
+  },
+  "vqa": {
+   "em": 0.7734375
+  },
+  "ocr": {
+   "cer": 0.6210030533729254,
+   "wer": 0.7447916666666669,
+   "em": 0.1640625
+  },
+  "doc": {
+   "anls": 0.2238715277777778,
+   "em": 0.03125
+  },
+  "chart": {
+   "relaxed_acc": 0.125
+  },
+  "grounding": {
+   "point_acc": 0.0,
+   "parse_fail": 1.0,
+   "iou": 0.0,
+   "acc@0.5": 0.0,
+   "mask_iou": 0.0
+  }
+ },
+ "examples": {
+  "caption": [
+   {
+    "question": "Describe the image.",
+    "gold": "A red circle and a yellow triangle.",
+    "pred": "A red circle and a yellow triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "An orange triangle.",
+    "pred": "An orange triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "A purple triangle.",
+    "pred": "A purple triangle."
+   }
+  ],
+  "vqa": [
+   {
+    "question": "How many shapes are there? Answer with one word.",
+    "gold": "5",
+    "pred": "5"
+   },
+   {
+    "question": "How many green squares are there? Answer with one word.",
+    "gold": "1",
+    "pred": "1"
+   },
+   {
+    "question": "Is there a blue circle? Answer with one word.",
+    "gold": "no",
+    "pred": "yes"
+   }
+  ],
+  "ocr": [
+   {
+    "question": "What does the text in the image say?",
+    "gold": "pearl oyster",
+    "pred": "window pearl"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "square pearl",
+    "pred": "market market"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "radio",
+    "pred": "rabbit"
+   }
+  ],
+  "doc": [
+   {
+    "question": "What is the total?",
+    "gold": "79.50",
+    "pred": "12.50"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "5",
+    "pred": "1"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "1",
+    "pred": "1"
+   }
+  ],
+  "chart": [
+   {
+    "question": "What is the value of yak?",
+    "gold": "5",
+    "pred": "6"
+   },
+   {
+    "question": "What is the value of fox?",
+    "gold": "4",
+    "pred": "3"
+   },
+   {
+    "question": "What is the value of fox?",
+    "gold": "5",
+    "pred": "6"
+   }
+  ],
+  "grounding": [
+   {
+    "question": "Point to the green circle.",
+    "gold": "<loc_17><loc_14>",
+    "pred": ""
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "<loc_23><loc_15><loc_31><loc_22>",
+    "pred": ""
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "<loc_14><loc_4><loc_19><loc_9>",
+    "pred": ""
+   }
+  ]
+ },
+ "curve": [
+  {
+   "step": 250,
+   "caption": {
+    "em": 0.9609375
+   },
+   "vqa": {
+    "em": 0.7734375
+   },
+   "ocr": {
+    "cer": 0.6210030533729254,
+    "wer": 0.7447916666666669,
+    "em": 0.1640625
+   },
+   "doc": {
+    "anls": 0.2238715277777778,
+    "em": 0.03125
+   },
+   "chart": {
+    "relaxed_acc": 0.125
+   },
+   "grounding": {
+    "point_acc": 0.0,
+    "parse_fail": 1.0,
+    "iou": 0.0,
+    "acc@0.5": 0.0,
+    "mask_iou": 0.0
+   }
+  }
+ ],
+ "log": [
+  {
+   "step": 1,
+   "loss": 11.5923,
+   "grad_norm": 121.669,
+   "lr": {
+    "projector": 4.000000000000001e-06,
+    "projector/no_decay": 4.000000000000001e-06,
+    "lm/no_decay": 1.0000000000000002e-06,
+    "lm": 1.0000000000000002e-06
+   },
+   "task_loss": {
+    "grounding": 17.5324,
+    "chart": 6.4119,
+    "ocr": 10.668,
+    "vqa": 15.7843,
+    "doc": 9.0089
+   },
+   "sec": 2.5
+  },
+  {
+   "step": 10,
+   "loss": 8.1848,
+   "grad_norm": 95.514,
+   "lr": {
+    "projector": 2.2000000000000003e-05,
+    "projector/no_decay": 2.2000000000000003e-05,
+    "lm/no_decay": 5.500000000000001e-06,
+    "lm": 5.500000000000001e-06
+   },
+   "task_loss": {
+    "grounding": 18.6825,
+    "chart": 4.3669,
+    "vqa": 9.8082,
+    "ocr": 11.4709,
+    "caption": 0.003,
+    "doc": 6.9346
+   },
+   "sec": 9.1
+  },
+  {
+   "step": 20,
+   "loss": 4.541,
+   "grad_norm": 23.212,
+   "lr": {
+    "projector": 4.2e-05,
+    "projector/no_decay": 4.2e-05,
+    "lm/no_decay": 1.05e-05,
+    "lm": 1.05e-05
+   },
+   "task_loss": {
+    "ocr": 8.3165,
+    "doc": 3.8647,
+    "vqa": 3.2251,
+    "grounding": 14.5405,
+    "caption": 0.0295,
+    "chart": 3.0148
+   },
+   "sec": 15.2
+  },
+  {
+   "step": 30,
+   "loss": 4.7222,
+   "grad_norm": 16.485,
+   "lr": {
+    "projector": 6.2e-05,
+    "projector/no_decay": 6.2e-05,
+    "lm/no_decay": 1.55e-05,
+    "lm": 1.55e-05
+   },
+   "task_loss": {
+    "vqa": 1.5086,
+    "chart": 1.8013,
+    "ocr": 5.8118,
+    "caption": 0.2367,
+    "grounding": 12.2587,
+    "doc": 3.2777
+   },
+   "sec": 23.7
+  },
+  {
+   "step": 40,
+   "loss": 2.5138,
+   "grad_norm": 10.209,
+   "lr": {
+    "projector": 8.2e-05,
+    "projector/no_decay": 8.2e-05,
+    "lm/no_decay": 2.05e-05,
+    "lm": 2.05e-05
+   },
+   "task_loss": {
+    "vqa": 0.7275,
+    "caption": 0.1872,
+    "ocr": 4.865,
+    "doc": 2.1737,
+    "grounding": 11.2558,
+    "chart": 2.2222
+   },
+   "sec": 33.2
+  },
+  {
+   "step": 50,
+   "loss": 1.507,
+   "grad_norm": 9.454,
+   "lr": {
+    "projector": 0.00010200000000000001,
+    "projector/no_decay": 0.00010200000000000001,
+    "lm/no_decay": 2.5500000000000003e-05,
+    "lm": 2.5500000000000003e-05
+   },
+   "task_loss": {
+    "chart": 1.8082,
+    "ocr": 4.4927,
+    "vqa": 0.6298,
+    "doc": 2.4246,
+    "caption": 0.0527,
+    "grounding": 10.5928
+   },
+   "sec": 42.5
+  },
+  {
+   "step": 60,
+   "loss": 2.9139,
+   "grad_norm": 7.635,
+   "lr": {
+    "projector": 0.000122,
+    "projector/no_decay": 0.000122,
+    "lm/no_decay": 3.05e-05,
+    "lm": 3.05e-05
+   },
+   "task_loss": {
+    "doc": 1.8375,
+    "grounding": 10.1133,
+    "caption": 0.0318,
+    "chart": 1.2983,
+    "ocr": 4.7832,
+    "vqa": 0.7553
+   },
+   "sec": 50.5
+  },
+  {
+   "step": 70,
+   "loss": 1.6264,
+   "grad_norm": 10.877,
+   "lr": {
+    "projector": 0.000142,
+    "projector/no_decay": 0.000142,
+    "lm/no_decay": 3.55e-05,
+    "lm": 3.55e-05
+   },
+   "task_loss": {
+    "chart": 1.4193,
+    "doc": 1.616,
+    "vqa": 0.5278,
+    "ocr": 4.0932,
+    "grounding": 9.2332,
+    "caption": 0.0396
+   },
+   "sec": 59.6
+  },
+  {
+   "step": 80,
+   "loss": 3.3068,
+   "grad_norm": 16.056,
+   "lr": {
+    "projector": 0.000162,
+    "projector/no_decay": 0.000162,
+    "lm/no_decay": 4.05e-05,
+    "lm": 4.05e-05
+   },
+   "task_loss": {
+    "doc": 1.974,
+    "chart": 1.2269,
+    "grounding": 8.8665,
+    "ocr": 4.8049,
+    "caption": 0.071,
+    "vqa": 0.6234
+   },
+   "sec": 66.5
+  },
+  {
+   "step": 90,
+   "loss": 2.996,
+   "grad_norm": 7.589,
+   "lr": {
+    "projector": 0.000182,
+    "projector/no_decay": 0.000182,
+    "lm/no_decay": 4.55e-05,
+    "lm": 4.55e-05
+   },
+   "task_loss": {
+    "vqa": 0.6606,
+    "ocr": 4.1675,
+    "doc": 1.761,
+    "grounding": 8.9363,
+    "caption": 0.0344,
+    "chart": 1.1057
+   },
+   "sec": 75.2
+  },
+  {
+   "step": 100,
+   "loss": 2.8956,
+   "grad_norm": 9.974,
+   "lr": {
+    "projector": 0.0002,
+    "projector/no_decay": 0.0002,
+    "lm/no_decay": 5e-05,
+    "lm": 5e-05
+   },
+   "task_loss": {
+    "chart": 1.3001,
+    "caption": 0.0328,
+    "ocr": 3.7879,
+    "grounding": 8.802,
+    "doc": 1.4461,
+    "vqa": 0.8303
+   },
+   "sec": 83.0
+  },
+  {
+   "step": 110,
+   "loss": 2.8078,
+   "grad_norm": 8.618,
+   "lr": {
+    "projector": 0.00019803328406604252,
+    "projector/no_decay": 0.00019803328406604252,
+    "lm/no_decay": 4.950832101651063e-05,
+    "lm": 4.950832101651063e-05
+   },
+   "task_loss": {
+    "caption": 0.0459,
+    "ocr": 3.7504,
+    "chart": 1.1589,
+    "vqa": 0.7473,
+    "doc": 1.5818,
+    "grounding": 8.1047
+   },
+   "sec": 91.9
+  },
+  {
+   "step": 120,
+   "loss": 2.399,
+   "grad_norm": 7.339,
+   "lr": {
+    "projector": 0.00019221909118783407,
+    "projector/no_decay": 0.00019221909118783407,
+    "lm/no_decay": 4.805477279695852e-05,
+    "lm": 4.805477279695852e-05
+   },
+   "task_loss": {
+    "caption": 0.0217,
+    "doc": 1.4509,
+    "grounding": 7.7665,
+    "ocr": 3.7651,
+    "chart": 1.1916,
+    "vqa": 0.5361
+   },
+   "sec": 99.7
+  },
+  {
+   "step": 130,
+   "loss": 2.7586,
+   "grad_norm": 5.11,
+   "lr": {
+    "projector": 0.00018281152949374527,
+    "projector/no_decay": 0.00018281152949374527,
+    "lm/no_decay": 4.570288237343632e-05,
+    "lm": 4.570288237343632e-05
+   },
+   "task_loss": {
+    "doc": 1.4168,
+    "caption": 0.0155,
+    "chart": 1.229,
+    "ocr": 3.5757,
+    "grounding": 7.7734,
+    "vqa": 0.9677
+   },
+   "sec": 110.7
+  },
+  {
+   "step": 140,
+   "loss": 2.5428,
+   "grad_norm": 7.21,
+   "lr": {
+    "projector": 0.00017022175457229725,
+    "projector/no_decay": 0.00017022175457229725,
+    "lm/no_decay": 4.255543864307431e-05,
+    "lm": 4.255543864307431e-05
+   },
+   "task_loss": {
+    "ocr": 3.3501,
+    "doc": 1.5219,
+    "chart": 1.1065,
+    "grounding": 7.444,
+    "caption": 0.0163,
+    "vqa": 0.6123
+   },
+   "sec": 118.8
+  },
+  {
+   "step": 150,
+   "loss": 1.8761,
+   "grad_norm": 8.065,
+   "lr": {
+    "projector": 0.000155,
+    "projector/no_decay": 0.000155,
+    "lm/no_decay": 3.875e-05,
+    "lm": 3.875e-05
+   },
+   "task_loss": {
+    "doc": 1.6762,
+    "caption": 0.0161,
+    "chart": 1.0965,
+    "ocr": 3.2186,
+    "vqa": 0.4187,
+    "grounding": 6.9061
+   },
+   "sec": 126.0
+  },
+  {
+   "step": 160,
+   "loss": 1.1271,
+   "grad_norm": 5.338,
+   "lr": {
+    "projector": 0.00013781152949374526,
+    "projector/no_decay": 0.00013781152949374526,
+    "lm/no_decay": 3.4452882373436316e-05,
+    "lm": 3.4452882373436316e-05
+   },
+   "task_loss": {
+    "vqa": 0.4144,
+    "chart": 1.2764,
+    "doc": 1.2439,
+    "caption": 0.011,
+    "ocr": 3.0683,
+    "grounding": 6.6907
+   },
+   "sec": 134.2
+  },
+  {
+   "step": 170,
+   "loss": 1.4448,
+   "grad_norm": 7.254,
+   "lr": {
+    "projector": 0.00011940756169408881,
+    "projector/no_decay": 0.00011940756169408881,
+    "lm/no_decay": 2.9851890423522204e-05,
+    "lm": 2.9851890423522204e-05
+   },
+   "task_loss": {
+    "ocr": 3.1064,
+    "doc": 1.2117,
+    "caption": 0.026,
+    "grounding": 6.4572,
+    "vqa": 0.4349,
+    "chart": 1.2429
+   },
+   "sec": 142.4
+  },
+  {
+   "step": 180,
+   "loss": 1.7559,
+   "grad_norm": 6.533,
+   "lr": {
+    "projector": 0.00010059243830591121,
+    "projector/no_decay": 0.00010059243830591121,
+    "lm/no_decay": 2.5148109576477802e-05,
+    "lm": 2.5148109576477802e-05
+   },
+   "task_loss": {
+    "grounding": 6.3355,
+    "doc": 1.2371,
+    "chart": 1.0706,
+    "caption": 0.0281,
+    "ocr": 3.0167,
+    "vqa": 0.3231
+   },
+   "sec": 148.9
+  },
+  {
+   "step": 190,
+   "loss": 1.4912,
+   "grad_norm": 8.906,
+   "lr": {
+    "projector": 8.218847050625476e-05,
+    "projector/no_decay": 8.218847050625476e-05,
+    "lm/no_decay": 2.054711762656369e-05,
+    "lm": 2.054711762656369e-05
+   },
+   "task_loss": {
+    "vqa": 0.4304,
+    "chart": 1.106,
+    "grounding": 6.3018,
+    "caption": 0.0435,
+    "doc": 1.2533,
+    "ocr": 2.8482
+   },
+   "sec": 157.3
+  },
+  {
+   "step": 200,
+   "loss": 1.9421,
+   "grad_norm": 6.089,
+   "lr": {
+    "projector": 6.500000000000002e-05,
+    "projector/no_decay": 6.500000000000002e-05,
+    "lm/no_decay": 1.6250000000000005e-05,
+    "lm": 1.6250000000000005e-05
+   },
+   "task_loss": {
+    "grounding": 6.0548,
+    "doc": 1.1534,
+    "caption": 0.0057,
+    "ocr": 3.0699,
+    "chart": 1.075,
+    "vqa": 0.3978
+   },
+   "sec": 164.4
+  },
+  {
+   "step": 210,
+   "loss": 2.2796,
+   "grad_norm": 7.41,
+   "lr": {
+    "projector": 4.977824542770279e-05,
+    "projector/no_decay": 4.977824542770279e-05,
+    "lm/no_decay": 1.2444561356925697e-05,
+    "lm": 1.2444561356925697e-05
+   },
+   "task_loss": {
+    "doc": 1.1299,
+    "chart": 1.2161,
+    "ocr": 2.772,
+    "caption": 0.0142,
+    "grounding": 6.0535,
+    "vqa": 0.2543
+   },
+   "sec": 171.3
+  },
+  {
+   "step": 220,
+   "loss": 1.9904,
+   "grad_norm": 6.281,
+   "lr": {
+    "projector": 3.718847050625475e-05,
+    "projector/no_decay": 3.718847050625475e-05,
+    "lm/no_decay": 9.297117626563687e-06,
+    "lm": 9.297117626563687e-06
+   },
+   "task_loss": {
+    "grounding": 5.955,
+    "doc": 1.3724,
+    "vqa": 0.3238,
+    "chart": 1.144,
+    "ocr": 2.6355,
+    "caption": 0.0189
+   },
+   "sec": 178.9
+  },
+  {
+   "step": 230,
+   "loss": 2.1592,
+   "grad_norm": 7.327,
+   "lr": {
+    "projector": 2.778090881216592e-05,
+    "projector/no_decay": 2.778090881216592e-05,
+    "lm/no_decay": 6.94522720304148e-06,
+    "lm": 6.94522720304148e-06
+   },
+   "task_loss": {
+    "chart": 1.1156,
+    "doc": 1.4495,
+    "caption": 0.0257,
+    "vqa": 0.1678,
+    "ocr": 2.5862,
+    "grounding": 6.0339
+   },
+   "sec": 185.8
+  },
+  {
+   "step": 240,
+   "loss": 1.3105,
+   "grad_norm": 6.57,
+   "lr": {
+    "projector": 2.196671593395749e-05,
+    "projector/no_decay": 2.196671593395749e-05,
+    "lm/no_decay": 5.491678983489372e-06,
+    "lm": 5.491678983489372e-06
+   },
+   "task_loss": {
+    "ocr": 2.5215,
+    "grounding": 5.8705,
+    "caption": 0.0049,
+    "doc": 1.1743,
+    "vqa": 0.2468,
+    "chart": 1.0735
+   },
+   "sec": 193.0
+  },
+  {
+   "step": 250,
+   "loss": 1.488,
+   "grad_norm": 4.74,
+   "lr": {
+    "projector": 2e-05,
+    "projector/no_decay": 2e-05,
+    "lm/no_decay": 5e-06,
+    "lm": 5e-06
+   },
+   "task_loss": {
+    "vqa": 0.2897,
+    "grounding": 5.8223,
+    "caption": 0.0226,
+    "ocr": 2.9245,
+    "chart": 1.0614,
+    "doc": 1.2877
+   },
+   "sec": 200.0
+  }
+ ]
+}

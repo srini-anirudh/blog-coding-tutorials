@@ -1,0 +1,187 @@
+{
+ "name": "own_smoke",
+ "config": {
+  "name": "own_smoke",
+  "model": "own",
+  "steps": 20,
+  "batch_size": 4,
+  "freeze": "align",
+  "vision_layers_to_train": 0,
+  "lrs": {
+   "vision": 1e-06,
+   "projector": 0.001,
+   "lm": 2e-05,
+   "lora": 0.0002
+  },
+  "weight_decay": 0.0,
+  "warmup": 2,
+  "grad_clip": 1.0,
+  "loss_norm": "token",
+  "tasks": [
+   "caption"
+  ],
+  "task_sizes": {
+   "caption": 40000,
+   "vqa": 20000,
+   "ocr": 8000,
+   "doc": 1000,
+   "chart": 2000,
+   "grounding": 4000
+  },
+  "mixture": "temperature",
+  "temperature": 2.0,
+  "manual_weights": null,
+  "replay_ratio": 0.0,
+  "replay_max_tokens": 96,
+  "strategy": "tile",
+  "max_tiles": 4,
+  "grounding_format": "tokens",
+  "loc_init": "mean",
+  "lora": [],
+  "lora_r": 16,
+  "lora_alpha": 32.0,
+  "train_new_tokens": false,
+  "pack_budget": 0,
+  "init_from": null,
+  "eval_n": 8,
+  "eval_every": 0,
+  "eval_n_mid": 24,
+  "ppl_passages": 0,
+  "save": false,
+  "out_dir": "outputs",
+  "results_dir": "results",
+  "seed": 0,
+  "device": null,
+  "log_every": 5
+ },
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads",
+ "train_sec": 22.0,
+ "sec_per_step": 1.098,
+ "tokens_per_sec": 270,
+ "peak_rss_mb": 2239,
+ "peak_device_mb": 0,
+ "trainable": {
+  "vision": {
+   "trainable": 0,
+   "total": 85797120
+  },
+  "projector": {
+   "trainable": 2102400,
+   "total": 2102400
+  },
+  "lm": {
+   "trainable": 0,
+   "total": 134534016
+  }
+ },
+ "mixture_target": {
+  "caption": 1.0
+ },
+ "mixture_observed": {
+  "caption": 1.0
+ },
+ "supervised_token_share": {
+  "caption": 1.0
+ },
+ "ppl_before": null,
+ "ppl_after": null,
+ "metrics": {
+  "caption": {
+   "em": 0.0
+  }
+ },
+ "examples": {
+  "caption": [
+   {
+    "question": "Describe the image.",
+    "gold": "A red circle and a yellow triangle.",
+    "pred": "A red square and a blue square."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "An orange triangle.",
+    "pred": "A red triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "A purple triangle.",
+    "pred": "A red square."
+   }
+  ]
+ },
+ "curve": [
+  {
+   "step": 20,
+   "caption": {
+    "em": 0.0
+   }
+  }
+ ],
+ "log": [
+  {
+   "step": 1,
+   "loss": 2.8199,
+   "grad_norm": 17.198,
+   "lr": {
+    "projector": 0.001,
+    "projector/no_decay": 0.001
+   },
+   "task_loss": {
+    "caption": 2.8574
+   },
+   "sec": 1.3
+  },
+  {
+   "step": 5,
+   "loss": 2.622,
+   "grad_norm": 10.794,
+   "lr": {
+    "projector": 0.0009397114317029974,
+    "projector/no_decay": 0.0009397114317029974
+   },
+   "task_loss": {
+    "caption": 2.7065
+   },
+   "sec": 6.3
+  },
+  {
+   "step": 10,
+   "loss": 1.6398,
+   "grad_norm": 3.496,
+   "lr": {
+    "projector": 0.0006281416799501187,
+    "projector/no_decay": 0.0006281416799501187
+   },
+   "task_loss": {
+    "caption": 1.87
+   },
+   "sec": 11.9
+  },
+  {
+   "step": 15,
+   "loss": 1.3238,
+   "grad_norm": 4.379,
+   "lr": {
+    "projector": 0.0002607455756410573,
+    "projector/no_decay": 0.0002607455756410573
+   },
+   "task_loss": {
+    "caption": 1.4508
+   },
+   "sec": 17.3
+  },
+  {
+   "step": 20,
+   "loss": 1.1377,
+   "grad_norm": 4.334,
+   "lr": {
+    "projector": 0.0001,
+    "projector/no_decay": 0.0001
+   },
+   "task_loss": {
+    "caption": 1.2956
+   },
+   "sec": 22.0
+  }
+ ]
+}

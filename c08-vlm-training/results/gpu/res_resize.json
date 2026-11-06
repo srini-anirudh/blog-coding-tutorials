@@ -1,0 +1,571 @@
+{
+ "name": "res_resize",
+ "config": {
+  "name": "res_resize",
+  "model": "auto",
+  "steps": 250,
+  "batch_size": 16,
+  "freeze": "lm",
+  "vision_layers_to_train": 0,
+  "lrs": {
+   "vision": 1e-06,
+   "projector": 0.0002,
+   "lm": 5e-05,
+   "lora": 0.0002
+  },
+  "weight_decay": 0.0,
+  "warmup": 100,
+  "grad_clip": 1.0,
+  "loss_norm": "sample",
+  "tasks": [
+   "doc",
+   "ocr"
+  ],
+  "task_sizes": {
+   "caption": 40000,
+   "vqa": 20000,
+   "ocr": 8000,
+   "doc": 1000,
+   "chart": 2000,
+   "grounding": 4000
+  },
+  "mixture": "temperature",
+  "temperature": 2.0,
+  "manual_weights": null,
+  "replay_ratio": 0,
+  "replay_max_tokens": 96,
+  "strategy": "resize",
+  "max_tiles": 4,
+  "grounding_format": "tokens",
+  "loc_init": "mean",
+  "lora": [],
+  "lora_r": 16,
+  "lora_alpha": 32.0,
+  "train_new_tokens": false,
+  "pack_budget": 0,
+  "init_from": "outputs/gpu/stage1_align/trainable.safetensors",
+  "eval_n": 128,
+  "eval_every": 0,
+  "eval_n_mid": 24,
+  "ppl_passages": 0,
+  "save": false,
+  "out_dir": "outputs/gpu",
+  "results_dir": "results/gpu",
+  "seed": 0,
+  "device": null,
+  "log_every": 10
+ },
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "train_sec": 67.0,
+ "sec_per_step": 0.268,
+ "tokens_per_sec": 4267,
+ "peak_rss_mb": 2010,
+ "peak_device_mb": 4997,
+ "trainable": {
+  "vision": {
+   "trainable": 0,
+   "total": 85797120
+  },
+  "projector": {
+   "trainable": 2102400,
+   "total": 2102400
+  },
+  "lm": {
+   "trainable": 134551872,
+   "total": 134551872
+  }
+ },
+ "mixture_target": {
+  "doc": 0.2612038749637414,
+  "ocr": 0.7387961250362586
+ },
+ "mixture_observed": {
+  "doc": 0.25375,
+  "ocr": 0.74625
+ },
+ "supervised_token_share": {
+  "ocr": 0.6520051746442432,
+  "doc": 0.34799482535575677
+ },
+ "ppl_before": null,
+ "ppl_after": null,
+ "metrics": {
+  "doc": {
+   "anls": 0.18463541666666666,
+   "em": 0.015625
+  },
+  "ocr": {
+   "cer": 0.044710907937736494,
+   "wer": 0.05208333333333333,
+   "em": 0.875
+  }
+ },
+ "examples": {
+  "doc": [
+   {
+    "question": "What is the total?",
+    "gold": "79.50",
+    "pred": "6.25"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "5",
+    "pred": "6"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "1",
+    "pred": "6"
+   }
+  ],
+  "ocr": [
+   {
+    "question": "What does the text in the image say?",
+    "gold": "pearl oyster",
+    "pred": "pearl oyster"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "square pearl",
+    "pred": "square pearl"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "radio",
+    "pred": "radio"
+   }
+  ]
+ },
+ "curve": [
+  {
+   "step": 250,
+   "doc": {
+    "anls": 0.18463541666666666,
+    "em": 0.015625
+   },
+   "ocr": {
+    "cer": 0.044710907937736494,
+    "wer": 0.05208333333333333,
+    "em": 0.875
+   }
+  }
+ ],
+ "log": [
+  {
+   "step": 1,
+   "loss": 14.8156,
+   "grad_norm": 122.655,
+   "lr": {
+    "projector": 4.000000000000001e-06,
+    "projector/no_decay": 4.000000000000001e-06,
+    "lm/no_decay": 1.0000000000000002e-06,
+    "lm": 1.0000000000000002e-06
+   },
+   "task_loss": {
+    "ocr": 15.3181,
+    "doc": 11.2982
+   },
+   "sec": 1.6
+  },
+  {
+   "step": 10,
+   "loss": 7.6151,
+   "grad_norm": 68.49,
+   "lr": {
+    "projector": 2.2000000000000003e-05,
+    "projector/no_decay": 2.2000000000000003e-05,
+    "lm/no_decay": 5.500000000000001e-06,
+    "lm": 5.500000000000001e-06
+   },
+   "task_loss": {
+    "ocr": 11.9879,
+    "doc": 6.7803
+   },
+   "sec": 4.1
+  },
+  {
+   "step": 20,
+   "loss": 5.0562,
+   "grad_norm": 24.077,
+   "lr": {
+    "projector": 4.2e-05,
+    "projector/no_decay": 4.2e-05,
+    "lm/no_decay": 1.05e-05,
+    "lm": 1.05e-05
+   },
+   "task_loss": {
+    "ocr": 7.0763,
+    "doc": 3.5774
+   },
+   "sec": 6.8
+  },
+  {
+   "step": 30,
+   "loss": 4.3522,
+   "grad_norm": 12.789,
+   "lr": {
+    "projector": 6.2e-05,
+    "projector/no_decay": 6.2e-05,
+    "lm/no_decay": 1.55e-05,
+    "lm": 1.55e-05
+   },
+   "task_loss": {
+    "doc": 2.7256,
+    "ocr": 5.4734
+   },
+   "sec": 9.5
+  },
+  {
+   "step": 40,
+   "loss": 4.1879,
+   "grad_norm": 10.752,
+   "lr": {
+    "projector": 8.2e-05,
+    "projector/no_decay": 8.2e-05,
+    "lm/no_decay": 2.05e-05,
+    "lm": 2.05e-05
+   },
+   "task_loss": {
+    "ocr": 4.7776,
+    "doc": 2.0113
+   },
+   "sec": 12.2
+  },
+  {
+   "step": 50,
+   "loss": 3.051,
+   "grad_norm": 13.81,
+   "lr": {
+    "projector": 0.00010200000000000001,
+    "projector/no_decay": 0.00010200000000000001,
+    "lm/no_decay": 2.5500000000000003e-05,
+    "lm": 2.5500000000000003e-05
+   },
+   "task_loss": {
+    "ocr": 4.4145,
+    "doc": 2.0256
+   },
+   "sec": 15.0
+  },
+  {
+   "step": 60,
+   "loss": 3.7972,
+   "grad_norm": 16.563,
+   "lr": {
+    "projector": 0.000122,
+    "projector/no_decay": 0.000122,
+    "lm/no_decay": 3.05e-05,
+    "lm": 3.05e-05
+   },
+   "task_loss": {
+    "ocr": 4.1049,
+    "doc": 1.7242
+   },
+   "sec": 17.7
+  },
+  {
+   "step": 70,
+   "loss": 2.6186,
+   "grad_norm": 10.457,
+   "lr": {
+    "projector": 0.000142,
+    "projector/no_decay": 0.000142,
+    "lm/no_decay": 3.55e-05,
+    "lm": 3.55e-05
+   },
+   "task_loss": {
+    "ocr": 3.5812,
+    "doc": 1.7017
+   },
+   "sec": 20.4
+  },
+  {
+   "step": 80,
+   "loss": 2.5392,
+   "grad_norm": 11.211,
+   "lr": {
+    "projector": 0.000162,
+    "projector/no_decay": 0.000162,
+    "lm/no_decay": 4.05e-05,
+    "lm": 4.05e-05
+   },
+   "task_loss": {
+    "ocr": 3.4698,
+    "doc": 1.579
+   },
+   "sec": 23.1
+  },
+  {
+   "step": 90,
+   "loss": 2.7512,
+   "grad_norm": 8.8,
+   "lr": {
+    "projector": 0.000182,
+    "projector/no_decay": 0.000182,
+    "lm/no_decay": 4.55e-05,
+    "lm": 4.55e-05
+   },
+   "task_loss": {
+    "doc": 1.657,
+    "ocr": 3.1155
+   },
+   "sec": 26.0
+  },
+  {
+   "step": 100,
+   "loss": 2.3206,
+   "grad_norm": 6.785,
+   "lr": {
+    "projector": 0.0002,
+    "projector/no_decay": 0.0002,
+    "lm/no_decay": 5e-05,
+    "lm": 5e-05
+   },
+   "task_loss": {
+    "ocr": 3.012,
+    "doc": 1.5349
+   },
+   "sec": 28.9
+  },
+  {
+   "step": 110,
+   "loss": 2.4433,
+   "grad_norm": 8.868,
+   "lr": {
+    "projector": 0.00019803328406604252,
+    "projector/no_decay": 0.00019803328406604252,
+    "lm/no_decay": 4.950832101651063e-05,
+    "lm": 4.950832101651063e-05
+   },
+   "task_loss": {
+    "doc": 1.3296,
+    "ocr": 2.7625
+   },
+   "sec": 31.7
+  },
+  {
+   "step": 120,
+   "loss": 1.8294,
+   "grad_norm": 8.353,
+   "lr": {
+    "projector": 0.00019221909118783407,
+    "projector/no_decay": 0.00019221909118783407,
+    "lm/no_decay": 4.805477279695852e-05,
+    "lm": 4.805477279695852e-05
+   },
+   "task_loss": {
+    "doc": 1.2419,
+    "ocr": 2.2364
+   },
+   "sec": 34.2
+  },
+  {
+   "step": 130,
+   "loss": 1.5041,
+   "grad_norm": 8.64,
+   "lr": {
+    "projector": 0.00018281152949374527,
+    "projector/no_decay": 0.00018281152949374527,
+    "lm/no_decay": 4.570288237343632e-05,
+    "lm": 4.570288237343632e-05
+   },
+   "task_loss": {
+    "ocr": 1.7485,
+    "doc": 1.2037
+   },
+   "sec": 36.7
+  },
+  {
+   "step": 140,
+   "loss": 1.0481,
+   "grad_norm": 9.751,
+   "lr": {
+    "projector": 0.00017022175457229725,
+    "projector/no_decay": 0.00017022175457229725,
+    "lm/no_decay": 4.255543864307431e-05,
+    "lm": 4.255543864307431e-05
+   },
+   "task_loss": {
+    "ocr": 1.3349,
+    "doc": 1.4764
+   },
+   "sec": 39.2
+  },
+  {
+   "step": 150,
+   "loss": 0.8595,
+   "grad_norm": 7.397,
+   "lr": {
+    "projector": 0.000155,
+    "projector/no_decay": 0.000155,
+    "lm/no_decay": 3.875e-05,
+    "lm": 3.875e-05
+   },
+   "task_loss": {
+    "ocr": 1.1241,
+    "doc": 1.5168
+   },
+   "sec": 41.7
+  },
+  {
+   "step": 160,
+   "loss": 0.9444,
+   "grad_norm": 17.099,
+   "lr": {
+    "projector": 0.00013781152949374526,
+    "projector/no_decay": 0.00013781152949374526,
+    "lm/no_decay": 3.4452882373436316e-05,
+    "lm": 3.4452882373436316e-05
+   },
+   "task_loss": {
+    "ocr": 0.5888,
+    "doc": 1.2098
+   },
+   "sec": 44.3
+  },
+  {
+   "step": 170,
+   "loss": 0.3226,
+   "grad_norm": 6.309,
+   "lr": {
+    "projector": 0.00011940756169408881,
+    "projector/no_decay": 0.00011940756169408881,
+    "lm/no_decay": 2.9851890423522204e-05,
+    "lm": 2.9851890423522204e-05
+   },
+   "task_loss": {
+    "ocr": 0.5039,
+    "doc": 1.2521
+   },
+   "sec": 46.9
+  },
+  {
+   "step": 180,
+   "loss": 0.7188,
+   "grad_norm": 12.278,
+   "lr": {
+    "projector": 0.00010059243830591121,
+    "projector/no_decay": 0.00010059243830591121,
+    "lm/no_decay": 2.5148109576477802e-05,
+    "lm": 2.5148109576477802e-05
+   },
+   "task_loss": {
+    "ocr": 0.3439,
+    "doc": 1.3514
+   },
+   "sec": 49.3
+  },
+  {
+   "step": 190,
+   "loss": 0.8677,
+   "grad_norm": 8.019,
+   "lr": {
+    "projector": 8.218847050625476e-05,
+    "projector/no_decay": 8.218847050625476e-05,
+    "lm/no_decay": 2.054711762656369e-05,
+    "lm": 2.054711762656369e-05
+   },
+   "task_loss": {
+    "ocr": 0.3807,
+    "doc": 1.3187
+   },
+   "sec": 51.9
+  },
+  {
+   "step": 200,
+   "loss": 0.5112,
+   "grad_norm": 4.152,
+   "lr": {
+    "projector": 6.500000000000002e-05,
+    "projector/no_decay": 6.500000000000002e-05,
+    "lm/no_decay": 1.6250000000000005e-05,
+    "lm": 1.6250000000000005e-05
+   },
+   "task_loss": {
+    "ocr": 0.253,
+    "doc": 1.3598
+   },
+   "sec": 54.5
+  },
+  {
+   "step": 210,
+   "loss": 0.3987,
+   "grad_norm": 4.285,
+   "lr": {
+    "projector": 4.977824542770279e-05,
+    "projector/no_decay": 4.977824542770279e-05,
+    "lm/no_decay": 1.2444561356925697e-05,
+    "lm": 1.2444561356925697e-05
+   },
+   "task_loss": {
+    "ocr": 0.2943,
+    "doc": 1.2592
+   },
+   "sec": 57.0
+  },
+  {
+   "step": 220,
+   "loss": 0.3008,
+   "grad_norm": 5.586,
+   "lr": {
+    "projector": 3.718847050625475e-05,
+    "projector/no_decay": 3.718847050625475e-05,
+    "lm/no_decay": 9.297117626563687e-06,
+    "lm": 9.297117626563687e-06
+   },
+   "task_loss": {
+    "ocr": 0.1429,
+    "doc": 1.3198
+   },
+   "sec": 59.5
+  },
+  {
+   "step": 230,
+   "loss": 0.4003,
+   "grad_norm": 8.446,
+   "lr": {
+    "projector": 2.778090881216592e-05,
+    "projector/no_decay": 2.778090881216592e-05,
+    "lm/no_decay": 6.94522720304148e-06,
+    "lm": 6.94522720304148e-06
+   },
+   "task_loss": {
+    "ocr": 0.1942,
+    "doc": 1.273
+   },
+   "sec": 62.1
+  },
+  {
+   "step": 240,
+   "loss": 0.2061,
+   "grad_norm": 2.021,
+   "lr": {
+    "projector": 2.196671593395749e-05,
+    "projector/no_decay": 2.196671593395749e-05,
+    "lm/no_decay": 5.491678983489372e-06,
+    "lm": 5.491678983489372e-06
+   },
+   "task_loss": {
+    "ocr": 0.1052,
+    "doc": 1.1815
+   },
+   "sec": 64.5
+  },
+  {
+   "step": 250,
+   "loss": 0.4331,
+   "grad_norm": 4.417,
+   "lr": {
+    "projector": 2e-05,
+    "projector/no_decay": 2e-05,
+    "lm/no_decay": 5e-06,
+    "lm": 5e-06
+   },
+   "task_loss": {
+    "doc": 1.226,
+    "ocr": 0.1247
+   },
+   "sec": 67.0
+  }
+ ]
+}

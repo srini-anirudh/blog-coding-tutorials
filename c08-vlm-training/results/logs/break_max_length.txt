@@ -1,0 +1,6 @@
+AMD EPYC 7R13 Processor, 8 threads
+max_tiles  tiles  tokens  forward ms
+        1      1      66         386
+        4      5     262         696
+       16     17     850        2345
+       36  ValueError: sample has 1830 tokens > max_length 1024

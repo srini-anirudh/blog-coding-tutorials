@@ -1,0 +1,1309 @@
+{
+ "name": "stage2_noreplay",
+ "config": {
+  "name": "stage2_noreplay",
+  "model": "auto",
+  "steps": 500,
+  "batch_size": 4,
+  "freeze": "lm",
+  "vision_layers_to_train": 0,
+  "lrs": {
+   "vision": 1e-06,
+   "projector": 0.0002,
+   "lm": 5e-05,
+   "lora": 0.0002
+  },
+  "weight_decay": 0.0,
+  "warmup": 20,
+  "grad_clip": 1.0,
+  "loss_norm": "sample",
+  "tasks": [
+   "caption",
+   "vqa",
+   "ocr",
+   "doc",
+   "chart",
+   "grounding"
+  ],
+  "task_sizes": {
+   "caption": 40000,
+   "vqa": 20000,
+   "ocr": 8000,
+   "doc": 1000,
+   "chart": 2000,
+   "grounding": 4000
+  },
+  "mixture": "temperature",
+  "temperature": 2.0,
+  "manual_weights": null,
+  "replay_ratio": 0,
+  "replay_max_tokens": 96,
+  "strategy": "tile",
+  "max_tiles": 4,
+  "grounding_format": "tokens",
+  "lora": [],
+  "lora_r": 16,
+  "lora_alpha": 32.0,
+  "train_new_tokens": false,
+  "pack_budget": 0,
+  "init_from": "outputs/stage1_align/trainable.safetensors",
+  "eval_n": 48,
+  "eval_every": 250,
+  "eval_n_mid": 24,
+  "ppl_passages": 64,
+  "save": false,
+  "out_dir": "outputs",
+  "results_dir": "results",
+  "seed": 0,
+  "device": null,
+  "log_every": 10
+ },
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads",
+ "train_sec": 1382.6,
+ "sec_per_step": 2.765,
+ "tokens_per_sec": 147,
+ "peak_rss_mb": 7521,
+ "trainable": {
+  "vision": {
+   "trainable": 0,
+   "total": 85797120
+  },
+  "projector": {
+   "trainable": 2102400,
+   "total": 2102400
+  },
+  "lm": {
+   "trainable": 134551872,
+   "total": 134551872
+  }
+ },
+ "mixture_target": {
+  "caption": 0.35059808941371806,
+  "vqa": 0.24791028649548758,
+  "ocr": 0.1567922321421246,
+  "doc": 0.055434425292535824,
+  "chart": 0.0783961160710623,
+  "grounding": 0.11086885058507165
+ },
+ "mixture_observed": {
+  "caption": 0.3385,
+  "vqa": 0.2575,
+  "ocr": 0.153,
+  "doc": 0.06,
+  "chart": 0.0765,
+  "grounding": 0.1145
+ },
+ "supervised_token_share": {
+  "chart": 0.027760641579272053,
+  "doc": 0.055697541200317266,
+  "vqa": 0.09077289151317529,
+  "caption": 0.6173437913104786,
+  "grounding": 0.11465585617343792,
+  "ocr": 0.09376927822331894
+ },
+ "ppl_before": 38.36633088175263,
+ "ppl_after": 45.096409252060695,
+ "metrics": {
+  "caption": {
+   "em": 0.7291666666666666
+  },
+  "vqa": {
+   "em": 0.7291666666666666
+  },
+  "ocr": {
+   "cer": 0.450050546074153,
+   "wer": 0.545138888888889,
+   "em": 0.2708333333333333
+  },
+  "doc": {
+   "anls": 0.24965277777777775,
+   "em": 0.020833333333333332
+  },
+  "chart": {
+   "relaxed_acc": 0.125
+  },
+  "grounding": {
+   "point_acc": 0.0,
+   "parse_fail": 1.0,
+   "iou": 0.0,
+   "acc@0.5": 0.0,
+   "mask_iou": 0.0
+  }
+ },
+ "examples": {
+  "caption": [
+   {
+    "question": "Describe the image.",
+    "gold": "A red circle and a yellow triangle.",
+    "pred": "A red circle and a yellow triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "An orange triangle.",
+    "pred": "An orange triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "A purple triangle.",
+    "pred": "A purple triangle."
+   }
+  ],
+  "vqa": [
+   {
+    "question": "How many shapes are there? Answer with one word.",
+    "gold": "5",
+    "pred": "5"
+   },
+   {
+    "question": "How many green squares are there? Answer with one word.",
+    "gold": "1",
+    "pred": "1"
+   },
+   {
+    "question": "Is there a blue circle? Answer with one word.",
+    "gold": "no",
+    "pred": "yes"
+   }
+  ],
+  "ocr": [
+   {
+    "question": "What does the text in the image say?",
+    "gold": "pearl oyster",
+    "pred": "rabbit pearl"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "square pearl",
+    "pred": "square pearl"
+   },
+   {
+    "question": "What does the text in the image say?",
+    "gold": "radio",
+    "pred": "rabbit"
+   }
+  ],
+  "doc": [
+   {
+    "question": "What is the total?",
+    "gold": "79.50",
+    "pred": "12.50"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "5",
+    "pred": "3"
+   },
+   {
+    "question": "How many items are on the invoice?",
+    "gold": "1",
+    "pred": "3"
+   }
+  ],
+  "chart": [
+   {
+    "question": "What is the value of yak?",
+    "gold": "5",
+    "pred": "2"
+   },
+   {
+    "question": "What is the value of fox?",
+    "gold": "4",
+    "pred": "2"
+   },
+   {
+    "question": "What is the value of fox?",
+    "gold": "5",
+    "pred": "2"
+   }
+  ],
+  "grounding": [
+   {
+    "question": "Point to the green circle.",
+    "gold": "<loc_17><loc_14>",
+    "pred": ""
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "<loc_23><loc_15><loc_31><loc_22>",
+    "pred": ""
+   },
+   {
+    "question": "Find the red square. Give its bounding box.",
+    "gold": "<loc_14><loc_4><loc_19><loc_9>",
+    "pred": ""
+   }
+  ]
+ },
+ "curve": [
+  {
+   "step": 250,
+   "caption": {
+    "em": 0.7083333333333334
+   },
+   "vqa": {
+    "em": 0.5
+   },
+   "ocr": {
+    "cer": 1.2526119770895314,
+    "wer": 1.402777777777778,
+    "em": 0.125
+   },
+   "doc": {
+    "anls": 0.17916666666666667,
+    "em": 0.041666666666666664
+   },
+   "chart": {
+    "relaxed_acc": 0.041666666666666664
+   },
+   "grounding": {
+    "point_acc": 0.0,
+    "parse_fail": 1.0,
+    "iou": 0.0,
+    "acc@0.5": 0.0,
+    "mask_iou": 0.0
+   }
+  },
+  {
+   "step": 500,
+   "caption": {
+    "em": 0.7291666666666666
+   },
+   "vqa": {
+    "em": 0.7291666666666666
+   },
+   "ocr": {
+    "cer": 0.450050546074153,
+    "wer": 0.545138888888889,
+    "em": 0.2708333333333333
+   },
+   "doc": {
+    "anls": 0.24965277777777775,
+    "em": 0.020833333333333332
+   },
+   "chart": {
+    "relaxed_acc": 0.125
+   },
+   "grounding": {
+    "point_acc": 0.0,
+    "parse_fail": 1.0,
+    "iou": 0.0,
+    "acc@0.5": 0.0,
+    "mask_iou": 0.0
+   }
+  }
+ ],
+ "log": [
+  {
+   "step": 1,
+   "loss": 6.8355,
+   "grad_norm": 116.493,
+   "lr": {
+    "projector": 2e-05,
+    "projector/no_decay": 2e-05,
+    "lm/no_decay": 5e-06,
+    "lm": 5e-06
+   },
+   "task_loss": {
+    "chart": 7.7817,
+    "doc": 10.6634,
+    "vqa": 8.6196,
+    "caption": 0.2775
+   },
+   "sec": 4.5
+  },
+  {
+   "step": 10,
+   "loss": 5.0837,
+   "grad_norm": 41.282,
+   "lr": {
+    "projector": 0.00011000000000000002,
+    "projector/no_decay": 0.00011000000000000002,
+    "lm/no_decay": 2.7500000000000004e-05,
+    "lm": 2.7500000000000004e-05
+   },
+   "task_loss": {
+    "vqa": 4.4686,
+    "doc": 5.9516,
+    "caption": 0.0947,
+    "grounding": 15.7575,
+    "ocr": 8.0417,
+    "chart": 2.4494
+   },
+   "sec": 36.3
+  },
+  {
+   "step": 20,
+   "loss": 4.268,
+   "grad_norm": 22.442,
+   "lr": {
+    "projector": 0.0002,
+    "projector/no_decay": 0.0002,
+    "lm/no_decay": 5e-05,
+    "lm": 5e-05
+   },
+   "task_loss": {
+    "caption": 0.5158,
+    "vqa": 0.8144,
+    "chart": 1.5716,
+    "grounding": 14.6591,
+    "doc": 1.58,
+    "ocr": 5.5704
+   },
+   "sec": 63.3
+  },
+  {
+   "step": 30,
+   "loss": 4.6849,
+   "grad_norm": 20.761,
+   "lr": {
+    "projector": 0.00019980730309147434,
+    "projector/no_decay": 0.00019980730309147434,
+    "lm/no_decay": 4.9951825772868586e-05,
+    "lm": 4.9951825772868586e-05
+   },
+   "task_loss": {
+    "grounding": 12.741,
+    "vqa": 0.6527,
+    "ocr": 5.7175,
+    "caption": 0.3307,
+    "chart": 1.2218,
+    "doc": 5.8536
+   },
+   "sec": 100.7
+  },
+  {
+   "step": 40,
+   "loss": 0.4179,
+   "grad_norm": 8.701,
+   "lr": {
+    "projector": 0.00019923003752364297,
+    "projector/no_decay": 0.00019923003752364297,
+    "lm/no_decay": 4.980750938091074e-05,
+    "lm": 4.980750938091074e-05
+   },
+   "task_loss": {
+    "vqa": 1.1788,
+    "grounding": 12.1308,
+    "caption": 0.1162,
+    "doc": 3.3407,
+    "ocr": 6.2704,
+    "chart": 1.2563
+   },
+   "sec": 141.0
+  },
+  {
+   "step": 50,
+   "loss": 3.0296,
+   "grad_norm": 22.533,
+   "lr": {
+    "projector": 0.00019827067523629075,
+    "projector/no_decay": 0.00019827067523629075,
+    "lm/no_decay": 4.956766880907269e-05,
+    "lm": 4.956766880907269e-05
+   },
+   "task_loss": {
+    "vqa": 0.6494,
+    "caption": 0.0967,
+    "chart": 0.9773,
+    "ocr": 5.4246,
+    "grounding": 10.3965
+   },
+   "sec": 167.8
+  },
+  {
+   "step": 60,
+   "loss": 0.3272,
+   "grad_norm": 8.124,
+   "lr": {
+    "projector": 0.00019693332436601614,
+    "projector/no_decay": 0.00019693332436601614,
+    "lm/no_decay": 4.9233331091504034e-05,
+    "lm": 4.9233331091504034e-05
+   },
+   "task_loss": {
+    "vqa": 0.5252,
+    "caption": 0.2324,
+    "doc": 4.0302,
+    "chart": 1.3445,
+    "grounding": 9.7395,
+    "ocr": 5.9081
+   },
+   "sec": 196.1
+  },
+  {
+   "step": 70,
+   "loss": 0.2103,
+   "grad_norm": 6.941,
+   "lr": {
+    "projector": 0.00019522371165455954,
+    "projector/no_decay": 0.00019522371165455954,
+    "lm/no_decay": 4.8805927913639885e-05,
+    "lm": 4.8805927913639885e-05
+   },
+   "task_loss": {
+    "doc": 1.7258,
+    "chart": 1.4299,
+    "caption": 0.0858,
+    "vqa": 0.5207,
+    "ocr": 5.4052,
+    "grounding": 8.9114
+   },
+   "sec": 224.1
+  },
+  {
+   "step": 80,
+   "loss": 4.4154,
+   "grad_norm": 12.972,
+   "lr": {
+    "projector": 0.00019314915792601581,
+    "projector/no_decay": 0.00019314915792601581,
+    "lm/no_decay": 4.8287289481503954e-05,
+    "lm": 4.8287289481503954e-05
+   },
+   "task_loss": {
+    "vqa": 0.6199,
+    "caption": 0.259,
+    "grounding": 9.4834,
+    "chart": 0.8181,
+    "ocr": 6.0046
+   },
+   "sec": 250.2
+  },
+  {
+   "step": 90,
+   "loss": 5.033,
+   "grad_norm": 13.959,
+   "lr": {
+    "projector": 0.00019071854673794196,
+    "projector/no_decay": 0.00019071854673794196,
+    "lm/no_decay": 4.767963668448549e-05,
+    "lm": 4.767963668448549e-05
+   },
+   "task_loss": {
+    "caption": 0.2693,
+    "doc": 1.6087,
+    "vqa": 0.6126,
+    "chart": 1.7333,
+    "ocr": 4.7689,
+    "grounding": 8.9647
+   },
+   "sec": 275.7
+  },
+  {
+   "step": 100,
+   "loss": 0.8771,
+   "grad_norm": 10.001,
+   "lr": {
+    "projector": 0.0001879422863405995,
+    "projector/no_decay": 0.0001879422863405995,
+    "lm/no_decay": 4.6985571585149876e-05,
+    "lm": 4.6985571585149876e-05
+   },
+   "task_loss": {
+    "caption": 0.2235,
+    "doc": 2.0741,
+    "chart": 1.9898,
+    "vqa": 0.9315,
+    "ocr": 5.1584,
+    "grounding": 8.7712
+   },
+   "sec": 304.0
+  },
+  {
+   "step": 110,
+   "loss": 0.7559,
+   "grad_norm": 13.955,
+   "lr": {
+    "projector": 0.0001848322651072291,
+    "projector/no_decay": 0.0001848322651072291,
+    "lm/no_decay": 4.620806627680727e-05,
+    "lm": 4.620806627680727e-05
+   },
+   "task_loss": {
+    "doc": 1.5286,
+    "ocr": 3.708,
+    "caption": 0.1623,
+    "vqa": 0.5193,
+    "chart": 1.1329,
+    "grounding": 8.573
+   },
+   "sec": 330.9
+  },
+  {
+   "step": 120,
+   "loss": 2.1798,
+   "grad_norm": 21.051,
+   "lr": {
+    "projector": 0.00018140180062621117,
+    "projector/no_decay": 0.00018140180062621117,
+    "lm/no_decay": 4.535045015655279e-05,
+    "lm": 4.535045015655279e-05
+   },
+   "task_loss": {
+    "vqa": 0.4194,
+    "chart": 1.2031,
+    "ocr": 3.8432,
+    "caption": 0.1101,
+    "doc": 3.137,
+    "grounding": 8.0447
+   },
+   "sec": 367.1
+  },
+  {
+   "step": 130,
+   "loss": 0.4408,
+   "grad_norm": 7.848,
+   "lr": {
+    "projector": 0.00017766558267310798,
+    "projector/no_decay": 0.00017766558267310798,
+    "lm/no_decay": 4.4416395668276995e-05,
+    "lm": 4.4416395668276995e-05
+   },
+   "task_loss": {
+    "caption": 0.1557,
+    "vqa": 1.1651,
+    "grounding": 7.6632,
+    "doc": 4.1743,
+    "ocr": 4.262,
+    "chart": 1.1758
+   },
+   "sec": 392.6
+  },
+  {
+   "step": 140,
+   "loss": 2.166,
+   "grad_norm": 12.472,
+   "lr": {
+    "projector": 0.00017363961030678927,
+    "projector/no_decay": 0.00017363961030678927,
+    "lm/no_decay": 4.340990257669732e-05,
+    "lm": 4.340990257669732e-05
+   },
+   "task_loss": {
+    "grounding": 8.9115,
+    "caption": 0.1728,
+    "vqa": 0.712,
+    "ocr": 4.5341,
+    "doc": 3.836
+   },
+   "sec": 416.0
+  },
+  {
+   "step": 150,
+   "loss": 2.5933,
+   "grad_norm": 13.092,
+   "lr": {
+    "projector": 0.00016934112335900621,
+    "projector/no_decay": 0.00016934112335900621,
+    "lm/no_decay": 4.2335280839751554e-05,
+    "lm": 4.2335280839751554e-05
+   },
+   "task_loss": {
+    "ocr": 3.721,
+    "caption": 0.115,
+    "vqa": 0.5765,
+    "grounding": 8.3154,
+    "doc": 1.8765
+   },
+   "sec": 456.8
+  },
+  {
+   "step": 160,
+   "loss": 0.7024,
+   "grad_norm": 9.593,
+   "lr": {
+    "projector": 0.00016478852861078486,
+    "projector/no_decay": 0.00016478852861078486,
+    "lm/no_decay": 4.1197132152696215e-05,
+    "lm": 4.1197132152696215e-05
+   },
+   "task_loss": {
+    "caption": 0.194,
+    "chart": 5.2059,
+    "vqa": 0.3669,
+    "ocr": 4.3787,
+    "grounding": 8.7158,
+    "doc": 1.6339
+   },
+   "sec": 490.3
+  },
+  {
+   "step": 170,
+   "loss": 2.0311,
+   "grad_norm": 10.232,
+   "lr": {
+    "projector": 0.00016000132097176422,
+    "projector/no_decay": 0.00016000132097176422,
+    "lm/no_decay": 4.0000330242941056e-05,
+    "lm": 4.0000330242941056e-05
+   },
+   "task_loss": {
+    "ocr": 3.5015,
+    "vqa": 0.7291,
+    "caption": 0.2017,
+    "chart": 1.5122,
+    "grounding": 7.3204
+   },
+   "sec": 529.7
+  },
+  {
+   "step": 180,
+   "loss": 0.8557,
+   "grad_norm": 11.272,
+   "lr": {
+    "projector": 0.000155,
+    "projector/no_decay": 0.000155,
+    "lm/no_decay": 3.875e-05,
+    "lm": 3.875e-05
+   },
+   "task_loss": {
+    "vqa": 0.4268,
+    "ocr": 3.1028,
+    "caption": 0.112,
+    "grounding": 7.642,
+    "doc": 1.3384,
+    "chart": 1.44
+   },
+   "sec": 576.1
+  },
+  {
+   "step": 190,
+   "loss": 1.6982,
+   "grad_norm": 15.063,
+   "lr": {
+    "projector": 0.00014980598211971014,
+    "projector/no_decay": 0.00014980598211971014,
+    "lm/no_decay": 3.7451495529927534e-05,
+    "lm": 3.7451495529927534e-05
+   },
+   "task_loss": {
+    "caption": 0.2182,
+    "ocr": 3.3122,
+    "doc": 1.7033,
+    "grounding": 7.4602,
+    "vqa": 0.8592,
+    "chart": 1.1035
+   },
+   "sec": 607.0
+  },
+  {
+   "step": 200,
+   "loss": 2.7408,
+   "grad_norm": 16.303,
+   "lr": {
+    "projector": 0.00014444150891285807,
+    "projector/no_decay": 0.00014444150891285807,
+    "lm/no_decay": 3.611037722821452e-05,
+    "lm": 3.611037722821452e-05
+   },
+   "task_loss": {
+    "grounding": 7.4462,
+    "vqa": 0.2612,
+    "caption": 0.1686,
+    "doc": 1.4532,
+    "ocr": 3.1009,
+    "chart": 1.0553
+   },
+   "sec": 633.5
+  },
+  {
+   "step": 210,
+   "loss": 1.3522,
+   "grad_norm": 21.842,
+   "lr": {
+    "projector": 0.00013892955187728455,
+    "projector/no_decay": 0.00013892955187728455,
+    "lm/no_decay": 3.473238796932114e-05,
+    "lm": 3.473238796932114e-05
+   },
+   "task_loss": {
+    "vqa": 0.7893,
+    "chart": 1.1028,
+    "caption": 0.1641,
+    "ocr": 3.6808,
+    "doc": 1.4513,
+    "grounding": 9.8169
+   },
+   "sec": 662.0
+  },
+  {
+   "step": 220,
+   "loss": 1.0089,
+   "grad_norm": 9.119,
+   "lr": {
+    "projector": 0.00013329371405922688,
+    "projector/no_decay": 0.00013329371405922688,
+    "lm/no_decay": 3.332342851480672e-05,
+    "lm": 3.332342851480672e-05
+   },
+   "task_loss": {
+    "ocr": 3.3248,
+    "grounding": 6.5927,
+    "caption": 0.1371,
+    "chart": 1.7595,
+    "vqa": 0.9816,
+    "doc": 4.3497
+   },
+   "sec": 697.0
+  },
+  {
+   "step": 230,
+   "loss": 1.4322,
+   "grad_norm": 10.01,
+   "lr": {
+    "projector": 0.00012755812898145155,
+    "projector/no_decay": 0.00012755812898145155,
+    "lm/no_decay": 3.188953224536289e-05,
+    "lm": 3.188953224536289e-05
+   },
+   "task_loss": {
+    "caption": 0.1077,
+    "ocr": 3.426,
+    "grounding": 6.5745,
+    "vqa": 0.395,
+    "chart": 1.2884,
+    "doc": 2.568
+   },
+   "sec": 719.4
+  },
+  {
+   "step": 240,
+   "loss": 0.9222,
+   "grad_norm": 10.398,
+   "lr": {
+    "projector": 0.00012174735729980466,
+    "projector/no_decay": 0.00012174735729980466,
+    "lm/no_decay": 3.0436839324951166e-05,
+    "lm": 3.0436839324951166e-05
+   },
+   "task_loss": {
+    "ocr": 3.6801,
+    "caption": 0.0972,
+    "grounding": 6.5941,
+    "vqa": 0.4235,
+    "doc": 2.1688
+   },
+   "sec": 744.1
+  },
+  {
+   "step": 250,
+   "loss": 3.5976,
+   "grad_norm": 8.429,
+   "lr": {
+    "projector": 0.00011588628163071289,
+    "projector/no_decay": 0.00011588628163071289,
+    "lm/no_decay": 2.897157040767822e-05,
+    "lm": 2.897157040767822e-05
+   },
+   "task_loss": {
+    "ocr": 3.3025,
+    "vqa": 0.5324,
+    "doc": 2.0902,
+    "caption": 0.1422,
+    "grounding": 7.2825,
+    "chart": 1.1617
+   },
+   "sec": 767.6
+  },
+  {
+   "step": 260,
+   "loss": 3.5339,
+   "grad_norm": 19.059,
+   "lr": {
+    "projector": 0.00011000000000000002,
+    "projector/no_decay": 0.00011000000000000002,
+    "lm/no_decay": 2.7500000000000004e-05,
+    "lm": 2.7500000000000004e-05
+   },
+   "task_loss": {
+    "grounding": 7.0086,
+    "chart": 1.2239,
+    "doc": 2.6344,
+    "ocr": 3.8915,
+    "caption": 0.1275,
+    "vqa": 0.7135
+   },
+   "sec": 841.5
+  },
+  {
+   "step": 270,
+   "loss": 2.3793,
+   "grad_norm": 19.825,
+   "lr": {
+    "projector": 0.00010411371836928712,
+    "projector/no_decay": 0.00010411371836928712,
+    "lm/no_decay": 2.602842959232178e-05,
+    "lm": 2.602842959232178e-05
+   },
+   "task_loss": {
+    "doc": 2.8731,
+    "caption": 0.0614,
+    "vqa": 0.2391,
+    "grounding": 7.0462,
+    "ocr": 3.0334,
+    "chart": 1.1453
+   },
+   "sec": 868.0
+  },
+  {
+   "step": 280,
+   "loss": 0.6944,
+   "grad_norm": 9.853,
+   "lr": {
+    "projector": 9.825264270019538e-05,
+    "projector/no_decay": 9.825264270019538e-05,
+    "lm/no_decay": 2.4563160675048846e-05,
+    "lm": 2.4563160675048846e-05
+   },
+   "task_loss": {
+    "vqa": 0.4631,
+    "chart": 1.1452,
+    "caption": 0.1,
+    "ocr": 2.819,
+    "grounding": 6.6123,
+    "doc": 0.9258
+   },
+   "sec": 889.5
+  },
+  {
+   "step": 290,
+   "loss": 0.5109,
+   "grad_norm": 14.297,
+   "lr": {
+    "projector": 9.244187101854847e-05,
+    "projector/no_decay": 9.244187101854847e-05,
+    "lm/no_decay": 2.3110467754637118e-05,
+    "lm": 2.3110467754637118e-05
+   },
+   "task_loss": {
+    "vqa": 0.7538,
+    "ocr": 3.0184,
+    "grounding": 6.5155,
+    "caption": 0.0997,
+    "chart": 1.0501,
+    "doc": 2.0453
+   },
+   "sec": 915.1
+  },
+  {
+   "step": 300,
+   "loss": 0.2555,
+   "grad_norm": 8.668,
+   "lr": {
+    "projector": 8.670628594077313e-05,
+    "projector/no_decay": 8.670628594077313e-05,
+    "lm/no_decay": 2.1676571485193282e-05,
+    "lm": 2.1676571485193282e-05
+   },
+   "task_loss": {
+    "vqa": 0.2751,
+    "chart": 1.0679,
+    "grounding": 6.0942,
+    "caption": 0.1052,
+    "ocr": 3.5666,
+    "doc": 2.0202
+   },
+   "sec": 939.5
+  },
+  {
+   "step": 310,
+   "loss": 1.4382,
+   "grad_norm": 10.924,
+   "lr": {
+    "projector": 8.10704481227155e-05,
+    "projector/no_decay": 8.10704481227155e-05,
+    "lm/no_decay": 2.0267612030678874e-05,
+    "lm": 2.0267612030678874e-05
+   },
+   "task_loss": {
+    "ocr": 3.9035,
+    "caption": 0.088,
+    "vqa": 1.802,
+    "chart": 1.7912,
+    "doc": 0.919,
+    "grounding": 6.4607
+   },
+   "sec": 964.0
+  },
+  {
+   "step": 320,
+   "loss": 1.6339,
+   "grad_norm": 9.914,
+   "lr": {
+    "projector": 7.555849108714192e-05,
+    "projector/no_decay": 7.555849108714192e-05,
+    "lm/no_decay": 1.888962277178548e-05,
+    "lm": 1.888962277178548e-05
+   },
+   "task_loss": {
+    "caption": 0.0829,
+    "chart": 1.1739,
+    "vqa": 0.4201,
+    "grounding": 7.0977,
+    "doc": 1.534,
+    "ocr": 3.1172
+   },
+   "sec": 985.4
+  },
+  {
+   "step": 330,
+   "loss": 1.7939,
+   "grad_norm": 14.919,
+   "lr": {
+    "projector": 7.019401788028993e-05,
+    "projector/no_decay": 7.019401788028993e-05,
+    "lm/no_decay": 1.754850447007248e-05,
+    "lm": 1.754850447007248e-05
+   },
+   "task_loss": {
+    "caption": 0.0644,
+    "vqa": 0.4178,
+    "ocr": 3.6528,
+    "chart": 2.1893,
+    "grounding": 6.3937,
+    "doc": 1.317
+   },
+   "sec": 1011.2
+  },
+  {
+   "step": 340,
+   "loss": 2.0536,
+   "grad_norm": 10.867,
+   "lr": {
+    "projector": 6.500000000000002e-05,
+    "projector/no_decay": 6.500000000000002e-05,
+    "lm/no_decay": 1.6250000000000005e-05,
+    "lm": 1.6250000000000005e-05
+   },
+   "task_loss": {
+    "ocr": 2.4496,
+    "caption": 0.1509,
+    "grounding": 6.215,
+    "vqa": 0.4729,
+    "doc": 1.0667,
+    "chart": 1.665
+   },
+   "sec": 1037.7
+  },
+  {
+   "step": 350,
+   "loss": 0.623,
+   "grad_norm": 12.406,
+   "lr": {
+    "projector": 5.9998679028235824e-05,
+    "projector/no_decay": 5.9998679028235824e-05,
+    "lm/no_decay": 1.4999669757058956e-05,
+    "lm": 1.4999669757058956e-05
+   },
+   "task_loss": {
+    "caption": 0.0818,
+    "vqa": 0.5399,
+    "ocr": 3.0303,
+    "grounding": 6.0809,
+    "chart": 1.52,
+    "doc": 1.7404
+   },
+   "sec": 1061.2
+  },
+  {
+   "step": 360,
+   "loss": 0.8288,
+   "grad_norm": 8.974,
+   "lr": {
+    "projector": 5.521147138921514e-05,
+    "projector/no_decay": 5.521147138921514e-05,
+    "lm/no_decay": 1.3802867847303785e-05,
+    "lm": 1.3802867847303785e-05
+   },
+   "task_loss": {
+    "caption": 0.099,
+    "vqa": 0.4453,
+    "doc": 1.8736,
+    "grounding": 6.0882,
+    "chart": 1.3222,
+    "ocr": 2.9615
+   },
+   "sec": 1081.6
+  },
+  {
+   "step": 370,
+   "loss": 0.0731,
+   "grad_norm": 3.85,
+   "lr": {
+    "projector": 5.06588766409938e-05,
+    "projector/no_decay": 5.06588766409938e-05,
+    "lm/no_decay": 1.266471916024845e-05,
+    "lm": 1.266471916024845e-05
+   },
+   "task_loss": {
+    "chart": 1.2863,
+    "caption": 0.0485,
+    "vqa": 0.6698,
+    "grounding": 5.703,
+    "doc": 3.7899,
+    "ocr": 2.4817
+   },
+   "sec": 1097.3
+  },
+  {
+   "step": 380,
+   "loss": 3.9532,
+   "grad_norm": 15.429,
+   "lr": {
+    "projector": 4.6360389693210735e-05,
+    "projector/no_decay": 4.6360389693210735e-05,
+    "lm/no_decay": 1.1590097423302684e-05,
+    "lm": 1.1590097423302684e-05
+   },
+   "task_loss": {
+    "vqa": 0.4323,
+    "doc": 1.2768,
+    "caption": 0.0346,
+    "grounding": 5.9837,
+    "ocr": 3.4626,
+    "chart": 1.1561
+   },
+   "sec": 1118.2
+  },
+  {
+   "step": 390,
+   "loss": 0.6997,
+   "grad_norm": 20.496,
+   "lr": {
+    "projector": 4.233441732689205e-05,
+    "projector/no_decay": 4.233441732689205e-05,
+    "lm/no_decay": 1.0583604331723012e-05,
+    "lm": 1.0583604331723012e-05
+   },
+   "task_loss": {
+    "ocr": 2.6224,
+    "vqa": 0.628,
+    "caption": 0.0597,
+    "grounding": 5.6477,
+    "doc": 0.9198,
+    "chart": 4.9679
+   },
+   "sec": 1137.8
+  },
+  {
+   "step": 400,
+   "loss": 1.9317,
+   "grad_norm": 13.347,
+   "lr": {
+    "projector": 3.8598199373788846e-05,
+    "projector/no_decay": 3.8598199373788846e-05,
+    "lm/no_decay": 9.649549843447212e-06,
+    "lm": 9.649549843447212e-06
+   },
+   "task_loss": {
+    "doc": 1.7251,
+    "ocr": 2.7257,
+    "caption": 0.0328,
+    "vqa": 0.353,
+    "chart": 1.075,
+    "grounding": 5.8577
+   },
+   "sec": 1158.4
+  },
+  {
+   "step": 410,
+   "loss": 2.2416,
+   "grad_norm": 21.217,
+   "lr": {
+    "projector": 3.516773489277092e-05,
+    "projector/no_decay": 3.516773489277092e-05,
+    "lm/no_decay": 8.79193372319273e-06,
+    "lm": 8.79193372319273e-06
+   },
+   "task_loss": {
+    "caption": 0.0717,
+    "vqa": 0.4864,
+    "doc": 1.1765,
+    "ocr": 2.7152,
+    "grounding": 5.28,
+    "chart": 1.2663
+   },
+   "sec": 1181.8
+  },
+  {
+   "step": 420,
+   "loss": 1.8131,
+   "grad_norm": 15.298,
+   "lr": {
+    "projector": 3.205771365940052e-05,
+    "projector/no_decay": 3.205771365940052e-05,
+    "lm/no_decay": 8.01442841485013e-06,
+    "lm": 8.01442841485013e-06
+   },
+   "task_loss": {
+    "vqa": 0.1836,
+    "ocr": 2.7336,
+    "grounding": 5.8341,
+    "caption": 0.0498,
+    "chart": 0.9287,
+    "doc": 1.5026
+   },
+   "sec": 1205.1
+  },
+  {
+   "step": 430,
+   "loss": 0.0818,
+   "grad_norm": 3.249,
+   "lr": {
+    "projector": 2.928145326205806e-05,
+    "projector/no_decay": 2.928145326205806e-05,
+    "lm/no_decay": 7.320363315514515e-06,
+    "lm": 7.320363315514515e-06
+   },
+   "task_loss": {
+    "vqa": 0.194,
+    "grounding": 5.7939,
+    "ocr": 2.0311,
+    "caption": 0.0791,
+    "chart": 1.6446,
+    "doc": 1.2386
+   },
+   "sec": 1226.4
+  },
+  {
+   "step": 440,
+   "loss": 1.8677,
+   "grad_norm": 9.522,
+   "lr": {
+    "projector": 2.6850842073984196e-05,
+    "projector/no_decay": 2.6850842073984196e-05,
+    "lm/no_decay": 6.712710518496049e-06,
+    "lm": 6.712710518496049e-06
+   },
+   "task_loss": {
+    "chart": 1.1576,
+    "caption": 0.0588,
+    "ocr": 2.3377,
+    "vqa": 0.6102,
+    "grounding": 5.7037,
+    "doc": 0.8794
+   },
+   "sec": 1247.8
+  },
+  {
+   "step": 450,
+   "loss": 2.1022,
+   "grad_norm": 10.179,
+   "lr": {
+    "projector": 2.4776288345440503e-05,
+    "projector/no_decay": 2.4776288345440503e-05,
+    "lm/no_decay": 6.194072086360126e-06,
+    "lm": 6.194072086360126e-06
+   },
+   "task_loss": {
+    "caption": 0.0609,
+    "vqa": 0.6615,
+    "chart": 1.5383,
+    "doc": 1.5631,
+    "ocr": 1.4972,
+    "grounding": 5.824
+   },
+   "sec": 1270.8
+  },
+  {
+   "step": 460,
+   "loss": 0.4065,
+   "grad_norm": 11.531,
+   "lr": {
+    "projector": 2.3066675633983865e-05,
+    "projector/no_decay": 2.3066675633983865e-05,
+    "lm/no_decay": 5.766668908495966e-06,
+    "lm": 5.766668908495966e-06
+   },
+   "task_loss": {
+    "vqa": 0.4684,
+    "caption": 0.077,
+    "grounding": 6.0512,
+    "ocr": 1.9928,
+    "chart": 1.0192,
+    "doc": 1.1995
+   },
+   "sec": 1292.9
+  },
+  {
+   "step": 470,
+   "loss": 1.5881,
+   "grad_norm": 5.828,
+   "lr": {
+    "projector": 2.1729324763709264e-05,
+    "projector/no_decay": 2.1729324763709264e-05,
+    "lm/no_decay": 5.432331190927316e-06,
+    "lm": 5.432331190927316e-06
+   },
+   "task_loss": {
+    "doc": 0.9143,
+    "vqa": 0.0877,
+    "caption": 0.0339,
+    "chart": 0.9732,
+    "grounding": 5.5456,
+    "ocr": 2.8129
+   },
+   "sec": 1311.0
+  },
+  {
+   "step": 480,
+   "loss": 0.8726,
+   "grad_norm": 8.1,
+   "lr": {
+    "projector": 2.0769962476357068e-05,
+    "projector/no_decay": 2.0769962476357068e-05,
+    "lm/no_decay": 5.192490619089267e-06,
+    "lm": 5.192490619089267e-06
+   },
+   "task_loss": {
+    "chart": 1.6891,
+    "doc": 1.5572,
+    "ocr": 2.7498,
+    "caption": 0.0592,
+    "vqa": 0.2453,
+    "grounding": 5.2766
+   },
+   "sec": 1332.9
+  },
+  {
+   "step": 490,
+   "loss": 0.5103,
+   "grad_norm": 8.698,
+   "lr": {
+    "projector": 2.019269690852569e-05,
+    "projector/no_decay": 2.019269690852569e-05,
+    "lm/no_decay": 5.048174227131422e-06,
+    "lm": 5.048174227131422e-06
+   },
+   "task_loss": {
+    "vqa": 0.3783,
+    "caption": 0.112,
+    "ocr": 2.0313,
+    "grounding": 5.5776,
+    "chart": 1.4161,
+    "doc": 1.9127
+   },
+   "sec": 1359.6
+  },
+  {
+   "step": 500,
+   "loss": 0.7361,
+   "grad_norm": 11.056,
+   "lr": {
+    "projector": 2e-05,
+    "projector/no_decay": 2e-05,
+    "lm/no_decay": 5e-06,
+    "lm": 5e-06
+   },
+   "task_loss": {
+    "caption": 0.0882,
+    "vqa": 0.2522,
+    "ocr": 2.7001,
+    "grounding": 5.8795,
+    "doc": 1.8764,
+    "chart": 1.1347
+   },
+   "sec": 1382.6
+  }
+ ]
+}

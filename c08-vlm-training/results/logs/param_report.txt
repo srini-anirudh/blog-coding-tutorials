@@ -1,46 +1,38 @@
---- align
 module         trainable         total   share
 vision                 0    85,797,120    0.0%
 projector      2,102,400     2,102,400  100.0%
 lm                     0   134,551,872    0.0%
 all            2,102,400   222,451,392    0.9%
---- lm
 module         trainable         total   share
 vision                 0    85,797,120    0.0%
 projector      2,102,400     2,102,400  100.0%
 lm           134,551,872   134,551,872  100.0%
 all          136,654,272   222,451,392   61.4%
---- partial top 4
 module         trainable         total   share
 vision        28,353,024    85,797,120   33.0%
 projector      2,102,400     2,102,400  100.0%
 lm           134,551,872   134,551,872  100.0%
 all          165,007,296   222,451,392   74.2%
---- full
 module         trainable         total   share
 vision        85,797,120    85,797,120  100.0%
 projector      2,102,400     2,102,400  100.0%
 lm           134,551,872   134,551,872  100.0%
 all          222,451,392   222,451,392  100.0%
---- lora lm (210 wrapped linears, r=16)
 module         trainable         total   share
 vision                 0    85,797,120    0.0%
 projector              0     2,102,400    0.0%
 lm             4,884,480   139,436,352    3.5%
 all            4,884,480   227,335,872    2.1%
---- lora vision (72 wrapped linears, r=16)
 module         trainable         total   share
 vision         2,654,208    88,451,328    3.0%
 projector              0     2,102,400    0.0%
 lm                     0   134,551,872    0.0%
 all            2,654,208   225,105,600    1.2%
---- lora projector (2 wrapped linears, r=16)
 module         trainable         total   share
 vision                 0    85,797,120    0.0%
 projector         76,800     2,179,200    3.5%
 lm                     0   134,551,872    0.0%
 all               76,800   222,528,192    0.0%
---- lora all (284 wrapped linears, r=16)
 module         trainable         total   share
 vision         2,654,208    88,451,328    3.0%
 projector         76,800     2,179,200    3.5%

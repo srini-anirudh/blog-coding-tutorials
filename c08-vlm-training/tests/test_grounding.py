@@ -63,3 +63,15 @@ def test_polygon_encoding():
     obj = Obj("triangle", "blue", (0.0, 0.0, 70.0, 70.0))
     s = G.encode_polygon(obj.polygon(), 224, 224, "text")
     assert G.parse_coords(s, "text") == [5, 0, 10, 10, 0, 10]
+
+
+@pytest.mark.parametrize("shape", ["circle", "square", "triangle"])
+def test_polygon_target_rasterises_close_to_the_true_mask(shape):
+    obj = Obj(shape, "red", (40.0, 60.0, 96.0, 116.0))
+    text = G.encode_polygon(obj.polygon(), 224, 224)
+    points = G.decode_polygon(text, 224, 224)
+    assert G.mask_iou(G.polygon_to_mask(points, 224, 224), object_mask(obj, 224)) > 0.7  # the bin grid caps it
+
+
+def test_short_polygon_does_not_parse():
+    assert G.decode_polygon("<loc_1><loc_2><loc_3><loc_4>", 224, 224) is None

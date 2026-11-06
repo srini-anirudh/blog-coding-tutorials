@@ -1,0 +1,6 @@
+AMD EPYC 7R13 Processor, 8 threads
+supervised positions in one batch: correct mask 96, everything 604
+40 Stage 1 steps with the correct mask:
+   lr 0.001: logged loss 2.97 -> 0.81, answer-only loss on held-out captions 0.92
+40 Stage 1 steps supervising the prompt and the <image> slots too:
+   lr 0.001: logged loss 10.67 -> 8.49, answer-only loss on held-out captions 2.25

@@ -117,7 +117,8 @@ def caption(objs: list[Obj]) -> str:
     for o in objs:
         groups[(o.shape, o.color)] = groups.get((o.shape, o.color), 0) + 1
     order = sorted(groups, key=lambda k: (SHAPES.index(k[0]), list(COLORS).index(k[1])))
-    parts = [f"{'a' if groups[k] == 1 else NUMBER_WORDS[groups[k]]} {k[1]} {plural(k[0], groups[k])}"
+    article = {c: "an" if c[0] in "aeiou" else "a" for c in COLORS}
+    parts = [f"{article[k[1]] if groups[k] == 1 else NUMBER_WORDS[groups[k]]} {k[1]} {plural(k[0], groups[k])}"
              for k in order]
     text = parts[0] if len(parts) == 1 else ", ".join(parts[:-1]) + " and " + parts[-1]
     return text[0].upper() + text[1:] + "."

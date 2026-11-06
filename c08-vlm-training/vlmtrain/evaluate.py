@@ -5,18 +5,25 @@
     ocr        CER and WER (lower is better), plus exact match
     doc        ANLS (DocVQA), plus exact match
     chart      relaxed accuracy (ChartQA, 5% tolerance)
-    grounding  box IoU and accuracy at IoU >= 0.5; point-in-box accuracy for pointing questions
+    grounding  box IoU and accuracy at IoU >= 0.5; point-in-box for pointing; mask IoU for outlines
+
+Two controls say what a number is worth. `blind=True` runs the same model on grey images, so a score
+that does not drop was never coming from the image. `majority_baseline` uses no model at all.
 """
 
 from __future__ import annotations
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 import torch
 
 from . import grounding as G
 from . import metrics as M
 from .data import make_example
+
+# A 12-vertex outline is at most 24 <loc_k> tokens, but up to 96 tokens as "[x, y, ...]" text.
+# Each format gets a limit that fits its longest target, so generation never caps one format's mask IoU.
+GROUNDING_NEW_TOKENS = {"tokens": 24, "text": 100}
 
 HEADLINE = {"caption": "em", "vqa": "em", "ocr": "cer", "doc": "anls", "chart": "relaxed_acc", "grounding": "acc@0.5"}
 
@@ -36,6 +43,10 @@ def score(task: str, pred: str, meta: dict) -> dict[str, float]:
         if meta["kind"] == "point":
             p = G.decode_point(pred, w, h, meta["fmt"])
             return {"point_acc": 0.0 if p is None else M.point_in_box(p, meta["box"]), "parse_fail": float(p is None)}
+        if meta["kind"] == "mask":
+            poly = G.decode_polygon(pred, w, h, meta["fmt"])
+            iou = 0.0 if poly is None else G.mask_iou(G.polygon_to_mask(poly, w, h), G.rle_to_mask(meta["rle"]))
+            return {"mask_iou": iou, "parse_fail": float(poly is None)}
         box = G.decode_box(pred, w, h, meta["fmt"])
         iou = 0.0 if box is None else M.box_iou(box, meta["box"])
         return {"iou": iou, "acc@0.5": float(iou >= 0.5), "parse_fail": float(box is None)}
@@ -45,8 +56,8 @@ def score(task: str, pred: str, meta: dict) -> dict[str, float]:
 @torch.no_grad()
 def evaluate(model, processor, device: torch.device, tasks: list[str], n: int = 64, split: str = "test",
              batch_size: int = 8, max_new_tokens: int = 24, grounding_format: str = "tokens",
-             keep_examples: int = 3) -> dict:
-    """Greedy-decode `n` held-out samples per task and average each metric."""
+             keep_examples: int = 3, blind: bool = False) -> dict:
+    """Greedy-decode `n` held-out samples per task and average each metric. blind=True greys out every pixel."""
     was_training = model.training
     model.eval()
     results: dict = {}
@@ -55,12 +66,15 @@ def evaluate(model, processor, device: torch.device, tasks: list[str], n: int = 
         sums: dict[str, float] = defaultdict(float)
         counts: dict[str, int] = defaultdict(int)
         ex = []
+        limit = GROUNDING_NEW_TOKENS[grounding_format] if task == "grounding" else max_new_tokens
         for start in range(0, n, batch_size):
             samples = [make_example(task, i, split, grounding_format) for i in range(start, min(n, start + batch_size))]
             batch = processor(samples, for_generation=True)
-            out = model.generate(batch["input_ids"].to(device),
-                                 None if batch["pixel_values"] is None else batch["pixel_values"].to(device),
-                                 batch["attention_mask"].to(device), max_new_tokens=max_new_tokens,
+            pixels = batch["pixel_values"]
+            if blind and pixels is not None:
+                pixels = torch.zeros_like(pixels)  # 0 is mid-grey after SigLIP's normalisation
+            out = model.generate(batch["input_ids"].to(device), None if pixels is None else pixels.to(device),
+                                 batch["attention_mask"].to(device), max_new_tokens=limit,
                                  do_sample=False, eos_token_id=processor.eos_id, pad_token_id=processor.pad_id)
             preds = processor.tok.batch_decode(out, skip_special_tokens=False)
             for s, pred in zip(samples, preds):
@@ -75,6 +89,22 @@ def evaluate(model, processor, device: torch.device, tasks: list[str], n: int = 
         examples[task] = ex
     model.train(was_training)
     return {"metrics": results, "examples": examples}
+
+
+def majority_baseline(tasks: list[str], n: int = 64, n_train: int = 1000, grounding_format: str = "tokens") -> dict:
+    """No model: always answer with the most common training answer of the task, then score on the test split."""
+    results = {}
+    for task in tasks:
+        common = Counter(make_example(task, i, "train", grounding_format)["meta"]["answer"]
+                         for i in range(n_train)).most_common(1)[0][0]
+        sums: dict[str, float] = defaultdict(float)
+        counts: dict[str, int] = defaultdict(int)
+        for i in range(n):
+            for k, v in score(task, common, make_example(task, i, "test", grounding_format)["meta"]).items():
+                sums[k] += v
+                counts[k] += 1
+        results[task] = {"answer": common, **{k: sums[k] / counts[k] for k in sums}}
+    return results
 
 
 def format_results(res: dict) -> str:

@@ -1,0 +1,914 @@
+{
+ "name": "stage1_align",
+ "config": {
+  "name": "stage1_align",
+  "model": "auto",
+  "steps": 600,
+  "batch_size": 8,
+  "freeze": "align",
+  "vision_layers_to_train": 0,
+  "lrs": {
+   "vision": 1e-06,
+   "projector": 0.001,
+   "lm": 2e-05,
+   "lora": 0.0002
+  },
+  "weight_decay": 0.0,
+  "warmup": 20,
+  "grad_clip": 1.0,
+  "loss_norm": "token",
+  "tasks": [
+   "caption"
+  ],
+  "task_sizes": {
+   "caption": 40000,
+   "vqa": 20000,
+   "ocr": 8000,
+   "doc": 1000,
+   "chart": 2000,
+   "grounding": 4000
+  },
+  "mixture": "temperature",
+  "temperature": 2.0,
+  "manual_weights": null,
+  "replay_ratio": 0.0,
+  "replay_max_tokens": 96,
+  "strategy": "tile",
+  "max_tiles": 4,
+  "grounding_format": "tokens",
+  "lora": [],
+  "lora_r": 16,
+  "lora_alpha": 32.0,
+  "train_new_tokens": false,
+  "pack_budget": 0,
+  "init_from": null,
+  "eval_n": 64,
+  "eval_every": 0,
+  "eval_n_mid": 24,
+  "ppl_passages": 0,
+  "save": true,
+  "out_dir": "outputs",
+  "results_dir": "results",
+  "seed": 0,
+  "device": null,
+  "log_every": 10
+ },
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads",
+ "train_sec": 1123.2,
+ "sec_per_step": 1.872,
+ "tokens_per_sec": 318,
+ "peak_rss_mb": 3148,
+ "trainable": {
+  "vision": {
+   "trainable": 0,
+   "total": 85797120
+  },
+  "projector": {
+   "trainable": 2102400,
+   "total": 2102400
+  },
+  "lm": {
+   "trainable": 0,
+   "total": 134551872
+  }
+ },
+ "mixture_target": {
+  "caption": 1.0
+ },
+ "mixture_observed": {
+  "caption": 1.0
+ },
+ "supervised_token_share": {
+  "caption": 1.0
+ },
+ "ppl_before": null,
+ "ppl_after": null,
+ "metrics": {
+  "caption": {
+   "em": 0.796875
+  }
+ },
+ "examples": {
+  "caption": [
+   {
+    "question": "Describe the image.",
+    "gold": "A red circle and a yellow triangle.",
+    "pred": "A red circle and a yellow triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "An orange triangle.",
+    "pred": "An orange triangle."
+   },
+   {
+    "question": "What is in this picture?",
+    "gold": "A purple triangle.",
+    "pred": "A purple triangle."
+   }
+  ]
+ },
+ "curve": [
+  {
+   "step": 600,
+   "caption": {
+    "em": 0.796875
+   }
+  }
+ ],
+ "log": [
+  {
+   "step": 1,
+   "loss": 2.9848,
+   "grad_norm": 16.487,
+   "lr": {
+    "projector": 0.0001,
+    "projector/no_decay": 0.0001
+   },
+   "task_loss": {
+    "caption": 3.0923
+   },
+   "sec": 2.3
+  },
+  {
+   "step": 10,
+   "loss": 1.7582,
+   "grad_norm": 6.659,
+   "lr": {
+    "projector": 0.00055,
+    "projector/no_decay": 0.00055
+   },
+   "task_loss": {
+    "caption": 2.4467
+   },
+   "sec": 20.0
+  },
+  {
+   "step": 20,
+   "loss": 1.2906,
+   "grad_norm": 4.858,
+   "lr": {
+    "projector": 0.001,
+    "projector/no_decay": 0.001
+   },
+   "task_loss": {
+    "caption": 1.5691
+   },
+   "sec": 38.4
+  },
+  {
+   "step": 30,
+   "loss": 0.8054,
+   "grad_norm": 3.306,
+   "lr": {
+    "projector": 0.0009993400362330058,
+    "projector/no_decay": 0.0009993400362330058
+   },
+   "task_loss": {
+    "caption": 1.0495
+   },
+   "sec": 58.0
+  },
+  {
+   "step": 40,
+   "loss": 0.726,
+   "grad_norm": 2.946,
+   "lr": {
+    "projector": 0.0009973620807194618,
+    "projector/no_decay": 0.0009973620807194618
+   },
+   "task_loss": {
+    "caption": 0.8312
+   },
+   "sec": 76.3
+  },
+  {
+   "step": 50,
+   "loss": 0.6696,
+   "grad_norm": 3.145,
+   "lr": {
+    "projector": 0.000994071935143687,
+    "projector/no_decay": 0.000994071935143687
+   },
+   "task_loss": {
+    "caption": 0.69
+   },
+   "sec": 93.8
+  },
+  {
+   "step": 60,
+   "loss": 0.6463,
+   "grad_norm": 3.852,
+   "lr": {
+    "projector": 0.000989479250069539,
+    "projector/no_decay": 0.000989479250069539
+   },
+   "task_loss": {
+    "caption": 0.6295
+   },
+   "sec": 111.5
+  },
+  {
+   "step": 70,
+   "loss": 0.4179,
+   "grad_norm": 2.145,
+   "lr": {
+    "projector": 0.0009835974966336503,
+    "projector/no_decay": 0.0009835974966336503
+   },
+   "task_loss": {
+    "caption": 0.532
+   },
+   "sec": 128.8
+  },
+  {
+   "step": 80,
+   "loss": 0.6454,
+   "grad_norm": 4.939,
+   "lr": {
+    "projector": 0.0009764439270322612,
+    "projector/no_decay": 0.0009764439270322612
+   },
+   "task_loss": {
+    "caption": 0.5603
+   },
+   "sec": 146.3
+  },
+  {
+   "step": 90,
+   "loss": 0.5624,
+   "grad_norm": 2.044,
+   "lr": {
+    "projector": 0.0009680395239175562,
+    "projector/no_decay": 0.0009680395239175562
+   },
+   "task_loss": {
+    "caption": 0.5578
+   },
+   "sec": 164.7
+  },
+  {
+   "step": 100,
+   "loss": 0.5106,
+   "grad_norm": 2.193,
+   "lr": {
+    "projector": 0.0009584089388519307,
+    "projector/no_decay": 0.0009584089388519307
+   },
+   "task_loss": {
+    "caption": 0.4675
+   },
+   "sec": 181.6
+  },
+  {
+   "step": 110,
+   "loss": 0.6692,
+   "grad_norm": 2.245,
+   "lr": {
+    "projector": 0.0009475804200007103,
+    "projector/no_decay": 0.0009475804200007103
+   },
+   "task_loss": {
+    "caption": 0.4946
+   },
+   "sec": 199.6
+  },
+  {
+   "step": 120,
+   "loss": 0.5482,
+   "grad_norm": 2.136,
+   "lr": {
+    "projector": 0.0009355857292754152,
+    "projector/no_decay": 0.0009355857292754152
+   },
+   "task_loss": {
+    "caption": 0.3805
+   },
+   "sec": 216.8
+  },
+  {
+   "step": 130,
+   "loss": 0.3563,
+   "grad_norm": 2.826,
+   "lr": {
+    "projector": 0.0009224600491706008,
+    "projector/no_decay": 0.0009224600491706008
+   },
+   "task_loss": {
+    "caption": 0.3503
+   },
+   "sec": 233.7
+  },
+  {
+   "step": 140,
+   "loss": 0.3853,
+   "grad_norm": 1.987,
+   "lr": {
+    "projector": 0.0009082418795675396,
+    "projector/no_decay": 0.0009082418795675396
+   },
+   "task_loss": {
+    "caption": 0.3618
+   },
+   "sec": 250.0
+  },
+  {
+   "step": 150,
+   "loss": 0.3399,
+   "grad_norm": 1.545,
+   "lr": {
+    "projector": 0.0008929729248074364,
+    "projector/no_decay": 0.0008929729248074364
+   },
+   "task_loss": {
+    "caption": 0.3163
+   },
+   "sec": 267.4
+  },
+  {
+   "step": 160,
+   "loss": 0.3172,
+   "grad_norm": 1.876,
+   "lr": {
+    "projector": 0.0008766979713654089,
+    "projector/no_decay": 0.0008766979713654089
+   },
+   "task_loss": {
+    "caption": 0.2514
+   },
+   "sec": 284.8
+  },
+  {
+   "step": 170,
+   "loss": 0.284,
+   "grad_norm": 2.285,
+   "lr": {
+    "projector": 0.0008594647564840406,
+    "projector/no_decay": 0.0008594647564840406
+   },
+   "task_loss": {
+    "caption": 0.2722
+   },
+   "sec": 303.1
+  },
+  {
+   "step": 180,
+   "loss": 0.1936,
+   "grad_norm": 1.473,
+   "lr": {
+    "projector": 0.0008413238281518226,
+    "projector/no_decay": 0.0008413238281518226
+   },
+   "task_loss": {
+    "caption": 0.199
+   },
+   "sec": 321.4
+  },
+  {
+   "step": 190,
+   "loss": 0.1803,
+   "grad_norm": 1.63,
+   "lr": {
+    "projector": 0.0008223283968371944,
+    "projector/no_decay": 0.0008223283968371944
+   },
+   "task_loss": {
+    "caption": 0.2459
+   },
+   "sec": 339.8
+  },
+  {
+   "step": 200,
+   "loss": 0.2235,
+   "grad_norm": 1.697,
+   "lr": {
+    "projector": 0.0008025341794130721,
+    "projector/no_decay": 0.0008025341794130721
+   },
+   "task_loss": {
+    "caption": 0.2484
+   },
+   "sec": 357.0
+  },
+  {
+   "step": 210,
+   "loss": 0.2836,
+   "grad_norm": 2.007,
+   "lr": {
+    "projector": 0.0007819992357296598,
+    "projector/no_decay": 0.0007819992357296598
+   },
+   "task_loss": {
+    "caption": 0.193
+   },
+   "sec": 377.8
+  },
+  {
+   "step": 220,
+   "loss": 0.0932,
+   "grad_norm": 1.153,
+   "lr": {
+    "projector": 0.0007607837983149056,
+    "projector/no_decay": 0.0007607837983149056
+   },
+   "task_loss": {
+    "caption": 0.1923
+   },
+   "sec": 398.5
+  },
+  {
+   "step": 230,
+   "loss": 0.1812,
+   "grad_norm": 1.802,
+   "lr": {
+    "projector": 0.0007389500957021191,
+    "projector/no_decay": 0.0007389500957021191
+   },
+   "task_loss": {
+    "caption": 0.1944
+   },
+   "sec": 418.7
+  },
+  {
+   "step": 240,
+   "loss": 0.2478,
+   "grad_norm": 1.633,
+   "lr": {
+    "projector": 0.0007165621699029615,
+    "projector/no_decay": 0.0007165621699029615
+   },
+   "task_loss": {
+    "caption": 0.1762
+   },
+   "sec": 439.3
+  },
+  {
+   "step": 250,
+   "loss": 0.2736,
+   "grad_norm": 2.212,
+   "lr": {
+    "projector": 0.000693685688561191,
+    "projector/no_decay": 0.000693685688561191
+   },
+   "task_loss": {
+    "caption": 0.1334
+   },
+   "sec": 458.1
+  },
+  {
+   "step": 260,
+   "loss": 0.2656,
+   "grad_norm": 2.704,
+   "lr": {
+    "projector": 0.0006703877523381495,
+    "projector/no_decay": 0.0006703877523381495
+   },
+   "task_loss": {
+    "caption": 0.2142
+   },
+   "sec": 477.8
+  },
+  {
+   "step": 270,
+   "loss": 0.1533,
+   "grad_norm": 1.186,
+   "lr": {
+    "projector": 0.0006467366980949609,
+    "projector/no_decay": 0.0006467366980949609
+   },
+   "task_loss": {
+    "caption": 0.1681
+   },
+   "sec": 497.3
+  },
+  {
+   "step": 280,
+   "loss": 0.1138,
+   "grad_norm": 0.915,
+   "lr": {
+    "projector": 0.0006228018984487442,
+    "projector/no_decay": 0.0006228018984487442
+   },
+   "task_loss": {
+    "caption": 0.1563
+   },
+   "sec": 516.8
+  },
+  {
+   "step": 290,
+   "loss": 0.3048,
+   "grad_norm": 2.631,
+   "lr": {
+    "projector": 0.0005986535582907738,
+    "projector/no_decay": 0.0005986535582907738
+   },
+   "task_loss": {
+    "caption": 0.1911
+   },
+   "sec": 535.8
+  },
+  {
+   "step": 300,
+   "loss": 0.1523,
+   "grad_norm": 1.679,
+   "lr": {
+    "projector": 0.000574362508863438,
+    "projector/no_decay": 0.000574362508863438
+   },
+   "task_loss": {
+    "caption": 0.1196
+   },
+   "sec": 553.0
+  },
+  {
+   "step": 310,
+   "loss": 0.1703,
+   "grad_norm": 1.348,
+   "lr": {
+    "projector": 0.00055,
+    "projector/no_decay": 0.00055
+   },
+   "task_loss": {
+    "caption": 0.1517
+   },
+   "sec": 570.8
+  },
+  {
+   "step": 320,
+   "loss": 0.1821,
+   "grad_norm": 2.113,
+   "lr": {
+    "projector": 0.0005256374911365621,
+    "projector/no_decay": 0.0005256374911365621
+   },
+   "task_loss": {
+    "caption": 0.1413
+   },
+   "sec": 589.0
+  },
+  {
+   "step": 330,
+   "loss": 0.2537,
+   "grad_norm": 1.354,
+   "lr": {
+    "projector": 0.0005013464417092262,
+    "projector/no_decay": 0.0005013464417092262
+   },
+   "task_loss": {
+    "caption": 0.1551
+   },
+   "sec": 606.4
+  },
+  {
+   "step": 340,
+   "loss": 0.1272,
+   "grad_norm": 0.996,
+   "lr": {
+    "projector": 0.00047719810155125587,
+    "projector/no_decay": 0.00047719810155125587
+   },
+   "task_loss": {
+    "caption": 0.1304
+   },
+   "sec": 624.1
+  },
+  {
+   "step": 350,
+   "loss": 0.1285,
+   "grad_norm": 1.216,
+   "lr": {
+    "projector": 0.0004532633019050392,
+    "projector/no_decay": 0.0004532633019050392
+   },
+   "task_loss": {
+    "caption": 0.1215
+   },
+   "sec": 642.4
+  },
+  {
+   "step": 360,
+   "loss": 0.1367,
+   "grad_norm": 1.457,
+   "lr": {
+    "projector": 0.0004296122476618507,
+    "projector/no_decay": 0.0004296122476618507
+   },
+   "task_loss": {
+    "caption": 0.1382
+   },
+   "sec": 662.0
+  },
+  {
+   "step": 370,
+   "loss": 0.031,
+   "grad_norm": 0.451,
+   "lr": {
+    "projector": 0.00040631431143880916,
+    "projector/no_decay": 0.00040631431143880916
+   },
+   "task_loss": {
+    "caption": 0.108
+   },
+   "sec": 678.7
+  },
+  {
+   "step": 380,
+   "loss": 0.1076,
+   "grad_norm": 1.526,
+   "lr": {
+    "projector": 0.00038343783009703845,
+    "projector/no_decay": 0.00038343783009703845
+   },
+   "task_loss": {
+    "caption": 0.1193
+   },
+   "sec": 695.4
+  },
+  {
+   "step": 390,
+   "loss": 0.1664,
+   "grad_norm": 1.349,
+   "lr": {
+    "projector": 0.000361049904297881,
+    "projector/no_decay": 0.000361049904297881
+   },
+   "task_loss": {
+    "caption": 0.0972
+   },
+   "sec": 711.6
+  },
+  {
+   "step": 400,
+   "loss": 0.1391,
+   "grad_norm": 1.213,
+   "lr": {
+    "projector": 0.0003392162016850945,
+    "projector/no_decay": 0.0003392162016850945
+   },
+   "task_loss": {
+    "caption": 0.0991
+   },
+   "sec": 728.5
+  },
+  {
+   "step": 410,
+   "loss": 0.0617,
+   "grad_norm": 0.646,
+   "lr": {
+    "projector": 0.0003180007642703402,
+    "projector/no_decay": 0.0003180007642703402
+   },
+   "task_loss": {
+    "caption": 0.1006
+   },
+   "sec": 745.3
+  },
+  {
+   "step": 420,
+   "loss": 0.0955,
+   "grad_norm": 0.892,
+   "lr": {
+    "projector": 0.000297465820586928,
+    "projector/no_decay": 0.000297465820586928
+   },
+   "task_loss": {
+    "caption": 0.1273
+   },
+   "sec": 762.5
+  },
+  {
+   "step": 430,
+   "loss": 0.0973,
+   "grad_norm": 1.332,
+   "lr": {
+    "projector": 0.00027767160316280584,
+    "projector/no_decay": 0.00027767160316280584
+   },
+   "task_loss": {
+    "caption": 0.0806
+   },
+   "sec": 781.0
+  },
+  {
+   "step": 440,
+   "loss": 0.0736,
+   "grad_norm": 0.896,
+   "lr": {
+    "projector": 0.0002586761718481776,
+    "projector/no_decay": 0.0002586761718481776
+   },
+   "task_loss": {
+    "caption": 0.0737
+   },
+   "sec": 799.2
+  },
+  {
+   "step": 450,
+   "loss": 0.0034,
+   "grad_norm": 0.04,
+   "lr": {
+    "projector": 0.00024053524351595949,
+    "projector/no_decay": 0.00024053524351595949
+   },
+   "task_loss": {
+    "caption": 0.0638
+   },
+   "sec": 816.8
+  },
+  {
+   "step": 460,
+   "loss": 0.0987,
+   "grad_norm": 0.91,
+   "lr": {
+    "projector": 0.00022330202863459124,
+    "projector/no_decay": 0.00022330202863459124
+   },
+   "task_loss": {
+    "caption": 0.0825
+   },
+   "sec": 834.9
+  },
+  {
+   "step": 470,
+   "loss": 0.0242,
+   "grad_norm": 0.409,
+   "lr": {
+    "projector": 0.00020702707519256364,
+    "projector/no_decay": 0.00020702707519256364
+   },
+   "task_loss": {
+    "caption": 0.0713
+   },
+   "sec": 855.0
+  },
+  {
+   "step": 480,
+   "loss": 0.0393,
+   "grad_norm": 0.95,
+   "lr": {
+    "projector": 0.00019175812043246033,
+    "projector/no_decay": 0.00019175812043246033
+   },
+   "task_loss": {
+    "caption": 0.0585
+   },
+   "sec": 873.3
+  },
+  {
+   "step": 490,
+   "loss": 0.0336,
+   "grad_norm": 0.495,
+   "lr": {
+    "projector": 0.00017753995082939931,
+    "projector/no_decay": 0.00017753995082939931
+   },
+   "task_loss": {
+    "caption": 0.0733
+   },
+   "sec": 891.6
+  },
+  {
+   "step": 500,
+   "loss": 0.1127,
+   "grad_norm": 0.737,
+   "lr": {
+    "projector": 0.00016441427072458494,
+    "projector/no_decay": 0.00016441427072458494
+   },
+   "task_loss": {
+    "caption": 0.0798
+   },
+   "sec": 913.3
+  },
+  {
+   "step": 510,
+   "loss": 0.0478,
+   "grad_norm": 0.926,
+   "lr": {
+    "projector": 0.00015241957999928974,
+    "projector/no_decay": 0.00015241957999928974
+   },
+   "task_loss": {
+    "caption": 0.0647
+   },
+   "sec": 934.6
+  },
+  {
+   "step": 520,
+   "loss": 0.0792,
+   "grad_norm": 1.161,
+   "lr": {
+    "projector": 0.0001415910611480694,
+    "projector/no_decay": 0.0001415910611480694
+   },
+   "task_loss": {
+    "caption": 0.0721
+   },
+   "sec": 955.2
+  },
+  {
+   "step": 530,
+   "loss": 0.0516,
+   "grad_norm": 0.573,
+   "lr": {
+    "projector": 0.00013196047608244387,
+    "projector/no_decay": 0.00013196047608244387
+   },
+   "task_loss": {
+    "caption": 0.0602
+   },
+   "sec": 977.3
+  },
+  {
+   "step": 540,
+   "loss": 0.0374,
+   "grad_norm": 0.657,
+   "lr": {
+    "projector": 0.00012355607296773896,
+    "projector/no_decay": 0.00012355607296773896
+   },
+   "task_loss": {
+    "caption": 0.0599
+   },
+   "sec": 998.9
+  },
+  {
+   "step": 550,
+   "loss": 0.0388,
+   "grad_norm": 0.891,
+   "lr": {
+    "projector": 0.00011640250336634969,
+    "projector/no_decay": 0.00011640250336634969
+   },
+   "task_loss": {
+    "caption": 0.0567
+   },
+   "sec": 1019.9
+  },
+  {
+   "step": 560,
+   "loss": 0.1569,
+   "grad_norm": 1.14,
+   "lr": {
+    "projector": 0.00011052074993046101,
+    "projector/no_decay": 0.00011052074993046101
+   },
+   "task_loss": {
+    "caption": 0.0766
+   },
+   "sec": 1039.9
+  },
+  {
+   "step": 570,
+   "loss": 0.061,
+   "grad_norm": 0.752,
+   "lr": {
+    "projector": 0.00010592806485631325,
+    "projector/no_decay": 0.00010592806485631325
+   },
+   "task_loss": {
+    "caption": 0.0503
+   },
+   "sec": 1060.4
+  },
+  {
+   "step": 580,
+   "loss": 0.0607,
+   "grad_norm": 1.405,
+   "lr": {
+    "projector": 0.00010263791928053818,
+    "projector/no_decay": 0.00010263791928053818
+   },
+   "task_loss": {
+    "caption": 0.0719
+   },
+   "sec": 1082.4
+  },
+  {
+   "step": 590,
+   "loss": 0.0432,
+   "grad_norm": 1.22,
+   "lr": {
+    "projector": 0.0001006599637669943,
+    "projector/no_decay": 0.0001006599637669943
+   },
+   "task_loss": {
+    "caption": 0.064
+   },
+   "sec": 1103.4
+  },
+  {
+   "step": 600,
+   "loss": 0.0351,
+   "grad_norm": 0.675,
+   "lr": {
+    "projector": 0.0001,
+    "projector/no_decay": 0.0001
+   },
+   "task_loss": {
+    "caption": 0.0537
+   },
+   "sec": 1123.2
+  }
+ ],
+ "checkpoint_mb": 8.0
+}
