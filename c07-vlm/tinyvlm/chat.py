@@ -5,6 +5,10 @@ SmolLM2-Instruct uses ChatML:
 
 An image is one <image> marker inside a user message. The processor later expands each marker into
 N_img placeholder tokens per crop.
+
+One deliberate difference: SmolLM2's own template inserts a default system message when there is none.
+We do not, so the sequence stays the one we are building: role header, image, question, assistant.
+<|im_start|> is the tokenizer's BOS token, so every sequence still starts with BOS.
 """
 
 from __future__ import annotations

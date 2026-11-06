@@ -1,0 +1,37 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads",
+ "rows": [
+  {
+   "crops": 1,
+   "shuffle": 2,
+   "prompt_tokens": 63,
+   "cached_s": 1.4892086503095925,
+   "recomputed_s": 2.1349518303759396,
+   "same_tokens": true
+  },
+  {
+   "crops": 7,
+   "shuffle": 2,
+   "prompt_tokens": 357,
+   "cached_s": 2.072610564995557,
+   "recomputed_s": 6.582245519850403,
+   "same_tokens": true
+  },
+  {
+   "crops": 1,
+   "shuffle": 1,
+   "prompt_tokens": 210,
+   "cached_s": 1.4137491970323026,
+   "recomputed_s": 4.0110765267163515,
+   "same_tokens": true
+  },
+  {
+   "crops": 7,
+   "shuffle": 1,
+   "prompt_tokens": 1386,
+   "cached_s": 2.787060631904751,
+   "recomputed_s": 21.903564466163516,
+   "same_tokens": true
+  }
+ ]
+}

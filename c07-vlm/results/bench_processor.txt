@@ -1,5 +1,6 @@
+device AMD EPYC 7R13, 8 threads, best of 20
      picture  resize ms  normalise ms   ours ms     hf ms
-   224 x 224        0.02          1.51      2.15      2.51
-   640 x 480        4.81          1.97      6.92      8.46
-  1920 x 1080      23.09          1.35     25.06     28.40
-tile strategy, 1920 x 1080, 3 crops: 48.59 ms
+   224 x 224        0.01          0.72      0.85      1.07
+   640 x 480        2.46          0.75      3.26      3.87
+  1920 x 1080      11.71          0.79     12.75     25.70
+tile strategy, 1920 x 1080, 3 crops: 28.46 ms

@@ -1,0 +1,49 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "rows": [
+  {
+   "crops": 1,
+   "shuffle": 2,
+   "image_tokens": 49,
+   "seq": 63,
+   "encode_ms": 6.169208907522261,
+   "lm_ms": 26.394451153464615,
+   "total_ms": 32.56366006098688,
+   "kv_cache_mb": 2.90304,
+   "gpu_peak_mb": 980.12928
+  },
+  {
+   "crops": 7,
+   "shuffle": 2,
+   "image_tokens": 343,
+   "seq": 357,
+   "encode_ms": 8.09339596889913,
+   "lm_ms": 27.13756507728249,
+   "total_ms": 35.23096104618162,
+   "kv_cache_mb": 16.45056,
+   "gpu_peak_mb": 1130.67776
+  },
+  {
+   "crops": 1,
+   "shuffle": 1,
+   "image_tokens": 196,
+   "seq": 210,
+   "encode_ms": 6.160249002277851,
+   "lm_ms": 26.95052104536444,
+   "total_ms": 33.11077004764229,
+   "kv_cache_mb": 9.6768,
+   "gpu_peak_mb": 1082.9824
+  },
+  {
+   "crops": 7,
+   "shuffle": 1,
+   "image_tokens": 1372,
+   "seq": 1386,
+   "encode_ms": 7.962803938426077,
+   "lm_ms": 27.892690035514534,
+   "total_ms": 35.85549397394061,
+   "kv_cache_mb": 63.86688,
+   "gpu_peak_mb": 1635.851776
+  }
+ ]
+}

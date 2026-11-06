@@ -30,6 +30,14 @@ def test_pixel_shuffle_matches_loop():
     assert torch.allclose(out.sort(-1).values, expected.sort(-1).values)
 
 
+def test_pixel_shuffle_equals_idefics3():
+    """Exact match with the Hugging Face implementation that SmolVLM uses, channel order included."""
+    from transformers.models.idefics3.modeling_idefics3 import Idefics3Connector
+
+    x = torch.randn(2, 196, 12)
+    assert torch.equal(pixel_shuffle(x, 2), Idefics3Connector.pixel_shuffle(None, x, 2))
+
+
 def test_pixel_shuffle_rejects_bad_grid():
     with pytest.raises(ValueError):
         pixel_shuffle(torch.randn(1, 15, 8), 2)

@@ -1,6 +1,6 @@
-device CPU, float32, one sample, about 14 text tokens
-crops  s img tok   seq  encode ms    lm ms  total ms  KV cache MB
-    1  2      49    63        281      281       561          2.9
-    7  2     343   357       1357      841      2198         16.5
-    1  1     196   210        396      321       717          9.7
-    7  1    1372  1386        870     1972      2842         63.9
+device AMD EPYC 7R13, 8 threads, float32, one sample, 14 text tokens, best of 5
+crops  s img tok   seq  encode ms    lm ms  total ms  KV cache MB  GPU peak MB
+    1  2      49    63         86       86       172          2.9            -
+    7  2     343   357        438      267       705         16.5            -
+    1  1     196   210         97      190       288          9.7            -
+    7  1    1372  1386        414      955      1369         63.9            -

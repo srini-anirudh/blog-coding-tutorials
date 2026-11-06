@@ -17,24 +17,25 @@ import torch
 from PIL import Image, ImageDraw
 from safetensors.torch import load_file
 
-from tinyvlm import build_tinyvlm, pick_device
-from tinyvlm.data import COLORS, draw_shape, make_example, render, score
+from tinyvlm import build_tinyvlm, describe_device, pick_device
+from tinyvlm.data import COLORS, PROMPTS, caption, draw_shape, make_example, render, score
 
 HERE = Path(__file__).resolve().parents[1]
-QUESTION = "Describe the image."
 
 
-def prompt_for(processor) -> str:
-    message = {"role": "user", "content": [{"type": "image"}, {"type": "text", "text": QUESTION}]}
+def prompt_for(processor, question: str) -> str:
+    message = {"role": "user", "content": [{"type": "image"}, {"type": "text", "text": question}]}
     return processor.apply_chat_template([message], add_generation_prompt=True)
 
 
 @torch.no_grad()
 def captions(model, processor, images, device, transform=None, padding_side="left", batch_size=16) -> list[str]:
+    """Greedy captions. The questions cycle through prompts of different lengths, so batches really are padded."""
     out = []
     for start in range(0, len(images), batch_size):
         chunk = images[start : start + batch_size]
-        batch = processor([prompt_for(processor)] * len(chunk), [[im] for im in chunk], padding_side=padding_side)
+        prompts = [prompt_for(processor, PROMPTS[(start + i) % len(PROMPTS)]) for i in range(len(chunk))]
+        batch = processor(prompts, [[im] for im in chunk], padding_side=padding_side)
         pixels = batch["pixel_values"].to(device)
         if transform is not None:
             pixels = transform(pixels)
@@ -44,6 +45,12 @@ def captions(model, processor, images, device, transform=None, padding_side="lef
         )
         out += [p.strip() for p in processor.batch_decode(new)]
     return out
+
+
+def padded_rows(processor, n: int, batch_size: int = 16) -> list[bool]:
+    """Which samples get padding: those whose question is shorter than the longest one in their batch."""
+    lengths = [len(processor.tokenizer(PROMPTS[i % len(PROMPTS)])["input_ids"]) for i in range(n)]
+    return [lengths[i] < max(lengths[i - i % batch_size : i - i % batch_size + batch_size]) for i in range(n)]
 
 
 def out_of_distribution() -> dict[str, Image.Image]:
@@ -88,7 +95,11 @@ def main() -> None:
     examples = [make_example(i, seed=1) for i in range(args.n)]
     images = [e["images"][0] for e in examples]
     targets = [e["target"] for e in examples]
-    report: dict = {"run": args.run, "device": device.type, "n": args.n, "conditions": {}}
+    report: dict = {"run": args.run, "device": describe_device(device), "n": args.n, "conditions": {}}
+    print(f"device {report['device']} | {args.n} held-out pictures")
+    # Padding only exists if the prompts differ in length, so record that they do.
+    report["question_tokens"] = {q: len(processor.tokenizer(q)["input_ids"]) for q in PROMPTS}
+    print("question lengths in tokens:", report["question_tokens"])
 
     conditions = {
         "correct": {},
@@ -96,10 +107,19 @@ def main() -> None:
         "wrong normalisation ([0, 1], not [-1, 1])": {"transform": lambda x: x * 0.5 + 0.5},
         "right padding at generation": {"padding_side": "right"},
     }
+    padded = padded_rows(processor, args.n)
     for name, kwargs in conditions.items():
         predicted = captions(model, processor, images, device, **kwargs)
         report["conditions"][name] = {"score": score(predicted, targets), "samples": predicted[:4]}
-        print(f"{name:<44} {report['conditions'][name]['score']}")
+        # Split by whether the sample was padded: a padding bug only hurts the padded ones.
+        for group, keep in (("padded", True), ("not_padded", False)):
+            rows = [i for i in range(args.n) if padded[i] == keep]
+            exact = sum(predicted[i] == caption(**targets[i]) for i in rows)
+            report["conditions"][name][group] = {"n": len(rows), "exact_caption": exact,
+                                                 "score": score([predicted[i] for i in rows], [targets[i] for i in rows])}
+        split = report["conditions"][name]
+        print(f"{name:<44} {split['score']}  exact: padded {split['padded']['exact_caption']}/{split['padded']['n']}, "
+              f"not padded {split['not_padded']['exact_caption']}/{split['not_padded']['n']}")
 
     # Silent bug: pixel_values reversed against the placeholders. Nothing raises; captions swap.
     shifted = captions(model, processor, images[:16], device, transform=lambda x: x.flip(0))
@@ -110,7 +130,7 @@ def main() -> None:
 
     # Did training also fix the scale? Compare the trained projector's output with real token embeddings.
     with torch.no_grad():
-        batch = processor([prompt_for(processor)], [images[0]])
+        batch = processor(prompt_for(processor, PROMPTS[0]), [images[0]])
         features = model.get_image_features(batch["pixel_values"].to(device))
         embeddings = model.get_input_embeddings().weight[: model.config.image_token_id]
     report["scale"] = {"trained_projector_std": features.std().item(), "token_embedding_std": embeddings.std().item()}

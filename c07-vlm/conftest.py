@@ -8,8 +8,7 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-# The Hub models used by the network tests are cached after the first run; do not ping the Hub every time.
 os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
 
-# Many tutorials share one laptop; keep each test process polite.
+# The offline tests use tiny models, which gain nothing from more threads.
 torch.set_num_threads(2)

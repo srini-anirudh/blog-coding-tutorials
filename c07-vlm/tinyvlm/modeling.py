@@ -52,10 +52,13 @@ class TinyVLM(PreTrainedModel):
     def embed(self, input_ids: torch.Tensor, pixel_values: torch.Tensor | None = None) -> torch.Tensor:
         """B x N ids (+ crops) -> B x N x d_lm input embeddings with image features scattered in."""
         embeds = self.get_input_embeddings()(input_ids)
-        if pixel_values is not None and pixel_values.shape[0] > 0:
-            features = self.get_image_features(pixel_values)
-            embeds = merge_masked_scatter(embeds, input_ids, features, self.config.image_token_id)
-        return embeds
+        if pixel_values is None or pixel_values.shape[0] == 0:
+            # Otherwise the model would read one meaningless embedding N_img times and never complain.
+            if (input_ids == self.config.image_token_id).any():
+                raise ValueError("input_ids contain <image> placeholders, but no pixel_values were given")
+            return embeds
+        features = self.get_image_features(pixel_values)
+        return merge_masked_scatter(embeds, input_ids, features, self.config.image_token_id)
 
     def forward(
         self,

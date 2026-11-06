@@ -1,0 +1,206 @@
+{
+ "run": "align-mlp-s2",
+ "device": "AMD EPYC 7R13, 8 threads",
+ "n": 96,
+ "conditions": {
+  "correct": {
+   "score": {
+    "count": 1.0,
+    "color": 1.0,
+    "shape": 1.0,
+    "all": 1.0
+   },
+   "samples": [
+    "Three orange squares.",
+    "Two green circles.",
+    "Two red circles.",
+    "Two purple circles."
+   ],
+   "padded": {
+    "n": 32,
+    "exact_caption": 32,
+    "score": {
+     "count": 1.0,
+     "color": 1.0,
+     "shape": 1.0,
+     "all": 1.0
+    }
+   },
+   "not_padded": {
+    "n": 64,
+    "exact_caption": 64,
+    "score": {
+     "count": 1.0,
+     "color": 1.0,
+     "shape": 1.0,
+     "all": 1.0
+    }
+   }
+  },
+  "blind (all pixels zero)": {
+   "score": {
+    "count": 0.1875,
+    "color": 0.09375,
+    "shape": 0.4166666666666667,
+    "all": 0.0
+   },
+   "samples": [
+    "One red square.",
+    "I see a single red square.",
+    "One yellow square.",
+    "One red square."
+   ],
+   "padded": {
+    "n": 32,
+    "exact_caption": 0,
+    "score": {
+     "count": 0.0625,
+     "color": 0.0625,
+     "shape": 0.46875,
+     "all": 0.0
+    }
+   },
+   "not_padded": {
+    "n": 64,
+    "exact_caption": 0,
+    "score": {
+     "count": 0.25,
+     "color": 0.109375,
+     "shape": 0.390625,
+     "all": 0.0
+    }
+   }
+  },
+  "wrong normalisation ([0, 1], not [-1, 1])": {
+   "score": {
+    "count": 0.9895833333333334,
+    "color": 0.8333333333333334,
+    "shape": 1.0,
+    "all": 0.8229166666666666
+   },
+   "samples": [
+    "Three yellow squares.",
+    "Two green circles.",
+    "Two yellow circles.",
+    "Two purple circles."
+   ],
+   "padded": {
+    "n": 32,
+    "exact_caption": 23,
+    "score": {
+     "count": 0.96875,
+     "color": 0.75,
+     "shape": 1.0,
+     "all": 0.71875
+    }
+   },
+   "not_padded": {
+    "n": 64,
+    "exact_caption": 56,
+    "score": {
+     "count": 1.0,
+     "color": 0.875,
+     "shape": 1.0,
+     "all": 0.875
+    }
+   }
+  },
+  "right padding at generation": {
+   "score": {
+    "count": 0.7291666666666666,
+    "color": 0.7395833333333334,
+    "shape": 0.7083333333333334,
+    "all": 0.6979166666666666
+   },
+   "samples": [
+    "What is the same as this question?\nWhat",
+    "Two green circles.",
+    "Two red circles.",
+    "What is something you saw?\nTwo purple circles"
+   ],
+   "padded": {
+    "n": 32,
+    "exact_caption": 1,
+    "score": {
+     "count": 0.1875,
+     "color": 0.21875,
+     "shape": 0.125,
+     "all": 0.09375
+    }
+   },
+   "not_padded": {
+    "n": 64,
+    "exact_caption": 64,
+    "score": {
+     "count": 1.0,
+     "color": 1.0,
+     "shape": 1.0,
+     "all": 1.0
+    }
+   }
+  },
+  "crops reversed inside the batch": {
+   "score": {
+    "count": 0.25,
+    "color": 0.0,
+    "shape": 0.375,
+    "all": 0.0
+   },
+   "score_against_reversed_targets": {
+    "count": 1.0,
+    "color": 1.0,
+    "shape": 1.0,
+    "all": 1.0
+   }
+  }
+ },
+ "question_tokens": {
+  "Describe the image.": 4,
+  "What do you see?": 5,
+  "Write a short caption.": 5
+ },
+ "scale": {
+  "trained_projector_std": 4.825751304626465,
+  "token_embedding_std": 0.13557223975658417
+ },
+ "samples": [
+  {
+   "target": "Three orange squares.",
+   "predicted": "Three orange squares."
+  },
+  {
+   "target": "Two green circles.",
+   "predicted": "Two green circles."
+  },
+  {
+   "target": "Two red circles.",
+   "predicted": "Two red circles."
+  },
+  {
+   "target": "Two purple circles.",
+   "predicted": "Two purple circles."
+  },
+  {
+   "target": "Two green squares.",
+   "predicted": "Two green squares."
+  },
+  {
+   "target": "Two yellow circles.",
+   "predicted": "Two yellow circles."
+  },
+  {
+   "target": "Three green triangles.",
+   "predicted": "Three green triangles."
+  },
+  {
+   "target": "One blue triangle.",
+   "predicted": "One blue triangle."
+  }
+ ],
+ "out_of_distribution": {
+  "a red circle and a blue square": "Two red circles.",
+  "four green squares (count outside 1-3)": "Three green squares.",
+  "two inverted triangles on a dark canvas": "Two blue triangles.",
+  "a grey gradient, no shapes": "\"A\" is a valid punctuation mark."
+ }
+}

@@ -57,7 +57,10 @@ class TinyVLMProcessor:
         pieces = text.split(self.image_token)
         out = [pieces[0]]
         for piece in pieces[1:]:
-            out.append(self.image_token * self.tokens_for_image(next(crops)))
+            num_crops = next(crops, None)
+            if num_crops is None:
+                raise ValueError("more <image> markers than pictures in the messages")
+            out.append(self.image_token * self.tokens_for_image(num_crops))
             out.append(piece)
         return "".join(out)
 

@@ -1,0 +1,6 @@
+device NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, float32, one sample, 14 text tokens, best of 5
+crops  s img tok   seq  encode ms    lm ms  total ms  KV cache MB  GPU peak MB
+    1  2      49    63          6       26        33          2.9          980
+    7  2     343   357          8       27        35         16.5         1131
+    1  1     196   210          6       27        33          9.7         1083
+    7  1    1372  1386          8       28        36         63.9         1636

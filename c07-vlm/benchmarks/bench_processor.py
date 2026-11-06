@@ -12,19 +12,22 @@ from PIL import Image
 from transformers.models.siglip.image_processing_pil_siglip import SiglipImageProcessorPil
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from tinyvlm.device import describe_device  # noqa: E402
 from tinyvlm.image_processing import TinyVLMImageProcessor, normalize, resize  # noqa: E402
-
-torch.set_num_threads(2)
 
 
 def timed(fn, repeats: int = 20) -> float:
-    start = time.perf_counter()
+    """Fastest call in milliseconds, because other work on the machine only ever adds time."""
+    seconds = []
     for _ in range(repeats):
+        start = time.perf_counter()
         fn()
-    return (time.perf_counter() - start) / repeats * 1000
+        seconds.append(time.perf_counter() - start)
+    return min(seconds) * 1000
 
 
 rng = np.random.default_rng(0)
+print(f"device {describe_device(torch.device('cpu'))}, best of 20")
 print(f"{'picture':>12} {'resize ms':>10} {'normalise ms':>13} {'ours ms':>9} {'hf ms':>9}")
 hf = SiglipImageProcessorPil(size={"height": 224, "width": 224}, resample=3)
 ours = TinyVLMImageProcessor()

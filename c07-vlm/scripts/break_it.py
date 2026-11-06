@@ -1,15 +1,18 @@
-"""Break it on purpose: the failures that raise, and one that does not.
+"""Break it on purpose: the failures that raise, and the ones that do not.
 
 A processor built for 196 tokens per crop meets a model that makes 49. Then we feed labels that supervise
-every token, and compare the loss with the correct labels on an untrained projector.
+every token, and compare the loss with the correct labels on an untrained projector. Last, a 12 MP photo
+with 48 tiles and no pixel shuffle: nothing raises, even past the language model's position limit. It is just slow.
 """
 
 import _common  # noqa: F401
 import random
+import time
 
 import torch
+from PIL import Image
 
-from tinyvlm import TinyVLMProcessor, build_tinyvlm
+from tinyvlm import TinyVLMProcessor, build_tinyvlm, describe_device
 from tinyvlm.data import render
 
 model, processor = build_tinyvlm()
@@ -41,3 +44,19 @@ with torch.no_grad():
     bad = model(batch["input_ids"], batch["pixel_values"], batch["attention_mask"], labels=everything).loss
 print(f"   labels on the reply only: {good:.3f} over {(batch['labels'] != -100).sum().item()} targets")
 print(f"   labels on every token:    {bad:.3f} over {everything.numel()} targets, {(everything == processor.image_token_id).sum().item()} of them <image>")
+
+print("4. Excessive image resolution (one 4032 x 3024 photo)")
+photo = Image.new("RGB", (4032, 3024), "white")
+prompt = processor.apply_chat_template(messages[:1], add_generation_prompt=True)
+big_model, big_processor = build_tinyvlm(pixel_shuffle_factor=1, strategy="tile", max_tiles=48)
+limit = model.config.text_config.max_position_embeddings
+print(f"   language model max_position_embeddings: {limit} | {describe_device(batch['input_ids'].device)}")
+for name, m, p in (("resize, s = 2", model, processor), ("48 tiles, s = 1", big_model, big_processor)):
+    batch = p(prompt, [photo])
+    start = time.perf_counter()
+    with torch.no_grad():
+        out = m(batch["input_ids"], batch["pixel_values"], batch["attention_mask"], use_cache=True)
+    seconds = time.perf_counter() - start
+    cache_mb = sum(c.keys.numel() + c.values.numel() for c in out.past_key_values.layers) * 4 / 1e6
+    print(f"   {name:<16} {batch['pixel_values'].shape[0]:>3} crops  {batch['input_ids'].shape[1]:>5} tokens  "
+          f"{seconds:7.2f} s  KV cache {cache_mb:7.1f} MB  past the limit: {batch['input_ids'].shape[1] > limit}")

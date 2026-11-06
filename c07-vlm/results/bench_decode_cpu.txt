@@ -1,0 +1,6 @@
+device AMD EPYC 7R13, 8 threads, float32, 20 new tokens, best of 3
+crops  s  prompt  cached s  recomputed s  ratio
+    1  2      63      1.49          2.13    1.4
+    7  2     357      2.07          6.58    3.2
+    1  1     210      1.41          4.01    2.8
+    7  1    1386      2.79         21.90    7.9

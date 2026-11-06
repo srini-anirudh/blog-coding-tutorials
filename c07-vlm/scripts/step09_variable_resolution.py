@@ -16,7 +16,7 @@ for w, h in SIZES:
     print(f"{w:>5} x {h:<4} | {n_resize * 49:>7} | {n_pad * 49:>7} | {cols:>4} x {rows:<2} {tiled:>5} {tiled * 196:>6} {tiled * 49:>6}")
 print("resize and pad columns use pixel shuffle s = 2 (49 tokens per crop); s = 1 gives 196.")
 
-# Distortion: how far a fixed resize stretches a circle, measured in pixels.
+# What each strategy does to a wide picture: a fixed resize distorts it, padding shrinks it.
 wide = Image.new("RGB", (1000, 300), "white")
 print("resize  ", TinyVLMImageProcessor(strategy="resize").crops(wide)[0].size, "aspect ratio changes by", round((1000 / 300) / 1, 2), "x")
 print("pad     ", TinyVLMImageProcessor(strategy="pad").crops(wide)[0].size, "content fills", round(300 / 1000 * 100), "% of the crop height")

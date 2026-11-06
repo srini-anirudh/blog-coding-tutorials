@@ -5,3 +5,7 @@
 3. Wrong loss mask (fresh projector, one example)
    labels on the reply only: 4.401 over 5 targets
    labels on every token:    11.458 over 69 targets, 49 of them <image>
+4. Excessive image resolution (one 4032 x 3024 photo)
+   language model max_position_embeddings: 8192 | AMD EPYC 7R13, 8 threads
+   resize, s = 2      1 crops     63 tokens     0.29 s  KV cache     2.9 MB  past the limit: False
+   48 tiles, s = 1   49 crops   9618 tokens    18.17 s  KV cache   443.2 MB  past the limit: True

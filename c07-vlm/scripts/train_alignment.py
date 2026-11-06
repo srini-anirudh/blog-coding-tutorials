@@ -65,7 +65,6 @@ def main() -> None:
     parser.add_argument("--device", default=None)
     parser.add_argument("--out", default=None)
     args = parser.parse_args()
-    torch.set_num_threads(2)
     torch.manual_seed(0)
     transformers.logging.disable_progress_bar()
 
@@ -112,7 +111,6 @@ def main() -> None:
             snapshots.append({"step": step + 1, "score": snap, "captions": captions[:6]})
             print(f"  eval at {step + 1}: {snap} {captions[:2]}", flush=True)
             model.train()
-    train_seconds = trained_seconds
     model.eval()
 
     after, after_score = caption_eval(model, processor, args.eval_n, device)
@@ -120,14 +118,14 @@ def main() -> None:
     snapshots.append({"step": args.steps, "score": after_score, "captions": after[:6]})
     save_file(model.projector.state_dict(), out / "projector.safetensors")
     report = {
-        "device": describe_device(device), "args": vars(args), "params": model.parameter_counts(),
-        "train_seconds": train_seconds, "before": before_score, "after": after_score,
+        "device": describe_device(device), "args": {k: v for k, v in vars(args).items() if k != "out"},
+        "params": model.parameter_counts(), "train_seconds": trained_seconds, "before": before_score, "after": after_score,
         "samples_before": before[:12], "samples_after": after[:12], "snapshots": snapshots, "history": history,
     }
     results = Path(__file__).resolve().parents[1] / "results"
     results.mkdir(exist_ok=True)
     (results / f"{out.name}.json").write_text(json.dumps(report, indent=1))  # small; kept in git, weights are not
-    print(f"saved {out} | {train_seconds:.0f}s training")
+    print(f"saved {out.name} | {trained_seconds:.0f}s training")
 
 
 if __name__ == "__main__":

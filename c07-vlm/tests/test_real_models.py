@@ -31,6 +31,19 @@ def test_chat_template_matches_smollm2(built):
     assert proc.apply_chat_template(messages[:2], True) == hf.apply_chat_template(messages[:2], tokenize=False, add_generation_prompt=True)
 
 
+def test_we_leave_out_smollm2s_default_system_message(built):
+    """Our template and SmolLM2's differ in one known way, pinned here so it cannot drift."""
+    _, proc = built
+    from transformers import AutoTokenizer
+
+    hf = AutoTokenizer.from_pretrained(LM_ID)
+    messages = [{"role": "user", "content": "Hi there"}]
+    theirs = hf.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    ours = proc.apply_chat_template(messages, True)
+    assert theirs.startswith("<|im_start|>system\n") and theirs.endswith(ours)
+    assert proc.tokenizer.bos_token == "<|im_start|>" and ours.startswith(proc.tokenizer.bos_token)
+
+
 def test_piecewise_tokenisation_equals_whole_string(built):
     """Labels are built piece by piece; the ids must be the same as tokenising the full string."""
     _, proc = built

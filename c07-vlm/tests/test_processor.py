@@ -79,6 +79,18 @@ def test_marker_count_must_match_images():
         proc("<image> and <image>", [RED])
 
 
+def test_too_few_pictures_for_the_messages():
+    _, proc = tiny_vlm()
+    with pytest.raises(ValueError, match="more <image> markers"):
+        proc.build_example(conversation(n_images=2), [RED])
+
+
+def test_too_many_pictures_for_the_messages():
+    _, proc = tiny_vlm()
+    with pytest.raises(ValueError, match="more pictures"):
+        proc.build_example(conversation(n_images=1), [RED, BLUE])
+
+
 def test_processor_round_trip(tmp_path):
     _, proc = tiny_vlm(strategy="tile")
     proc.save_pretrained(tmp_path)

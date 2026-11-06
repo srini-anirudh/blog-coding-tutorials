@@ -6,7 +6,7 @@ import time
 
 import torch
 
-from tinyvlm import build_tinyvlm
+from tinyvlm import build_tinyvlm, describe_device
 from tinyvlm.data import render
 from tinyvlm.merge import merge_masked_scatter, merge_naive
 
@@ -34,10 +34,12 @@ print("slot", first, "equals features[0, 0]   ", torch.equal(merged[0, first], f
 print("slot", first + 48, "equals features[0, 48]  ", torch.equal(merged[0, first + 48], features[0, 48]))
 print("text rows untouched      ", torch.equal(merged[~mask], text_embeds[~mask]))
 
-# A batch big enough for the difference to matter: 8 samples, 8 x 49 placeholders, 64 tokens each.
+# A batch big enough for the difference to matter: 8 samples of 63 tokens, 49 of them placeholders.
 big_ids, big_embeds, big_features = ids.repeat(8, 1), text_embeds.repeat(8, 1, 1), features.repeat(8, 1, 1)
 for name, fn in (("merge_naive", merge_naive), ("merge_masked_scatter", merge_masked_scatter)):
-    start = time.perf_counter()
+    seconds = []
     for _ in range(20):
+        start = time.perf_counter()
         out = fn(big_embeds, big_ids, big_features, model.config.image_token_id)
-    print(f"{name:<22} {(time.perf_counter() - start) / 20 * 1000:8.3f} ms per batch (CPU)")
+        seconds.append(time.perf_counter() - start)
+    print(f"{name:<22} {min(seconds) * 1000:8.3f} ms per batch, best of 20 ({describe_device(big_ids.device)})")

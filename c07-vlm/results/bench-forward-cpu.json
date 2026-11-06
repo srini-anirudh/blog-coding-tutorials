@@ -1,42 +1,49 @@
-[
- {
-  "crops": 1,
-  "shuffle": 2,
-  "image_tokens": 49,
-  "seq": 63,
-  "encode_ms": 280.7921249998344,
-  "lm_ms": 280.6882500001393,
-  "total_ms": 561.4803749999737,
-  "kv_cache_mb": 2.90304
- },
- {
-  "crops": 7,
-  "shuffle": 2,
-  "image_tokens": 343,
-  "seq": 357,
-  "encode_ms": 1356.9044580001446,
-  "lm_ms": 841.2873749998653,
-  "total_ms": 2198.19183300001,
-  "kv_cache_mb": 16.45056
- },
- {
-  "crops": 1,
-  "shuffle": 1,
-  "image_tokens": 196,
-  "seq": 210,
-  "encode_ms": 396.0314999999355,
-  "lm_ms": 320.7252080001126,
-  "total_ms": 716.7567080000481,
-  "kv_cache_mb": 9.6768
- },
- {
-  "crops": 7,
-  "shuffle": 1,
-  "image_tokens": 1372,
-  "seq": 1386,
-  "encode_ms": 869.9857919998522,
-  "lm_ms": 1971.9461250001586,
-  "total_ms": 2841.931917000011,
-  "kv_cache_mb": 63.86688
- }
-]
+{
+ "hardware": "AMD EPYC 7R13, 8 threads",
+ "rows": [
+  {
+   "crops": 1,
+   "shuffle": 2,
+   "image_tokens": 49,
+   "seq": 63,
+   "encode_ms": 85.7671252451837,
+   "lm_ms": 85.83266567438841,
+   "total_ms": 171.59979091957211,
+   "kv_cache_mb": 2.90304,
+   "gpu_peak_mb": null
+  },
+  {
+   "crops": 7,
+   "shuffle": 2,
+   "image_tokens": 343,
+   "seq": 357,
+   "encode_ms": 437.9071621224284,
+   "lm_ms": 267.32913265004754,
+   "total_ms": 705.236294772476,
+   "kv_cache_mb": 16.45056,
+   "gpu_peak_mb": null
+  },
+  {
+   "crops": 1,
+   "shuffle": 1,
+   "image_tokens": 196,
+   "seq": 210,
+   "encode_ms": 97.19807980582118,
+   "lm_ms": 190.49590546637774,
+   "total_ms": 287.6939852721989,
+   "kv_cache_mb": 9.6768,
+   "gpu_peak_mb": null
+  },
+  {
+   "crops": 7,
+   "shuffle": 1,
+   "image_tokens": 1372,
+   "seq": 1386,
+   "encode_ms": 414.19466584920883,
+   "lm_ms": 954.7259472310543,
+   "total_ms": 1368.9206130802631,
+   "kv_cache_mb": 63.86688,
+   "gpu_peak_mb": null
+  }
+ ]
+}

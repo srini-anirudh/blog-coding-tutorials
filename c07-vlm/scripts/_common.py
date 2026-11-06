@@ -1,4 +1,4 @@
-"""Shared setup for the step scripts: make `tinyvlm` importable and keep the laptop responsive."""
+"""Shared setup for the step scripts: make `tinyvlm` importable, fix the seed, quiet the logs."""
 
 import sys
 from pathlib import Path
@@ -7,7 +7,6 @@ import torch
 import transformers
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-torch.set_num_threads(2)
 torch.manual_seed(0)  # a fresh projector starts from the same weights on every run
 transformers.logging.set_verbosity_error()
 transformers.logging.disable_progress_bar()

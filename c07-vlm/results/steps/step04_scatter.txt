@@ -7,5 +7,5 @@ merged                   (1, 63, 576)
 slot 3 equals features[0, 0]    True
 slot 51 equals features[0, 48]   True
 text rows untouched       True
-merge_naive               6.491 ms per batch (CPU)
-merge_masked_scatter      1.039 ms per batch (CPU)
+merge_naive               3.764 ms per batch, best of 20 (AMD EPYC 7R13, 8 threads)
+merge_masked_scatter      0.461 ms per batch, best of 20 (AMD EPYC 7R13, 8 threads)

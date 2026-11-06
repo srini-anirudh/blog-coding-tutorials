@@ -31,14 +31,14 @@ def sync(device: torch.device) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", default=None)
-    parser.add_argument("--repeats", type=int, default=3)
+    parser.add_argument("--repeats", type=int, default=5)
     args = parser.parse_args()
-    torch.set_num_threads(2)
     transformers.logging.disable_progress_bar()
     device = pick_device(args.device)
     rows = []
-    print(f"device {describe_device(device)}, float32, one sample, about 14 text tokens")
-    print(f"{'crops':>5} {'s':>2} {'img tok':>7} {'seq':>5} {'encode ms':>10} {'lm ms':>8} {'total ms':>9} {'KV cache MB':>12}")
+    hardware = describe_device(device)
+    print(f"device {hardware}, float32, one sample, 14 text tokens, best of {args.repeats}")
+    print(f"{'crops':>5} {'s':>2} {'img tok':>7} {'seq':>5} {'encode ms':>10} {'lm ms':>8} {'total ms':>9} {'KV cache MB':>12} {'GPU peak MB':>12}")
     for factor in (2, 1):
         model, processor = build_tinyvlm(pixel_shuffle_factor=factor)
         model.to(device).eval()
@@ -55,6 +55,8 @@ def main() -> None:
             mask = torch.ones_like(input_ids)
             pixels = batch["pixel_values"].repeat(crops, 1, 1, 1).to(device)
             encode, total = [], []
+            if device.type == "cuda":
+                torch.cuda.reset_peak_memory_stats(device)
             with torch.no_grad():
                 for _ in range(args.repeats):
                     start = time.perf_counter()
@@ -67,12 +69,14 @@ def main() -> None:
                     total.append(time.perf_counter() - start)
             cache_mb = sum(k.numel() + v.numel() for k, v in ((layer.keys, layer.values) for layer in out.past_key_values.layers)) * 4 / 1e6
             enc, tot = min(encode) * 1000, min(total) * 1000
-            row = {"crops": crops, "shuffle": factor, "image_tokens": n * crops, "seq": len(ids), "encode_ms": enc, "lm_ms": tot - enc, "total_ms": tot, "kv_cache_mb": cache_mb}
+            peak_mb = torch.cuda.max_memory_allocated(device) / 1e6 if device.type == "cuda" else None
+            row = {"crops": crops, "shuffle": factor, "image_tokens": n * crops, "seq": len(ids), "encode_ms": enc, "lm_ms": tot - enc, "total_ms": tot, "kv_cache_mb": cache_mb, "gpu_peak_mb": peak_mb}
             rows.append(row)
-            print(f"{crops:>5} {factor:>2} {n * crops:>7} {len(ids):>5} {enc:>10.0f} {tot - enc:>8.0f} {tot:>9.0f} {cache_mb:>12.1f}")
+            peak = f"{peak_mb:.0f}" if peak_mb is not None else "-"
+            print(f"{crops:>5} {factor:>2} {n * crops:>7} {len(ids):>5} {enc:>10.0f} {tot - enc:>8.0f} {tot:>9.0f} {cache_mb:>12.1f} {peak:>12}")
         del model
     (ROOT / "results").mkdir(exist_ok=True)
-    (ROOT / "results" / f"bench-forward-{device.type}.json").write_text(json.dumps(rows, indent=1))
+    (ROOT / "results" / f"bench-forward-{device.type}.json").write_text(json.dumps({"hardware": hardware, "rows": rows}, indent=1))
 
 
 if __name__ == "__main__":

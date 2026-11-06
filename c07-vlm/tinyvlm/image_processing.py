@@ -43,7 +43,8 @@ def normalize(image: Image.Image, mean=SIGLIP_MEAN, std=SIGLIP_STD) -> torch.Ten
 def pad_to_square(image: Image.Image, mean=SIGLIP_MEAN) -> Image.Image:
     """Centre the picture on a square canvas filled with the mean colour.
 
-    After normalisation the mean colour becomes exactly 0, so the padding carries no signal.
+    After normalisation the padding is close to 0, so it carries almost no signal. It is not exactly 0:
+    a mean of 0.5 is 127.5 in 8 bits, which rounds to 128 and normalises to 0.0039.
     """
     width, height = image.size
     side = max(width, height)
