@@ -1,0 +1,134 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/the-cost-of-a-picture/scripts/01_cost_model.py",
+ "worked_example": {
+  "patches / visual tokens": "6,912 / 1,728",
+  "encoder compute": "9.3 TFLOP, 19 ms",
+  "prefill compute (1,768 tokens)": "26.0 TFLOP, 53 ms",
+  "KV cache per token": "56 KiB",
+  "KV cache, this request": "101 MB, image 98%",
+  "same model, 28 KV heads (no GQA)": "710 MB",
+  "one decode step, batch 1": "4.21 ms",
+  "200-token answer, decode only": "0.84 s"
+ },
+ "latency_split": {
+  "1": {
+   "total_ms": 75.6,
+   "image_share": 0.929
+  },
+  "10": {
+   "total_ms": 113.4,
+   "image_share": 0.618
+  },
+  "200": {
+   "total_ms": 913.2,
+   "image_share": 0.077
+  }
+ },
+ "concurrency": {
+  "1.0": 549,
+  "0.5": 979,
+  "0.25": 1608,
+  "0.111": 2502
+ },
+ "token_counts": [
+  {
+   "h": 336,
+   "w": 336,
+   "values": [
+    576,
+    576,
+    144,
+    64,
+    36,
+    144,
+    255,
+    258
+   ]
+  },
+  {
+   "h": 448,
+   "w": 448,
+   "values": [
+    1024,
+    1024,
+    256,
+    113,
+    64,
+    256,
+    255,
+    258
+   ]
+  },
+  {
+   "h": 672,
+   "w": 672,
+   "values": [
+    2304,
+    2304,
+    576,
+    256,
+    144,
+    576,
+    765,
+    258
+   ]
+  },
+  {
+   "h": 1000,
+   "w": 1000,
+   "values": [
+    5184,
+    5184,
+    1296,
+    576,
+    324,
+    1296,
+    765,
+    1032
+   ]
+  },
+  {
+   "h": 1008,
+   "w": 1344,
+   "values": [
+    6912,
+    6912,
+    1728,
+    768,
+    432,
+    1728,
+    765,
+    1032
+   ]
+  },
+  {
+   "h": 1080,
+   "w": 1920,
+   "values": [
+    10764,
+    10764,
+    2691,
+    1196,
+    672,
+    2691,
+    1105,
+    1548
+   ]
+  },
+  {
+   "h": 3508,
+   "w": 2480,
+   "values": [
+    44678,
+    44678,
+    11169,
+    4964,
+    2792,
+    11214,
+    1105,
+    5160
+   ]
+  }
+ ]
+}

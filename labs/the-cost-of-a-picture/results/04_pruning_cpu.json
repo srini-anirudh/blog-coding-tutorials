@@ -1,0 +1,163 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/the-cost-of-a-picture/scripts/04_pruning.py --device cpu --n 16",
+ "rows": [
+  {
+   "policy": "full",
+   "kept": 576,
+   "color": 1.0,
+   "number": 1.0,
+   "number_top": 1.0,
+   "number_bottom": 1.0,
+   "mean_kept_row": 11.5,
+   "prefill_ms_median": 3301.4083550078794
+  },
+  {
+   "policy": "random",
+   "kept": 144,
+   "color": 1.0,
+   "number": 0.9375,
+   "number_top": 0.875,
+   "number_bottom": 1.0,
+   "mean_kept_row": 11.417534828186035,
+   "prefill_ms_median": 1249.3562649469823
+  },
+  {
+   "policy": "uniform",
+   "kept": 144,
+   "color": 1.0,
+   "number": 0.9375,
+   "number_top": 1.0,
+   "number_bottom": 0.875,
+   "mean_kept_row": 11.5,
+   "prefill_ms_median": 1249.3562649469823
+  },
+  {
+   "policy": "pool",
+   "kept": 144,
+   "color": 1.0,
+   "number": 0.875,
+   "number_top": 0.875,
+   "number_bottom": 0.875,
+   "mean_kept_row": 12.0,
+   "prefill_ms_median": 1249.3562649469823
+  },
+  {
+   "policy": "attention",
+   "kept": 144,
+   "color": 1.0,
+   "number": 0.9375,
+   "number_top": 1.0,
+   "number_bottom": 0.875,
+   "mean_kept_row": 9.836805522441864,
+   "prefill_ms_median": 1249.3562649469823
+  },
+  {
+   "policy": "diversity",
+   "kept": 144,
+   "color": 1.0,
+   "number": 1.0,
+   "number_top": 1.0,
+   "number_bottom": 1.0,
+   "mean_kept_row": 11.43272578716278,
+   "prefill_ms_median": 1249.3562649469823
+  },
+  {
+   "policy": "tome",
+   "kept": 144,
+   "color": 1.0,
+   "number": 1.0,
+   "number_top": 1.0,
+   "number_bottom": 1.0,
+   "mean_kept_row": 11.5,
+   "prefill_ms_median": 1249.3562649469823
+  },
+  {
+   "policy": "random",
+   "kept": 64,
+   "color": 1.0,
+   "number": 0.375,
+   "number_top": 0.375,
+   "number_bottom": 0.375,
+   "mean_kept_row": 11.361328125,
+   "prefill_ms_median": 862.5181310344487
+  },
+  {
+   "policy": "uniform",
+   "kept": 64,
+   "color": 0.9375,
+   "number": 0.0625,
+   "number_top": 0.0,
+   "number_bottom": 0.125,
+   "mean_kept_row": 11.5,
+   "prefill_ms_median": 862.5181310344487
+  },
+  {
+   "policy": "pool",
+   "kept": 64,
+   "color": 1.0,
+   "number": 0.0,
+   "number_top": 0.0,
+   "number_bottom": 0.0,
+   "mean_kept_row": 11.5,
+   "prefill_ms_median": 862.5181310344487
+  },
+  {
+   "policy": "attention",
+   "kept": 64,
+   "color": 1.0,
+   "number": 0.25,
+   "number_top": 0.375,
+   "number_bottom": 0.125,
+   "mean_kept_row": 7.7822265625,
+   "prefill_ms_median": 862.5181310344487
+  },
+  {
+   "policy": "diversity",
+   "kept": 64,
+   "color": 1.0,
+   "number": 0.75,
+   "number_top": 0.875,
+   "number_bottom": 0.625,
+   "mean_kept_row": 10.7646484375,
+   "prefill_ms_median": 862.5181310344487
+  },
+  {
+   "policy": "tome",
+   "kept": 64,
+   "color": 1.0,
+   "number": 0.6875,
+   "number_top": 0.5,
+   "number_bottom": 0.875,
+   "mean_kept_row": 11.5361328125,
+   "prefill_ms_median": 862.5181310344487
+  }
+ ],
+ "row_attention": [
+  0.1651315540075302,
+  0.15507394075393677,
+  0.1610519140958786,
+  0.09771526604890823,
+  0.03439074754714966,
+  0.01921704225242138,
+  0.009558312594890594,
+  0.005597889889031649,
+  0.004103226587176323,
+  0.005529649090021849,
+  0.0037182802334427834,
+  0.004842488560825586,
+  0.004599333740770817,
+  0.003951333928853273,
+  0.005095234140753746,
+  0.006374201271682978,
+  0.004538300447165966,
+  0.003787766909226775,
+  0.006277562119066715,
+  0.009424693882465363,
+  0.01250616367906332,
+  0.03145412728190422,
+  0.07171167433261871,
+  0.17434930801391602
+ ],
+ "n": 16
+}

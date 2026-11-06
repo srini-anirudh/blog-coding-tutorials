@@ -1,0 +1,36 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/the-cost-of-a-picture/scripts/01_cost_model.py
+Worked example (600M encoder, 4 global layers; 7B LLM, 28 layers, 4 KV heads x 128; H100 at 50%)
+quantity                             this code                    post
+patches / visual tokens              6,912 / 1,728                6,912 / 1,728
+encoder compute                      9.3 TFLOP, 19 ms             9.3 TFLOP, 19 ms
+prefill compute (1,768 tokens)       26.0 TFLOP, 53 ms            26 TFLOP, 53 ms
+KV cache per token                   56 KiB                       56 KiB
+KV cache, this request               101 MB, image 98%            101 MB, 98%
+same model, 28 KV heads (no GQA)     710 MB                       710 MB
+one decode step, batch 1             4.21 ms                      4.2 ms
+200-token answer, decode only        0.84 s                       about 0.85 s
+
+Which stage dominates: estimated latency split for answers of 1, 10 and 200 tokens
+ answer   encoder   prefill    decode   image share of time
+      1      19ms      53ms       4ms                  93%
+     10      19ms      53ms      42ms                  62%
+    200      19ms      53ms     842ms                   8%
+
+Concurrency: how many such requests (200-token answers) fit in 80 GB next to the 7B weights
+  keep  100% of visual tokens ( 1728 tokens):  549 requests
+  keep   50% of visual tokens (  864 tokens):  979 requests
+  keep   25% of visual tokens (  432 tokens): 1608 requests
+  keep   11% of visual tokens (  192 tokens): 2502 requests
+
+Tokens per image: connector merge (14-px patches), and three provider rules as the post states them
+      image  patches  merge 1    2x2    3x3    4x4  28px rule  512 tiles  768 tiles
+    336x336      576      576    144     64     36        144        255        258
+    448x448    1,024    1,024    256    113     64        256        255        258
+    672x672    2,304    2,304    576    256    144        576        765        258
+  1000x1000    5,184    5,184  1,296    576    324      1,296        765      1,032
+  1344x1008    6,912    6,912  1,728    768    432      1,728        765      1,032
+  1920x1080   10,764   10,764  2,691  1,196    672      2,691      1,105      1,548
+  2480x3508   44,678   44,678 11,169  4,964  2,792     11,214      1,105      5,160
+
+The 3x3 and 4x4 merges floor the patch count; real connectors pad the grid first.

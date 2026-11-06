@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/the-cost-of-a-picture/scripts/03_stage_timing.py --device cpu --sizes 448x448,672x672 --decode-steps 16 --repeats 2
+Qwen2-VL-2B: encoder 665M params, language model 1.31B non-embedding params, device cpu, FP32
+     image patches tokens  model  prep ms   enc ms  pref ms dec ms/tok enc TF/s pref TF/s   KV MB model MB
+   448x448    1024    256    256      8.9   3152.5   3116.8     372.17     0.49      0.25    16.6     16.6
+   672x672    2304    576    576     14.2   6597.5   2801.7     320.12     0.60      0.59    34.9     34.9
+
+Measured latency for one request, split by stage, for answers of 1, 10 and 200 tokens
+     image answer  total ms  prep+enc+prefill  decode
+   448x448      1      6650               94%      6%
+   448x448     10     10000               63%     37%
+   448x448    200     80712                8%     92%
+   672x672      1      9733               97%      3%
+   672x672     10     12615               75%     25%
+   672x672    200     73437               13%     87%
+
+Times are medians of the repeats after one warm-up. 'model' columns come from costmodel.py.

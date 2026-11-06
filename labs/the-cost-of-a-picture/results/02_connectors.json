@@ -1,0 +1,86 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/the-cost-of-a-picture/scripts/02_connectors.py",
+ "rows": [
+  {
+   "connector": "mlp",
+   "glyph": 1.0,
+   "tokens": 64,
+   "glyph_runs": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "blob": 1.0,
+   "blob_runs": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "connector": "shuffle",
+   "glyph": 1.0,
+   "tokens": 16,
+   "glyph_runs": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "blob": 0.9993333333333334,
+   "blob_runs": [
+    1.0,
+    0.998,
+    1.0
+   ]
+  },
+  {
+   "connector": "pool",
+   "glyph": 0.23233333333333336,
+   "tokens": 16,
+   "glyph_runs": [
+    0.232,
+    0.236,
+    0.229
+   ],
+   "blob": 0.9993333333333334,
+   "blob_runs": [
+    0.998,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "connector": "resampler",
+   "glyph": 1.0,
+   "tokens": 4,
+   "glyph_runs": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "blob": 1.0,
+   "blob_runs": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "connector": "conv",
+   "glyph": 1.0,
+   "tokens": 16,
+   "glyph_runs": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "blob": 0.9993333333333334,
+   "blob_runs": [
+    0.998,
+    1.0,
+    1.0
+   ]
+  }
+ ]
+}

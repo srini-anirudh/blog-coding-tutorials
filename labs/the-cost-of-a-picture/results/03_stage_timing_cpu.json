@@ -1,0 +1,40 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/the-cost-of-a-picture/scripts/03_stage_timing.py --device cpu --sizes 448x448,672x672 --decode-steps 16 --repeats 2",
+ "rows": [
+  {
+   "image": "448x448",
+   "preprocess_s": 0.008860382717102766,
+   "encode_s": 3.1524701677262783,
+   "prefill_s": 3.1167755662463605,
+   "decode_step_s": 0.37216941179940477,
+   "patches": 1024,
+   "visual_tokens": 256,
+   "prompt_tokens": 289,
+   "kv_bytes": 16572416,
+   "model_visual_tokens": 256,
+   "encoder_tflop": 1.534274306048,
+   "prefill_tflop": 0.771745156096,
+   "encoder_tflops_per_s": 0.4866895559410152,
+   "prefill_tflops_per_s": 0.24761011490648943,
+   "model_kv_bytes": 16572416
+  },
+  {
+   "image": "672x672",
+   "preprocess_s": 0.014200315345078707,
+   "encode_s": 6.597490164916962,
+   "prefill_s": 2.8016829336993396,
+   "decode_step_s": 0.32011998881353065,
+   "patches": 2304,
+   "visual_tokens": 576,
+   "prompt_tokens": 609,
+   "kv_bytes": 34922496,
+   "model_visual_tokens": 576,
+   "encoder_tflop": 3.935301009408,
+   "prefill_tflop": 1.659798260736,
+   "encoder_tflops_per_s": 0.5964845586787669,
+   "prefill_tflops_per_s": 0.5924290149936431,
+   "model_kv_bytes": 34922496
+  }
+ ]
+}

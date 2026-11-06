@@ -1,0 +1,23 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2
+# command: python labs/the-cost-of-a-picture/scripts/04_pruning.py --device cuda --n 48
+Qwen2-VL-2B, 48 pictures of 672 x 672 (576 visual tokens), greedy answers of at most 8 tokens
+policy      kept  colour  number  num top  num bottom  mean kept row  prefill ms
+full         576    1.00    1.00     1.00        1.00           11.5        24.2
+random       144    1.00    0.90     0.83        0.96           11.5        24.0
+uniform      144    1.00    0.92     0.92        0.92           11.5        24.0
+pool         144    1.00    0.75     0.62        0.88           12.0        24.0
+attention    144    1.00    0.94     0.92        0.96            9.8        24.0
+diversity    144    1.00    1.00     1.00        1.00           11.6        24.0
+tome         144    1.00    0.92     0.96        0.88           11.5        24.0
+random        64    1.00    0.42     0.50        0.33           11.4        24.2
+uniform       64    0.98    0.12     0.08        0.17           11.5        24.2
+pool          64    1.00    0.04     0.04        0.04           11.5        24.2
+attention     64    1.00    0.44     0.38        0.50            7.9        24.2
+diversity     64    1.00    0.85     0.79        0.92           10.9        24.2
+tome          64    1.00    0.42     0.29        0.54           11.6        24.2
+
+Share of layer-2 last-token attention on visual tokens, by image row (0 = top), mean over pictures:
+  0.170 0.155 0.161 0.096 0.033 0.018 0.010 0.005 0.004 0.005 0.004 0.005 0.005 0.004 0.005 0.006 0.005 0.004 0.006 0.009 0.012 0.031 0.070 0.177
+  top 12 rows 0.665, bottom 12 rows 0.335
+
+Row 11.5 is the centre of the grid. Prefill ms is the median per budget over all policies.

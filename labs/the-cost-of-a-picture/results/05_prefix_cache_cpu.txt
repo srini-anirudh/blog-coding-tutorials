@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/the-cost-of-a-picture/scripts/05_prefix_cache.py
+Prefix cache keyed on token ids only
+  request                    answer      reused / prompt  prep+enc ms  prefill ms
+  A: red circle, colour?     red              0 / 288            4009        2032
+  B: blue square, colour?    red            272 / 288            3474         574
+  A again, shape?            circle         272 / 291              12         437
+  embedding cache: 1 hits, 2 misses
+
+Prefix cache keyed on token ids + image hash
+  request                    answer      reused / prompt  prep+enc ms  prefill ms
+  A: red circle, colour?     red              0 / 288            2820        2048
+  B: blue square, colour?    Blue             0 / 288            2981        1880
+  A again, shape?            circle         272 / 291              11         613
+  embedding cache: 1 hits, 2 misses
+
+Pictures 448 x 448; both have the same number of visual tokens, so their placeholder ids are identical. Blocks of 16 tokens. One run, not a benchmark.

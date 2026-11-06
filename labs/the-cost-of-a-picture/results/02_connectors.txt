@@ -1,0 +1,14 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/the-cost-of-a-picture/scripts/02_connectors.py
+pixel shuffle 2: (2, 64, 8) -> (2, 16, 32); unshuffle recovers the input exactly: True
+average pool 2: (2, 64, 8) -> (2, 16, 8); numbers kept: 256 of 1024
+
+Toy task accuracy (test set of 512, chance 0.25), 400 steps, mean over 3 seeds
+connector   tokens  glyph (detail inside a 2x2 block)  blob (which quadrant)
+mlp             64                              1.000                  1.000
+shuffle         16                              1.000                  0.999
+pool            16                              0.232                  0.999
+resampler        4                              1.000                  1.000
+conv            16                              1.000                  0.999
+
+Toy model: 8 x 8 grid of 8-dim patches, connector, then a one-layer transformer reader. Not a VLM measurement.

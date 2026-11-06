@@ -1,0 +1,56 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/the-cost-of-a-picture/scripts/05_prefix_cache.py",
+ "token ids only": [
+  {
+   "request": "A: red circle, colour?",
+   "answer": "red",
+   "prompt": 288,
+   "reused": 0,
+   "encoder_and_prep_ms": 4009.157964028418,
+   "prefill_ms": 2032.1081397123635
+  },
+  {
+   "request": "B: blue square, colour?",
+   "answer": "red",
+   "prompt": 288,
+   "reused": 272,
+   "encoder_and_prep_ms": 3474.38383474946,
+   "prefill_ms": 574.4959330186248
+  },
+  {
+   "request": "A again, shape?",
+   "answer": "circle",
+   "prompt": 291,
+   "reused": 272,
+   "encoder_and_prep_ms": 12.380144093185663,
+   "prefill_ms": 436.6406360641122
+  }
+ ],
+ "token ids + image hash": [
+  {
+   "request": "A: red circle, colour?",
+   "answer": "red",
+   "prompt": 288,
+   "reused": 0,
+   "encoder_and_prep_ms": 2820.301183965057,
+   "prefill_ms": 2047.7608488872647
+  },
+  {
+   "request": "B: blue square, colour?",
+   "answer": "Blue",
+   "prompt": 288,
+   "reused": 0,
+   "encoder_and_prep_ms": 2981.232167221606,
+   "prefill_ms": 1880.113624036312
+  },
+  {
+   "request": "A again, shape?",
+   "answer": "circle",
+   "prompt": 291,
+   "reused": 272,
+   "encoder_and_prep_ms": 10.672179982066154,
+   "prefill_ms": 612.5724827870727
+  }
+ ]
+}
