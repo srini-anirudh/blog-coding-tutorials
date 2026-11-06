@@ -1,0 +1,33 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0",
+ "command": "python labs/from-vlms-to-vlas/scripts/05_action_expert.py",
+ "results": {
+  "params": {
+   "backbone": 18902016,
+   "expert": 6394887
+  },
+  "max_diff_velocity": 4.76837158203125e-07,
+  "max_diff_prefix": 0.0,
+  "timing_ms": [
+   {
+    "what": "10 flow steps, full pass each step",
+    "median ms": 2449.3
+   },
+   {
+    "what": "prefix once + 10 expert steps",
+    "median ms": 372.9
+   },
+   {
+    "what": "  of which the prefix",
+    "median ms": 185.5
+   },
+   {
+    "what": "  of which the 10 expert steps",
+    "median ms": 187.4
+   }
+  ],
+  "speedup": 6.5686039694273095,
+  "prefix_tokens": 816,
+  "layers": 6
+ }
+}

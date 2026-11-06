@@ -1,0 +1,26 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0
+# command: python labs/from-vlms-to-vlas/scripts/06_trial_statistics.py
+
+95% intervals for a measured success rate of 50%:
+trials  normal half-width (pts)  Wilson interval (%)  normal coverage  Wilson coverage
+10      31.0                     23.7-76.3            0.89             0.978          
+20      21.9                     29.9-70.1            0.959            0.959          
+50      13.9                     36.6-63.4            0.936            0.936          
+100     9.8                      40.4-59.6            0.942            0.942          
+385     5.0                      45.0-55.0            0.949            0.949          
+Coverage: share of 20000 simulated experiments whose interval contains the true 50%.
+
+Trials per policy for 80% power, two-sided 5% test:
+A    B     trials per policy  simulated power at that n
+0.5  0.6   385                0.795                    
+0.5  0.7   91                 0.799                    
+0.5  0.8   36                 0.788                    
+0.8  0.9   197                0.808                    
+0.9  0.95  432                0.81                     
+
+Chance to detect the gap with 20 trials per policy (A = 50%):
+B    gap (pts)  power, normal approx  power, simulated
+0.6  10.0       0.096                 0.087           
+0.7  20.0       0.248                 0.241           
+0.8  30.0       0.512                 0.532           
+0.9  40.0       0.813                 0.84            

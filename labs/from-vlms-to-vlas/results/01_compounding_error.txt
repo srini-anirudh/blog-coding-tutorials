@@ -1,0 +1,27 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0
+# command: python labs/from-vlms-to-vlas/scripts/01_compounding_error.py
+
+Part A. Ross-Bagnell worst case, eps = 0.01 per decision, 200000 Monte Carlo episodes.
+T = steps per task. H = actions per decision (chunk size). eps*T is the supervised-learning count.
+T    H   decisions  mistakes_mc  mistakes_exact  eps_T  eps_T2_over_2H
+10   1   10         0.53         0.53            0.1    0.5           
+10   10  1          0.1          0.1             0.1    0.05          
+50   1   50         10.93        10.9            0.5    12.5          
+50   10  5          1.48         1.48            0.5    1.25          
+50   50  1          0.51         0.5             0.5    0.25          
+100  1   100        37.18        37.24           1.0    50.0          
+100  10  10         5.32         5.34            1.0    5.0           
+100  50  2          1.5          1.5             1.0    1.0           
+500  1   500        401.94       401.65          5.0    1250.0        
+500  10  50         108.31       108.96          5.0    125.0         
+500  50  10         26.35        26.69           5.0    25.0          
+At T = 500 (ten seconds at 50 Hz), one-step decisions give about 401.94 mistaken steps; one-second chunks (H = 50) give 26.35.
+
+Part B. Lane task, State: time step t and lateral offset y from the lane centre. Action: lateral velocity a.
+Demos: 50 x 400 expert steps, |y| up to 0.0047. Test: start offset std 0.02, action noise std 0.3. Mistake: |y| > 0.1.
+Mean number of mistaken steps per episode, 500 test episodes:
+policy             T=25  T=50  T=100  T=200  T=400  mean |y| at T=400
+expert             0.35  0.76  1.59   3.48   7.01   0.034            
+behaviour cloning  4.02  9.24  20.0   42.94  88.39  0.065            
+DAgger round 1     0.34  0.75  1.58   3.46   6.98   0.034            
+DAgger round 4     0.35  0.76  1.59   3.46   7.0    0.034            

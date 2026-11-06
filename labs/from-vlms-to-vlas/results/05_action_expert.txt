@@ -1,0 +1,23 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0
+# command: python labs/from-vlms-to-vlas/scripts/05_action_expert.py
+
+Model: 6 layers. Backbone width 512, expert width 256, 8 heads of 64 shared. Parameters: backbone 18.90 M, expert 6.39 M.
+Sequence: 816 prefix tokens, 1 state token, 50 action tokens of 7 dims.
+Block-wise causal mask for blocks of 3 (image+text), 1 (state), 2 (actions); 1 = may attend:
+  1 1 1 0 0 0
+  1 1 1 0 0 0
+  1 1 1 0 0 0
+  1 1 1 1 0 0
+  1 1 1 1 1 1
+  1 1 1 1 1 1
+
+Max |velocity, cached - full pass|: 4.77e-07
+Max change in prefix outputs when the noisy actions and tau change: 0.00e+00
+
+Timing, batch 1, median of 5:
+what                                median ms
+10 flow steps, full pass each step  2449.3   
+prefix once + 10 expert steps       372.9    
+  of which the prefix               185.5    
+  of which the 10 expert steps      187.4    
+Speed-up from the cache: 6.6x. For comparison, pi0 reports on an RTX 4090: 14 ms image encoding, 32 ms observation pass, 27 ms for ten expert steps (73 ms). Not reproduced here.

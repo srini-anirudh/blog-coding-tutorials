@@ -1,0 +1,51 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0",
+ "command": "python labs/from-vlms-to-vlas/scripts/02_multimodal_demos.py",
+ "results": {
+  "MSE regression": {
+   "collision_rate": 0.86,
+   "success_rate": 0.14,
+   "went_left": 0.036,
+   "went_right": 0.104,
+   "final_loss": 2.9e-05,
+   "start_dx_mean": 0.0014,
+   "start_dx_abs_mean": 0.0014
+  },
+  "MSE regression, chunk of 8": {
+   "collision_rate": 0.902,
+   "success_rate": 0.098,
+   "went_left": 0.028,
+   "went_right": 0.07,
+   "final_loss": 4e-05,
+   "start_dx_mean": 0.0039,
+   "start_dx_abs_mean": 0.0039
+  },
+  "256 bins per dimension": {
+   "collision_rate": 0.004,
+   "success_rate": 0.996,
+   "went_left": 0.416,
+   "went_right": 0.58,
+   "final_loss": 1.547309,
+   "start_dx_mean": 0.0053,
+   "start_dx_abs_mean": 0.0258
+  },
+  "flow matching, 10 steps": {
+   "collision_rate": 0.0,
+   "success_rate": 1.0,
+   "went_left": 0.4,
+   "went_right": 0.6,
+   "final_loss": 0.059529,
+   "start_dx_mean": 0.0054,
+   "start_dx_abs_mean": 0.0246
+  },
+  "flow matching, 10 steps, chunk of 8": {
+   "collision_rate": 0.028,
+   "success_rate": 0.972,
+   "went_left": 0.422,
+   "went_right": 0.55,
+   "final_loss": 0.045024,
+   "start_dx_mean": 0.0055,
+   "start_dx_abs_mean": 0.0242
+  }
+ }
+}

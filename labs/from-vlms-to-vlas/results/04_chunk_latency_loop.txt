@@ -1,0 +1,64 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0
+# command: python labs/from-vlms-to-vlas/scripts/04_chunk_latency_loop.py
+
+50 Hz for 4.0 s. Object bumped by 0.3 between 1.6 and 2.74 s (three steps later per seed, 20 seeds). Each call adds an offset with std 0.01.
+calls_per_s: policy calls. paused_frac: steps with nothing to execute. reaction_ms: time from the bump to the first command computed after it. jump_at_switch / step_elsewhere: mean hand step at chunk switches and at other steps. track_err: mean |hand - object|.
+
+Inference latency 20 ms:
+mode   H   calls_per_s  paused_frac  reaction_ms  jump_at_switch  step_elsewhere  track_err
+sync   1   25.0         0.5          30.0         0.018           0.0             0.011    
+sync   5   8.5          0.17         70.0         0.024           0.005           0.013    
+sync   10  4.75         0.095        127.0        0.033           0.005           0.019    
+sync   25  2.0          0.04         294.0        0.09            0.006           0.045    
+sync   50  1.0          0.02         502.0        0.186           0.005           0.108    
+async  1   25.0         0.5          30.0         0.018           0.0             0.011    
+async  5   10.0         0.005        60.0         0.02            0.006           0.013    
+async  10  5.0          0.005        110.0        0.03            0.006           0.017    
+async  25  2.0          0.005        275.0        0.089           0.006           0.043    
+async  50  1.0          0.005        500.0        0.188           0.005           0.11     
+blend  1   25.0         0.5          30.0         0.018           0.0             0.011    
+blend  5   25.0         0.005        30.0         0.007           0.008           0.01     
+blend  10  10.0         0.005        60.0         0.008           0.007           0.015    
+blend  25  2.5          0.005        210.0        0.012           0.008           0.039    
+blend  50  1.25         0.005        415.0        0.03            0.01            0.099    
+
+Inference latency 80 ms:
+mode   H   calls_per_s  paused_frac  reaction_ms  jump_at_switch  step_elsewhere  track_err
+sync   1   10.0         0.8          120.0        0.037           0.0             0.023    
+sync   5   5.75         0.45         160.0        0.042           0.003           0.024    
+sync   10  3.75         0.3          206.0        0.054           0.004           0.03     
+sync   25  1.75         0.14         346.0        0.11            0.005           0.061    
+sync   50  1.0          0.08         610.0        0.22            0.006           0.121    
+async  1   10.0         0.8          120.0        0.037           0.0             0.023    
+async  5   10.0         0.02         120.0        0.021           0.006           0.018    
+async  10  5.0          0.02         170.0        0.035           0.006           0.024    
+async  25  2.0          0.02         335.0        0.104           0.006           0.053    
+async  50  1.0          0.02         560.0        0.215           0.005           0.121    
+blend  1   10.0         0.8          120.0        0.037           0.0             0.023    
+blend  5   10.0         0.02         120.0        0.021           0.006           0.018    
+blend  10  10.0         0.02         120.0        0.009           0.007           0.023    
+blend  25  2.5          0.02         270.0        0.016           0.009           0.05     
+blend  50  1.25         0.02         475.0        0.038           0.01            0.114    
+
+Inference latency 200 ms:
+mode   H   calls_per_s  paused_frac  reaction_ms  jump_at_switch  step_elsewhere  track_err
+sync   1   4.75         0.91         307.0        0.076           0.0             0.052    
+sync   5   3.5          0.675        340.0        0.083           0.002           0.054    
+sync   10  2.5          0.5          390.0        0.098           0.003           0.062    
+sync   25  1.5          0.3          515.0        0.157           0.004           0.098    
+sync   50  1.0          0.2          790.0        0.291           0.005           0.168    
+async  1   4.75         0.91         307.0        0.076           0.0             0.052    
+async  5   4.75         0.56         307.0        0.062           0.002           0.046    
+async  10  4.75         0.135        307.0        0.053           0.005           0.047    
+async  25  2.0          0.05         455.0        0.136           0.005           0.081    
+async  50  1.0          0.05         680.0        0.272           0.005           0.148    
+blend  1   4.75         0.91         307.0        0.076           0.0             0.052    
+blend  5   4.75         0.56         307.0        0.062           0.002           0.046    
+blend  10  4.75         0.135        307.0        0.053           0.005           0.047    
+blend  25  2.5          0.05         390.0        0.024           0.009           0.079    
+blend  50  1.25         0.05         595.0        0.056           0.011           0.15     
+
+pi0's reported schedule (73 ms, async, H = 25 executed per 0.5 s) against waiting for each chunk:
+latency_ms  mode   H   calls_per_s  paused_frac  reaction_ms  jump_at_switch  step_elsewhere  track_err
+73          sync   25  1.75         0.14         346.0        0.11            0.005           0.061    
+73          async  25  2.0          0.02         335.0        0.104           0.006           0.053    

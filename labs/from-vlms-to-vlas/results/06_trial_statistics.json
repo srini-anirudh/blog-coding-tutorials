@@ -1,0 +1,101 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0",
+ "command": "python labs/from-vlms-to-vlas/scripts/06_trial_statistics.py",
+ "results": {
+  "intervals": [
+   {
+    "trials": 10,
+    "normal half-width (pts)": 31.0,
+    "Wilson interval (%)": "23.7-76.3",
+    "normal coverage": 0.89,
+    "Wilson coverage": 0.978
+   },
+   {
+    "trials": 20,
+    "normal half-width (pts)": 21.9,
+    "Wilson interval (%)": "29.9-70.1",
+    "normal coverage": 0.959,
+    "Wilson coverage": 0.959
+   },
+   {
+    "trials": 50,
+    "normal half-width (pts)": 13.9,
+    "Wilson interval (%)": "36.6-63.4",
+    "normal coverage": 0.936,
+    "Wilson coverage": 0.936
+   },
+   {
+    "trials": 100,
+    "normal half-width (pts)": 9.8,
+    "Wilson interval (%)": "40.4-59.6",
+    "normal coverage": 0.942,
+    "Wilson coverage": 0.942
+   },
+   {
+    "trials": 385,
+    "normal half-width (pts)": 5.0,
+    "Wilson interval (%)": "45.0-55.0",
+    "normal coverage": 0.949,
+    "Wilson coverage": 0.949
+   }
+  ],
+  "sample_size": [
+   {
+    "A": 0.5,
+    "B": 0.6,
+    "trials per policy": 385,
+    "simulated power at that n": 0.795
+   },
+   {
+    "A": 0.5,
+    "B": 0.7,
+    "trials per policy": 91,
+    "simulated power at that n": 0.799
+   },
+   {
+    "A": 0.5,
+    "B": 0.8,
+    "trials per policy": 36,
+    "simulated power at that n": 0.788
+   },
+   {
+    "A": 0.8,
+    "B": 0.9,
+    "trials per policy": 197,
+    "simulated power at that n": 0.808
+   },
+   {
+    "A": 0.9,
+    "B": 0.95,
+    "trials per policy": 432,
+    "simulated power at that n": 0.81
+   }
+  ],
+  "power_n20": [
+   {
+    "B": 0.6,
+    "gap (pts)": 10.0,
+    "power, normal approx": 0.096,
+    "power, simulated": 0.087
+   },
+   {
+    "B": 0.7,
+    "gap (pts)": 20.0,
+    "power, normal approx": 0.248,
+    "power, simulated": 0.241
+   },
+   {
+    "B": 0.8,
+    "gap (pts)": 30.0,
+    "power, normal approx": 0.512,
+    "power, simulated": 0.532
+   },
+   {
+    "B": 0.9,
+    "gap (pts)": 40.0,
+    "power, normal approx": 0.813,
+    "power, simulated": 0.84
+   }
+  ]
+ }
+}

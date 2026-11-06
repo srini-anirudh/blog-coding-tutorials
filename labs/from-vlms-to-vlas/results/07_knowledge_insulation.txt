@@ -1,0 +1,14 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0
+# command: python labs/from-vlms-to-vlas/scripts/07_knowledge_insulation.py
+
+Pretraining (pointing, 20 colours): 2000 steps. Robot training (flow matching, colours 0-4): 1500 steps. Errors are mean distances; positions lie in [-1, 1]^2.
+Reference errors: chunk that does not move 1.043; going to a random other object 1.041.
+seed 0: pretrained pointing error 0.0116
+seed 1: pretrained pointing error 0.0169
+
+Mean over 2 seeds (min-max):
+variant    action_err_seen      action_err_unseen    pointing_err_all   
+joint      0.037 (0.034-0.039)  0.523 (0.520-0.527)  0.803 (0.706-0.900)
+joint+web  0.033 (0.032-0.035)  0.545 (0.543-0.547)  0.022 (0.020-0.025)
+insulated  0.046 (0.045-0.046)  0.574 (0.516-0.632)  0.019 (0.017-0.022)
+frozen     0.048 (0.045-0.051)  0.645 (0.624-0.667)  0.014 (0.012-0.017)

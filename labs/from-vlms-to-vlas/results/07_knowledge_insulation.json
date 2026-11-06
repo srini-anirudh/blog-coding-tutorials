@@ -1,0 +1,82 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0",
+ "command": "python labs/from-vlms-to-vlas/scripts/07_knowledge_insulation.py",
+ "results": {
+  "per_seed": [
+   {
+    "seed": 0,
+    "pretrained pointing_err": 0.0116,
+    "joint": {
+     "action_err_seen": 0.034,
+     "action_err_unseen": 0.5199,
+     "pointing_err_all": 0.706
+    },
+    "joint+web": {
+     "action_err_seen": 0.0317,
+     "action_err_unseen": 0.5469,
+     "pointing_err_all": 0.0199
+    },
+    "insulated": {
+     "action_err_seen": 0.0458,
+     "action_err_unseen": 0.5158,
+     "pointing_err_all": 0.0165
+    },
+    "frozen": {
+     "action_err_seen": 0.0454,
+     "action_err_unseen": 0.6239,
+     "pointing_err_all": 0.0116
+    }
+   },
+   {
+    "seed": 1,
+    "pretrained pointing_err": 0.0169,
+    "joint": {
+     "action_err_seen": 0.0391,
+     "action_err_unseen": 0.5266,
+     "pointing_err_all": 0.9004
+    },
+    "joint+web": {
+     "action_err_seen": 0.035,
+     "action_err_unseen": 0.5429,
+     "pointing_err_all": 0.0245
+    },
+    "insulated": {
+     "action_err_seen": 0.0455,
+     "action_err_unseen": 0.6325,
+     "pointing_err_all": 0.0216
+    },
+    "frozen": {
+     "action_err_seen": 0.051,
+     "action_err_unseen": 0.667,
+     "pointing_err_all": 0.0169
+    }
+   }
+  ],
+  "summary": [
+   {
+    "variant": "joint",
+    "action_err_seen": "0.037 (0.034-0.039)",
+    "action_err_unseen": "0.523 (0.520-0.527)",
+    "pointing_err_all": "0.803 (0.706-0.900)"
+   },
+   {
+    "variant": "joint+web",
+    "action_err_seen": "0.033 (0.032-0.035)",
+    "action_err_unseen": "0.545 (0.543-0.547)",
+    "pointing_err_all": "0.022 (0.020-0.025)"
+   },
+   {
+    "variant": "insulated",
+    "action_err_seen": "0.046 (0.045-0.046)",
+    "action_err_unseen": "0.574 (0.516-0.632)",
+    "pointing_err_all": "0.019 (0.017-0.022)"
+   },
+   {
+    "variant": "frozen",
+    "action_err_seen": "0.048 (0.045-0.051)",
+    "action_err_unseen": "0.645 (0.624-0.667)",
+    "pointing_err_all": "0.014 (0.012-0.017)"
+   }
+  ]
+ }
+}
