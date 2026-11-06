@@ -1,0 +1,10 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+command: python labs/an-image-is-a-sentence/scripts/04_wallclock.py --device cpu
+
+== Part 1: one block forward, batch 4, torch.float32, inference mode, median of 10 ==
+block                            GFLOPs/sample        ms   GFLOP/s
+ViT global, 3136 tokens                  4.470    247.75        72
+Swin W-MSA, M=7                          0.753     30.47        99
+Swin SW-MSA, M=7, shift 3                0.753     47.40        64
+PVT SRA, R=8                             0.697     24.01       116
+ViT global, 196 tokens, D=384            0.753     15.44       195

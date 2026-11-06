@@ -1,0 +1,36 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+command: python labs/an-image-is-a-sentence/scripts/01_tokens.py
+
+== Patchify: Conv2d(3, 768, kernel=16, stride=16) vs reshape + one matmul ==
+tokens N = 196 (224^2 / 16^2 = 196), width D = 768
+max |conv - matmul| = 3.10e-06  (float32 rounding only)
+CvT overlapping embed, kernel 7 stride 4: 56x56 tokens; each sees 49 pixels, stride area is 16, so neighbouring tokens share pixels
+
+== Permutation equivariance of a ViT block (196 tokens, D=64) ==
+no positions:   max |block(shuffled) - shuffled(block)| = 4.77e-07
+with positions: max |block(shuffled + pos) - shuffled(block + pos)| = 6.65
+
+== Parameter split in one ViT-B block (D=768) ==
+attention 2,362,368 (4D^2 = 2,359,296 + biases), MLP 4,722,432 (8D^2 = 4,718,592 + biases)
+MLP share of attention + MLP weights: 0.6666
+
+== Inside one head: why divide by sqrt(d) (d=64, 197 keys, q, k ~ N(0, 1)) ==
+score variance without scale 63.6, with scale 0.994
+  scaled=False: row entropy 0.80 nats (uniform = log 197 = 5.28), mean max weight 0.727
+  scaled=True : row entropy 4.79 nats (uniform = log 197 = 5.28), mean max weight 0.051
+
+== Mean attention distance at initialisation, 14x14 patches of 16 px (224 px image) ==
+uniform attention (reference):     116.5 px
+fresh MHSA, 9 heads:               116.5 px (mean over heads)
+fresh GPSA, gate sigmoid(1)=0.73:  46.1 px (heads 40.2 to 48.7)
+GPSA positional term only:         20.2 px (heads 12.2 to 23.8)
+  centre head, query (7,7): weight on itself 0.318, on the 3x3 neighbourhood 0.959
+
+== Swin patch merging vs PixelUnshuffle ==
+(2, 8, 8, 96) -> (2, 4, 4, 384); max |merge[perm] - pixel_unshuffle| = 0.0e+00: same numbers, reordered
+so Linear(4C, 2C) after merging is a 1x1 conv after PixelUnshuffle with its input channels permuted
+Swin relative position bias table, M=7: (2M-1)^2 = 169 entries per head
+
+== Video: 16 frames at 224^2, patch 16 ==
+tubelet depth t=1: 3136 tokens, joint attention scores per head per layer 9,834,496
+tubelet depth t=2: 1568 tokens, joint attention scores per head per layer 2,458,624

@@ -1,0 +1,61 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132",
+ "command": "python labs/an-image-is-a-sentence/scripts/04_wallclock.py --device cuda",
+ "blocks": {
+  "ViT global, 3136 tokens": {
+   "gflops_per_sample": 4.470079488,
+   "ms": 2.1962845348753035,
+   "gflop_per_s": 130258.66306901023
+  },
+  "Swin W-MSA, M=7": {
+   "gflops_per_sample": 0.75264,
+   "ms": 11.395239969715476,
+   "gflop_per_s": 4227.112384470716
+  },
+  "Swin SW-MSA, M=7, shift 3": {
+   "gflops_per_sample": 0.75264,
+   "ms": 40.531272476073354,
+   "gflop_per_s": 1188.4393718069268
+  },
+  "PVT SRA, R=8": {
+   "gflops_per_sample": 0.696643584,
+   "ms": 1.4255389687605202,
+   "gflop_per_s": 31276.022860859426
+  },
+  "ViT global, 196 tokens, D=384": {
+   "gflops_per_sample": 0.75264,
+   "ms": 0.6209674756973982,
+   "gflop_per_s": 77570.82598553531
+  }
+ },
+ "attention_memory": {
+  "224": {
+   "naive_mib": 36.81884765625,
+   "naive_ms": 2.5202110409736633,
+   "sdpa_mib": 36.81884765625,
+   "sdpa_ms": 1.2248700368218124,
+   "scores_mib": 0.8882675170898438
+  },
+  "512": {
+   "naive_mib": 103.69775390625,
+   "naive_ms": 1.4251439715735614,
+   "sdpa_mib": 43.86767578125,
+   "sdpa_ms": 0.8987080072984099,
+   "scores_mib": 24.046897888183594
+  },
+  "768": {
+   "naive_mib": 504.09521484375,
+   "naive_ms": 1.9575449987314641,
+   "sdpa_mib": 61.88818359375,
+   "sdpa_ms": 1.5322910621762276,
+   "scores_mib": 121.6054916381836
+  },
+  "1024": {
+   "naive_mib": 1566.76025390625,
+   "naive_ms": 6.139713455922902,
+   "sdpa_mib": 107.38818359375,
+   "sdpa_ms": 5.59025292750448,
+   "scores_mib": 384.1875228881836
+  }
+ }
+}

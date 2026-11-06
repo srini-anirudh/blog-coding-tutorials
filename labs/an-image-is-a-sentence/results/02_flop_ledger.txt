@@ -1,0 +1,51 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+command: python labs/an-image-is-a-sentence/scripts/02_flop_ledger.py
+
+== ViT block FLOPs, D=768, measured vs 24ND^2 + 4N^2D ==
+ image     N   linear meas.        formula  attention meas.        formula attn share
+   224   197  2,788,687,872  2,788,687,872      119,221,248    119,221,248      0.041
+   384   577  8,167,882,752  8,167,882,752    1,022,757,888  1,022,757,888      0.111
+   512  1025 14,509,670,400 14,509,670,400    3,227,520,000  3,227,520,000      0.182
+  1024  4097 57,996,214,272 57,996,214,272   51,564,776,448 51,564,776,448      0.471
+  1088  4625 65,470,464,000 65,470,464,000   65,712,000,000 65,712,000,000      0.501
+crossover N = 6D = 4608 tokens = 67.9^2 patches = 1086 px at patch 16
+
+== Swin attention sublayer, MACs (FLOPs / 2), measured vs Swin eq. (1) and (2) ==
+stage 1: h=w=56, D=96
+  projections 4hwD^2:   global    115.6 M   window    115.6 M   (formula 115.6 M)
+  attention:            global   1888.2 M   window     29.5 M   (formulas 1888.2 M and 29.5 M)
+  sublayer total:       global   2003.8 M   window    145.1 M   ratio 13.8x; shifted window 145.1 M (the shift adds no MACs)
+  score memory / head:  global 9.83 M   window 0.15 M
+stage 4: h=w=7, D=768
+  projections 4hwD^2:   global    115.6 M   window    115.6 M   (formula 115.6 M)
+  attention:            global      3.7 M   window      3.7 M   (formulas 3.7 M and 3.7 M)
+  sublayer total:       global    119.3 M   window    119.3 M   ratio 1.0x; shifted window 119.3 M (the shift adds no MACs)
+  score memory / head:  global 0.00 M   window 0.00 M
+stage 1 full block, MLP included: global 2235.0 M MACs, window 376.3 M MACs, ratio 5.9x (the post's 13.8x leaves the MLP out)
+stage 4: attention is 0.031 of the attention sublayer (3.7 M vs 115.6 M MACs)
+
+== PVT stage 1, 56x56 tokens, D=64 ==
+global attention term: 2.52 GFLOPs per layer (post: 4 x 3136^2 x 64 = 2.52 G)
+R=8: attention    39.3 M (post 4N^2D/R^2    39.3 M) | rest  283.4 M (op by op  283.4 M, post 24ND^2 + ND^2/R^2  308.5 M)
+R=4: attention   157.4 M (post 4N^2D/R^2   157.4 M) | rest  285.8 M (op by op  285.8 M, post 24ND^2 + ND^2/R^2  309.1 M)
+R=2: attention   629.4 M (post 4N^2D/R^2   629.4 M) | rest  295.4 M (op by op  295.4 M, post 24ND^2 + ND^2/R^2  311.5 M)
+R=1: attention  2517.6 M (post 4N^2D/R^2  2517.6 M) | rest  308.3 M (op by op  308.3 M, post 24ND^2 + ND^2/R^2  321.1 M)
+SRA score matrix at R=8: (3136, 49), N x N/R^2, not square
+
+== MViT pooling attention, 56x56 tokens, D=96 ==
+stride_q=1 stride_kv=1: output 3136 tokens (56x56), keys 3136, attention  3776.4 M FLOPs, pooling convs 0.00 M
+stride_q=1 stride_kv=4: output 3136 tokens (56x56), keys  196, attention   236.0 M FLOPs, pooling convs 1.88 M
+stride_q=2 stride_kv=1: output  784 tokens (28x28), keys 3136, attention   944.1 M FLOPs, pooling convs 1.35 M
+stride_q=2 stride_kv=4: output  784 tokens (28x28), keys  196, attention    59.0 M FLOPs, pooling convs 3.24 M
+
+== Space-time attention, N=196 patches per frame, D=768 ==
+T=8: pairs per head joint 2.46 M, divided 0.32 M, ratio 7.7x
+      measured attention FLOPs ratio 7.7x; projection + MLP: joint 24 TND^2, divided 32 TND^2 (post's table: 24 and 48)
+T=32: pairs per head joint 39.34 M, divided 1.43 M, ratio 27.5x
+      measured attention FLOPs ratio 27.5x; projection + MLP: joint 24 TND^2, divided 32 TND^2 (post's table: 24 and 48)
+
+== Score-matrix and activation memory, in elements per sample ==
+ViT-B, 224^2, patch 16: 12 x 197^2 = 465,708 scores per layer = 1 MiB in fp16 (1 MB)
+ViT-B, 1024^2, patch 16: 12 x 4097^2 = 201,424,908 scores per layer = 384 MiB in fp16 (403 MB)
+ViT-L, 224^2: 13ND x L = 62.9 M (126 MB fp16), naive scores hN^2 x L = 14.9 M, scores / everything else = 0.24
+ViT-L, 1024^2: 13ND x L = 1,308.9 M (2,618 MB fp16), naive scores hN^2 x L = 6,445.6 M, scores / everything else = 4.92

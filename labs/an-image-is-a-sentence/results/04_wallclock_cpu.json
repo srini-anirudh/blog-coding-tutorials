@@ -1,0 +1,31 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/an-image-is-a-sentence/scripts/04_wallclock.py --device cpu",
+ "blocks": {
+  "ViT global, 3136 tokens": {
+   "gflops_per_sample": 4.470079488,
+   "ms": 247.75166052859277,
+   "gflop_per_s": 72.17032537279988
+  },
+  "Swin W-MSA, M=7": {
+   "gflops_per_sample": 0.75264,
+   "ms": 30.470431491266936,
+   "gflop_per_s": 98.80267041386828
+  },
+  "Swin SW-MSA, M=7, shift 3": {
+   "gflops_per_sample": 0.75264,
+   "ms": 47.397516085766256,
+   "gflop_per_s": 63.51725256134442
+  },
+  "PVT SRA, R=8": {
+   "gflops_per_sample": 0.696643584,
+   "ms": 24.00572900660336,
+   "gflop_per_s": 116.07955481099886
+  },
+  "ViT global, 196 tokens, D=384": {
+   "gflops_per_sample": 0.75264,
+   "ms": 15.440439514350146,
+   "gflop_per_s": 194.97890569773122
+  }
+ }
+}

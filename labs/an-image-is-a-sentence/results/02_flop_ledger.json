@@ -1,0 +1,216 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/an-image-is-a-sentence/scripts/02_flop_ledger.py",
+ "vit_block": [
+  {
+   "px": 224,
+   "N": 197,
+   "meas_linear": 2788687872,
+   "meas_attention": 119221248,
+   "meas_total": 2907909120,
+   "formula": {
+    "linear": 2788687872,
+    "attention": 119221248
+   }
+  },
+  {
+   "px": 384,
+   "N": 577,
+   "meas_linear": 8167882752,
+   "meas_attention": 1022757888,
+   "meas_total": 9190640640,
+   "formula": {
+    "linear": 8167882752,
+    "attention": 1022757888
+   }
+  },
+  {
+   "px": 512,
+   "N": 1025,
+   "meas_linear": 14509670400,
+   "meas_attention": 3227520000,
+   "meas_total": 17737190400,
+   "formula": {
+    "linear": 14509670400,
+    "attention": 3227520000
+   }
+  },
+  {
+   "px": 1024,
+   "N": 4097,
+   "meas_linear": 57996214272,
+   "meas_attention": 51564776448,
+   "meas_total": 109560990720,
+   "formula": {
+    "linear": 57996214272,
+    "attention": 51564776448
+   }
+  },
+  {
+   "px": 1088,
+   "N": 4625,
+   "meas_linear": 65470464000,
+   "meas_attention": 65712000000,
+   "meas_total": 131182464000,
+   "formula": {
+    "linear": 65470464000,
+    "attention": 65712000000
+   }
+  }
+ ],
+ "swin": {
+  "stage 1": {
+   "global": {
+    "linear": 231211008,
+    "attention": 3776446464,
+    "total": 4007657472
+   },
+   "window": {
+    "linear": 231211008,
+    "attention": 59006976,
+    "total": 290217984
+   },
+   "shifted": {
+    "linear": 231211008,
+    "attention": 59006976,
+    "total": 290217984
+   },
+   "formula_global": {
+    "linear": 115605504,
+    "attention": 1888223232
+   },
+   "formula_window": {
+    "linear": 115605504,
+    "attention": 29503488
+   }
+  },
+  "stage 4": {
+   "global": {
+    "linear": 231211008,
+    "attention": 7375872,
+    "total": 238586880
+   },
+   "window": {
+    "linear": 231211008,
+    "attention": 7375872,
+    "total": 238586880
+   },
+   "shifted": {
+    "linear": 231211008,
+    "attention": 7375872,
+    "total": 238586880
+   },
+   "formula_global": {
+    "linear": 115605504,
+    "attention": 3687936
+   },
+   "formula_window": {
+    "linear": 115605504,
+    "attention": 3687936
+   }
+  }
+ },
+ "pvt": {
+  "8": {
+   "measured": {
+    "linear": 257703936,
+    "conv": 25690112,
+    "attention": 39337984,
+    "total": 322732032
+   },
+   "op_by_op": {
+    "linear": 257703936,
+    "conv": 25690112,
+    "attention": 39337984
+   },
+   "post_row": {
+    "rest": 308482048,
+    "attention": 39337984
+   }
+  },
+  "4": {
+   "measured": {
+    "linear": 260112384,
+    "conv": 25690112,
+    "attention": 157351936,
+    "total": 443154432
+   },
+   "op_by_op": {
+    "linear": 260112384,
+    "conv": 25690112,
+    "attention": 157351936
+   },
+   "post_row": {
+    "rest": 309084160,
+    "attention": 157351936
+   }
+  },
+  "2": {
+   "measured": {
+    "linear": 269746176,
+    "conv": 25690112,
+    "attention": 629407744,
+    "total": 924844032
+   },
+   "op_by_op": {
+    "linear": 269746176,
+    "conv": 25690112,
+    "attention": 629407744
+   },
+   "post_row": {
+    "rest": 311492608,
+    "attention": 629407744
+   }
+  },
+  "1": {
+   "measured": {
+    "linear": 308281344,
+    "attention": 2517630976,
+    "total": 2825912320
+   },
+   "op_by_op": {
+    "linear": 308281344,
+    "conv": 0,
+    "attention": 2517630976
+   },
+   "post_row": {
+    "rest": 321126400,
+    "attention": 2517630976
+   }
+  }
+ },
+ "video": {
+  "8": {
+   "pairs": {
+    "joint": 2458624,
+    "divided": 319872
+   },
+   "joint": {
+    "linear": 22196256768,
+    "attention": 7552892928,
+    "total": 29749149696
+   },
+   "divided": {
+    "linear": 29595009024,
+    "attention": 982646784,
+    "total": 30577655808
+   }
+  },
+  "32": {
+   "pairs": {
+    "joint": 39337984,
+    "divided": 1430016
+   },
+   "joint": {
+    "linear": 88785027072,
+    "attention": 120846286848,
+    "total": 209631313920
+   },
+   "divided": {
+    "linear": 118380036096,
+    "attention": 4393009152,
+    "total": 122773045248
+   }
+  }
+ }
+}
