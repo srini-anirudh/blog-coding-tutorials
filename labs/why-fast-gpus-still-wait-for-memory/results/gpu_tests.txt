@@ -1,0 +1,3 @@
+# NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, Triton 3.9.0
+# command: python -m pytest labs/why-fast-gpus-still-wait-for-memory/tests/test_gpu.py -m gpu
+22 passed, 1 warning in 17.26s

@@ -1,0 +1,13 @@
+# NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/why-fast-gpus-still-wait-for-memory/scripts/04_compute_ceilings.py
+
+## Square matmul, n = 8192
+                  pipe   TFLOP/s   spec  % of spec
+      bf16 tensor core     701.9    989      71.0%
+  fp8 e4m3 tensor core    1253.0   1979      63.3%
+      tf32 tensor core     382.5    495      77.3%
+  fp32 matmul, no TF32      51.6     67      77.2%
+      Triton FMA x4096      63.6     67      95.0%
+
+## The cliff between tensor cores and CUDA cores
+bf16 tensor core / fp32 CUDA core: measured 11.0x, spec 14.8x

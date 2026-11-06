@@ -1,0 +1,69 @@
+# CPU only (AMD EPYC 7R13 Processor, 8 threads), torch 2.15.0+cu132
+# command: python labs/why-fast-gpus-still-wait-for-memory/scripts/01_ridge_points.py
+
+## One operation, two costs (bf16)
+vector add      I = 0.167 FLOP/B (any n)
+matmul n=4096  I = 1365 FLOP/B   ratio 8,192x
+
+## Table 1: ridge points I* = pi / beta at HBM (FLOP/B)
+accelerator      beta TB/s   bf16    fp8   fp32
+A100 SXM 80GB         2.04    153      -    9.6
+H100 SXM5             3.35    295    591   20.0
+H200 SXM              4.80    206    412   13.9
+B200 (spec)           8.00    281    562   10.0
+MI300X                5.30    247    493   30.8
+L40S                  0.86    421    852  106.5
+RTX 4090              1.01    163    327   81.8
+
+## Overlap: at the ridge, the serial model reaches 0.50 of the overlapped roof
+RMSNorm at I = 2 can reach 0.68% of H100 bf16 peak
+
+## GEMM
+square bf16 GEMM reaches the H100 ridge at n = 886
+4096^3 compulsory I = 1365, 4.6x past the ridge
+tile 128x128: tiled I -> 64 FLOP/B
+tile 256x256: tiled I -> 128 FLOP/B
+tile needed to reach the ridge: T = 590
+
+## Table 2: a d x d projection, d = 8192, bf16
+M =  32768  I =  3640.9  12.3x over
+M =    512  I =   455.1  1.5x over
+M =     64  I =    63.0  4.7x under
+M =      1  I =     1.0  295.3x under
+
+## Decode economics, 70B parameters, bf16, H100
+batch-1 step = 41.8 ms, 24 tokens/s
+B* = s I* / 2 = 295
+KV cache: 320 KiB per token, 2.68 GB per 8k sequence
+batch where KV traffic passes weight traffic: 52
+
+## Table 3: elementwise floor, bf16 storage
+bf16 -> fp32 cast      f= 0  r+w=2  6 B/elt  I=0.00  0.00% of peak
+residual add           f= 1  r+w=3  6 B/elt  I=0.17  0.06% of peak
+SwiGLU (elementwise)   f= 6  r+w=3  6 B/elt  I=1.00  0.34% of peak
+RMSNorm                f= 5  r+w=2  4 B/elt  I=1.25  0.42% of peak
+softmax (online)       f= 6  r+w=2  4 B/elt  I=1.50  0.51% of peak
+LayerNorm              f= 9  r+w=2  4 B/elt  I=2.25  0.76% of peak
+GELU (tanh)            f=12  r+w=2  4 B/elt  I=3.00  1.02% of peak
+RMSNorm on (8, 8192, 8192) bf16: 0.64 ms at 3.35 TB/s
+
+## Attention, one head, bf16
+naive, N -> inf: I -> d/s = 64 (N=4096, d=128: 62.1)
+compulsory at N = 2048: I = N/s = 1024
+FA2 tiled, Br = 128, N = 65536: I = 128 (limit 2Br/s = 128)
+decode: I = 1; GQA g=8: I = 8
+
+## Optimizers, fp32 master weights, bytes per parameter
+sgd            14 B (with bf16 weight copy)   12 B (without)
+sgd_momentum   22 B (with bf16 weight copy)   20 B (without)
+adam           30 B (with bf16 weight copy)   28 B (without)
+Adam I = 0.40; 7B step = 63 ms at 3.35 TB/s
+
+## Little's law, H100, 600 ns HBM latency
+bytes in flight = 2.01 MB, 14.9 KiB per SM, 119 128-byte requests per SM
+
+## The next wall: ridge per link, bf16
+HBM3             I* = 295
+NVLink 4         I* = 2,198
+PCIe Gen5 x16    I* = 15,453
+400 Gb/s fabric  I* = 19,780

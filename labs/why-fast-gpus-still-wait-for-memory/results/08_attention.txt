@@ -1,0 +1,22 @@
+# NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/why-fast-gpus-still-wait-for-memory/scripts/08_attention.py
+beta = 3.04 TB/s, bf16 pi = 702 TFLOP/s (measured (03_bandwidth, 04_compute_ceilings))
+
+## Part 1: prefill, batch 1, 16 heads, non-causal
+     N  I naive  naive ms  naive TF/s  flash ms  flash TF/s  speed-up
+   512     51.2     0.252         8.5     0.063        33.9      4.0x
+  1024     56.9     0.190        45.1     0.063       136.6      3.0x
+  2048     60.2     0.379        90.7     0.105       327.7      3.6x
+  4096     62.1     1.593        86.3     0.403       340.6      3.9x
+  8192     63.0     7.118        77.2     1.561       352.2      4.6x
+ 16384     63.5    19.754       111.3     6.523       337.1      3.0x
+Naive roof at I = 64: beta x 64 = 195 TFLOP/s. The naive model counts S and P as bf16 and four N^2 passes; the real kernels add a scale and softmax pass of their own.
+
+## Part 2: decode, batch 8, cache N = 32768, 8 KV heads, one new token
+KV cache read per step: 1.07 GB; model time at measured beta: 353 us
+  g  q heads     I  time us   TB/s  TFLOP/s
+  1        8     1      383   2.80     2.80
+  2       16     2      386   2.78     5.56
+  4       32     4      464   2.32     9.26
+  8       64     8      452   2.37    18.99
+g = 8 does 8x the FLOPs of g = 1 in 1.18x the time.

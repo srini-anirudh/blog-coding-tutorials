@@ -1,0 +1,13 @@
+# NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/why-fast-gpus-still-wait-for-memory/scripts/09_optimizers.py
+beta = 3.04 TB/s (measured (03_bandwidth, 04_compute_ceilings))
+
+## One optimizer step on 268 M fp32 parameters
+     optimizer  B/param  model ms  measured ms   TB/s  7B step ms
+           sgd       12      1.06         1.08   3.00          28
+  sgd_momentum       20      1.76         1.82   2.95          48
+          adam       28      2.47         2.58   2.91          67
+Adam / SGD: bytes 2.33x, time 2.40x. The 7B column scales the measured time linearly; it assumes one GPU holds all the state.
+
+## Muon's Newton-Schulz on one 4096 x 4096 bf16 matrix (5 iterations, 3 matmuls each)
+time 3.64 ms, 567 TFLOP/s (81% of measured bf16 pi). Fused AdamW on the same 16.8 M parameters at the measured rate: 0.161 ms.

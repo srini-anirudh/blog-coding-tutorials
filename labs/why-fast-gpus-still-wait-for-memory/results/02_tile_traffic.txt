@@ -1,0 +1,24 @@
+# CPU only (AMD EPYC 7R13 Processor, 8 threads), torch 2.15.0+cu132
+# command: python labs/why-fast-gpus-still-wait-for-memory/scripts/02_tile_traffic.py --n 1024 --wave 16
+
+M = N = K = 1024, bf16. W = 2.1 GFLOP. Q_compulsory = 6.3 MB, I = 341
+
+## Tile size sets the no-cache intensity (formula vs counted)
+    tile  Q formula MB  Q counted MB      I  limit T/s
+  32x32          136.3         136.3   15.8         16
+  64x64           69.2          69.2   31.0         32
+ 128x128          35.7          35.7   60.2         64
+ 256x256          18.9          18.9  113.8        128
+
+## A cache absorbs re-reads if the order lets it. Tile 128x128, Tk 64, 16 tiles in flight
+   cache    order      Q MB  hit rate       I  x compulsory
+    0 MB      row      35.7     0.00%      60          5.67
+    0 MB  grouped      35.7     0.00%      60          5.67
+    1 MB      row      12.6    68.75%     171          2.00
+    1 MB  grouped      12.6    68.75%     171          2.00
+    4 MB      row       6.3    87.50%     341          1.00
+    4 MB  grouped       6.3    87.50%     341          1.00
+   50 MB      row       6.3    87.50%     341          1.00
+   50 MB  grouped       6.3    87.50%     341          1.00
+
+The LRU model is far simpler than real L2 (sectored, partitioned, not LRU). It shows the direction only.

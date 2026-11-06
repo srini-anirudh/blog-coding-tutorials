@@ -1,0 +1,238 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "beta": 3043406733253.4717,
+ "part1": [
+  {
+   "op": "residual add x + r",
+   "bytes_per_elt": 6,
+   "t": 0.0010392800189079122,
+   "model": 0.0010584275301764993
+  },
+  {
+   "op": "cast bf16 -> fp32",
+   "bytes_per_elt": 6,
+   "t": 0.0010838138406926935,
+   "model": 0.0010584275301764993
+  },
+  {
+   "op": "SiLU",
+   "bytes_per_elt": 4,
+   "t": 0.0007066518258357393,
+   "model": 0.0007056183534509996
+  },
+  {
+   "op": "GELU (tanh)",
+   "bytes_per_elt": 4,
+   "t": 0.0007067916427833447,
+   "model": 0.0007056183534509996
+  },
+  {
+   "op": "softmax over last dim",
+   "bytes_per_elt": 4,
+   "t": 0.0020835951100225034,
+   "model": 0.0007056183534509996
+  },
+  {
+   "op": "RMSNorm F.rms_norm",
+   "bytes_per_elt": 4,
+   "t": 0.0010653777908492875,
+   "model": 0.0007056183534509996
+  }
+ ],
+ "part2": [
+  {
+   "breaks": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "kernels": 5,
+   "passes": 12,
+   "t": 0.004228005842729048,
+   "model": 0.004233710120705997
+  },
+  {
+   "breaks": [
+    true,
+    true,
+    true,
+    false
+   ],
+   "kernels": 4,
+   "passes": 10,
+   "t": 0.003516224048755787,
+   "model": 0.0035280917672549975
+  },
+  {
+   "breaks": [
+    true,
+    true,
+    false,
+    true
+   ],
+   "kernels": 4,
+   "passes": 10,
+   "t": 0.003511151349103009,
+   "model": 0.0035280917672549975
+  },
+  {
+   "breaks": [
+    true,
+    true,
+    false,
+    false
+   ],
+   "kernels": 3,
+   "passes": 8,
+   "t": 0.002812629237319484,
+   "model": 0.0028224734138039983
+  },
+  {
+   "breaks": [
+    true,
+    false,
+    true,
+    true
+   ],
+   "kernels": 4,
+   "passes": 10,
+   "t": 0.00351971435546875,
+   "model": 0.0035280917672549975
+  },
+  {
+   "breaks": [
+    true,
+    false,
+    true,
+    false
+   ],
+   "kernels": 3,
+   "passes": 8,
+   "t": 0.002801310076032366,
+   "model": 0.0028224734138039983
+  },
+  {
+   "breaks": [
+    true,
+    false,
+    false,
+    true
+   ],
+   "kernels": 3,
+   "passes": 8,
+   "t": 0.002801897684733073,
+   "model": 0.0028224734138039983
+  },
+  {
+   "breaks": [
+    true,
+    false,
+    false,
+    false
+   ],
+   "kernels": 2,
+   "passes": 6,
+   "t": 0.002086722980846058,
+   "model": 0.0021168550603529986
+  },
+  {
+   "breaks": [
+    false,
+    true,
+    true,
+    true
+   ],
+   "kernels": 4,
+   "passes": 11,
+   "t": 0.003896718660990397,
+   "model": 0.0038809009439804976
+  },
+  {
+   "breaks": [
+    false,
+    true,
+    true,
+    false
+   ],
+   "kernels": 3,
+   "passes": 9,
+   "t": 0.003179165993967364,
+   "model": 0.003175282590529498
+  },
+  {
+   "breaks": [
+    false,
+    true,
+    false,
+    true
+   ],
+   "kernels": 3,
+   "passes": 9,
+   "t": 0.003177900695800781,
+   "model": 0.003175282590529498
+  },
+  {
+   "breaks": [
+    false,
+    true,
+    false,
+    false
+   ],
+   "kernels": 2,
+   "passes": 7,
+   "t": 0.0024799802731244993,
+   "model": 0.002469664237078498
+  },
+  {
+   "breaks": [
+    false,
+    false,
+    true,
+    true
+   ],
+   "kernels": 3,
+   "passes": 9,
+   "t": 0.0031878336588541667,
+   "model": 0.003175282590529498
+  },
+  {
+   "breaks": [
+    false,
+    false,
+    true,
+    false
+   ],
+   "kernels": 2,
+   "passes": 7,
+   "t": 0.0024671114408052882,
+   "model": 0.002469664237078498
+  },
+  {
+   "breaks": [
+    false,
+    false,
+    false,
+    true
+   ],
+   "kernels": 2,
+   "passes": 7,
+   "t": 0.002471985710991753,
+   "model": 0.002469664237078498
+  },
+  {
+   "breaks": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "kernels": 1,
+   "passes": 5,
+   "t": 0.0017538780905983666,
+   "model": 0.0017640458836274988
+  }
+ ],
+ "eager_s": 0.003847553405761719,
+ "compile_s": 0.0018003870157095104
+}

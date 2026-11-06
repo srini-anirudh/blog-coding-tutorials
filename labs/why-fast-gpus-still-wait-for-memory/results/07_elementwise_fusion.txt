@@ -1,0 +1,34 @@
+# NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/why-fast-gpus-still-wait-for-memory/scripts/07_elementwise_fusion.py
+beta = 3.04 TB/s (measured (03_bandwidth, 04_compute_ceilings))
+
+## Part 1: single ops on (8, 8192, 8192) bf16 (1.07 GB per tensor)
+                        op bytes/elt  model ms  measured ms  measured / model
+        residual add x + r         6     1.058        1.039              0.98
+         cast bf16 -> fp32         6     1.058        1.084              1.02
+                      SiLU         4     0.706        0.707              1.00
+               GELU (tanh)         4     0.706        0.707              1.00
+     softmax over last dim         4     0.706        2.084              2.95
+        RMSNorm F.rms_norm         4     0.706        1.065              1.51
+
+## Part 2: the fusion chain, 65536 tokens x d = 8192, bf16 (1.07 GB per tensor)
+                        boundaries after kernels passes  model ms  measured ms  speed-up
+        residual +, RMSNorm, scale, SiLU       5     12      4.23         4.23     1.00x
+                    RMSNorm, scale, SiLU       4     11      3.88         3.90     1.09x
+                 residual +, scale, SiLU       4     10      3.53         3.52     1.20x
+              residual +, RMSNorm, scale       4     10      3.53         3.52     1.20x
+               residual +, RMSNorm, SiLU       4     10      3.53         3.51     1.20x
+                             scale, SiLU       3      9      3.18         3.19     1.33x
+                          RMSNorm, scale       3      9      3.18         3.18     1.33x
+                           RMSNorm, SiLU       3      9      3.18         3.18     1.33x
+                     residual +, RMSNorm       3      8      2.82         2.81     1.50x
+                        residual +, SiLU       3      8      2.82         2.80     1.51x
+                       residual +, scale       3      8      2.82         2.80     1.51x
+                                 RMSNorm       2      7      2.47         2.48     1.70x
+                                    SiLU       2      7      2.47         2.47     1.71x
+                                   scale       2      7      2.47         2.47     1.71x
+                              residual +       2      6      2.12         2.09     2.03x
+                      none (fully fused)       1      5      1.76         1.75     2.41x
+
+All split -> fully fused: model 2.40x, measured 2.41x. Achieved bandwidth fully fused: 3.06 TB/s.
+Same chain in eager PyTorch: 3.85 ms. torch.compile: 1.80 ms. Triton fully fused: 1.75 ms.

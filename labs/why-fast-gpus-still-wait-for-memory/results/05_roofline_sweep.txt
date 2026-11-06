@@ -1,0 +1,23 @@
+# NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/why-fast-gpus-still-wait-for-memory/scripts/05_roofline_sweep.py
+ceilings: beta = 3.04 TB/s, fp32 pi = 63.6 TFLOP/s (measured (03_bandwidth, 04_compute_ceilings)); ridge I* = 20.9 FLOP/B
+
+ iters  I FLOP/B  time ms  TFLOP/s   TB/s   roof  serial  % of roof
+     0         0    0.356     0.00   3.01    0.0     0.0          -
+     8         2    0.357     6.02   3.01    6.1     5.6        99%
+    16         4    0.356    12.05   3.01   12.2    10.2        99%
+    24         6    0.357    18.07   3.01   18.3    14.2        99%
+    32         8    0.357    24.09   3.01   24.3    17.6        99%
+    48        12    0.357    36.13   3.01   36.5    23.2        99%
+    64        16    0.391    43.88   2.74   48.7    27.6        90%
+    80        20    0.431    49.87   2.49   60.9    31.1        82%
+    96        24    0.498    51.72   2.15   63.6    34.0        81%
+   128        32    0.606    56.67   1.77   63.6    38.5        89%
+   192        48    0.873    59.07   1.23   63.6    44.3        93%
+   256        64    1.134    60.61   0.95   63.6    47.9        95%
+   384        96    1.669    61.74   0.64   63.6    52.2        97%
+   512       128    2.207    62.28   0.49   63.6    54.7        98%
+  1024       256    4.367    62.94   0.25   63.6    58.8        99%
+  2048       512    8.679    63.35   0.12   63.6    61.1       100%
+
+Nearest point to the ridge: I = 20, measured 82% of the overlapped roof; the no-overlap model predicts 51%.
