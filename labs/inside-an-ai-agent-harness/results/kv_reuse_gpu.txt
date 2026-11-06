@@ -1,0 +1,35 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/inside-an-ai-agent-harness/scripts/kv_reuse.py --device cuda --model Qwen/Qwen2.5-0.5B-Instruct --dtype bfloat16 --prefix 8192 --delta 1024 --steps 23 --out kv_reuse_gpu.txt
+
+model Qwen/Qwen2.5-0.5B-Instruct, bfloat16, device cuda
+prefix 8192 tokens, 1024 new tokens per step, 23 steps, last request 31744 tokens
+exactness: max |logit difference| = 0.00e+00 over 35 requests; next-token argmax agrees on 35 of 35
+
+step  tokens |     no reuse computed, ms |        reuse computed, ms | reuse + edit computed, ms
+   1   9,216 |        9,216         39.1 |        9,216         42.9 |        9,216         39.3
+   2  10,240 |       10,240         44.0 |        1,024         25.0 |        1,024         25.0
+   3  11,264 |       11,264         49.0 |        1,024         24.6 |        1,024         24.9
+   4  12,288 |       12,288         55.3 |        1,024         25.2 |        1,024         24.9
+   5  13,312 |       13,312         60.7 |        1,024         24.7 |        1,024         24.9
+   6  14,336 |       14,336         66.8 |        1,024         25.1 |        1,024         25.0
+   7  15,360 |       15,360         72.2 |        1,024         25.1 |        1,024         25.0
+   8  16,384 |       16,384         78.1 |        1,024         25.2 |        1,024         25.2
+   9  17,408 |       17,408         83.9 |        1,024         25.0 |        1,024         24.7
+  10  18,432 |       18,432         92.7 |        1,024         25.1 |        1,024         24.6
+  11  19,456 |       19,456         97.3 |        1,024         25.3 |        1,024         24.2
+  12  20,480 |       20,480        103.8 |        1,024         25.3 |       20,416        265.4
+  13  21,504 |       21,504        110.8 |        1,024         25.1 |        1,024         26.4
+  14  22,528 |       22,528        122.0 |        1,024         24.9 |        1,024         25.3
+  15  23,552 |       23,552        126.9 |        1,024         24.7 |        1,024         25.4
+  16  24,576 |       24,576        134.0 |        1,024         24.9 |        1,024         25.4
+  17  25,600 |       25,600        141.6 |        1,024         24.9 |        1,024         25.3
+  18  26,624 |       26,624        149.6 |        1,024         25.5 |        1,024         25.5
+  19  27,648 |       27,648        162.7 |        1,024         25.8 |        1,024         25.1
+  20  28,672 |       28,672        168.1 |        1,024         25.8 |        1,024         25.7
+  21  29,696 |       29,696        174.7 |        1,024         26.4 |        1,024         26.5
+  22  30,720 |       30,720        186.9 |        1,024         27.5 |        1,024         27.4
+  23  31,744 |       31,744        193.8 |        1,024         27.6 |        1,024         27.6
+
+     no reuse: computed   471,040 tokens,    2.51 s total,   1.0x faster than no reuse
+        reuse: computed    31,744 tokens,    0.60 s total,   4.2x faster than no reuse
+ reuse + edit: computed    51,136 tokens,    0.84 s total,   3.0x faster than no reuse

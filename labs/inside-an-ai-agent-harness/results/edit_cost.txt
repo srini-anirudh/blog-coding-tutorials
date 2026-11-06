@@ -1,0 +1,41 @@
+hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0+cu132
+command: python labs/inside-an-ai-agent-harness/scripts/edit_cost.py
+
+p per attempt (schematic, as in the post): {'whole file': 0.98, 'search/replace': 0.85, 'unified diff': 0.7}
+Each size: 400 trials, a fresh file and line each time. Context cost = failed attempts and error messages, times 20 later steps.
+
+lines          format  m (clean)    m / p  measured E[m]  mean tries   1/p  context cost
+   10      whole file        118      120            118        1.02  1.02            26
+   10  search/replace         90      106            108        1.19  1.18           605
+   10    unified diff        118      168            169        1.43  1.43          1962
+   25      whole file        294      300            296        1.01  1.02            62
+   25  search/replace         89      105            105        1.18  1.18           539
+   25    unified diff        127      181            182        1.43  1.43          2134
+   50      whole file        580      592            590        1.03  1.02           204
+   50  search/replace         91      107            104        1.14  1.18           455
+   50    unified diff        131      187            189        1.44  1.43          2238
+  100      whole file       1171     1195           1188        1.03  1.02           348
+  100  search/replace         91      108            108        1.18  1.18           552
+  100    unified diff        130      186            181        1.40  1.43          1978
+  200      whole file       2338     2386           2370        1.03  1.02           654
+  200  search/replace         93      110            110        1.20  1.18           587
+  200    unified diff        135      193            196        1.45  1.43          2375
+  400      whole file       4635     4729           4657        1.01  1.02           458
+  400  search/replace         91      107            107        1.17  1.18           539
+  400    unified diff        137      195            194        1.42  1.43          2225
+  800      whole file       9236     9425           9354        1.02  1.02          2374
+  800  search/replace         95      112            114        1.22  1.18           655
+  800    unified diff        136      194            187        1.38  1.43          1986
+
+Cheapest format per file size (measured output tokens per landed edit):
+    10 lines: search/replace  (whole file 118, search/replace 108, unified diff 169)
+    25 lines: search/replace  (whole file 296, search/replace 105, unified diff 182)
+    50 lines: search/replace  (whole file 590, search/replace 104, unified diff 189)
+   100 lines: search/replace  (whole file 1188, search/replace 108, unified diff 181)
+   200 lines: search/replace  (whole file 2370, search/replace 110, unified diff 196)
+   400 lines: search/replace  (whole file 4657, search/replace 107, unified diff 194)
+   800 lines: search/replace  (whole file 9354, search/replace 114, unified diff 187)
+
+Break-even against whole-file rewrite, from the formula |F|* = m_patch * p_whole / p_patch (in tokens):
+   search/replace: m = 91 tokens -> whole file is cheaper below about 105 tokens of file
+     unified diff: m = 128 tokens -> whole file is cheaper below about 179 tokens of file

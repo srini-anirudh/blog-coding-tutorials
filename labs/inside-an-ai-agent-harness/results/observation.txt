@@ -1,0 +1,15 @@
+hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0+cu132
+command: python labs/inside-an-ai-agent-harness/scripts/observation.py
+
+Token budget per observation: 2000 (C10 estimate). 'yes' = the explaining line is in the context.
+'spill to handle' includes one follow-up query; its tokens are counted.
+
+                                output   lines    tokens |      everything |         first N |   head and tail |         summary | spill to handle |      C10 rescue
+                    grep, answer at 0%  40,001   680,032 | yes     680,032 | yes       1,873 | yes       1,879 |  no       1,748 | yes         931 | yes       1,397
+                   grep, answer at 50%  40,001   680,032 | yes     680,032 |  no       1,875 |  no       1,881 |  no       1,748 | yes         931 |  no       1,382
+                  grep, answer at 100%  40,001   680,032 | yes     680,032 |  no       1,875 | yes       1,879 |  no       1,748 | yes         931 | yes       1,397
+ pytest -s, failure in test 200 of 400   4,815    34,158 | yes      34,158 |  no       1,747 | yes       1,767 | yes         137 | yes         172 | yes         701
+             build log, error at 50.0%  20,002   239,923 | yes     239,923 |  no       1,825 |  no       1,823 | yes          65 | yes         103 | yes         998
+             build log, error at 99.9%  20,002   239,923 | yes     239,923 |  no       1,825 | yes       1,824 | yes          65 | yes         103 | yes         951
+
+Each cell: survived?, then tokens the observation adds to the context.

@@ -1,0 +1,49 @@
+hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0+cu132
+command: python labs/inside-an-ai-agent-harness/scripts/loop_cost.py
+
+Prefix P0 = 14000 tokens, growth delta = 2000 tokens per step, cached tokens billed at r = 0.1.
+Block-hashed prefix cache, 16-token blocks. Prefix warm from an earlier turn unless noted.
+
+1. The naive loop is quadratic (section 3)
+   K  closed-form T   sent (sim)  computed, cache on  billed, r=0.1  T / |C_1|
+   1         16,000       16,000               2,000          3,400        1.0
+  10        250,000      250,000              20,000         43,000       15.6
+  20        700,000      700,000              40,000        106,000       43.8
+  40      2,200,000    2,200,000              80,000        292,000      137.5
+  60      4,500,000    4,500,000             120,000        558,000      281.2
+K = 60 with a cold cache: computed 134,000 = P0 + K delta = 134,000
+K = 60: T / delta = 2,250
+
+2. Cache hit rate h, K = 60, r = 0.1: closed-form T_eff against the simulation, 400 seeds
+   (1000-token blocks here: P0 and delta are multiples of 1000, so the counts are the same, only faster)
+    h  closed form  simulated mean  std error  sim / closed
+ 0.00    4,500,000       4,500,000          0         1.000
+ 0.25    3,514,500       3,520,364     12,134         1.002
+ 0.50    2,529,000       2,538,594     14,935         1.004
+ 0.75    1,543,500       1,553,954     12,735         1.007
+ 0.90      952,200         953,514      8,895         1.001
+ 1.00      558,000         558,000          0         1.000
+
+3. A state change at step 20 of 40: append a message, or edit the block in place (section 5)
+  append: computed at step 20 =  1,232 tokens; whole turn computed = 53,168; sent = 1,324,048
+    edit: computed at step 20 = 20,688 tokens; whole turn computed = 72,624; sent = 1,319,680
+  Edit item 6 of a 40-item list (128 tokens each): recomputed 4,480 tokens = 35 items (items 6 to 40), reused 5 items
+
+4. Tool schemas in a fixed order, or in set-iteration order from a fresh process each call (section 5)
+     sorted:  1 distinct orders in 30 calls; cached  94.8% of 394,080 sent; computed 20,560
+  set order: 30 distinct orders in 30 calls; cached  15.3% of 394,080 sent; computed 333,680
+  (30 distinct set orders from 30 hash seeds, 20 tools of 160 tokens each)
+
+5. Compaction is a scheduled cache miss (section 16): K = 200, summary = 4000 tokens
+ threshold  compactions  max context     computed        cached  billed r=0.1  summary out
+      none            0      414,000      400,000    42,600,000     4,660,000            0
+    200000            2      202,000      408,000    20,548,000     2,462,800        8,000
+    100000            4      102,000      416,000    11,408,000     1,556,800       16,000
+     50000           11       52,000      444,000     6,850,000     1,129,000       44,000
+     30000           28       32,000      512,000     5,164,000     1,028,400      112,000
+     22000           66       24,000      664,000     4,914,000     1,155,400      264,000
+
+6. The tool-context tax (section 17): M = 300 tools, tau = 120 tokens each, K = 40 steps
+  closed form K M tau = 1,440,000 schema tokens
+     eager: schema tokens sent  1,440,000; turn sent   1,939,840; computed   20,480; billed r=0.1     212,416
+  deferred: schema tokens sent     14,160; turn sent     514,000; computed   20,720; billed r=0.1      70,048

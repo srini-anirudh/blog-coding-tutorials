@@ -1,0 +1,28 @@
+hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0+cu132
+command: python labs/inside-an-ai-agent-harness/scripts/kv_reuse.py
+
+model HuggingFaceTB/SmolLM2-135M-Instruct, float32, device cpu
+prefix 1024 tokens, 256 new tokens per step, 16 steps, last request 5120 tokens
+exactness: max |logit difference| = 4.01e-05 over 24 requests; next-token argmax agrees on 24 of 24
+
+step  tokens |     no reuse computed, ms |        reuse computed, ms | reuse + edit computed, ms
+   1   1,280 |        1,280       1964.2 |        1,280       1898.3 |        1,280       1801.7
+   2   1,536 |        1,536       2404.2 |          256        724.9 |          256        742.5
+   3   1,792 |        1,792       2819.1 |          256        756.1 |          256        752.1
+   4   2,048 |        2,048       2741.5 |          256        813.1 |          256        774.1
+   5   2,304 |        2,304       4129.4 |          256        831.9 |          256        762.8
+   6   2,560 |        2,560       4906.0 |          256        822.8 |          256        773.5
+   7   2,816 |        2,816       5115.7 |          256        873.6 |          256        813.7
+   8   3,072 |        3,072       5203.1 |          256        860.0 |          256        839.3
+   9   3,328 |        3,328       6068.8 |          256       1022.8 |        3,264       8541.3
+  10   3,584 |        3,584       6212.2 |          256        941.7 |          256       1135.1
+  11   3,840 |        3,840       6394.6 |          256        971.0 |          256       1034.2
+  12   4,096 |        4,096       6751.0 |          256        934.5 |          256       1039.6
+  13   4,352 |        4,352       9182.1 |          256       1064.3 |          256       1190.2
+  14   4,608 |        4,608       9115.8 |          256       1369.0 |          256       1308.3
+  15   4,864 |        4,864       8540.5 |          256       1173.6 |          256       1363.9
+  16   5,120 |        5,120       9220.4 |          256       1116.7 |          256       1254.1
+
+     no reuse: computed    51,200 tokens,   90.77 s total,   1.0x faster than no reuse
+        reuse: computed     5,120 tokens,   16.17 s total,   5.6x faster than no reuse
+ reuse + edit: computed     8,128 tokens,   24.13 s total,   3.8x faster than no reuse

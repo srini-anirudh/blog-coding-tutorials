@@ -1,0 +1,13 @@
+hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0+cu132
+command: python labs/inside-an-ai-agent-harness/scripts/code_action.py
+
+Scripted agents, real files. Input tokens = sum over model calls of the context sent (C10 estimate).
+ files  matches | JSON calls  JSON input JSON output | code calls code input code output | input ratio same repo
+     5        2 |          9       7,116         564 |          2        805         156 |        8.8x      True
+    10        5 |         17      24,145       1,279 |          2        829         156 |       29.1x      True
+    20        7 |         29      66,495       1,949 |          2        845         156 |       78.7x      True
+    40       15 |         57     256,423       4,049 |          2        909         156 |      282.1x      True
+    80       32 |        114   1,019,155       8,439 |          2      1,045         156 |      975.3x      True
+
+JSON calls = 1 list + n reads + one write per match + 1 final answer. Code calls = 1 program + 1 final answer.
+File contents pass through the context in the JSON lane. In the code lane they stay in program variables.
