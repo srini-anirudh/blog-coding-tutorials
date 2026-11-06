@@ -1,0 +1,30 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python scripts/08_whack_a_mole.py
+ResMLP d=1024 depth=8 batch=4096; 1650 GFLOP per step (6 x weights x batch). MFU against 989 TFLOP/s dense bf16, the post's harsh denominator.
+
+stage                   step ms profiled data wait GPU busy busy frac kernels mean kern    MFU speedup  diagnosis
+0 baseline                61.01    60.90   21.57ms  37.15ms      0.61     530    69.1us   2.7%   1.00x  input pipeline: the GPU waits in next()
+1 + input pipeline        37.75    37.99    0.07ms  36.96ms      0.98     530    69.1us   4.4%   1.62x  dense GPU work in fp32: tensor cores idle
+2 + bf16                  13.44    19.62    0.07ms   6.63ms      0.49     626    10.1us  12.4%   4.54x  gaps: CPU launch overhead
+3 + launch overhead        6.31    12.35    0.05ms   5.03ms      0.80     204    21.4us  26.4%   9.66x  dense GPU work: stop
+4 + CUDA graphs            4.86     5.17    0.04ms   4.95ms      1.00     217    21.4us  34.3%  12.55x  dense GPU work: stop
+
+step ms: unprofiled wall clock. profiled: the same step under torch.profiler. busy frac: kernel time from
+the trace divided by the unprofiled step, because the profiler slows a launch-bound step.
+After the last stage the GPU is busy 100% of the step: removing every gap could buy at most 1.00x.
+Top operators by self CUDA time, last stage:
+----------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                    Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  
+----------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+## Call CompiledFxGraph fou2pfzfsmld3...         4.69%       3.096ms         8.11%       5.350ms     535.028us      23.386ms        47.09%      23.470ms       2.347ms            10  
+                           ProfilerStep*         0.00%       0.000us         0.00%       0.000us       0.000us      17.875ms        35.99%      17.875ms       1.788ms            10  
+## Call CompiledFxGraph fbmpoldu4jv66...         3.50%       2.309ms         6.24%       4.121ms     412.104us      13.361ms        26.90%      13.522ms       1.352ms            10  
+nvjet_sm90_tst_256x128_64x4_1x2_h_bz_...         0.00%       0.000us         0.00%       0.000us       0.000us       8.200ms        16.51%       8.200ms      44.809us           183  
+nvjet_sm90_tst_256x128_64x4_1x2_h_bz_...         0.00%       0.000us         0.00%       0.000us       0.000us       7.883ms        15.87%       7.883ms      45.304us           174  
+nvjet_sm90_tst_256x128_64x4_1x2_h_bz_...         0.00%       0.000us         0.00%       0.000us       0.000us       7.563ms        15.23%       7.563ms      47.266us           160  
+void at::native::(anonymous namespace...         0.00%       0.000us         0.00%       0.000us       0.000us       7.125ms        14.35%       7.125ms     647.730us            11  
+               Optimizer.step#AdamW.step         0.00%       0.000us         0.00%       0.000us       0.000us       6.513ms        13.11%       6.513ms     651.271us            10  
+----------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 65.994ms
+Self CUDA time total: 49.660ms
+

@@ -1,0 +1,80 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "python scripts/03_roofline.py",
+ "cases": {
+  "64^3 matmul (one tiny kernel)": {
+   "flops": 524288.0,
+   "bytes": 24576.0,
+   "seconds": 3.931200131773949e-05,
+   "intensity": 21.333333333333332,
+   "achieved": 13336588889.546453,
+   "ceiling": 71466666666666.66,
+   "fraction_of_roof": 0.00018661271767089256,
+   "ridge": 295.2238805970149,
+   "regime": "below both roofs",
+   "bandwidth": 625152604.19749
+  },
+  "elementwise chain, 4 kernels": {
+   "flops": 738197504.0,
+   "bytes": 1476395008.0,
+   "seconds": 0.0005060960054397583,
+   "intensity": 0.5,
+   "achieved": 1458611599509.7876,
+   "ceiling": 1675000000000.0,
+   "fraction_of_roof": 0.8708128952297239,
+   "ridge": 295.2238805970149,
+   "regime": "bandwidth bound",
+   "bandwidth": 2917223199019.575
+  },
+  "same chain, torch.compile (1 kernel)": {
+   "flops": 738197504.0,
+   "bytes": 536870912.0,
+   "seconds": 0.0002106879949569702,
+   "intensity": 1.375,
+   "achieved": 3503747349965.3623,
+   "ceiling": 4606250000000.0,
+   "fraction_of_roof": 0.7606507136966866,
+   "ridge": 295.2238805970149,
+   "regime": "bandwidth bound",
+   "bandwidth": 2548179890883.9
+  },
+  "16 x 8192 @ 8192 x 8192 (skinny)": {
+   "flops": 2147483648.0,
+   "bytes": 134742016.0,
+   "seconds": 7.193600013852119e-05,
+   "intensity": 15.937743190661479,
+   "achieved": 29852697451411.934,
+   "ceiling": 53391439688715.95,
+   "fraction_of_roof": 0.5591289095304387,
+   "ridge": 295.2238805970149,
+   "regime": "bandwidth bound",
+   "bandwidth": 1873081846926.9695
+  },
+  "256 x 8192 @ 8192 x 8192 (skinny)": {
+   "flops": 34359738368.0,
+   "bytes": 142606336.0,
+   "seconds": 7.70079977810383e-05,
+   "intensity": 240.94117647058823,
+   "achieved": 446184024491809.44,
+   "ceiling": 807152941176470.6,
+   "fraction_of_roof": 0.552787460380769,
+   "ridge": 295.2238805970149,
+   "regime": "bandwidth bound",
+   "bandwidth": 1851837992275.5764
+  },
+  "8192^3 matmul": {
+   "flops": 1099511627776.0,
+   "bytes": 402653184.0,
+   "seconds": 0.0014325760006904601,
+   "intensity": 2730.6666666666665,
+   "achieved": 767506664390627.2,
+   "ceiling": 989000000000000.0,
+   "fraction_of_roof": 0.7760431389187333,
+   "ridge": 295.2238805970149,
+   "regime": "compute bound",
+   "bandwidth": 281069335103.9895
+  }
+ },
+ "measured_copy_tbps": 2.9274500769173146,
+ "measured_mm_tflops": 752.2163337522381
+}

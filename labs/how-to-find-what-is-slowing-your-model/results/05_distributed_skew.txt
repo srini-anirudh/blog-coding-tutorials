@@ -1,0 +1,22 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132, no GPU
+# command: python scripts/05_distributed_skew.py
+4 ranks, backend gloo, compute 40 ms per step, 16 MiB all-reduce, median of 12 steps.
+
+scenario      rank  compute all-reduce |  barrier transfer  (ms)
+balanced         0     40.1       21.8 |      0.8     20.6
+balanced         1     40.1       21.5 |      0.7     20.2
+balanced         2     40.1       21.6 |      0.6     20.2
+balanced         3     40.1       21.7 |      0.7     20.4
+              per-rank compute spread (max - min): 0.0 ms
+
+one rank slow    0     40.1       36.4 |     18.6     17.7
+one rank slow    1     40.1       36.4 |     18.6     17.7
+one rank slow    2     58.1       18.3 |      0.6     17.8
+one rank slow    3     40.1       36.3 |     18.7     17.7
+              per-rank compute spread (max - min): 18.0 ms
+
+Halve the message. Time roughly halves: bandwidth bound. Time stays put: latency bound. (rank 0)
+    67108864 B ->   33554432 B :  62.583 ->  47.312 ms  (ratio 0.76)
+    33554432 B ->   16777216 B :  47.312 ->  18.368 ms  (ratio 0.39)
+    16777216 B ->       4096 B :  18.368 ->   1.030 ms  (ratio 0.06)
+        4096 B ->       2048 B :   1.030 ->   0.980 ms  (ratio 0.95)

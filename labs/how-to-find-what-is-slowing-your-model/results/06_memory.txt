@@ -1,0 +1,18 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python scripts/06_memory.py
+Part 1: allocated, reserved, peak
+  1 GiB kept + 2 GiB temporary   allocated 3.00 GiB  reserved 3.00 GiB  peak 3.00 GiB
+  after del temporary            allocated 1.00 GiB  reserved 3.00 GiB  peak 3.00 GiB
+  after empty_cache()            allocated 1.00 GiB  reserved 1.00 GiB  peak 3.00 GiB
+
+Part 2: a 2.00 GiB cap, 400 x 4 MiB allocated, 80 kept, then ask for 1 GiB
+  interleaved, default              before: allocated 0.31 GiB, reserved 1.56 GiB, cached idle 1.25 GiB  ->  OOM
+    OOM numbers: requested 1.00 GiB, free on device 76.59 GiB, allocated 0.31 GiB, reserved but unallocated 1.25 GiB
+    verdict: fragmentation: enough cached-but-idle memory, in pieces too small; fix the allocator or shapes
+    message: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 79.18 GiB of which 76.59 GiB is free. Process <pid> has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 2.07 GiB memory in use. 2.00 GiB allowed; Of the allocated memory 320.00 MiB is allocated by PyTorch, and 1.25 GiB is reserved by PyTorch but unallocated
+  interleaved, expandable_segments  before: allocated 0.31 GiB, reserved 1.56 GiB, cached idle 1.25 GiB  ->  OOM
+    OOM numbers: requested 1.00 GiB, free on device 76.59 GiB, allocated 0.31 GiB, reserved but unallocated 1.25 GiB
+    verdict: fragmentation: enough cached-but-idle memory, in pieces too small; fix the allocator or shapes
+    message: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 79.18 GiB of which 76.59 GiB is free. Process <pid> has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 2.07 GiB memory in use. 2.00 GiB allowed; Of the allocated memory 320.00 MiB is allocated by PyTorch, and 1.25 GiB is reserved by PyTorch but unallocated. expandable_segments is enabled
+  long-lived first, default         before: allocated 0.31 GiB, reserved 1.56 GiB, cached idle 1.25 GiB  ->  ok
+    after: allocated 1.31 GiB, reserved 1.31 GiB

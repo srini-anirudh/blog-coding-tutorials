@@ -1,0 +1,6 @@
+traces/
+results/traces/
+*.pt
+*.json.gz
+__pycache__/
+results/*_quick.*

@@ -1,0 +1,7 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132 (offline and slow); NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2 (gpu)
+# command: python -m pytest labs/how-to-find-what-is-slowing-your-model -m "not slow and not gpu and not network"
+19 passed, 5 deselected in 2.23s
+# command: python -m pytest labs/how-to-find-what-is-slowing-your-model -m slow
+2 passed, 21 deselected in 29.48s (run before the last offline test was added)
+# command: python -m pytest tests/test_gpu.py -m gpu   (from the lab folder, on the H100)
+3 passed in 9.82s

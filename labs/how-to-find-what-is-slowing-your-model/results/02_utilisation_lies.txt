@@ -1,0 +1,9 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python scripts/02_utilisation_lies.py
+kernel                                     NVML util   TFLOP/s     GB/s % bf16 peak % HBM peak
+A  add_ on 4096 floats (graph of 200)           100%     0.004       32       0.00%       1.0%
+B  elementwise on 1 GiB fp32                    100%     0.379     3030       0.04%      90.5%
+C  8192^3 bf16 matmul                           100%   679.923      249      68.75%       7.4%
+
+Peaks are vendor numbers for H100 SXM (989 TFLOP/s dense bf16, 3.35 TB/s HBM3). Bytes are analytic:
+each operand read once and each output written once.

@@ -1,0 +1,19 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python scripts/07_decode_batching.py
+weights 3.00 GiB; reading them once at 3.35 TB/s takes 0.96 ms (vendor bandwidth)
+
+context batch  step ms  tokens/s KV / weights bytes model ms achieved GB/s
+    512     1    1.932       518         0.02          0.982          1702
+    512     4    1.914      2090         0.08          1.042          1823
+    512    16    1.948      8215         0.33          1.282          2205
+    512    32    2.075     15424         0.67          1.603          2588
+    512    64    2.819     22700         1.33          2.244          2666
+    512   128    4.247     30137         2.67          3.526          2781
+   4096     1    2.025       494         0.17          1.122          1856
+   4096     4    2.011      1989         0.67          1.603          2669
+   4096    16    4.097      3906         2.67          3.526          2883
+   4096    32    6.830      4685         5.33          6.090          2987
+   4096    64   12.229      5233        10.67         11.218          3073
+
+prefill of 4096 tokens, batch 1: 22.36 ms, I= 2218.67 FLOP/B    639.34 TFLOP/s       288 GB/s   64.6% of roof  -> compute bound
+decode, batch 1, context 512 (weights only): I=    1.00 FLOP/B      1.67 TFLOP/s      1667 GB/s   49.8% of roof  -> below both roofs

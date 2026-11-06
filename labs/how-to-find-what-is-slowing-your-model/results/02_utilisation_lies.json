@@ -1,0 +1,27 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "python scripts/02_utilisation_lies.py",
+ "rows": {
+  "A  add_ on 4096 floats (graph of 200)": {
+   "util_pct": 99.90625,
+   "calls": 19472,
+   "seconds": 4.002490635029972,
+   "tflops": 0.003985384065709513,
+   "gbps": 31.883072525676106
+  },
+  "B  elementwise on 1 GiB fp32": {
+   "util_pct": 100.0,
+   "calls": 5648,
+   "seconds": 4.002555546001531,
+   "tflops": 0.37878886078235074,
+   "gbps": 3030.310886258806
+  },
+  "C  8192^3 bf16 matmul": {
+   "util_pct": 99.8,
+   "calls": 2480,
+   "seconds": 4.0104374459479,
+   "tflops": 679.9230442154374,
+   "gbps": 248.99525544998926
+  }
+ }
+}

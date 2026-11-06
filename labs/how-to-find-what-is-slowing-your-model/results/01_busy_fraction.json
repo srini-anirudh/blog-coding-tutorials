@@ -1,0 +1,104 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "python scripts/01_busy_fraction.py",
+ "cases": {
+  "small (d=256, depth=12, batch=64, fp32)": {
+   "steps": [
+    {
+     "wall_us": 20899.60498046875,
+     "busy_fraction": 0.08195285165260978,
+     "largest_gap_us": 260.9609375,
+     "n_gaps": 822
+    },
+    {
+     "wall_us": 20879.35400390625,
+     "busy_fraction": 0.08212005837012336,
+     "largest_gap_us": 282.33740234375,
+     "n_gaps": 822
+    },
+    {
+     "wall_us": 20935.326171875,
+     "busy_fraction": 0.0819828821779724,
+     "largest_gap_us": 257.31396484375,
+     "n_gaps": 822
+    },
+    {
+     "wall_us": 21116.9990234375,
+     "busy_fraction": 0.08119927725955009,
+     "largest_gap_us": 278.78515625,
+     "n_gaps": 822
+    },
+    {
+     "wall_us": 20922.2451171875,
+     "busy_fraction": 0.08194809287120994,
+     "largest_gap_us": 278.56103515625,
+     "n_gaps": 822
+    },
+    {
+     "wall_us": 20794.9228515625,
+     "busy_fraction": 0.08245463123628105,
+     "largest_gap_us": 291.52099609375,
+     "n_gaps": 822
+    }
+   ],
+   "kernels": 4908,
+   "mean_us": 2.090153219233904,
+   "median_us": 1.44,
+   "busy_fraction": 0.08188580189909578,
+   "step_us": 20938.907145182293,
+   "gpu_busy_us_per_step": 1714.5992024739583,
+   "unprofiled_ms": 11.288368602981791,
+   "profiled_ms": 20.93890714518229,
+   "tflops": 0.21415778072319736
+  },
+  "large (d=4096, depth=12, batch=8192, bf16)": {
+   "steps": [
+    {
+     "wall_us": 179705.18505859375,
+     "busy_fraction": 0.9909017079647805,
+     "largest_gap_us": 143.30029296875,
+     "n_gaps": 1020
+    },
+    {
+     "wall_us": 176768.037109375,
+     "busy_fraction": 0.9909565148358546,
+     "largest_gap_us": 117.44970703125,
+     "n_gaps": 1020
+    },
+    {
+     "wall_us": 178314.046875,
+     "busy_fraction": 0.991114465993504,
+     "largest_gap_us": 107.87744140625,
+     "n_gaps": 1020
+    },
+    {
+     "wall_us": 180239.51513671875,
+     "busy_fraction": 0.9902189991455245,
+     "largest_gap_us": 230.10693359375,
+     "n_gaps": 1020
+    },
+    {
+     "wall_us": 179417.68896484375,
+     "busy_fraction": 0.9901206628941778,
+     "largest_gap_us": 280.58251953125,
+     "n_gaps": 1020
+    },
+    {
+     "wall_us": 176988.0810546875,
+     "busy_fraction": 0.9910297631877852,
+     "largest_gap_us": 110.03369140625,
+     "n_gaps": 1020
+    }
+   ],
+   "kernels": 5514,
+   "mean_us": 192.3854319912949,
+   "median_us": 14.24,
+   "busy_fraction": 0.9905464844535559,
+   "step_us": 178603.67488606772,
+   "gpu_busy_us_per_step": 176915.24226888022,
+   "unprofiled_ms": 177.66145530040376,
+   "profiled_ms": 178.60367488606772,
+   "tflops": 445.6118987175947
+  }
+ }
+}

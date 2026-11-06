@@ -1,0 +1,77 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "python scripts/06_memory.py",
+ "part1": {
+  "with_temp": {
+   "allocated": 3221225472,
+   "reserved": 3221225472,
+   "peak": 3221225472,
+   "cached_idle": 0
+  },
+  "after_del": {
+   "allocated": 1073741824,
+   "reserved": 3221225472,
+   "peak": 3221225472,
+   "cached_idle": 2147483648
+  },
+  "after_empty_cache": {
+   "allocated": 1073741824,
+   "reserved": 1073741824,
+   "peak": 3221225472,
+   "cached_idle": 0
+  }
+ },
+ "part2": {
+  "interleaved, default": {
+   "before": {
+    "allocated": 335544320,
+    "reserved": 1677721600,
+    "peak": 1677721600,
+    "cached_idle": 1342177280
+   },
+   "result": "OOM",
+   "oom": {
+    "requested": 1073741824,
+    "capacity": 85018877624,
+    "free": 82237886300,
+    "allocated": 335544320,
+    "reserved_unallocated": 1342177280
+   },
+   "diagnosis": "fragmentation: enough cached-but-idle memory, in pieces too small; fix the allocator or shapes",
+   "message": "CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 79.18 GiB of which 76.59 GiB is free. Process <pid> has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 2.07 GiB memory in use. 2.00 GiB allowed; Of the allocated memory 320.00 MiB is allocated by PyTorch, and 1.25 GiB is reserved by PyTorch but unallocated"
+  },
+  "interleaved, expandable_segments": {
+   "before": {
+    "allocated": 335544320,
+    "reserved": 1677721600,
+    "peak": 1677721600,
+    "cached_idle": 1342177280
+   },
+   "result": "OOM",
+   "oom": {
+    "requested": 1073741824,
+    "capacity": 85018877624,
+    "free": 82237886300,
+    "allocated": 335544320,
+    "reserved_unallocated": 1342177280
+   },
+   "diagnosis": "fragmentation: enough cached-but-idle memory, in pieces too small; fix the allocator or shapes",
+   "message": "CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 79.18 GiB of which 76.59 GiB is free. Process <pid> has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 2.07 GiB memory in use. 2.00 GiB allowed; Of the allocated memory 320.00 MiB is allocated by PyTorch, and 1.25 GiB is reserved by PyTorch but unallocated. expandable_segments is enabled"
+  },
+  "long-lived first, default": {
+   "before": {
+    "allocated": 335544320,
+    "reserved": 1677721600,
+    "peak": 1677721600,
+    "cached_idle": 1342177280
+   },
+   "result": "ok",
+   "after": {
+    "allocated": 1409286144,
+    "reserved": 1409286144,
+    "peak": 1677721600,
+    "cached_idle": 0
+   }
+  }
+ }
+}

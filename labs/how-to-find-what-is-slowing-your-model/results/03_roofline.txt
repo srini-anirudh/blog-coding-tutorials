@@ -1,0 +1,16 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python scripts/03_roofline.py
+Roofs: 989 TFLOP/s bf16 dense, 3.35 TB/s HBM (H100 SXM vendor numbers), ridge 295 FLOP/byte. FLOPs and bytes are analytic.
+
+64^3 matmul (one tiny kernel)               39.3 us  I=   21.33 FLOP/B      0.01 TFLOP/s         1 GB/s    0.0% of roof  -> below both roofs
+elementwise chain, 4 kernels               506.1 us  I=    0.50 FLOP/B      1.46 TFLOP/s      2917 GB/s   87.1% of roof  -> bandwidth bound
+same chain, torch.compile (1 kernel)       210.7 us  I=    1.38 FLOP/B      3.50 TFLOP/s      2548 GB/s   76.1% of roof  -> bandwidth bound
+16 x 8192 @ 8192 x 8192 (skinny)            71.9 us  I=   15.94 FLOP/B     29.85 TFLOP/s      1873 GB/s   55.9% of roof  -> bandwidth bound
+256 x 8192 @ 8192 x 8192 (skinny)           77.0 us  I=  240.94 FLOP/B    446.18 TFLOP/s      1852 GB/s   55.3% of roof  -> bandwidth bound
+8192^3 matmul                             1432.6 us  I= 2730.67 FLOP/B    767.51 TFLOP/s       281 GB/s   77.6% of roof  -> compute bound
+
+measured: copy 2.93 TB/s (read + write), 8192^3 bf16 matmul 752 TFLOP/s
+
+A roofline point needs a time budget (Trap). Fraction of the step saved:
+  part = 4% of the step, made 3x faster -> saves 2.7%
+  part = 18% of the step, made 2x faster -> saves 9.0%
