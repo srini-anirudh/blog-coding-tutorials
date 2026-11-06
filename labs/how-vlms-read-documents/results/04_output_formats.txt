@@ -1,0 +1,44 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/how-vlms-read-documents/scripts/04_output_formats.py
+
+Page: 8 elements, 32 words, one table with a merged header cell, 3 styled elements (2 bold, 1 struck through). Tokens: SmolLM2 tokenizer (the SmolDocling decoder family).
+
+format       tokens word recall order dist headings table TEDS  box IoU styles
+plain text      113        1.00       0.00     0 / 2       0.88     0.00   0 / 3
+Markdown        143        1.00       0.00     2 / 2       0.88     0.00   2 / 3
+HTML            245        1.00       0.00     2 / 2       1.00     0.00   3 / 3
+JSON fields      63        0.16       0.84     0 / 2       0.00     0.00   0 / 3
+DocTags         185        1.00       0.00     2 / 2       1.00     0.98   0 / 3
+layout HTML     524        1.00       0.00     2 / 2       1.00     1.00   3 / 3
+DocTags tokens count each tag as one token, as in SmolDocling's vocabulary; the plain SmolLM2 tokenizer
+splits the tags and gives 388. HTML tags are counted with the plain tokenizer.
+
+word recall: fraction of the page's words found in the output. order dist: edit distance of the word
+sequence to the page's (0 = same order). headings: heading levels recovered. table TEDS: the table parsed back
+from the output against the true table. box IoU: mean best overlap of recovered boxes with the true ones.
+
+The table alone, three ways (OTSL structure tokens counted as one token each):
+  HTML      112 tokens  <table><tr><td>Item</td><td colspan="2">Amount</td></tr><tr><td></td><td>Net</td><td>Tax</td></tr><tr><td>P...
+  OTSL       63 tokens  <c> Item <c> Amount <l> <nl> <c> <c> Net <c> Tax <nl> <c> Paper <c> 1,200.00 <c> 216.00 <nl> <c> Toner <c> ...
+  Markdown   65 tokens  | Item | Amount |  | / |---|---|---| / |  | Net | Tax | / | Paper | 1,200.00 | 216.00 | / | Toner | 300.00 ...
+Read back: HTML and OTSL give TEDS 1.00. Markdown gives 0.88: it has no syntax for the span of 'Amount'.
+
+DocTags and layout HTML outputs, for reference:
+--- DocTags
+  <title><loc_40><loc_30><loc_310><loc_55>ACME Supplies Ltd.</title>
+  <section_header><loc_40><loc_70><loc_210><loc_88>Invoice INV-2041</section_header>
+  <text><loc_40><loc_95><loc_200><loc_108>Date: 2026-03-14</text>
+  <text><loc_280><loc_95><loc_460><loc_108>Bill to: Northwind Traders</text>
+  <otsl><loc_40><loc_125><loc_460><loc_235><c>Item<c>Amount<l><nl><c><c>Net<c>Tax<nl><c>Paper<c>1,200.00<c>216.00<nl><c>Toner<c>300.00<c>54.00<nl></otsl>
+  <text><loc_40><loc_250><loc_300><loc_262>Credit note CN-17: -150.00</text>
+  <text><loc_280><loc_280><loc_460><loc_298>Total due: 1,770.00</text>
+  <page_footer><loc_220><loc_475><loc_280><loc_485>Page 1 of 1</page_footer>
+--- layout HTML
+  <div data-id="e1" data-kind="title" data-bbox="80 60 620 110" style="font-weight:bold">ACME Supplies Ltd.</div>
+  <div data-id="e2" data-kind="heading" data-bbox="80 140 420 175" style="">Invoice INV-2041</div>
+  <div data-id="e3" data-kind="text" data-bbox="80 190 400 215" style="">Date: 2026-03-14</div>
+  <div data-id="e4" data-kind="text" data-bbox="560 190 920 215" style="">Bill to: Northwind Traders</div>
+  <div data-id="e5" data-kind="table" data-bbox="80 250 920 470" style=""><table><tr><td>Item</td><td colspan="2">Amount</td></tr><tr><td></td><td>Net</td><td>Tax</td></tr><tr><td>Paper</td><td>1,200.00</td><td>216.00</td></tr><tr><td>Toner</td><td>300.00</td><td>54.00</td></tr></table></div>
+  <div data-id="e6" data-kind="text" data-bbox="80 500 600 525" style="text-decoration:line-through">Credit note CN-17: -150.00</div>
+  <div data-id="e7" data-kind="text" data-bbox="560 560 920 595" style="font-weight:bold">Total due: 1,770.00</div>
+  <div data-id="e8" data-kind="footer" data-bbox="440 950 560 970" style="">Page 1 of 1</div>

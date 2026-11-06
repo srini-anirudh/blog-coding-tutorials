@@ -1,0 +1,57 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/how-vlms-read-documents/scripts/07_scoring.py",
+ "anls_examples": {
+  "1,500.00": 1.0,
+  "1,580.00": 0.875,
+  "15": 0.0
+ },
+ "omnidocbench_max_abs_diff": 0.020000000000010232,
+ "unit_tests": {
+  "faithful": {
+   "edit_distance": 0.0,
+   "passed": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "caption moved after the paragraph": {
+   "edit_distance": 0.43636363636363634,
+   "passed": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "running header kept": {
+   "edit_distance": 0.17293233082706766,
+   "passed": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "one digit wrong": {
+   "edit_distance": 0.00909090909090909,
+   "passed": [
+    false,
+    true,
+    true,
+    true
+   ]
+  },
+  "stuck in a loop": {
+   "edit_distance": 0.5955882352941176,
+   "passed": [
+    true,
+    true,
+    true,
+    false
+   ]
+  }
+ }
+}

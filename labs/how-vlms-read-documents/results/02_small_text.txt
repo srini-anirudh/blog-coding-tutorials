@@ -1,0 +1,48 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/how-vlms-read-documents/scripts/02_small_text.py --steps 3000
+
+step     1  ctc loss 31.261
+step   250  ctc loss 1.617
+step   500  ctc loss 0.164
+step   750  ctc loss 0.190
+step  1000  ctc loss 0.172
+step  1250  ctc loss 0.217
+step  1500  ctc loss 0.136
+step  1750  ctc loss 0.120
+step  2000  ctc loss 0.094
+step  2250  ctc loss 0.091
+step  2500  ctc loss 0.114
+step  2750  ctc loss 0.143
+step  3000  ctc loss 0.042
+trained 3000 steps (batch 64, em sizes 3 to 28 px) in 1868 s
+
+Accuracy by pixels per em (400 held-out lines each; amounts like 1,580.00, words, codes):
+ px/em  char acc  line exact  amount exact  example (truth -> read)
+     3     0.759       0.343         0.808  hxoor -> hwvr
+     4     0.867       0.415         0.671  trwvqugy -> imvqugy
+     5     0.993       0.953         1.000  rnsujl -> rnsujl
+     6     0.957       0.743         0.832  29,968.56 -> 29,968.56
+     7     0.992       0.948         1.000  ZTF-5200 -> ZTF-5200
+     8     0.996       0.973         1.000  kcwydb -> kcwydb
+    10     0.999       0.993         1.000  hrcnnnfen -> hrcnnnfen
+    12     1.000       0.998         1.000  18,981.51 -> 18,981.51
+    15     1.000       1.000         1.000  39,445.62 -> 39,445.62
+    20     1.000       1.000         1.000  60,574.99 -> 60,574.99
+    28     1.000       1.000         1.000  uiygol -> uiygol
+
+The same reader on 10-pt body text and a 6.5-pt footnote, rendered at each dpi:
+ dpi  10 pt px/em  line exact  6.5 pt px/em  line exact
+  72         10.0       0.995           6.5       0.915
+ 110         15.3       0.995           9.9       0.973
+ 150         20.8       1.000          13.5       0.998
+ 200         27.8       1.000          18.1       0.993
+ 300         41.7       1.000          27.1       0.998
+
+One pass on a shrunk page versus a native-resolution crop of each element (page rendered at 200 dpi):
+input                                         scale  10 pt exact  6.5 pt exact
+native crop (two-pass, stage 2)               1.000        0.998         1.000
+whole page at 1280 px (DeepSeek-OCR Large)    0.547        0.995         0.960
+whole page at 1036 px (MinerU2.5 layout view)  0.443        0.993         0.920
+whole page at 1024 px (fixed 256 tokens)      0.438        0.993         0.900
+whole page at 640 px (fixed 100 tokens)       0.274        0.912         0.487
+Every line here is read by the same small CRNN; only the pixels it gets change.

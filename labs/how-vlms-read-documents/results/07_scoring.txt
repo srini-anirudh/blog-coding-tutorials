@@ -1,0 +1,42 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/how-vlms-read-documents/scripts/07_scoring.py
+
+ANLS for one question with gold answer '1,500.00':
+  1,500.00   NL 0.000  ANLS 1.000
+  1,580.00   NL 0.125  ANLS 0.875
+  1500.00    NL 0.125  ANLS 0.875
+  1,500      NL 0.375  ANLS 0.625
+  15         NL 0.750  ANLS 0.000
+  2,750.00   NL 0.375  ANLS 0.625
+A one-digit misread of an amount keeps 0.875 of the credit. Exact match would give it 0.
+Four answers, two of them wrong by one or two characters: ANLS 0.906, exact match 0.500
+
+OmniDocBench v1.5 overall = [(1 - TextEdit) x 100 + Table TEDS + Formula CDM] / 3, recomputed from components:
+  system                   reported recomputed   diff
+  Marker-1.8.2                71.30      71.31  +0.01
+  MinerU2-pipeline            75.51      75.52  +0.01
+  PP-StructureV3              86.73      86.72  -0.01
+  GPT-4o                      75.02      75.02  +0.00
+  InternVL3.5-241B            82.67      82.68  +0.01
+  Qwen2.5-VL-72B              87.02      87.01  -0.01
+  Gemini-2.5 Pro              88.03      88.01  -0.02
+  Qwen3-VL-235B               89.15      89.15  -0.00
+  Mistral OCR                 78.83      78.82  -0.01
+  olmOCR-7B                   81.79      81.79  -0.00
+  DeepSeek-OCR (9 crops)      87.36      87.36  +0.00
+  dots.ocr                    88.41      88.40  -0.01
+  MinerU2.5                   90.67      90.66  -0.01
+  DeepSeek-OCR 2              91.09      91.09  -0.00
+  PaddleOCR-VL                92.86      92.87  +0.01
+Largest gap 0.02 points: the components are rounded (text edit to 3 decimals), and the formula reproduces every reported overall.
+
+Edit distance against binary unit tests on five outputs of one small page:
+  output                               edit dist tests passed  longest repeat
+  faithful                                 0.000        4 / 4               1
+  caption moved after the paragraph        0.436        4 / 4               1
+  running header kept                      0.173        3 / 4               1
+  one digit wrong                          0.009        3 / 4               1
+  stuck in a loop                          0.596        3 / 4               7
+  tests: present: 'Scanned pages score 0.118.'; absent: running header; order: heading before table text; no repetition (max run 3)
+Moving a caption costs edit distance but breaks nothing a reader needs; a one-digit error costs almost no edit
+distance and changes a fact. The unit tests see the second only if someone wrote a test for that number.

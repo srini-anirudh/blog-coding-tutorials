@@ -1,0 +1,23 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/how-vlms-read-documents/scripts/03_layout_embeddings.py --steps 3000
+
+6000 training receipts (orders mixed), 1000 test receipts per order, 3000 steps, 3 seeds. Chance (guess one amount at random): 0.115
+
+text + 1D position  (152 s for 3 seeds)
+  rows                   accuracy 0.994  (seeds: 0.999, 0.987, 0.996)
+  columns                accuracy 0.828  (seeds: 0.866, 0.768, 0.850)
+  shuffled               accuracy 0.108  (seeds: 0.104, 0.103, 0.118)
+  rows, T0TAL typo       accuracy 0.261  (seeds: 0.236, 0.240, 0.306)
+  columns, T0TAL typo    accuracy 0.206  (seeds: 0.163, 0.227, 0.227)
+  shuffled, T0TAL typo   accuracy 0.119  (seeds: 0.108, 0.117, 0.131)
+
+text + 1D + 2D boxes  (175 s for 3 seeds)
+  rows                   accuracy 0.982  (seeds: 0.981, 0.993, 0.972)
+  columns                accuracy 0.977  (seeds: 0.973, 0.983, 0.974)
+  shuffled               accuracy 0.961  (seeds: 0.953, 0.977, 0.954)
+  rows, T0TAL typo       accuracy 0.311  (seeds: 0.197, 0.304, 0.433)
+  columns, T0TAL typo    accuracy 0.293  (seeds: 0.195, 0.280, 0.404)
+  shuffled, T0TAL typo   accuracy 0.276  (seeds: 0.167, 0.270, 0.392)
+
+rows: OCR reads line by line. columns: all left-half words, then all right-half amounts.
+shuffled: no order at all. T0TAL typo: the key word is misread, so it arrives as [UNK].

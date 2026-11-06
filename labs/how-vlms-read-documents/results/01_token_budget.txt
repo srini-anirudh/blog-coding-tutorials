@@ -1,0 +1,36 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/how-vlms-read-documents/scripts/01_token_budget.py --check-processor
+
+A4 page (8.27 x 11.69 in). Tokens per page under each input scheme.
+ dpi       pixels | post formula native (28px) | Fig.4 tiles tokens | InternVL max40  max12 | vision/text
+  72   595 x 842   |          639           630 |           4  1,280 |  35 ->   9,216  1,792 |        0.6x
+ 110   910 x 1286  |        1,492         1,472 |           9  2,560 |  35 ->   9,216  1,792 |        1.5x
+ 150  1240 x 1754  |        2,775         2,772 |          12  3,328 |  35 ->   9,216  1,792 |        2.8x
+ 200  1654 x 2338  |        4,932         4,956 |          24  6,400 |  35 ->   9,216  1,792 |        5.0x
+ 300  2481 x 3507  |       11,098        11,125 |          40 10,496 |  35 ->   9,216  1,792 |       11.1x
+native: Qwen2-VL smart_resize (sides rounded to multiples of 28), one token per 28 x 28 pixels.
+Fig.4 tiles: the post's figure covers the page with 448-px tiles at its own size, +1 thumbnail, 256 tokens each.
+InternVL: the grid is chosen by aspect ratio alone (closest to 0.707 is 5 x 7 with max 40, 2 x 3 with max 12),
+  and the page is resized to that grid. So the tile count does not grow with dpi: low-dpi pages are upscaled.
+
+Fixed-budget encoder (DeepSeek-OCR native modes): 16-px patches, then 16x token compression.
+   512 px ->  64 tokens,  15.6 text tokens per vision token, page shrunk to  43.8 dpi: 10-pt text gets  6.1 px per em
+   640 px -> 100 tokens,  10.0 text tokens per vision token, page shrunk to  54.7 dpi: 10-pt text gets  7.6 px per em
+  1024 px -> 256 tokens,   3.9 text tokens per vision token, page shrunk to  87.6 dpi: 10-pt text gets 12.2 px per em
+  1280 px -> 400 tokens,   2.5 text tokens per vision token, page shrunk to 109.5 dpi: 10-pt text gets 15.2 px per em
+
+Pixels per em for body text (10 pt) and a footnote (6.5 pt). One Qwen patch is 14 px.
+ dpi   10 pt  6.5 pt  patch / em (10 pt)
+  72    10.0     6.5                1.40
+ 110    15.3     9.9                0.92
+ 150    20.8    13.5                0.67
+ 200    27.8    18.1                0.50
+ 300    41.7    27.1                0.34
+InternVL 5 x 7 grid: the tiles hold the page at 268 dpi (10-pt text 37.3 px per em). A page rendered below that is upscaled, which adds no detail.
+
+Real Qwen2-VL image processor (Qwen/Qwen2-VL-2B-Instruct) on a blank A4 page:
+   72 dpi: grid 60 x 42 patches -> 630 tokens (ours: 630)
+  110 dpi: grid 92 x 64 patches -> 1,472 tokens (ours: 1,472)
+  150 dpi: grid 126 x 88 patches -> 2,772 tokens (ours: 2,772)
+  200 dpi: grid 168 x 118 patches -> 4,956 tokens (ours: 4,956)
+  300 dpi: grid 250 x 178 patches -> 11,125 tokens (ours: 11,125)

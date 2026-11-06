@@ -1,0 +1,24 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/how-vlms-read-documents/scripts/06_reading_order.py
+
+Figure 7 page (13 blocks: 11 body blocks, a running header and a page number):
+  top to bottom                      0.62  H T Ab A C Tc F Tb Fc D Bp Fn P
+  column-aware (XY-cut)              0.15  H T Ab A F Fc Bp C Tc Tb D Fn P
+  XY-cut, margin furniture dropped   0.00  T Ab A F Fc Bp C Tc Tb D Fn
+  reference                          0.00  T Ab A F Fc Bp C Tc Tb D Fn
+  (Figure 7's own script scores the same blocks with the same formula: lev / max(len), lower is better)
+
+Synthetic pages: 300 test pages per layout. Learned orderer trained on 300 other pages per
+layout, on body blocks only. Score = normalized edit distance to the reference order (0 is perfect).
+layout                         top-to-bottom  XY-cut  XY-cut - margins  learned   exact (XY - margins / learned)
+1-col                                  0.210   0.210             0.000    0.000   1.00 / 1.00
+2-col                                  0.762   0.127             0.006    0.061   0.98 / 0.54
+3-col                                  0.852   0.088             0.001    0.121   0.99 / 0.00
+2-col + full-width figure              0.511   0.154             0.001    0.318   0.99 / 0.04
+3-col + figure over 2 cols             0.808   0.131             0.034    0.174   0.89 / 0.00
+2-col, boxes cross the gutter          0.763   0.471             0.401    0.094   0.22 / 0.30
+
+XY-cut cuts at the widest empty band. When loose boxes reach across the gutter there is no vertical band to
+cut, and it falls back to top-to-bottom order for that region. The learned model sees two boxes at a time.
+That is enough to ignore a loose box, but not to learn rules that depend on the rest of the page, such as
+where a full-width figure sits between two column bands. LayoutReader reads all blocks at once for this reason.

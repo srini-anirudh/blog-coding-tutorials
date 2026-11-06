@@ -1,0 +1,16 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/how-vlms-read-documents/scripts/05_teds.py
+
+Figure 6: the header lost its two-column span, an empty cell was added, and 67.5 became 67.3.
+Figure 6 prediction                    cost 2.25 / 13 nodes   TEDS 0.827   TEDS-S 0.846   flattened text 0.971
+Post: edit cost 1 + 1 + 0.25 = 2.25 over 13 nodes; TEDS 0.83, TEDS-S 0.85, flattened text 0.97.
+
+A value in the wrong column: 'Ink 80.00' moved from Net to Tax. The table now says something false.
+one value in the wrong column          cost 2.00 / 17 nodes   TEDS 0.882   TEDS-S 1.000   flattened text 1.000
+last row missing                       cost 4.00 / 17 nodes   TEDS 0.765   TEDS-S 0.765   flattened text 0.841
+two rows merged into one               cost 4.94 / 17 nodes   TEDS 0.709   TEDS-S 0.765   flattened text 0.810
+The flattened string is identical when a value changes column, so a text metric gives it full marks.
+TEDS-S misses it too, because the grid is unchanged. Only TEDS, which compares each cell's text in place, drops.
+
+Writing the Figure 6 ground truth as Markdown and reading it back loses the span:
+ground truth through Markdown          cost 2.00 / 13 nodes   TEDS 0.846   TEDS-S 0.846   flattened text 1.000

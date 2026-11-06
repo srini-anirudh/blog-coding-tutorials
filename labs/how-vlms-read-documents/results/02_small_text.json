@@ -1,0 +1,172 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/how-vlms-read-documents/scripts/02_small_text.py --steps 3000",
+ "steps": 3000,
+ "by_em": [
+  {
+   "px_per_em": 3,
+   "char_acc": 0.7591727818545697,
+   "line_exact": 0.3425,
+   "amount_exact": 0.8076923076923077
+  },
+  {
+   "px_per_em": 4,
+   "char_acc": 0.8670481319421071,
+   "line_exact": 0.415,
+   "amount_exact": 0.6712328767123288
+  },
+  {
+   "px_per_em": 5,
+   "char_acc": 0.9927655376520881,
+   "line_exact": 0.9525,
+   "amount_exact": 1.0
+  },
+  {
+   "px_per_em": 6,
+   "char_acc": 0.9571763131482101,
+   "line_exact": 0.7425,
+   "amount_exact": 0.8322147651006712
+  },
+  {
+   "px_per_em": 7,
+   "char_acc": 0.9919055649241146,
+   "line_exact": 0.9475,
+   "amount_exact": 1.0
+  },
+  {
+   "px_per_em": 8,
+   "char_acc": 0.9960899315738025,
+   "line_exact": 0.9725,
+   "amount_exact": 1.0
+  },
+  {
+   "px_per_em": 10,
+   "char_acc": 0.999013482407103,
+   "line_exact": 0.9925,
+   "amount_exact": 1.0
+  },
+  {
+   "px_per_em": 12,
+   "char_acc": 0.9996699669966996,
+   "line_exact": 0.9975,
+   "amount_exact": 1.0
+  },
+  {
+   "px_per_em": 15,
+   "char_acc": 1.0,
+   "line_exact": 1.0,
+   "amount_exact": 1.0
+  },
+  {
+   "px_per_em": 20,
+   "char_acc": 1.0,
+   "line_exact": 1.0,
+   "amount_exact": 1.0
+  },
+  {
+   "px_per_em": 28,
+   "char_acc": 1.0,
+   "line_exact": 1.0,
+   "amount_exact": 1.0
+  }
+ ],
+ "by_dpi": [
+  {
+   "dpi": 72,
+   "10pt": {
+    "px_per_em": 10.0,
+    "line_exact": 0.995,
+    "char_acc": 0.99933598937583
+   },
+   "6.5pt": {
+    "px_per_em": 6.5,
+    "line_exact": 0.915,
+    "char_acc": 0.9866755496335776
+   }
+  },
+  {
+   "dpi": 110,
+   "10pt": {
+    "px_per_em": 15.277777777777779,
+    "line_exact": 0.995,
+    "char_acc": 0.9993313273152792
+   },
+   "6.5pt": {
+    "px_per_em": 9.930555555555555,
+    "line_exact": 0.9725,
+    "char_acc": 0.9963636363636363
+   }
+  },
+  {
+   "dpi": 150,
+   "10pt": {
+    "px_per_em": 20.833333333333332,
+    "line_exact": 1.0,
+    "char_acc": 1.0
+   },
+   "6.5pt": {
+    "px_per_em": 13.541666666666666,
+    "line_exact": 0.9975,
+    "char_acc": 0.9996645420999665
+   }
+  },
+  {
+   "dpi": 200,
+   "10pt": {
+    "px_per_em": 27.77777777777778,
+    "line_exact": 1.0,
+    "char_acc": 1.0
+   },
+   "6.5pt": {
+    "px_per_em": 18.055555555555557,
+    "line_exact": 0.9925,
+    "char_acc": 0.9989881956155143
+   }
+  },
+  {
+   "dpi": 300,
+   "10pt": {
+    "px_per_em": 41.666666666666664,
+    "line_exact": 1.0,
+    "char_acc": 1.0
+   },
+   "6.5pt": {
+    "px_per_em": 27.083333333333332,
+    "line_exact": 0.9975,
+    "char_acc": 0.9996678844237795
+   }
+  }
+ ],
+ "two_pass": [
+  {
+   "input": "native crop (two-pass, stage 2)",
+   "scale": 1.0,
+   "10pt": 0.9975,
+   "6.5pt": 1.0
+  },
+  {
+   "input": "whole page at 1280 px (DeepSeek-OCR Large)",
+   "scale": 0.5474764756201882,
+   "10pt": 0.995,
+   "6.5pt": 0.96
+  },
+  {
+   "input": "whole page at 1036 px (MinerU2.5 layout view)",
+   "scale": 0.4431137724550898,
+   "10pt": 0.9925,
+   "6.5pt": 0.92
+  },
+  {
+   "input": "whole page at 1024 px (fixed 256 tokens)",
+   "scale": 0.43798118049615054,
+   "10pt": 0.9925,
+   "6.5pt": 0.9
+  },
+  {
+   "input": "whole page at 640 px (fixed 100 tokens)",
+   "scale": 0.2737382378100941,
+   "10pt": 0.9125,
+   "6.5pt": 0.4875
+  }
+ ]
+}

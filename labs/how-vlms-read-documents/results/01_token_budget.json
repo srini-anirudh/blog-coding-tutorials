@@ -1,0 +1,109 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/how-vlms-read-documents/scripts/01_token_budget.py --check-processor",
+ "rows": [
+  {
+   "dpi": 72,
+   "post_formula": 639,
+   "native": 630,
+   "figure_tiles": 4,
+   "figure_tiling_tokens": 1280,
+   "internvl40_tiles": 35,
+   "internvl40_tokens": 9216,
+   "internvl12_tokens": 1792
+  },
+  {
+   "dpi": 110,
+   "post_formula": 1492,
+   "native": 1472,
+   "figure_tiles": 9,
+   "figure_tiling_tokens": 2560,
+   "internvl40_tiles": 35,
+   "internvl40_tokens": 9216,
+   "internvl12_tokens": 1792
+  },
+  {
+   "dpi": 150,
+   "post_formula": 2775,
+   "native": 2772,
+   "figure_tiles": 12,
+   "figure_tiling_tokens": 3328,
+   "internvl40_tiles": 35,
+   "internvl40_tokens": 9216,
+   "internvl12_tokens": 1792
+  },
+  {
+   "dpi": 200,
+   "post_formula": 4932,
+   "native": 4956,
+   "figure_tiles": 24,
+   "figure_tiling_tokens": 6400,
+   "internvl40_tiles": 35,
+   "internvl40_tokens": 9216,
+   "internvl12_tokens": 1792
+  },
+  {
+   "dpi": 300,
+   "post_formula": 11098,
+   "native": 11125,
+   "figure_tiles": 40,
+   "figure_tiling_tokens": 10496,
+   "internvl40_tiles": 35,
+   "internvl40_tokens": 9216,
+   "internvl12_tokens": 1792
+  }
+ ],
+ "fixed": [
+  {
+   "side": 512,
+   "tokens": 64,
+   "ratio": 15.625,
+   "effective_dpi": 43.798118049615056
+  },
+  {
+   "side": 640,
+   "tokens": 100,
+   "ratio": 10.0,
+   "effective_dpi": 54.74764756201882
+  },
+  {
+   "side": 1024,
+   "tokens": 256,
+   "ratio": 3.90625,
+   "effective_dpi": 87.59623609923011
+  },
+  {
+   "side": 1280,
+   "tokens": 400,
+   "ratio": 2.5,
+   "effective_dpi": 109.49529512403764
+  }
+ ],
+ "processor": [
+  {
+   "dpi": 72,
+   "tokens": 630,
+   "ours": 630
+  },
+  {
+   "dpi": 110,
+   "tokens": 1472,
+   "ours": 1472
+  },
+  {
+   "dpi": 150,
+   "tokens": 2772,
+   "ours": 2772
+  },
+  {
+   "dpi": 200,
+   "tokens": 4956,
+   "ours": 4956
+  },
+  {
+   "dpi": 300,
+   "tokens": 11125,
+   "ours": 11125
+  }
+ ]
+}

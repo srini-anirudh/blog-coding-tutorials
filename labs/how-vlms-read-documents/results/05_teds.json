@@ -1,0 +1,39 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/how-vlms-read-documents/scripts/05_teds.py",
+ "Figure 6 prediction": {
+  "edit_cost": 2.25,
+  "nodes": 13,
+  "teds": 0.8269230769230769,
+  "teds_s": 0.8461538461538461,
+  "flattened_text": 0.9714285714285714
+ },
+ "one value in the wrong column": {
+  "edit_cost": 2.0,
+  "nodes": 17,
+  "teds": 0.8823529411764706,
+  "teds_s": 1.0,
+  "flattened_text": 1.0
+ },
+ "last row missing": {
+  "edit_cost": 4.0,
+  "nodes": 17,
+  "teds": 0.7647058823529411,
+  "teds_s": 0.7647058823529411,
+  "flattened_text": 0.8412698412698413
+ },
+ "two rows merged into one": {
+  "edit_cost": 4.944444444444445,
+  "nodes": 17,
+  "teds": 0.7091503267973855,
+  "teds_s": 0.7647058823529411,
+  "flattened_text": 0.8095238095238095
+ },
+ "ground truth through Markdown": {
+  "edit_cost": 2.0,
+  "nodes": 13,
+  "teds": 0.8461538461538461,
+  "teds_s": 0.8461538461538461,
+  "flattened_text": 1.0
+ }
+}

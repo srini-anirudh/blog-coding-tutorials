@@ -1,0 +1,160 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/how-vlms-read-documents/scripts/06_reading_order.py",
+ "figure7": {
+  "top to bottom": {
+   "order": [
+    "H",
+    "T",
+    "Ab",
+    "A",
+    "C",
+    "Tc",
+    "F",
+    "Tb",
+    "Fc",
+    "D",
+    "Bp",
+    "Fn",
+    "P"
+   ],
+   "score": 0.6153846153846154
+  },
+  "column-aware (XY-cut)": {
+   "order": [
+    "H",
+    "T",
+    "Ab",
+    "A",
+    "F",
+    "Fc",
+    "Bp",
+    "C",
+    "Tc",
+    "Tb",
+    "D",
+    "Fn",
+    "P"
+   ],
+   "score": 0.15384615384615385
+  },
+  "XY-cut, margin furniture dropped": {
+   "order": [
+    "T",
+    "Ab",
+    "A",
+    "F",
+    "Fc",
+    "Bp",
+    "C",
+    "Tc",
+    "Tb",
+    "D",
+    "Fn"
+   ],
+   "score": 0.0
+  },
+  "reference": {
+   "order": [
+    "T",
+    "Ab",
+    "A",
+    "F",
+    "Fc",
+    "Bp",
+    "C",
+    "Tc",
+    "Tb",
+    "D",
+    "Fn"
+   ],
+   "score": 0.0
+  }
+ },
+ "synthetic": {
+  "1-col": {
+   "mean": {
+    "top-to-bottom": 0.21004031154031155,
+    "XY-cut": 0.21004031154031155,
+    "XY-cut - margins": 0.0,
+    "learned": 0.0
+   },
+   "exact": {
+    "top-to-bottom": 0.0,
+    "XY-cut": 0.0,
+    "XY-cut - margins": 1.0,
+    "learned": 1.0
+   }
+  },
+  "2-col": {
+   "mean": {
+    "top-to-bottom": 0.7618925110980065,
+    "XY-cut": 0.12659746588693957,
+    "XY-cut - margins": 0.005519841269841269,
+    "learned": 0.06080062366827073
+   },
+   "exact": {
+    "top-to-bottom": 0.0,
+    "XY-cut": 0.0,
+    "XY-cut - margins": 0.9766666666666667,
+    "learned": 0.54
+   }
+  },
+  "3-col": {
+   "mean": {
+    "top-to-bottom": 0.8521373052971832,
+    "XY-cut": 0.08757712737583065,
+    "XY-cut - margins": 0.0009205741626794259,
+    "learned": 0.12062923843380163
+   },
+   "exact": {
+    "top-to-bottom": 0.0,
+    "XY-cut": 0.0,
+    "XY-cut - margins": 0.99,
+    "learned": 0.0033333333333333335
+   }
+  },
+  "2-col + full-width figure": {
+   "mean": {
+    "top-to-bottom": 0.5109112143303319,
+    "XY-cut": 0.15374878335172454,
+    "XY-cut - margins": 0.0011111111111111111,
+    "learned": 0.31807592407592405
+   },
+   "exact": {
+    "top-to-bottom": 0.0,
+    "XY-cut": 0.0,
+    "XY-cut - margins": 0.9933333333333333,
+    "learned": 0.04
+   }
+  },
+  "3-col + figure over 2 cols": {
+   "mean": {
+    "top-to-bottom": 0.8082762747953353,
+    "XY-cut": 0.1305657736496813,
+    "XY-cut - margins": 0.03352208171945014,
+    "learned": 0.17353555787476907
+   },
+   "exact": {
+    "top-to-bottom": 0.0,
+    "XY-cut": 0.0,
+    "XY-cut - margins": 0.89,
+    "learned": 0.0033333333333333335
+   }
+  },
+  "2-col, boxes cross the gutter": {
+   "mean": {
+    "top-to-bottom": 0.7629457062545297,
+    "XY-cut": 0.4711607693848406,
+    "XY-cut - margins": 0.40146901954254893,
+    "learned": 0.0939051569345687
+   },
+   "exact": {
+    "top-to-bottom": 0.0,
+    "XY-cut": 0.0,
+    "XY-cut - margins": 0.22,
+    "learned": 0.30333333333333334
+   }
+  }
+ }
+}

@@ -1,0 +1,5 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python -m pytest labs/how-vlms-read-documents -m "not slow and not gpu and not network"   (also -m network: 1 passed; -m slow: 2 passed in 533.89s)
+
+................................                                         [100%]
+32 passed, 3 deselected in 24.07s
