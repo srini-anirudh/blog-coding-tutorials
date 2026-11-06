@@ -202,7 +202,7 @@ MLA uses its own formula, `L B S (r + dr) b`. Part 2 of `results/bench_kv_memory
 
 ### Fused QKV projection
 
-Three `Linear` layers took 38.33 ms per call and one fused `Linear` took 39.21 ms, on 8 x 1024 x 512 inputs. The fused layer was not faster in any of the five runs we made on this CPU. The output is the same. The usual argument for fusing is fewer kernel launches, and that was not measured here.
+Three `Linear` layers took 38.33 ms per call and one fused `Linear` took 39.21 ms, on 8 x 1024 x 512 inputs. On this CPU the fused layer is usually slightly slower, and the spread between runs exceeds the gap. The output is the same. The usual argument for fusing is fewer kernel launches, and that was not measured here.
 
 ## GPU-only: not yet measured
 
