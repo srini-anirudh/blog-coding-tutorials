@@ -1,0 +1,29 @@
+# Hardware: NVIDIA H100 80GB HBM3, CUDA 13.2, torch 2.15.0+cu132, Python 3.12.15
+# Command: python labs/the-mechanics-of-llm-inference/scripts/07_speculative.py --out labs/the-mechanics-of-llm-inference/results/speculative_h100.txt
+
+Part 1. 1,000,000 one-token draws through the rejection rule, vocabulary of 8
+  total variation(draft q, target p)          = 0.6384
+  total variation(speculative output, target) = 0.0008   (sampling noise alone is about 0.0014)
+  acceptance rate = sum min(p, q) = 0.362
+
+Part 2. tokens per target pass, 200,000 simulated rounds with i.i.d. acceptance
+ alpha  gamma  simulated  formula
+   0.5      4      1.936    1.938
+   0.8      4      3.366    3.362
+   0.8      8      4.320    4.329
+  0.95      4      4.525    4.524
+post's example: alpha 0.8, gamma 4 -> 3.36 tokens per pass; with a draft at 5% of a target step the speed-up is 2.80x
+
+Part 3. draft SmolLM2-135M, target SmolLM2-360M, fp32 on cuda, eager PyTorch (no CUDA graphs), 64 new tokens per prompt, 4 prompts
+  plain decoding: target 44 tok/s, draft 47 tok/s, so one draft step costs c = 0.94 target steps
+ temp  gamma  alpha  tok/pass  formula  speed-up  formula  matches plain
+  0.0      2  0.885      2.61     2.67     0.82x    0.93x    4/4 prompts
+  0.0      4  0.881      3.71     3.95     0.73x    0.83x    4/4 prompts
+  0.0      8  0.881      5.22     5.72     0.59x    0.67x    4/4 prompts
+  1.0      2  0.765      2.29     2.35     0.75x    0.82x              -
+  1.0      4  0.755      2.98     3.08     0.61x    0.65x              -
+  1.0      8  0.780      3.76     4.05     0.45x    0.48x              -
+  At temperature 1 the outputs are samples, so they are not compared token by token; Part 1 checks the
+  distribution. The formula assumes the verify pass costs one plain step; for these small models it is
+  launch-bound, so that assumption holds roughly, and c is large because both models are launch-bound too.
+  sample (greedy, gamma 4): 'rmany is Berlin. The capital of Italy is Rome. The capital of Spain is Madrid. The capital of the United States of America is Washington, D.C.'

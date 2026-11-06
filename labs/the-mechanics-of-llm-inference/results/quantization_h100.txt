@@ -1,0 +1,15 @@
+# Hardware: NVIDIA H100 80GB HBM3, CUDA 13.2, torch 2.15.0+cu132, Python 3.12.15
+# Command: python labs/the-mechanics-of-llm-inference/scripts/06_quantization.py --out labs/the-mechanics-of-llm-inference/results/quantization_h100.txt
+
+16 matrices of 14336 x 4096. Measured copy bandwidth 3.03 TB/s. Times are per matrix.
+int8 GEMV against a dequantized reference: max abs diff 3.12e-02
+
+regime               format                           B/weight       us weight GB/s vs bf16 cuBLAS
+decode, 1 row        fp32 cuBLAS                             4     88.9        2643          0.49x
+decode, 1 row        bf16 cuBLAS                             2     43.5        2701          1.00x
+decode, 1 row        bf16 Triton GEMV (8, 512)               2     43.4        2704          1.00x
+decode, 1 row        int8 Triton GEMV (8, 512)               1     28.9        2034          1.51x
+prefill, 4096 rows   bf16 cuBLAS                             2    682.5         172          1.00x
+prefill, 4096 rows   int8 dequant, then bf16 cuBLAS          1    971.9          60          0.70x
+
+weight GB/s counts weight bytes only. In prefill it is not a bandwidth figure, just bytes / time.

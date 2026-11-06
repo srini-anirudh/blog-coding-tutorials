@@ -1,0 +1,103 @@
+# Hardware: CPU only (AMD EPYC 7R13), 8 threads, torch 2.15.0+cu132, Python 3.12.15
+# Command: python labs/the-mechanics-of-llm-inference/scripts/02_ledger.py --out labs/the-mechanics-of-llm-inference/results/ledger_check.txt
+
+Section 3: prefill and decode
+DIFF attention term = linear term at N_p (P = 8.03e9)                   6.13e+04   post: 5.3e+04
+ok   same, with P excluding embedding table and LM head (6.98e9)        5.32e+04   post: 5.3e+04
+ok   intensity, prefill 8192 x 4096 x 4096 (FLOP/byte)                  1.64e+03   post: 1.64e+03
+ok   intensity, decode 1 x 4096 x 4096 (FLOP/byte)                             1   post: 1
+ok   prefill of 8,192 tokens, TFLOP                                          149   post: 149
+ok   prefill time at 45% of peak, ms                                         335   post: 335
+ok   decode step at 8k, GFLOP                                               20.4   post: 20.4
+ok   decode step at 8k, bytes GB                                            17.1   post: 17.2
+ok   decode step at 8k, floor ms                                            5.11   post: 5.1
+ok   decode achieved % of peak                                             0.402   post: 0.4
+
+Section 4: the cache
+ok   no-cache / cache FLOPs, 1,000 prompt + 500 out                          417   post: 417
+
+Section 5: Table 2, KV per token (KiB) and at 8k / 32k / 128k (GB)
+ok   Llama-2-7B (MHA) per token                                              512   post: 512
+ok   Llama-2-7B (MHA) at 8,192                                              4.29   post: 4.29
+ok   Llama-2-7B (MHA) at 32,768                                             17.2   post: 17.2
+ok   Llama-2-7B (MHA) at 131,072                                            68.7   post: 68.7
+ok   Llama-3-8B (GQA) per token                                              128   post: 128
+ok   Llama-3-8B (GQA) at 8,192                                              1.07   post: 1.07
+ok   Llama-3-8B (GQA) at 32,768                                             4.29   post: 4.29
+ok   Llama-3-8B (GQA) at 131,072                                            17.2   post: 17.2
+ok   Mistral-7B (GQA) per token                                              128   post: 128
+ok   Mistral-7B (GQA) at 8,192                                              1.07   post: 1.07
+ok   Mistral-7B (GQA) at 32,768                                             4.29   post: 4.29
+ok   Mistral-7B (GQA) at 131,072                                            17.2   post: 17.2
+ok   Llama-3-70B (GQA) per token                                             320   post: 320
+ok   Llama-3-70B (GQA) at 8,192                                             2.68   post: 2.68
+ok   Llama-3-70B (GQA) at 32,768                                            10.7   post: 10.7
+ok   Llama-3-70B (GQA) at 131,072                                           42.9   post: 42.9
+
+Sections 7 and 8: MLA, crossover, logits
+ok   MLA elements per token per layer, DeepSeek-V2 (d_c 512 + 64)            576   post: 576
+ok   GQA-8 elements per token per layer (2 x 8 x 128)                   2.05e+03   post: 2.05e+03
+ok   crossover, Llama-3-8B, cached tokens                               1.23e+05   post: 1.22e+05
+ok   crossover, 7B full MHA, cached tokens                              2.57e+04   post: 2.57e+04
+ok   decode logits, batch 256, V 128k, fp32, MB                              131   post: 131
+ok   prefill logits, 8k x 128k, fp32, GB                                     4.2   post: 4.2
+
+Section 10: the decode wall
+ok   8B bf16 weight read on H100, ms                                        4.79   post: 4.8
+ok   single-stream ceiling, tok/s                                            209   post: 209
+ok   KV at 128k vs weights (8B): KV GB                                      17.2   post: 17.2
+
+Section 11: batching, B* and Table 4
+ok   B* on H100 SXM (spec)                                                   295   post: 295
+ok   B* on A100 SXM (spec)                                                   153   post: 153
+ok   B* on L40S (spec)                                                       419   post: 419
+ok   N=2,048: KV per sequence GB                                           0.268   post: 0.27
+ok   N=2,048: B_cross                                                       59.8   post: 60
+ok   N=2,048: I at B -> inf                                                 63.8   post: 63.8
+ok   N=2,048: ceiling as % of peak                                          21.6   post: 21.6
+ok   N=2,048: throughput ceiling tok/s                                  1.25e+04   post: 1.25e+04
+ok   N=8,192: KV per sequence GB                                            1.07   post: 1.07
+ok   N=8,192: B_cross                                                         15   post: 15
+ok   N=8,192: I at B -> inf                                                   19   post: 19
+ok   N=8,192: ceiling as % of peak                                          6.42   post: 6.4
+ok   N=8,192: throughput ceiling tok/s                                  3.12e+03   post: 3.12e+03
+ok   N=32,768: KV per sequence GB                                           4.29   post: 4.29
+ok   N=32,768: B_cross                                                      3.74   post: 3.7
+ok   N=32,768: I at B -> inf                                                7.74   post: 7.7
+ok   N=32,768: ceiling as % of peak                                         2.62   post: 2.6
+ok   N=32,768: throughput ceiling tok/s                                      780   post: 780
+ok   N=131,072: KV per sequence GB                                          17.2   post: 17.2
+ok   N=131,072: B_cross                                                    0.935   post: 0.9
+ok   N=131,072: I at B -> inf                                               4.93   post: 4.9
+ok   N=131,072: ceiling as % of peak                                        1.67   post: 1.7
+ok   N=131,072: throughput ceiling tok/s                                     195   post: 195
+ok   I at N -> inf, GQA-4, bf16 cache (2g/s)                                   4   post: 4
+ok   B_max at 8k, 80 GB, 2 GB workspace                                     57.7   post: 57
+
+Section 15: speculative decoding
+ok   E[tokens], alpha 0.8, gamma 4                                          3.36   post: 3.36
+ok   speed-up with draft cost 5%                                             2.8   post: 2.8
+ok   idle tensor-core share in decode, 1/295 as %                          0.339   post: 0.34
+
+Section 16: distributed
+ok   TP=1, 8B batch 1, 6 us per all-reduce, ms                              4.79   post: 4.79
+ok   TP=2, 8B batch 1, 6 us per all-reduce, ms                              2.78   post: 2.78
+ok   TP=4, 8B batch 1, 6 us per all-reduce, ms                              1.58   post: 1.58
+ok   TP=8, 8B batch 1, 6 us per all-reduce, ms                             0.983   post: 0.98
+ok   distinct experts, E 8, k 2, batch 1                                       2   post: 2
+ok   distinct experts, E 8, k 2, batch 4                                    5.47   post: 5.5
+ok   distinct experts, E 8, k 2, batch 16                                   7.92   post: 7.9
+
+Section 17: VLM token and cache accounting (7B full-MHA backbone, P = 6.74e9)
+ok   visual tokens, 13 tiles x 729 / 4                                  2.37e+03   post: 2.37e+03
+ok   KV of one image, GB                                                    1.24   post: 1.24
+ok   KV of a 30-token question, MB                                          15.7   post: 15.7
+ok   ViT FLOPs, So400m (0.4B, 27 layers, d 1152), TFLOP                     8.44   post: 8.4
+DIFF LLM prefill over 2,400 tokens, TFLOP                                   33.9   post: 36.6
+
+Section 19: static batching of the figure-15 requests
+ok   slot utilisation, %                                                    29.5   post: 29.5
+
+2 lines differ from the post by more than rounding:
+  - attention term = linear term at N_p (P = 8.03e9)
+  - LLM prefill over 2,400 tokens, TFLOP

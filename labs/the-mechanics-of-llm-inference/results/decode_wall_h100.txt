@@ -1,0 +1,27 @@
+# Hardware: NVIDIA H100 80GB HBM3, CUDA 13.2, torch 2.15.0+cu132, Python 3.12.15
+# Command: python labs/the-mechanics-of-llm-inference/scripts/04_decode_wall.py --out labs/the-mechanics-of-llm-inference/results/decode_wall_h100.txt
+
+measured copy bandwidth 3.03 TB/s (spec 3.35). Random bf16 weights.
+floor spec = bytes / 3.35 TB/s, floor meas = bytes / measured copy bandwidth. graph = CUDA-graph replay.
+
+llama-3-8b: 8.03B parameters, 16.06 GB in bf16
+
+Prefill at batch 1 (LM head on the last position only)
+ prompt       ms   TFLOP  TFLOP/s % spec peak  us/token
+   2048     60.0    34.0      566         57%      29.3
+   8192    256.5   149.2      582         59%      31.3
+post's estimate for 8,192 tokens: 149 TFLOP at 45% of peak = 335 ms, 41 us per token
+
+llama-3-8b: decode step at batch 1. Weights read per step 15.01 GB (embedding table excluded).
+ context  KV GB floor spec floor meas  eager ms  graph ms  tok/s  achieved
+     512   0.07     4.50ms     4.98ms     28.87      8.19    122   1.84TB/s
+    2048   0.27     4.56ms     5.04ms     28.64      8.26    121   1.85TB/s
+    8192   1.07     4.80ms     5.31ms     27.66      8.58    117   1.87TB/s
+   32768   4.30     5.76ms     6.37ms     27.80      9.58    104   2.02TB/s
+  131072  17.18     9.61ms    10.62ms     28.48     13.56     74   2.37TB/s
+
+llama-2-7b (full MHA): decode step at batch 1. Weights read per step 13.21 GB (embedding table excluded).
+ context  KV GB floor spec floor meas  eager ms  graph ms  tok/s  achieved
+    8192   4.30     5.23ms     5.78ms     28.83      9.07    110   1.93TB/s
+   32768  17.18     9.07ms    10.03ms     27.85     13.04     77   2.33TB/s
+  131072  68.72    24.46ms    27.04ms     31.10     29.00     34   2.82TB/s

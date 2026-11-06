@@ -1,0 +1,16 @@
+# Hardware: CPU only (AMD EPYC 7R13), 8 threads, torch 2.15.0+cu132, Python 3.12.15
+# Command: python labs/the-mechanics-of-llm-inference/scripts/01_kv_cache_exact.py --out labs/the-mechanics-of-llm-inference/results/kv_cache_exact_cpu.txt
+
+smollm2-135m shape, random fp32 weights, CPU
+
+1. K and V at positions 0..31, after 32 tokens and after 33 tokens, all 30 layers:
+   max abs difference 0.000e+00, bit-identical: True
+   two sequences of 33 tokens that differ only in the last token: earlier keys bit-identical: True; last key differs: True
+
+2. greedy, 50 new tokens after a 100-token prompt: cached and uncached tokens equal: True
+
+3. rows through the linear layers: no cache 6,225, cache 149 (41.8x)
+   linear FLOPs at 2 x 135M params per row: no cache 1.67 TFLOP, cache 0.040 TFLOP
+   wall time: no cache 9.72 s, cache 5.00 s (1.9x)
+
+   post's example, computed: 8B model, 1,000-token prompt, 500 new tokens: 1.00e+16 vs 2.41e+13 FLOP = 417x

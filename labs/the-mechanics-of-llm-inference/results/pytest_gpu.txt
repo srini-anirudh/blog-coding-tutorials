@@ -1,0 +1,5 @@
+# Hardware: NVIDIA H100 80GB HBM3, CUDA 13.2, torch 2.15.0+cu132, Python 3.12.15
+# Command: python -m pytest labs/the-mechanics-of-llm-inference -m gpu
+
+.                                                                        [100%]
+1 passed, 22 deselected in 3.57s

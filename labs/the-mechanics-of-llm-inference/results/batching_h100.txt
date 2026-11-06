@@ -1,0 +1,42 @@
+# Hardware: NVIDIA H100 80GB HBM3, CUDA 13.2, torch 2.15.0+cu132, Python 3.12.15
+# Command: python labs/the-mechanics-of-llm-inference/scripts/05_batching.py --out labs/the-mechanics-of-llm-inference/results/batching_h100.txt
+
+Llama-3-8B shape, random bf16 weights, CUDA-graph replay. Measured copy bandwidth 3.02 TB/s.
+floor = (decode-read weights + B x KV) / measured bandwidth. I is the post's I(B), FLOP/byte.
+
+Batch sweep at context 512: KV per sequence 0.067 GB
+   B  step ms  floor ms  agg tok/s user tok/s  KV share  I (post)
+   1     8.19      4.99        122        122        0%       1.0
+   4     8.57      5.05        467        117        2%       4.0
+  16     9.30      5.32       1720        107        7%      15.2
+  64    10.76      6.39       5948         93       22%      51.3
+ 128    12.86      7.81       9955         78       36%      84.8
+ 256    17.15     10.65      14924         58       53%     125.8
+
+Batch sweep at context 8192: KV per sequence 1.074 GB
+   B  step ms  floor ms  agg tok/s user tok/s  KV share  I (post)
+   1     8.59      5.32        116        116        7%       1.2
+   2     9.08      5.68        220        110       13%       2.2
+   4     9.87      6.39        405        101       22%       4.0
+   8    11.41      7.81        701         88       36%       6.6
+  16    14.32     10.65       1117         70       53%       9.8
+  32    19.71     16.33       1624         51       70%      12.9
+  48    25.54     22.01       1880         39       77%      14.5
+  56    28.40     24.86       1972         35       80%      15.0
+  64  does not fit: needs 16.1 GB weights + 68.7 GB cache
+
+Verification width at context 2048: R new positions per sequence in one step (R = gamma + 1)
+   B    R   B*R  step ms  vs R=1
+   1    1     1     8.27   1.00x
+   1    2     2     9.90   1.20x
+   1    3     3    10.94   1.32x
+   1    5     5    10.96   1.32x
+   1    8     8    10.28   1.24x
+   1   16    16    10.72   1.30x
+   1   32    32    10.75   1.30x
+   1   64    64    11.04   1.33x
+   8    1     8     9.42   1.00x
+   8    5    40    14.13   1.50x
+  64    1    64    14.77   1.00x
+  64    5   320    49.78   3.37x
+post: verification costs about one step while B(gamma+1) stays below B* = 295 on an H100

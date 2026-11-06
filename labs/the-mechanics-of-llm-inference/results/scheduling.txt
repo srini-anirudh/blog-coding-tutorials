@@ -1,0 +1,17 @@
+# Hardware: CPU only (AMD EPYC 7R13), 8 threads, torch 2.15.0+cu132, Python 3.12.15
+# Command: python labs/the-mechanics-of-llm-inference/scripts/08_scheduling.py --out labs/the-mechanics-of-llm-inference/results/scheduling.txt
+
+requests (arrival step, prompt tokens, output tokens): (0, 512, 40), (0, 2048, 300), (1, 128, 20), (3, 8192, 60), (5, 256, 500), (8, 1024, 80), (12, 512, 150), (15, 4096, 30)
+
+scheduler            total steps slot utilisation mean latency stalled seq-steps
+static, 8 slots              565            29.5%          560                 0
+continuous, 8 slots          550            29.5%          192               193
+static, 4 slots              853            36.9%          589                 0
+continuous, 4 slots          570            56.7%          215               133
+static, 2 slots             1060            58.4%          659                 0
+continuous, 2 slots          670            95.2%          353                49
+
+slot utilisation = tokens produced / (slots x decode steps). latency is completion minus arrival.
+stalled seq-steps = running sequences x steps they waited on someone else's prefill; chunked prefill
+exists to spread exactly this cost. With 8 slots and 8 requests nothing is waiting, so continuous
+batching cannot raise utilisation; it still returns short requests early instead of at step 500.

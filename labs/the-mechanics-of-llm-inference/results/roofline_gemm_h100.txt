@@ -1,0 +1,24 @@
+# Hardware: NVIDIA H100 80GB HBM3, CUDA 13.2, torch 2.15.0+cu132, Python 3.12.15
+# Command: python labs/the-mechanics-of-llm-inference/scripts/03_roofline_gemm.py --out labs/the-mechanics-of-llm-inference/results/roofline_gemm_h100.txt
+
+spec:     989 TFLOP/s bf16 dense, 3.35 TB/s, ridge 295 FLOP/byte
+measured: 769 TFLOP/s (8192^3 bf16 matmul), 3.03 TB/s (4 GB copy), ridge 254 FLOP/byte
+
+one 4096 x 4096 bf16 linear layer, weight 32 MiB, pool of 16
+ M rows   time us  TFLOP/s  % peak    GB/s   % bw  I (post)
+      1      28.2      1.2    0.1%    1191    36%       1.0
+      2      28.8      2.3    0.2%    1165    35%       2.0
+      4      29.2      4.6    0.5%    1153    34%       4.0
+      8      29.7      9.0    0.9%    1133    34%       8.0
+     16      29.1     18.5    1.9%    1162    35%      15.9
+     32      24.7     43.5    4.4%    1381    41%      31.5
+     64      24.4     88.0    8.9%    1419    42%      62.1
+    128      24.3    176.9   17.9%    1469    44%     120.5
+    256      24.3    354.2   35.8%    1557    46%     227.6
+    512      27.2    631.1   63.8%    1541    46%     409.6
+   1024      48.0    716.4   72.4%    1049    31%     682.7
+   2048      91.9    747.5   75.6%     730    22%    1024.0
+   4096     205.3    669.3   67.7%     490    15%    1365.3
+   8192     384.3    715.3   72.3%     437    13%    1638.4
+
+% peak and % bw are against the spec sheet. I is FLOP per byte counting each operand once at HBM.
