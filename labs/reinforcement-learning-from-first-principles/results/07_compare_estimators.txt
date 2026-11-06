@@ -1,0 +1,17 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+command: python labs/reinforcement-learning-from-first-principles/scripts/07_compare_estimators.py
+   {'method': 'reinforce', 'final_pass@1_mean': 0.7257239760100512, 'final_pass@1_min': 0.5943824115712459, 'final_pass@1_max': 0.7933546304801778, 'steps_to_0.5': '83 (3/3)', 'seq_entropy': 0.9073685805002848}
+   {'method': 'batch', 'final_pass@1_mean': 0.6605897454906975, 'final_pass@1_min': 0.5921539381772293, 'final_pass@1_max': 0.794523847103123, 'steps_to_0.5': '87 (3/3)', 'seq_entropy': 0.858339250087738}
+   {'method': 'rloo', 'final_pass@1_mean': 0.6624908899811304, 'final_pass@1_min': 0.5962368857363802, 'final_pass@1_max': 0.7943589091301569, 'steps_to_0.5': '97 (3/3)', 'seq_entropy': 1.2607887585957844}
+   {'method': 'grpo', 'final_pass@1_mean': 0.6570364171827159, 'final_pass@1_min': 0.5877101067950824, 'final_pass@1_max': 0.7926138282156097, 'steps_to_0.5': '100 (3/3)', 'seq_entropy': 1.3835076093673706}
+   {'method': 'critic_gae', 'final_pass@1_mean': 0.5966791325394217, 'final_pass@1_min': 0.596039391000194, 'final_pass@1_max': 0.5971426130798541, 'steps_to_0.5': '97 (3/3)', 'seq_entropy': 0.8133644858996073}
+   {'method': 'ppo', 'final_pass@1_mean': 0.7309927821888588, 'final_pass@1_min': 0.5986899257543195, 'final_pass@1_max': 0.7975252033581126, 'steps_to_0.5': '30 (3/3)', 'seq_entropy': 0.36860255400339764}
+
+5 prompts x G = 8, 200 steps, Adam lr 3e-3 (critic lr 1e-2), seeds 0-2. pass@1 = 0.6 means the three common targets are solved and the two rare ones are not.
+    method  final_pass@1_mean  final_pass@1_min  final_pass@1_max  steps_to_0.5  seq_entropy
+ reinforce             0.7257            0.5944            0.7934      83 (3/3)       0.9074
+     batch             0.6606            0.5922            0.7945      87 (3/3)       0.8583
+      rloo             0.6625            0.5962            0.7944      97 (3/3)        1.261
+      grpo              0.657            0.5877            0.7926     100 (3/3)        1.384
+critic_gae             0.5967             0.596            0.5971      97 (3/3)       0.8134
+       ppo              0.731            0.5987            0.7975      30 (3/3)       0.3686

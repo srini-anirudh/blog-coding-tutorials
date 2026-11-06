@@ -1,0 +1,73 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/reinforcement-learning-from-first-principles/scripts/03_baselines.py",
+ "score_mean_norm": 1.001192799776618e-06,
+ "grad_norm": 0.08018037676811218,
+ "parabola": {
+  "rows": [
+   {
+    "b": -0.5,
+    "variance": 11.471602344884943,
+    "vs_b0": 3.5423488450168783
+   },
+   {
+    "b": 0.0,
+    "variance": 3.238416894209154,
+    "vs_b0": 1.0
+   },
+   {
+    "b": 0.08746964589226991,
+    "variance": 2.8198917962451264,
+    "vs_b0": 0.8707624399093205
+   },
+   {
+    "b": 0.17493929178453982,
+    "variance": 2.705637589704232,
+    "vs_b0": 0.8354815572208684
+   },
+   {
+    "b": 0.1640494608160847,
+    "variance": 2.703279512869485,
+    "vs_b0": 0.8347533999416238
+   },
+   {
+    "b": 0.5,
+    "variance": 4.947504323744724,
+    "vs_b0": 1.527753987632572
+   },
+   {
+    "b": 1.0,
+    "variance": 16.598864633491655,
+    "vs_b0": 5.125610807914595
+   }
+  ],
+  "mean_R": 0.17493929178453982,
+  "b_star": 0.1640494608160847
+ },
+ "sampled": [
+  {
+   "baseline": "none",
+   "mean_projection": 1.0885474681854248,
+   "std_error": 0.04455181583762169,
+   "mse_vs_none": 1.0
+  },
+  {
+   "baseline": "batch",
+   "mean_projection": 0.7790718674659729,
+   "std_error": 0.037583302706480026,
+   "mse_vs_none": 0.7066386020693839
+  },
+  {
+   "baseline": "loo",
+   "mean_projection": 1.0387624502182007,
+   "std_error": 0.0501110702753067,
+   "mse_vs_none": 1.2557335952170234
+  },
+  {
+   "baseline": "state_value",
+   "mean_projection": 1.0707907676696777,
+   "std_error": 0.04128259792923927,
+   "mse_vs_none": 0.8901429859961087
+  }
+ ]
+}

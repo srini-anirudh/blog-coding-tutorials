@@ -1,0 +1,17 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+command: python labs/reinforcement-learning-from-first-principles/scripts/02_variance.py
+1. Untrained policy, G = 8, 400 groups per prompt
+target_sum  exact_pass_rate  share_R0  groups_all_equal  predicted_all_equal
+         4          0.01082      0.99            0.9225               0.9167
+         8          0.05776    0.9497            0.6625               0.6213
+        12          0.09629    0.9016              0.44               0.4449
+        16          0.06358    0.9413            0.6225               0.5912
+        20          0.01763    0.9828              0.87               0.8674
+
+2. Reward depends only on token 0. N = 16 rollouts per estimate, 300 estimates per T
+  T  pass_rate     snr  snr_x_sqrtT  cos_to_true
+  2     0.1775   1.252        1.771        0.793
+  8     0.1775  0.5257        1.487       0.4509
+ 32     0.1775  0.2402        1.359       0.2437
+128     0.1775  0.1175        1.329       0.1203
+log-log slope of SNR against T: -0.569 (the post's 1/sqrt(T) rule predicts -0.5)

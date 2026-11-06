@@ -1,0 +1,74 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/reinforcement-learning-from-first-principles/scripts/02_variance.py",
+ "zero_contribution": [
+  {
+   "target_sum": 4,
+   "exact_pass_rate": 0.0108169075101614,
+   "share_R0": 0.9900000095367432,
+   "groups_all_equal": 0.9225000143051147,
+   "predicted_all_equal": 0.916670967954412
+  },
+  {
+   "target_sum": 8,
+   "exact_pass_rate": 0.05775632709264755,
+   "share_R0": 0.9496874809265137,
+   "groups_all_equal": 0.6625000238418579,
+   "predicted_all_equal": 0.6213064169674264
+  },
+  {
+   "target_sum": 12,
+   "exact_pass_rate": 0.09629274904727936,
+   "share_R0": 0.901562511920929,
+   "groups_all_equal": 0.4399999976158142,
+   "predicted_all_equal": 0.4448587552149913
+  },
+  {
+   "target_sum": 16,
+   "exact_pass_rate": 0.06357874721288681,
+   "share_R0": 0.9412500262260437,
+   "groups_all_equal": 0.6225000023841858,
+   "predicted_all_equal": 0.5912485578265809
+  },
+  {
+   "target_sum": 20,
+   "exact_pass_rate": 0.017629349604249,
+   "share_R0": 0.9828125238418579,
+   "groups_all_equal": 0.8700000047683716,
+   "predicted_all_equal": 0.8673672718846839
+  }
+ ],
+ "length_snr": {
+  "rows": [
+   {
+    "T": 2,
+    "pass_rate": 0.17751550674438477,
+    "snr": 1.2520997524261475,
+    "snr_x_sqrtT": 1.7707364513250525,
+    "cos_to_true": 0.7929754257202148
+   },
+   {
+    "T": 8,
+    "pass_rate": 0.17751550674438477,
+    "snr": 0.5256556272506714,
+    "snr_x_sqrtT": 1.4867786343912717,
+    "cos_to_true": 0.4508717954158783
+   },
+   {
+    "T": 32,
+    "pass_rate": 0.17751550674438477,
+    "snr": 0.24022646248340607,
+    "snr_x_sqrtT": 1.3589260851397775,
+    "cos_to_true": 0.24371302127838135
+   },
+   {
+    "T": 128,
+    "pass_rate": 0.17751550674438477,
+    "snr": 0.1174585297703743,
+    "snr_x_sqrtT": 1.3288915665413383,
+    "cos_to_true": 0.12026522308588028
+   }
+  ],
+  "slope": -0.5690210189495966
+ }
+}

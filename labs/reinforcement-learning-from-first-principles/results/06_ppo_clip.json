@@ -1,0 +1,128 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/reinforcement-learning-from-first-principles/scripts/06_ppo_clip.py",
+ "regions": [
+  {
+   "A": 1.0,
+   "ratio": 1.1,
+   "objective": 1.1,
+   "d_obj_d_ratio": 1.0
+  },
+  {
+   "A": 1.0,
+   "ratio": 1.4,
+   "objective": 1.2,
+   "d_obj_d_ratio": 0.0
+  },
+  {
+   "A": -1.0,
+   "ratio": 0.9,
+   "objective": -0.9,
+   "d_obj_d_ratio": -1.0
+  },
+  {
+   "A": -1.0,
+   "ratio": 0.6,
+   "objective": -0.8,
+   "d_obj_d_ratio": 0.0
+  },
+  {
+   "A": -1.0,
+   "ratio": 1.4,
+   "objective": -1.4,
+   "d_obj_d_ratio": -1.0
+  }
+ ],
+ "reuse_one_batch": {
+  "clipped": [
+   {
+    "epoch": 1,
+    "outside_frac": 0.36500000953674316,
+    "clip_frac": 0.11999999731779099,
+    "ratio_max": 2.1710638999938965,
+    "ratio_min": 0.38322776556015015,
+    "exact_kl": 0.18932905793190002
+   },
+   {
+    "epoch": 2,
+    "outside_frac": 0.5375000238418579,
+    "clip_frac": 0.20749999582767487,
+    "ratio_max": 3.2197022438049316,
+    "ratio_min": 0.23848658800125122,
+    "exact_kl": 0.4324815273284912
+   },
+   {
+    "epoch": 4,
+    "outside_frac": 0.5849999785423279,
+    "clip_frac": 0.2150000035762787,
+    "ratio_max": 3.0027177333831787,
+    "ratio_min": 0.1694164276123047,
+    "exact_kl": 0.5313928723335266
+   },
+   {
+    "epoch": 8,
+    "outside_frac": 0.5924999713897705,
+    "clip_frac": 0.23499999940395355,
+    "ratio_max": 2.951557159423828,
+    "ratio_min": 0.14846770465373993,
+    "exact_kl": 0.48555222153663635
+   },
+   {
+    "epoch": 16,
+    "outside_frac": 0.6575000286102295,
+    "clip_frac": 0.32249999046325684,
+    "ratio_max": 3.2171120643615723,
+    "ratio_min": 0.19857057929039001,
+    "exact_kl": 0.5414493680000305
+   }
+  ],
+  "unclipped": [
+   {
+    "epoch": 1,
+    "outside_frac": 0.36500000953674316,
+    "clip_frac": 0.11999999731779099,
+    "ratio_max": 2.1710638999938965,
+    "ratio_min": 0.38322776556015015,
+    "exact_kl": 0.18932905793190002
+   },
+   {
+    "epoch": 2,
+    "outside_frac": 0.6424999833106995,
+    "clip_frac": 0.23000000417232513,
+    "ratio_max": 3.869635820388794,
+    "ratio_min": 0.1439821720123291,
+    "exact_kl": 0.7584556341171265
+   },
+   {
+    "epoch": 4,
+    "outside_frac": 0.8424999713897705,
+    "clip_frac": 0.27000001072883606,
+    "ratio_max": 6.261132717132568,
+    "ratio_min": 0.02345026098191738,
+    "exact_kl": 2.5005624294281006
+   },
+   {
+    "epoch": 8,
+    "outside_frac": 0.9125000238418579,
+    "clip_frac": 0.29499998688697815,
+    "ratio_max": 6.763553142547607,
+    "ratio_min": 0.0037992040161043406,
+    "exact_kl": 4.774353981018066
+   },
+   {
+    "epoch": 16,
+    "outside_frac": 0.9524999856948853,
+    "clip_frac": 0.3474999964237213,
+    "ratio_max": 7.95023250579834,
+    "ratio_min": 0.0001390157558489591,
+    "exact_kl": 6.005749702453613
+   }
+  ]
+ },
+ "clip_in_training": {
+  "mean_clip_frac": 0.016500001773238182,
+  "max_clip_frac": 0.16500000655651093,
+  "mean_outside_frac": 0.03304999694228172,
+  "final_pass@1": 0.7975252033581126
+ }
+}

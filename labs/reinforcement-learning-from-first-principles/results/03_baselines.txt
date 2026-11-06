@@ -1,0 +1,21 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+command: python labs/reinforcement-learning-from-first-principles/scripts/03_baselines.py
+1. ||E[grad log pi]|| = 1.00e-06   ||grad J|| = 8.02e-02   (sum over all 7776 completions)
+
+2. One-sample variance tr Cov[(R - b) grad log pi] on 4 digits x 4 tokens, sum = 6 (256 completions)
+      b  variance   vs_b0
+   -0.5     11.47   3.542
+      0     3.238       1
+0.08747      2.82  0.8708
+ 0.1749     2.706  0.8355
+  0.164     2.703  0.8348
+    0.5     4.948   1.528
+      1      16.6   5.126
+mean reward E[R] = 0.1749; exact minimiser E[R|s|^2]/E[|s|^2] = 0.1640; corr(R, |s|^2) under pi = -0.058
+
+3-4. Sum = 12 task, N = 4 samples per estimate, 3000 estimates. mean_projection is <mean estimate, grad J> / ||grad J||^2: 1 means unbiased, (N-1)/N = 0.75 is the predicted self-inclusion bias.
+   baseline  mean_projection  std_error  mse_vs_none
+       none            1.089    0.04455            1
+      batch           0.7791    0.03758       0.7066
+        loo            1.039    0.05011        1.256
+state_value            1.071    0.04128       0.8901

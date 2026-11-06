@@ -1,0 +1,21 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+command: python labs/reinforcement-learning-from-first-principles/scripts/01_policy_gradient.py
+task: 6 digits, 5 tokens, reward 1 if the digits sum to 12; 7776 completions
+J = 0.0963   ||grad J|| = 8.0180e-02   parameters = 26054
+exact E[R grad log pi] vs autograd of the exact sum: relative difference 0.00e+00
+finite difference along a random direction (float64): 1.253485e-04   score-function gradient . direction: 1.253485e-04
+
+REINFORCE with N samples. RMS error relative to ||grad J||; unbiased means error x sqrt(N) is flat
+   N  estimates  rms_rel_error  rms_rel_error_x_sqrtN  cos_to_true  zero_frac
+   1        400          21.36                  21.36      0.01235       0.93
+   4        400           13.1                  26.21      0.03979       0.66
+  16        400          6.611                  26.45       0.1402     0.2075
+  64         50          3.222                  25.78       0.3051          0
+ 256         50          1.676                  26.82       0.5162          0
+1024         50         0.7793                  24.94       0.7944          0
+zero_frac is the share of estimates where every sample scored 0, so the estimate is the zero vector.
+
+The greedy trap: 5 prompts, 7 answers each, answers 0-2 correct. Both policies have J = 0.6.
+   policy    J  entropy_nats  grad_norm
+  diverse  0.6         1.887    0.08198
+collapsed  0.6     1.684e-11  1.123e-13

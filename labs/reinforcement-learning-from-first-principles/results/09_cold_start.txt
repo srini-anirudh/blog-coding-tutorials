@@ -1,0 +1,33 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+command: python labs/reinforcement-learning-from-first-principles/scripts/09_cold_start.py
+1. Random init: exact p(target) = 9.75e-11 (16^-8 = 2.33e-10). 200 RL steps x 64 rollouts: 0 successes, 0 steps with a nonzero gradient, largest weight change 0.0e+00
+
+2. 20 SFT steps on noisy demonstrations: exact p(target) = 0.0218. Then the same RL loop:
+step  p_target
+   0   0.02182
+  10    0.5441
+  20    0.8878
+  30    0.9632
+  40    0.9821
+  50    0.9886
+  60     0.991
+  70     0.992
+  80    0.9929
+  90    0.9938
+ 100    0.9942
+59 of 100 steps had a nonzero gradient; 5627 successes in 6400 rollouts
+
+3. Share of groups with at least one success: measured on Bernoulli(p) rewards, 20,000 groups
+   p   G  measured  1-(1-p)^G
+   0   4         0          0
+   0  16         0          0
+   0  64         0          0
+0.01   4    0.0416     0.0394
+0.01  16     0.152     0.1485
+0.01  64    0.4723     0.4744
+0.05   4    0.1841     0.1855
+0.05  16    0.5677     0.5599
+0.05  64    0.9649     0.9625
+0.12   4    0.4033     0.4003
+0.12  16    0.8737     0.8707
+0.12  64    0.9997     0.9997

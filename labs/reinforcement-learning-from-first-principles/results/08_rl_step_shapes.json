@@ -1,0 +1,69 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/reinforcement-learning-from-first-principles/scripts/08_rl_step_shapes.py",
+ "mask_bug": {
+  "cos": 0.9050533175468445,
+  "rel_diff": 0.4823721647262573
+ },
+ "normalisation": {
+  "seq": [
+   0.004999999888241291,
+   0.0002500000118743628
+  ],
+  "token": [
+   0.0004761904710903764,
+   0.0004761904710903764
+  ]
+ },
+ "logits": {
+  "gb_bf16": 268.435456,
+  "chunk_max_diff": 0.0
+ },
+ "four_models": [
+  {
+   "setup": "PPO with reward model",
+   "policy": 112.0,
+   "critic": 112.0,
+   "reference": 14.0,
+   "reward_model": 14.0,
+   "inference_copy": 0.0,
+   "total": 252.0
+  },
+  {
+   "setup": "+ separate inference copy",
+   "policy": 112.0,
+   "critic": 112.0,
+   "reference": 14.0,
+   "reward_model": 14.0,
+   "inference_copy": 14.0,
+   "total": 266.0
+  },
+  {
+   "setup": "verifier instead of reward model",
+   "policy": 112.0,
+   "critic": 112.0,
+   "reference": 14.0,
+   "reward_model": 0.0,
+   "inference_copy": 0.0,
+   "total": 238.0
+  },
+  {
+   "setup": "critic-free (group baseline)",
+   "policy": 112.0,
+   "critic": 0.0,
+   "reference": 14.0,
+   "reward_model": 0.0,
+   "inference_copy": 0.0,
+   "total": 126.0
+  },
+  {
+   "setup": "critic-free, no reference KL",
+   "policy": 112.0,
+   "critic": 0.0,
+   "reference": 0.0,
+   "reward_model": 0.0,
+   "inference_copy": 0.0,
+   "total": 112.0
+  }
+ ]
+}

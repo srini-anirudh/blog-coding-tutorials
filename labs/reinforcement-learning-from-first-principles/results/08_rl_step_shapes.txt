@@ -1,0 +1,26 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+command: python labs/reinforcement-learning-from-first-principles/scripts/08_rl_step_shapes.py
+1. One step, B = 4 prompts, G = 4 samples each, T = 12, |V| = 11 actions
+prompts      [4, 4]         [B, Lp], left-padded
+sequences    [16, 16]       [B*G, Lp + T] after the rollout
+rewards      [16]           [B*G], mean 0.188
+logits       [16, 12, 11]   [B*G, T, |V|]  <- the memory spike at real scale
+logprobs     [16, 12]       [B*G, T] after gathering the taken token (policy and reference)
+values       [16, 12]       [B*G, T]
+advantages   [16, 12]       [B*G, T], one backward scan, zero after EOS
+mask         [16, 12]       [B*G, T], 130 of 192 positions are real response tokens
+loss = clip -0.0456 + 0.5 * value 0.0804 - 0.01 * entropy 2.3780; ratio mean on the first epoch = 1 exactly (1.0 max); KL to reference 0.0e+00 (policy == reference)
+
+2. Forgetting the post-EOS mask: cosine(correct grad, buggy grad) = 0.905, relative difference = 0.482; 62 masked positions were included
+
+3. Weight of one token, answers of 100 and 2000 tokens: sequence-mean 5.00e-03 vs 2.50e-04 (ratio 20x); token-mean 4.76e-04 vs 4.76e-04 (ratio 1x)
+
+4. Logits for B*G = 256, T = 4096, |V| = 128,000 in bf16: 268.4 GB. Chunked gather on [8, 512, 8000]: max |full - chunked| = 0.0e+00; peak logits 131 MB full vs 16 MB per chunk of 64 positions (fp32)
+
+5. Weights and optimiser state at 7B parameters, GB (16 B/param trainable, 2 B/param frozen)
+                           setup  policy  critic  reference  reward_model  inference_copy  total
+           PPO with reward model     112     112         14            14               0    252
+       + separate inference copy     112     112         14            14              14    266
+verifier instead of reward model     112     112         14             0               0    238
+    critic-free (group baseline)     112       0         14             0               0    126
+    critic-free, no reference KL     112       0          0             0               0    112
