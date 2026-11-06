@@ -1,0 +1,29 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/the-making-of-an-ai-agent/scripts/05_state_layers.py
+
+50 episodes. Each asks for 6 calendar events with 1 to 3 email reads after each. Context budget 12 lines; compaction keeps the task, a summary of emails read, and the last 6 lines.
+Per-episode means. The policy is scripted: it trusts its transcript (see agentcraft/state_layers.py).
+
+| harness | duplicate events | missing events | tool calls | compactions | tool errors | finished |
+|---|---|---|---|---|---|---|
+| naive harness (context only) | 5.100 | 0.000 | 22.960 | 2.120 | 0.000 | 1.000 |
+| + persistent write log re-injected after compaction | 0.000 | 0.000 | 17.860 | 1.500 | 0.000 | 1.000 |
+| + policy lists events before each write | 0.000 | 0.000 | 30.740 | 3.420 | 0.000 | 1.000 |
+| + idempotent create in the tool | 0.000 | 0.000 | 22.960 | 2.120 | 0.000 | 1.000 |
+| no compaction (context budget 1000) | 0.000 | 0.000 | 17.860 | 0.000 | 0.000 | 1.000 |
+| token expires after 15 calls, no refresh | 0.000 | 0.640 | 181.460 | 34.300 | 166.500 | 0.100 |
+| token expires after 15 calls, harness refreshes | 0.000 | 0.000 | 18.760 | 1.500 | 0.000 | 1.000 |
+
+Final context of episode 0 under the naive harness:
+task: create meeting-0; read 0-0; read 0-1; create meeting-1; read 1-0; read 1-1; create meeting-2; 
+summary: read emails 2-0 3-0 3-1 4-0 0-0 0-1 1-0 1-1 
+ok: created meeting-0
+ok: created meeting-1
+ok: created meeting-2
+email 4-1: lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem
+email 4-2: lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem
+ok: created meeting-5
+ok: created meeting-3
+ok: created meeting-4
+email 5-0: lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem
+email 5-1: lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem

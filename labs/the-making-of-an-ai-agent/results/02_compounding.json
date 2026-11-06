@@ -1,0 +1,67 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only",
+ "command": "python labs/the-making-of-an-ai-agent/scripts/02_compounding.py",
+ "eps": 0.02,
+ "rows": [
+  {
+   "H": 3,
+   "exact_sum": 0.118408,
+   "eps_H2_over_2": 0.12,
+   "bc": 0.1208,
+   "dagger": 0.06065,
+   "dagger_irreversible": 0.1216,
+   "eps_H": 0.06
+  },
+  {
+   "H": 5,
+   "exact_sum": 0.2921190432,
+   "eps_H2_over_2": 0.30000000000000004,
+   "bc": 0.2836,
+   "dagger": 0.10375,
+   "dagger_irreversible": 0.30025,
+   "eps_H": 0.1
+  },
+  {
+   "H": 10,
+   "exact_sum": 1.0365675374897976,
+   "eps_H2_over_2": 1.1,
+   "bc": 1.0345,
+   "dagger": 0.2066,
+   "dagger_irreversible": 1.04025,
+   "eps_H": 0.2
+  },
+  {
+   "H": 20,
+   "exact_sum": 3.71279061599963,
+   "eps_H2_over_2": 4.2,
+   "bc": 3.76895,
+   "dagger": 0.40505,
+   "dagger_irreversible": 3.74335,
+   "eps_H": 0.4
+  },
+  {
+   "H": 50,
+   "exact_sum": 18.84431432426873,
+   "eps_H2_over_2": 25.5,
+   "bc": 18.9795,
+   "dagger": 1.0138,
+   "dagger_irreversible": 18.8199,
+   "eps_H": 1.0
+  },
+  {
+   "H": 100,
+   "exact_sum": 57.49835823884288,
+   "eps_H2_over_2": 101.0,
+   "bc": 58.1479,
+   "dagger": 2.0381,
+   "dagger_irreversible": 57.392,
+   "eps_H": 2.0
+  }
+ ],
+ "slopes_5_to_50": {
+  "bc": 1.8255785405843956,
+  "dagger": 0.9899641815032526,
+  "dagger_irreversible": 1.7971342953880494,
+  "exact_sum": 1.8096204701904774
+ }
+}

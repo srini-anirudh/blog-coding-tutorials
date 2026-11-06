@@ -1,0 +1,49 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/the-making-of-an-ai-agent/scripts/06_tool_retrieval.py
+
+Mean schema length: 106.3 tokens (SmolLM2-135M tokenizer, 300 sampled tools).
+
+Context cost in tokens (16,464 is ToolBench's API count, for scale; its schemas are not used here):
+
+| catalogue size | all schemas in prompt | top-8 in prompt | top-32 in prompt |
+|---|---|---|---|
+| 100 | 10,626 | 850 | 3,400 |
+| 1000 | 106,263 | 850 | 3,400 |
+| 10000 | 1,062,633 | 850 | 3,400 |
+| 16464 | 1,749,520 | 850 | 3,400 |
+
+Retrieval over the synthetic catalogue, TF-IDF cosine, 500 three-tool tasks per row (each word phrased with a synonym half the time).
+'all three retrieved' is the ceiling on task success: a task whose tools are not in the context cannot be solved.
+
+| catalogue | k | retrieval | per-tool recall | all three retrieved (ceiling) | recall^3 (independence) |
+|---|---|---|---|---|---|
+| 100 | 3 | whole request | 0.903 | 0.728 | 0.735 |
+| 100 | 3 | per clause | 0.815 | 0.536 | 0.541 |
+| 100 | 8 | whole request | 0.997 | 0.990 | 0.990 |
+| 100 | 8 | per clause | 0.969 | 0.912 | 0.909 |
+| 100 | 16 | whole request | 1.000 | 1.000 | 1.000 |
+| 100 | 16 | per clause | 1.000 | 1.000 | 1.000 |
+| 100 | 32 | whole request | 1.000 | 1.000 | 1.000 |
+| 100 | 32 | per clause | 1.000 | 1.000 | 1.000 |
+| 100 | 64 | whole request | 1.000 | 1.000 | 1.000 |
+| 100 | 64 | per clause | 1.000 | 1.000 | 1.000 |
+| 1000 | 3 | whole request | 0.570 | 0.086 | 0.185 |
+| 1000 | 3 | per clause | 0.543 | 0.158 | 0.160 |
+| 1000 | 8 | whole request | 0.817 | 0.548 | 0.545 |
+| 1000 | 8 | per clause | 0.782 | 0.506 | 0.478 |
+| 1000 | 16 | whole request | 0.943 | 0.856 | 0.839 |
+| 1000 | 16 | per clause | 0.841 | 0.620 | 0.596 |
+| 1000 | 32 | whole request | 1.000 | 1.000 | 1.000 |
+| 1000 | 32 | per clause | 0.899 | 0.748 | 0.727 |
+| 1000 | 64 | whole request | 1.000 | 1.000 | 1.000 |
+| 1000 | 64 | per clause | 0.988 | 0.964 | 0.964 |
+| 10000 | 3 | whole request | 0.269 | 0.002 | 0.019 |
+| 10000 | 3 | per clause | 0.291 | 0.030 | 0.025 |
+| 10000 | 8 | whole request | 0.410 | 0.052 | 0.069 |
+| 10000 | 8 | per clause | 0.375 | 0.054 | 0.053 |
+| 10000 | 16 | whole request | 0.549 | 0.112 | 0.166 |
+| 10000 | 16 | per clause | 0.515 | 0.134 | 0.137 |
+| 10000 | 32 | whole request | 0.723 | 0.346 | 0.378 |
+| 10000 | 32 | per clause | 0.693 | 0.342 | 0.332 |
+| 10000 | 64 | whole request | 0.815 | 0.538 | 0.541 |
+| 10000 | 64 | per clause | 0.773 | 0.474 | 0.462 |

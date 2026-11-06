@@ -1,0 +1,20 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/the-making-of-an-ai-agent/scripts/02_compounding.py
+
+Per-step error eps = 0.02. 20000 episodes per cell. BC: 50 expert demos. DAgger: 50 demos + 5 rounds of 50 learner rollouts labelled by the expert.
+Cost = expected number of steps that end off the expert's path.
+
+| H | exact sum (absorbing) | eps H(H+1)/2 | BC (measured) | DAgger (measured) | DAgger, irreversible mistakes | eps H | BC cost / H | DAgger cost / H |
+|---|---|---|---|---|---|---|---|---|
+| 3 | 0.118 | 0.120 | 0.121 | 0.061 | 0.122 | 0.060 | 0.040 | 0.020 |
+| 5 | 0.292 | 0.300 | 0.284 | 0.104 | 0.300 | 0.100 | 0.057 | 0.021 |
+| 10 | 1.037 | 1.100 | 1.034 | 0.207 | 1.040 | 0.200 | 0.103 | 0.021 |
+| 20 | 3.713 | 4.200 | 3.769 | 0.405 | 3.743 | 0.400 | 0.188 | 0.020 |
+| 50 | 18.844 | 25.500 | 18.980 | 1.014 | 18.820 | 1.000 | 0.380 | 0.020 |
+| 100 | 57.498 | 101.000 | 58.148 | 2.038 | 57.392 | 2.000 | 0.581 | 0.020 |
+
+Log-log slope of cost against H between H = 5 and H = 50 (2 = quadratic, 1 = linear):
+  bc: 1.83
+  dagger: 0.99
+  dagger_irreversible: 1.80
+  exact_sum: 1.81

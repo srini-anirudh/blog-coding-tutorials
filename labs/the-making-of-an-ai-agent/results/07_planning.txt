@@ -1,0 +1,13 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/the-making-of-an-ai-agent/scripts/07_planning.py
+
+Another writer moves one unread file with probability q = 0.05 after every tool call. 20000 episodes per row.
+Predicted plan-then-act success is (1 - q)^L. Plan half-life = ln 0.5 / ln(1 - q) = 13.5 steps.
+
+| files L | (1-q)^L | plan-then-act success | calls | react success | calls | hybrid success | calls |
+|---|---|---|---|---|---|---|---|
+| 2 | 0.902 | 0.900 | 4.000 | 1.000 | 6.143 | 1.000 | 4.207 |
+| 4 | 0.815 | 0.812 | 6.000 | 1.000 | 10.201 | 1.000 | 6.404 |
+| 8 | 0.663 | 0.664 | 10.000 | 1.000 | 18.265 | 1.000 | 10.755 |
+| 16 | 0.440 | 0.443 | 18.000 | 1.000 | 34.321 | 1.000 | 19.439 |
+| 32 | 0.194 | 0.194 | 34.000 | 1.000 | 66.381 | 1.000 | 36.428 |

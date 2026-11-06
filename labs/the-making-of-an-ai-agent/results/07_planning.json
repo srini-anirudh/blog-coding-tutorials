@@ -1,0 +1,88 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only",
+ "command": "python labs/the-making-of-an-ai-agent/scripts/07_planning.py",
+ "q": 0.05,
+ "half_life_steps": 13.513407333964874,
+ "rows": [
+  {
+   "files": 2,
+   "plan-then-act": {
+    "success": 0.9003,
+    "calls": 4.0
+   },
+   "react": {
+    "success": 1.0,
+    "calls": 6.1428
+   },
+   "hybrid": {
+    "success": 1.0,
+    "calls": 4.2072
+   },
+   "predicted_plan_success": 0.9025
+  },
+  {
+   "files": 4,
+   "plan-then-act": {
+    "success": 0.8124,
+    "calls": 6.0
+   },
+   "react": {
+    "success": 1.0,
+    "calls": 10.2006
+   },
+   "hybrid": {
+    "success": 1.0,
+    "calls": 6.4038
+   },
+   "predicted_plan_success": 0.8145062499999999
+  },
+  {
+   "files": 8,
+   "plan-then-act": {
+    "success": 0.66435,
+    "calls": 10.0
+   },
+   "react": {
+    "success": 1.0,
+    "calls": 18.2648
+   },
+   "hybrid": {
+    "success": 1.0,
+    "calls": 10.7547
+   },
+   "predicted_plan_success": 0.6634204312890623
+  },
+  {
+   "files": 16,
+   "plan-then-act": {
+    "success": 0.4425,
+    "calls": 18.0
+   },
+   "react": {
+    "success": 1.0,
+    "calls": 34.3205
+   },
+   "hybrid": {
+    "success": 1.0,
+    "calls": 19.4394
+   },
+   "predicted_plan_success": 0.44012666865176536
+  },
+  {
+   "files": 32,
+   "plan-then-act": {
+    "success": 0.1941,
+    "calls": 34.0
+   },
+   "react": {
+    "success": 1.0,
+    "calls": 66.3808
+   },
+   "hybrid": {
+    "success": 1.0,
+    "calls": 36.4279
+   },
+   "predicted_plan_success": 0.19371148445850087
+  }
+ ]
+}

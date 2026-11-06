@@ -1,0 +1,70 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only",
+ "command": "python labs/the-making-of-an-ai-agent/scripts/05_state_layers.py",
+ "episodes": 50,
+ "rows": [
+  {
+   "variant": "naive harness (context only)",
+   "duplicate_events": 5.1,
+   "missing_events": 0.0,
+   "tool_calls": 22.96,
+   "compactions": 2.12,
+   "finished": 1.0,
+   "tool_errors": 0.0
+  },
+  {
+   "variant": "+ persistent write log re-injected after compaction",
+   "duplicate_events": 0.0,
+   "missing_events": 0.0,
+   "tool_calls": 17.86,
+   "compactions": 1.5,
+   "finished": 1.0,
+   "tool_errors": 0.0
+  },
+  {
+   "variant": "+ policy lists events before each write",
+   "duplicate_events": 0.0,
+   "missing_events": 0.0,
+   "tool_calls": 30.74,
+   "compactions": 3.42,
+   "finished": 1.0,
+   "tool_errors": 0.0
+  },
+  {
+   "variant": "+ idempotent create in the tool",
+   "duplicate_events": 0.0,
+   "missing_events": 0.0,
+   "tool_calls": 22.96,
+   "compactions": 2.12,
+   "finished": 1.0,
+   "tool_errors": 0.0
+  },
+  {
+   "variant": "no compaction (context budget 1000)",
+   "duplicate_events": 0.0,
+   "missing_events": 0.0,
+   "tool_calls": 17.86,
+   "compactions": 0.0,
+   "finished": 1.0,
+   "tool_errors": 0.0
+  },
+  {
+   "variant": "token expires after 15 calls, no refresh",
+   "duplicate_events": 0.0,
+   "missing_events": 0.64,
+   "tool_calls": 181.46,
+   "compactions": 34.3,
+   "finished": 0.1,
+   "tool_errors": 166.5
+  },
+  {
+   "variant": "token expires after 15 calls, harness refreshes",
+   "duplicate_events": 0.0,
+   "missing_events": 0.0,
+   "tool_calls": 18.76,
+   "compactions": 1.5,
+   "finished": 1.0,
+   "tool_errors": 0.0
+  }
+ ]
+}

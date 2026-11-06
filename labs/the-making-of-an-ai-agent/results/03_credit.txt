@@ -1,0 +1,38 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/the-making-of-an-ai-agent/scripts/03_credit.py
+
+64 tasks, 4 stages, 4 actions per stage (1 advance, 1 dead end, 2 no-ops), horizon 12, gamma 0.9.
+Tabular softmax policy, Adam lr 0.1, 16 tasks x 8 rollouts per iteration, omega 1. 5 seeds, mean +- std.
+success = exact P(success) averaged over tasks (dynamic programming, no sampling noise).
+noop prob = probability mass the policy puts on no-op actions, averaged over states.
+anchor coverage = share of steps whose anchor group has 2 or more members (seen by GiGPO's matcher).
+
+| method | iteration | success | noop prob | anchor coverage |
+|---|---|---|---|---|
+| grpo | 10 | 0.126 +- 0.010 | 0.480 +- 0.004 | 0.987 |
+| grpo | 25 | 0.367 +- 0.023 | 0.418 +- 0.007 | 0.991 |
+| grpo | 50 | 0.775 +- 0.014 | 0.292 +- 0.007 | 0.995 |
+| grpo | 100 | 0.956 +- 0.003 | 0.182 +- 0.004 | 0.997 |
+| grpo | 200 | 0.986 +- 0.001 | 0.127 +- 0.005 | 0.999 |
+| gigpo, state noise 0.0 | 10 | 0.131 +- 0.010 | 0.476 +- 0.004 | 0.988 |
+| gigpo, state noise 0.0 | 25 | 0.397 +- 0.022 | 0.397 +- 0.006 | 0.992 |
+| gigpo, state noise 0.0 | 50 | 0.823 +- 0.012 | 0.206 +- 0.007 | 0.995 |
+| gigpo, state noise 0.0 | 100 | 0.980 +- 0.001 | 0.032 +- 0.001 | 0.998 |
+| gigpo, state noise 0.0 | 200 | 0.994 +- 0.000 | 0.007 +- 0.000 | 0.999 |
+| gigpo, state noise 0.5 | 10 | 0.119 +- 0.003 | 0.482 +- 0.002 | 0.478 |
+| gigpo, state noise 0.5 | 25 | 0.356 +- 0.012 | 0.417 +- 0.005 | 0.482 |
+| gigpo, state noise 0.5 | 50 | 0.798 +- 0.004 | 0.244 +- 0.004 | 0.487 |
+| gigpo, state noise 0.5 | 100 | 0.973 +- 0.002 | 0.056 +- 0.004 | 0.492 |
+| gigpo, state noise 0.5 | 200 | 0.993 +- 0.000 | 0.014 +- 0.001 | 0.494 |
+| gigpo, state noise 1.0 | 10 | 0.120 +- 0.011 | 0.484 +- 0.002 | 0.000 |
+| gigpo, state noise 1.0 | 25 | 0.361 +- 0.025 | 0.425 +- 0.006 | 0.000 |
+| gigpo, state noise 1.0 | 50 | 0.770 +- 0.023 | 0.302 +- 0.010 | 0.000 |
+| gigpo, state noise 1.0 | 100 | 0.956 +- 0.001 | 0.182 +- 0.003 | 0.000 |
+| gigpo, state noise 1.0 | 200 | 0.986 +- 0.000 | 0.124 +- 0.004 | 0.000 |
+
+Task 0, 4 rollouts of the untrained policy (rollout seed 15). Each step: stage:role A_E / A_S.
+
+rollout 1, R = 0:  s0:noop -0.50/-0.30 (R_t 0.00) | s0:advance -0.50/-0.30 (R_t 0.00) | s1:advance -0.50/-1.09 (R_t 0.00) | s2:dead_end -0.50/-1.73 (R_t 0.00)
+rollout 2, R = 0:  s0:noop -0.50/-0.30 (R_t 0.00) | s0:noop -0.50/-0.30 (R_t 0.00) | s0:advance -0.50/-0.30 (R_t 0.00) | s1:dead_end -0.50/-1.09 (R_t 0.00)
+rollout 3, R = 0:  s0:noop -0.50/-0.30 (R_t 0.00) | s0:noop -0.50/-0.30 (R_t 0.00) | s0:noop -0.50/-0.30 (R_t 0.00) | s0:noop -0.50/-0.30 (R_t 0.00) | s0:dead_end -0.50/-0.30 (R_t 0.00)
+rollout 4, R = 1:  s0:advance +1.50/+3.02 (R_t 0.43) | s1:noop +1.50/+0.54 (R_t 0.48) | s1:noop +1.50/+0.72 (R_t 0.53) | s1:advance +1.50/+0.92 (R_t 0.59) | s2:noop +1.50/+0.10 (R_t 0.66) | s2:noop +1.50/+0.31 (R_t 0.73) | s2:noop +1.50/+0.53 (R_t 0.81) | s2:advance +1.50/+0.79 (R_t 0.90) | s3:advance +1.50/+0.00 (R_t 1.00)
