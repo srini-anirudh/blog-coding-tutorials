@@ -1,0 +1,43 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+Command: python labs/why-transformers-do-not-explode/scripts/02_signal_propagation.py
+
+1. Random tanh network, sigma_b = 0.2. Mean-field quantities by Gauss-Hermite quadrature (101 nodes).
+   Critical sigma_w (chi_1 = 1) found by bisection: 1.3041
+   Empirical depth scale: fit of |c_l - c*| ~ exp(-l/xi) for two inputs in width-1000 nets,
+   mean of 4 seeds. c_0 = 0.2 when c* = 1, c_0 = 0.95 when c* < 1.
+sigma_w     phase   chi_1       c*  xi = -1/ln C'(c*)  xi fitted  c at layer 60
+-------  --------  ------  -------  -----------------  ---------  -------------
+    0.8   ordered  0.5522        1              1.684      1.661              1
+      1   ordered  0.7791        1              4.005      4.181              1
+  1.304  critical       1   0.9964              986.5      28.44         0.8537
+    1.5   chaotic   1.101   0.4966              14.54      23.51         0.5367
+      2   chaotic   1.346   0.1366              7.107      12.26         0.1424
+      3   chaotic   1.859  0.03172              4.524      8.346        0.02013
+Ordered phase: c* = 1, every input maps to the same vector. Chaotic phase: c* < 1, nearby inputs decorrelate.
+When c* = 1 the slope C'(c*) equals chi_1, so the post's 1/|ln chi_1| is the depth scale there. In the chaotic
+phase the slope at c* < 1 is a different number, so 1/|ln chi_1| is only the ordered-side formula.
+The fit matches theory within about 5% in the ordered phase. In the chaotic phase it comes out 1.6 to 1.8
+times longer: the map is far from linear over the fitted range and width 1000 adds noise near c*.
+
+2. Dynamical isometry: singular values s of the end-to-end Jacobian, width 200, one network each.
+   tanh on the critical line with q* = 0.05: sigma_w = 1.0458, sigma_b = 0.0113.
+   ReLU at its critical point sigma_w = sqrt(2), sigma_b = 0.
+ phi     weights    L  mean s^2  std/mean of s^2  max s  share of s in (0.5, 2)
+----  ----------  ---  --------  ---------------  -----  ----------------------
+tanh    gaussian    8    0.9942            2.962  4.626                   0.185
+tanh    gaussian   32    0.5466            5.877  6.065                   0.055
+tanh    gaussian  128    0.6635            11.58  10.39                   0.015
+tanh  orthogonal    8    0.9851            0.319  1.239                   0.995
+tanh  orthogonal   32     0.902           0.6653  1.554                    0.88
+tanh  orthogonal  128    0.8264            1.323  2.309                    0.53
+relu    gaussian    8     1.127            3.936  6.406                   0.095
+relu    gaussian   32     1.619            7.125   11.4                   0.025
+relu    gaussian  128     1.047            12.42  13.54                    0.01
+relu  orthogonal    8    0.5475            3.143  3.574                    0.13
+relu  orthogonal   32    0.6186             5.55  5.987                    0.05
+relu  orthogonal  128   0.01707             9.03  1.429                   0.015
+Gaussian weights: the mean of s^2 stays of order 1 at criticality, but the spread grows with depth.
+Orthogonal + tanh near the origin keeps the spectrum concentrated. Orthogonal + ReLU does not: the 0/1
+derivative mask zeroes about half the directions at every layer (most s are below 1e-15), which is
+Pennington et al.'s point that ReLU cannot be isometric. 'critical' row: xi is large but finite only because
+the bisection lands a hair off the line; the fit over 40 layers cannot see a depth scale that long.

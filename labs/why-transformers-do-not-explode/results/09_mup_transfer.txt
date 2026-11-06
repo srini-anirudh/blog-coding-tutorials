@@ -1,0 +1,59 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+Command: python labs/why-transformers-do-not-explode/scripts/09_mup_transfer.py
+
+Task: predict the next character of Tiny Shakespeare from the previous 8 (one-hot, 520 inputs).
+Model: input -> width -> width -> 65, ReLU, Adam, batch 256, 400 steps, constant LR.
+muP follows Tensor Programs V, Table 3 (Adam), with base width 64, so SP and muP are identical at width 64.
+
+1. Coordinate check: RMS change of each layer's output after 5 Adam steps at lr 1e-2.
+param  width  hidden 1  hidden 2  output logits
+-----  -----  --------  --------  -------------
+   sp     64    0.1434    0.3586         0.9371
+   sp    128    0.1287    0.5064          2.225
+   sp    256   0.06955     0.271          1.717
+   sp    512   0.05492    0.1032         0.8741
+   sp   1024   0.06705   0.08261         0.8096
+   sp   2048   0.08107   0.06342         0.4567
+  mup     64    0.1434    0.3586         0.9371
+  mup    128    0.1442    0.3716         0.9783
+  mup    256    0.1586    0.3886         0.9786
+  mup    512    0.1553    0.3839         0.9399
+  mup   1024    0.1491    0.3583          0.861
+  mup   2048    0.1527    0.3699         0.8982
+Under SP the change of every layer depends on width (the output logits swing between 0.46 and 2.2 across widths); under muP each layer changes by a width-independent amount (hidden 2 stays within 0.36 to 0.39, logits within 0.86 to 0.98).
+
+2. Final training loss (mean of the last 20% of steps) against log2(lr), for each width.
+   SP
+width  2^-12  2^-11  2^-10   2^-9   2^-8   2^-7   2^-6   2^-5   2^-4   2^-3   2^-2
+-----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----
+   64      3  2.596  2.308  2.147  2.031  1.946  1.946  2.031  2.297  2.668  3.337
+  128   2.77  2.397  2.191  2.043  1.922  1.853  1.877  2.006  2.299  2.854  3.264
+  256   2.51   2.24  2.073   1.93  1.823  1.789  1.842  2.035  2.477  3.047  3.204
+  512  2.322  2.134  1.982  1.848  1.761  1.757  1.843  2.121  2.431  2.829  3.338
+ 1024  2.181  2.027  1.882   1.76  1.706  1.723  1.893  2.177  2.564  3.235  3.484
+ 2048  2.067  1.927  1.797  1.705  1.668   1.75  2.042  2.266  2.722  3.366  3.572
+
+   MUP
+width  2^-12  2^-11  2^-10   2^-9   2^-8   2^-7   2^-6   2^-5   2^-4   2^-3   2^-2
+-----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----
+   64      3  2.596  2.308  2.147  2.031  1.946  1.946  2.031  2.297  2.668  3.337
+  128  2.996  2.567  2.289  2.124   1.99  1.885  1.844  1.909  2.085  2.442  3.013
+  256  2.977  2.532  2.264  2.104  1.967  1.851  1.788  1.818  1.966  2.287   2.81
+  512  2.984  2.537  2.261  2.104  1.966  1.839  1.763  1.755  1.867  2.111  2.509
+ 1024  2.989  2.531  2.255  2.097  1.958  1.825  1.737  1.711  1.791  1.985  2.301
+ 2048  2.986  2.529  2.256  2.096  1.956  1.823  1.725   1.69  1.726  1.853  2.104
+
+3. Best learning rate per width.
+width  SP best log2 lr  SP loss  muP best log2 lr  muP loss
+-----  ---------------  -------  ----------------  --------
+   64               -6    1.946                -6     1.946
+  128               -7    1.853                -6     1.844
+  256               -7    1.789                -6     1.788
+  512               -7    1.757                -5     1.755
+ 1024               -8    1.706                -5     1.711
+ 2048               -8    1.668                -5      1.69
+Shift of the best log2 lr from width 64 to 2048: SP -2, muP +1 (grid step 1 = a factor of 2).
+Transfer test: tune at width 64 and reuse at width 2048:
+   SP: lr 2^-6 gives loss 2.0423; the best at that width is 1.6684.
+   MUP: lr 2^-6 gives loss 1.7248; the best at that width is 1.6899.
+This is the mechanism on a 3-matrix MLP. The post's quoted muTransfer results (BERT, GPT-3 6.7B) were not run.

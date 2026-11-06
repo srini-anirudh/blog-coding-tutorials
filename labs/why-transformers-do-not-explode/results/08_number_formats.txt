@@ -1,0 +1,48 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+Command: python labs/why-transformers-do-not-explode/scripts/08_number_formats.py
+
+1. Format limits from torch.finfo, next to the post's 'relative precision' column.
+  format   S/E/M        max  min normal  eps (spacing at 1)    eps / 2  post's value
+--------  ------  ---------  ----------  ------------------  ---------  ------------
+    FP32  1/8/23  3.403e+38   1.175e-38           1.192e-07  5.960e-08     1.200e-07
+    FP16  1/5/10   6.55e+04   6.104e-05           9.766e-04  4.883e-04     9.800e-04
+    BF16   1/8/7  3.390e+38   1.175e-38            0.007812   0.003906        0.0078
+FP8 E4M3   1/4/3        448     0.01562               0.125     0.0625         0.063
+FP8 E5M2   1/5/2  5.734e+04   6.104e-05                0.25      0.125          0.13
+The max and min-normal columns match the post. The precision column mixes two conventions: the FP32, FP16
+and BF16 rows are eps (2^-23, 2^-10, 2^-7); the two FP8 rows are eps / 2, the unit roundoff.
+
+2. Rounding stagnation: theta = 1, update 1e-5.
+format  1 + 1e-5 == 1  spacing above 1
+------  -------------  ---------------
+  FP32          False        1.192e-07
+  FP16           True        9.766e-04
+  BF16           True         0.007812
+
+3. Master weights. SGD on 256 weights near 1, lr 1e-4, 3,000 steps, per-step updates around 1e-6.
+   Loss at the start (w = 1, target 1 + 0.01 * noise): 8.822e-05.
+             setup  final loss
+------------------  ----------
+      FP32 weights   2.658e-05
+ BF16 weights only   8.822e-05
+ FP16 weights only   8.822e-05
+BF16 + FP32 master   2.504e-05
+FP16 + FP32 master   2.617e-05
+Without a master copy every update rounds away and the loss stays at its starting value. With an FP32
+master copy the 16-bit weights follow the FP32 run; the small gap is the 16-bit rounding of the weights.
+
+4. Real parameter gradients of a 4-layer, d = 128 model after 200 training steps (816,128 values,
+   median |g| = 1.46e-04), cast to a 16-bit format after multiplying by S.
+format     S  flushed to zero  subnormal       inf
+------  ----  ---------------  ---------  --------
+  FP16   2^0        1.423e-04      0.253         0
+  FP16   2^8                0   0.001109         0
+  FP16  2^16                0  3.680e-06         0
+  FP16  2^24                0          0  0.008154
+  BF16   2^0                0          0         0
+Only parameter gradients are measured here. Activation gradients inside the backward pass, which the post's
+Micikevicius et al. citation measured, are not.
+
+5. Dynamic loss scaling on the same run: 300 more steps; at each step check whether S * grad overflows FP16.
+   S: start 2^32, after 10 steps 2^22, after 300 steps 2^18; skipped steps 16 (5.3%), most of them at the start while S comes down.
+   At the final S, 0.00% of gradient values flush to zero in FP16 (against 0.01% at S = 1).

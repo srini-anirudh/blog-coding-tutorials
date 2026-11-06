@@ -1,0 +1,66 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+Command: python labs/why-transformers-do-not-explode/scripts/04_norm_placement.py --steps 400 --warmup 100
+
+1. ||d LN(x) / dx|| (spectral norm, no affine) for x = r * u, d = 256. Xiong et al.: O(sqrt(d) / ||x||).
+||x||  ||dLN/dx||  sqrt(d)/||x||  ratio
+-----  ----------  -------------  -----
+    1          16             16      1
+    4           4              4      1
+   16           1              1      1
+   64        0.25           0.25      1
+  256      0.0625         0.0625      1
+Exact for centred x: the Jacobian is (sqrt(d)/||x||) times a projection, so the ratio is 1.
+
+2. Gradient norm of each block's weights at initialization, 12 layers, d = 128, one Tiny Shakespeare batch.
+block  post-LN default  post-LN xavier  pre-LN default  pre-LN xavier
+-----  ---------------  --------------  --------------  -------------
+    1           0.1074          0.3784            2.51         0.7109
+    2           0.1068          0.3911           1.948          0.566
+    3           0.1075          0.3976           1.547         0.4196
+    4           0.1074          0.4503           1.403         0.3692
+    5            0.108           0.476           1.248         0.3389
+    6           0.1097          0.5477           1.115         0.3171
+    7           0.1088          0.5622           1.092         0.2915
+    8           0.1084          0.6303           1.011         0.2917
+    9             0.11          0.6489          0.9427         0.2842
+   10           0.1099          0.6816          0.9104         0.2397
+   11           0.1107          0.6741          0.8657         0.2211
+   12           0.1092           0.682          0.8373         0.2074
+post-LN, default init: top block / bottom block gradient norm = 1.017
+post-LN, xavier init: top block / bottom block gradient norm = 1.802
+pre-LN, default init: top block / bottom block gradient norm = 0.334
+pre-LN, xavier init: top block / bottom block gradient norm = 0.292
+With Xavier init (Xiong et al.'s setting) Post-LN puts more gradient on the top blocks, because every LN on
+the identity path divides the gradient by the norm of x + F(x). With N(0, 0.02) init the branches start near
+zero, x + F(x) is about x, and the Post-LN profile is flat. Pre-LN puts more gradient on the bottom blocks
+under either init: the imbalance the post attributes to Shleifer et al.
+
+3. Training, 12 layers, d = 128, batch 32 x 64 chars, AdamW (0.9, 0.95), clip 1.0, 400 steps.
+   Warmup is linear over 100 steps, then constant. Validation loss on held-out text; 3.0 nats is
+   roughly a unigram model, 2.5 a bigram-level model.
+   done: lr 0.001 post-LN default warmup 0: val 2.060
+   done: lr 0.001 post-LN default warmup 100: val 2.109
+   done: lr 0.001 post-LN xavier warmup 0: val 3.365
+   done: lr 0.001 post-LN xavier warmup 100: val 3.365
+   done: lr 0.001 pre-LN default warmup 0: val 2.212
+   done: lr 0.001 pre-LN default warmup 100: val 2.197
+   done: lr 0.003 post-LN default warmup 0: val 2.005
+   done: lr 0.003 post-LN default warmup 100: val 2.003
+   done: lr 0.003 post-LN xavier warmup 0: val 3.364
+   done: lr 0.003 post-LN xavier warmup 100: val 3.385
+   done: lr 0.003 pre-LN default warmup 0: val 2.322
+   done: lr 0.003 pre-LN default warmup 100: val 2.082
+   lr  norm     init  warmup  train loss @ step 100  final train loss  val loss  max grad norm
+-----  ----  -------  ------  ---------------------  ----------------  --------  -------------
+0.001  post  default       0                  2.442             1.997      2.06          1.022
+0.001  post  default     100                  2.567             2.074     2.109          1.022
+0.001  post   xavier       0                  3.314             3.422     3.365          2.907
+0.001  post   xavier     100                  3.317             3.422     3.365          2.907
+0.001   pre  default       0                  2.533             2.166     2.212          5.156
+0.001   pre  default     100                  2.546             2.157     2.197          5.156
+0.003  post  default       0                  2.461             1.878     2.005          1.022
+0.003  post  default     100                  2.484             1.861     2.003          1.022
+0.003  post   xavier       0                   3.32              3.42     3.364          2.907
+0.003  post   xavier     100                  3.323              3.45     3.385          2.907
+0.003   pre  default       0                  2.805               2.3     2.322          5.156
+0.003   pre  default     100                  2.507             1.986     2.082          5.156

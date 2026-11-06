@@ -1,0 +1,30 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+Command: python labs/why-transformers-do-not-explode/scripts/05_deepnorm_update.py
+
+1. DeepNorm constants for a decoder-only stack of M layers: alpha = (2M)^(1/4), beta = (8M)^(-1/4).
+   M  alpha    beta
+----  -----  ------
+   6  1.861  0.3799
+  12  2.213  0.3195
+  48   3.13  0.2259
+ 100  3.761   0.188
+ 500  5.623  0.1257
+1000  6.687  0.1057
+
+2. ||Delta F|| after one Adam step (lr 0.0001, batch 16 x 64): mean per-token change of the final hidden state
+   (after the last LN, so every model's output has norm about sqrt(d) = 8). d = 64, 4 heads.
+   Post-LN uses Xavier init (DeepNet's baseline); DeepNorm uses Xavier with beta and alpha on the rail.
+             model      L=3     L=6    L=12    L=24    L=48  L=48 / L=3
+------------------  -------  ------  ------  ------  ------  ----------
+           Post-LN   0.5181   1.093   2.738   4.651   11.56       22.32
+          DeepNorm  0.07654  0.0881  0.1121  0.1561  0.2279       2.978
+            Pre-LN    1.076   2.175   3.996   5.638   6.986       6.494
+Pre-LN, 1/sqrt(2L)   0.7771   1.186   2.525   4.088   6.449         8.3
+With Adam every parameter moves by about lr per coordinate, so ||Delta theta|| grows with the parameter count
+and the question is how much of that reaches the output. DeepNet's bound says vanilla Post-LN passes it
+through roughly in proportion to the number of sublayers, while DeepNorm's alpha and beta keep it flat.
+Measured: depth grows 16x. Post-LN's update grows 22.3x, about linear in depth. At L = 48 one step
+moves the output by 11.6, more than the output's own norm of 8: a single step rewrites the function.
+DeepNorm's update is 7x smaller at L = 3 and grows 3.0x: much flatter, not exactly
+flat at this scale. Pre-LN's final LN bounds its output, so its growth slows at depth.
+This measures the bound's quantity on a tiny model; it is not DeepNet's 1,000-layer experiment.

@@ -1,0 +1,50 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+Command: python labs/why-transformers-do-not-explode/scripts/06_attention_logits.py
+
+1. Sixteen logits z = s * z0 (z0 ~ N(0,1), fixed), float64, as the growth factor s sweeps.
+  s  entropy (nats)   max p  max p(1-p)  uniform / this
+---  --------------  ------  ----------  --------------
+  0           2.773  0.0625     0.05859               1
+  1           2.174  0.2991      0.2096          0.2795
+  2           1.359  0.5589      0.2465          0.2377
+  4          0.5655  0.8419      0.1331          0.4401
+  8          0.1029    0.98     0.01955           2.997
+ 16        0.003295  0.9996   3.693e-04           158.7
+ 32       2.285e-06       1   1.359e-07       4.310e+05
+ 64       6.028e-13       1   1.848e-14       3.171e+12
+128       2.160e-26       1   3.415e-28       1.716e+26
+Uniform: entropy ln 16 = 2.773 nats, max p(1-p) = 0.0586.
+First s with entropy < 0.05 nats: max p = 0.9918, max p(1-p) = 0.0081, 7.2x below uniform (the post says about six times).
+First s with max p within 1e-3 of 1: max p(1-p) = 9.34e-04, 63x below uniform; entropy 0.0075 nats.
+Entropy falls first; the Jacobian only collapses once one probability is almost exactly 1. At moderate s the
+largest p(1-p) is above the uniform value (it peaks at 0.25 when some p = 1/2), so growth first sharpens a head
+without weakening its gradient at all.
+
+2. Softmax Jacobian p_i(delta_ij - p_j) against autograd, 16 random logits:
+   max |formula - autograd| = 1.08e-19
+
+3. What each mitigation bounds. One head, d = 64, d_h = 16, 32 tokens; W_Q and W_K multiplied by a growth
+   factor g (the logit grows like g^2 without a fix). QK-norm is LayerNorm with unit gain; soft-cap c = 50.
+ g  max |z| raw  max |z| QK-norm  max |z| soft-cap 50
+--  -----------  ---------------  -------------------
+ 1        4.002            2.884                3.994
+ 4        64.04            2.884                42.83
+16         1025            2.884                   50
+64    1.639e+04            2.884                   50
+QK-norm bound: |z| <= ||LN(q)|| ||LN(k)|| / sqrt(d_h) = d_h / sqrt(d_h) = sqrt(d_h) = 4.
+Nuance: with a learnable LayerNorm gain the bound scales with the gains, so QK-norm bounds the logits only
+as long as the gains themselves stay bounded.
+
+4. A small-scale proxy in the spirit of Wortsman et al.: 4 layers, d = 128, 4 heads, Pre-LN, AdamW (0.9, 0.95),
+   warmup 100, no clipping, 1000 steps, batch 32 x 64 chars. Max |logit| and min entropy over all heads.
+   lr  QK-norm  final max |z|  min entropy  step of peak |z|  worst train loss after step 100  val loss  NaN
+-----  -------  -------------  -----------  ----------------  -------------------------------  --------  ---
+0.001      off          30.22        1.219              1000                            2.557     1.876   no
+0.001       on          7.266        1.478              1000                            2.523     1.817   no
+0.003      off          37.22         1.38               650                              2.5     1.803   no
+0.003       on          7.522        1.609               900                            2.414     1.799   no
+ 0.01      off          70.25       0.2869               350                            2.536     1.833   no
+ 0.01       on           8.81        1.805               950                            2.527     1.828   no
+ 0.03      off      4.718e+04    6.743e-04              1000                            2.808      2.67   no
+ 0.03       on          18.28       0.7909               750                            2.586     1.897   no
+Read the max-logit column against the LR: this is the logged quantity the post says gives days of warning.

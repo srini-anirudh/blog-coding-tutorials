@@ -1,0 +1,46 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+Command: python labs/why-transformers-do-not-explode/scripts/03_residual_stream.py
+
+1. Stream norm ||x_L|| / ||x_0|| after L pre-norm residual MLP blocks (width 256, batch 64, float64),
+   against a plain linear stack with variance gain 1.1 per layer (amplitude gain sqrt(1.1)).
+ L  residual, none  residual, 1/sqrt(2L)  residual, LayerScale 1e-4  plain, gain 1.1
+--  --------------  --------------------  -------------------------  ---------------
+ 6           2.565                 1.015                          1            1.336
+12           3.416                 1.028                          1            1.753
+24           4.797                 1.053                          1            3.129
+48           6.826                 1.108                          1            11.18
+96           9.558                 1.206                          1            114.2
+Plain residual: the first 12 blocks each add v = 0.889 * ||x_0||^2 of squared norm, so ||x_L||^2 ~ ||x_0||^2 (1 + L v).
+Log-log slope of (||x_L||^2 - ||x_0||^2) against L: 1.030 (1.0 means linear in L, so ||x_L|| ~ sqrt(L)).
+Prediction for L = 96 from those 12 blocks: sqrt(1 + 96 v) = 9.291; measured 9.558.
+Branch outputs are near-orthogonal to the stream, so they add in quadrature like a random walk.
+Note: the 1/sqrt(2L) rule fixes the total added variance (about v/2) rather than letting it grow with L.
+
+2. The identity term. Gradient norm at the bottom of an L-layer stack, unit gradient at the top.
+  L  plain, gain 0.7 per layer      0.7^L  residual, dead branches
+---  -------------------------  ---------  -----------------------
+  8                    0.05883    0.05765                        1
+ 32                  1.023e-05  1.104e-05                        1
+128                  1.261e-20  1.488e-20                        1
+With dead branches the residual gradient is the top gradient, unattenuated: the S = empty term is I.
+
+3. The path ensemble. Expand prod_k (I + J_k) over subsets S for L = 10 linear branches with ||J|| ~ 0.4.
+   Sum over all 2^10 = 1024 paths equals the product: max difference 1.15e-14
+path length k  paths  ||sum of paths of length k|| / ||v||  C(L,k) ||J||^k
+-------------  -----  ------------------------------------  --------------
+            0      1                                     1               1
+            1     10                                  1.31               4
+            2     45                                 1.208             7.2
+            3    120                                0.8922            7.68
+            4    210                                0.4902           5.376
+            5    252                                0.2196            2.58
+            6    210                               0.07722          0.8602
+            7    120                               0.02252          0.1966
+            8     45                              0.005402         0.02949
+            9     10                              0.001298        0.002621
+           10      1                             1.784e-04       1.049e-04
+The norm of each group falls far below the C(L,k) ||J||^k count: paths of the same length point in
+near-random directions and partly cancel, so each group grows roughly like sqrt(C(L,k)) ||J||^k instead.
+The post's binomial weighting C(L,k) ||J||^k gives mean path length L ||J|| / (1 + ||J||) = 2.86;
+weighting by squared norms of the measured groups gives 1.57. Either way the
+gradient is carried by paths far shorter than L = 10.

@@ -1,0 +1,53 @@
+Hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+Command: python labs/why-transformers-do-not-explode/scripts/07_adam_under_stress.py
+
+1. InspectableAdam against torch.optim.Adam on 200 random gradients:
+   max |difference in parameters| = 1.39e-17
+   Step 1, gradients of size 1, eps 1e-8: |update| / lr in [1.0000, 1.0000]
+   Step 1, gradients of size 0.001, eps 1e-8: |update| / lr in [0.9996, 1.0000]
+   Step 1, gradients of size 1e-06, eps 1e-8: |update| / lr in [0.1777, 0.9972]
+   Adam's first step is lr * sign(g) whatever the gradient size, until |g| gets within a few orders of eps.
+
+2. The synthetic stream of the post's Figure 10 (256 coordinates): hot start (std 10, steps 1-20), ordinary
+   (std 1), quiet stretch from step 400 (std 0.01), correlated burst at steps 1500-1559 (mean 1).
+   Each cell is |update| / lr averaged over coordinates: the mean over the window, or the peak for burst windows.
+beta2        eps  warmup    step 1  hot start 2-20  ordinary 300-399  quiet 1000-1499  burst 1500-1520  burst 1540-1559
+-----  ---------  ------  --------  --------------  ----------------  ---------------  ---------------  ---------------
+0.999  1.000e-08       0         1          0.3058           0.07919         0.001872            1.064            1.181
+ 0.95  1.000e-08       0         1          0.3047            0.1848           0.1834            1.053             1.01
+0.999  1.000e-08     300  0.003333        0.009495           0.07919         0.001872            1.064            1.181
+0.999       0.01       0    0.9954          0.3054           0.07884         0.001853            1.051            1.167
+ 0.95       0.01       0    0.9954          0.3044             0.183          0.09122            1.041           0.9996
+beta2 = 0.999: the quiet stretch steps about 100x under the beta2 = 0.95 run, because sqrt(v_hat) still
+remembers the loud start. The burst overshoots lr only modestly here (peak 1.18x), because that same memory
+of the hot start keeps the denominator large. Section 3 removes the hot start and shows the clean overshoot.
+Warmup only changes the first 300 steps. eps = 1e-2 does nothing at beta2 = 0.999 (the remembered denominator
+is far above eps) and halves the quiet-stretch steps at beta2 = 0.95, where sqrt(v_hat) is about 0.01.
+
+3. The rare-token row: gradient exactly 0 for 5,000 steps, then gradient 1 every step. Peak |update| / lr.
+beta2  first nonzero step   peak  steps after the gradient appears
+-----  ------------------  -----  --------------------------------
+0.999               3.152  6.547                                12
+ 0.99                   1  2.131                                13
+ 0.95              0.4472  1.097                                20
+The first step is (1 - beta1) / sqrt(1 - beta2) times lr: 3.2x at beta2 = 0.999. The peak, 12 steps later, is 6.5x: m_hat fills in ~10 steps while v_hat has only seen 12 of its ~1,000-step window.
+
+4. Global-norm clipping keeps the direction; per-coordinate clamping does not. Two tensors, tau = 1.
+   ||g|| = 204.8 -> 1.0000; cosine(g, clipped) = 1.000000; cosine(g, clamp(g, -1, 1)) = 0.7016
+
+5. Scale invariance: W feeds a LayerNorm, so L(cW) = L(W) but ||dL/dW|| scales like 1/c.
+  c   loss  ||grad||  c * ||grad||
+---  -----  --------  ------------
+0.5  2.125    0.5177        0.2589
+  1  2.126    0.2589        0.2589
+  2  2.126    0.1294        0.2589
+  4  2.126   0.06471        0.2589
+The effective learning rate on W's direction is lr / ||W||^2, so weight decay, which shrinks ||W||, raises it.
+
+6. Gradient noise against batch size, linear regression with 4,096 examples: Var(g_B) ~ 1 / B.
+  B  total variance of minibatch gradient  variance * B
+---  ------------------------------------  ------------
+  8                                 155.8          1246
+ 32                                  39.7          1270
+128                                 9.937          1272
+512                                 2.487          1273
