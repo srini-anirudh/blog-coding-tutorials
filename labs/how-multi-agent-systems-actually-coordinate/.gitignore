@@ -1,0 +1,7 @@
+__pycache__/
+*.pt
+*.safetensors
+*.bin
+checkpoints/
+runs/
+hf_cache/

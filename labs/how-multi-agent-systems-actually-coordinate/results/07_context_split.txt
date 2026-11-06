@@ -1,0 +1,50 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/how-multi-agent-systems-actually-coordinate/scripts/07_context_split.py --device cuda
+model: Qwen/Qwen2.5-0.5B-Instruct, 40 trials per cell, k = 4
+token column: mean prompt tokens per question (whitespace words for the oracle)
+
+32 records (36 s for this block)
+   task     condition                           accuracy   tokens  calls  conflicting msgs
+   lookup   one agent                           0.75±0.07      500    1.0              0.00
+   lookup   4 workers                           0.47±0.08      688    4.0              0.78
+   lookup   4 workers + evidence check          0.88±0.05      688    4.0              0.00
+   lookup   32-record slices                    0.75±0.07      500    1.0              0.00
+   two-hop  one agent                           0.05±0.03      452    1.0              0.00
+   two-hop  4 workers, 1 round                  0.03±0.02      645    4.0              0.42
+   two-hop  4 workers, 2 rounds                 0.12±0.05     1255    8.0              0.60
+   one-agent lookup accuracy by answer position (start / middle / end): 0.69 / 0.86 / 0.69
+
+128 records (42 s for this block)
+   task     condition                           accuracy   tokens  calls  conflicting msgs
+   lookup   one agent                           0.35±0.08     1808    1.0              0.00
+   lookup   4 workers                           0.20±0.06     1996    4.0              0.95
+   lookup   4 workers + evidence check          0.72±0.07     1996    4.0              0.00
+   lookup   32-record slices                    0.72±0.07     1996    4.0              0.00
+   two-hop  one agent                           0.00±0.00     1613    1.0              0.00
+   two-hop  4 workers, 1 round                  0.03±0.02     1808    4.0              0.82
+   two-hop  4 workers, 2 rounds                 0.03±0.02     3533    7.9              0.95
+   one-agent lookup accuracy by answer position (start / middle / end): 0.33 / 0.43 / 0.29
+
+384 records (68 s for this block)
+   task     condition                           accuracy   tokens  calls  conflicting msgs
+   lookup   one agent                           0.20±0.06     5298    1.0              0.00
+   lookup   4 workers                           0.20±0.06     5486    4.0              1.00
+   lookup   4 workers + evidence check          0.57±0.08     5486    4.0              0.00
+   lookup   32-record slices                    0.82±0.06     5987   12.0              0.00
+   two-hop  one agent                           0.00±0.00     4701    1.0              0.00
+   two-hop  4 workers, 1 round                  0.00±0.00     4895    4.0              0.35
+   two-hop  4 workers, 2 rounds                 0.00±0.00     9754    8.0              0.85
+   one-agent lookup accuracy by answer position (start / middle / end): 0.25 / 0.17 / 0.17
+
+768 records (115 s for this block)
+   task     condition                           accuracy   tokens  calls  conflicting msgs
+   lookup   one agent                           0.12±0.05    10533    1.0              0.00
+   lookup   4 workers                           0.15±0.06    10721    4.0              1.00
+   lookup   4 workers + evidence check          0.38±0.08    10721    4.0              0.00
+   lookup   32-record slices                    0.70±0.07    11975   24.0              0.00
+   two-hop  one agent                           0.00±0.00     9350    1.0              0.00
+   two-hop  4 workers, 1 round                  0.00±0.00     9543    4.0              0.17
+   two-hop  4 workers, 2 rounds                 0.03±0.02    16430    6.9              0.53
+   one-agent lookup accuracy by answer position (start / middle / end): 0.17 / 0.06 / 0.17
+
+bill: {'calls': 5112, 'prompt_tokens': 5614303, 'output_tokens': 15008, 'seconds': 250.0}

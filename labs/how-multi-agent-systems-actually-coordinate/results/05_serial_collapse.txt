@@ -1,0 +1,26 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/how-multi-agent-systems-actually-coordinate/scripts/05_serial_collapse.py
+
+True objective r_perf = success - 0.3 x wall clock, for each choice of k subagents
+   k  skill 0  skill 1
+   0    0.250    0.250
+   1   -0.184    0.285
+   2   -0.048    0.514
+   4    0.044    0.794
+   8   -0.192    0.558
+   Serial (k=0) is best until the decomposition skill is learned; k=4 is best after.
+
+REINFORCE, 1500 steps x 32 episodes, 20 seeds, initial P(serial) = 0.65
+reward                                 final policy over k = 0,1,2,4,8     skill  collapsed  spurious/ep  true r_perf
+r_perf only                            [1. 0. 0. 0. 0.]                     0.28    20/20           0.01        0.250
++ r_parallel, never annealed           [0. 0. 0. 0. 1.]                     1.00     0/20           3.82        0.558
++ r_parallel, annealed                 [0. 0. 0. 1. 0.]                     1.00     0/20           0.86        0.793
++ r_parallel, annealed, + r_finish     [0. 0. 0. 1. 0.]                     1.00     0/20           0.07        0.794
+   collapsed = seeds whose final P(serial) > 0.5. spurious/ep = subagents beyond the 4 real
+   subtasks, averaged over all training episodes.
+
+How much the collapse depends on the starting preference (r_perf only)
+   initial P(serial) = 0.20: collapsed in 0/20 seeds
+   initial P(serial) = 0.40: collapsed in 12/20 seeds
+   initial P(serial) = 0.65: collapsed in 20/20 seeds
+   initial P(serial) = 0.83: collapsed in 20/20 seeds

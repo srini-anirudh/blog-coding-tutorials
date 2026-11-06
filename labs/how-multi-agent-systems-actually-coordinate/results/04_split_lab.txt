@@ -1,0 +1,51 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/how-multi-agent-systems-actually-coordinate/scripts/04_split_lab.py
+
+1. The eight preset scenarios
+scenario                            ctx    ens   hand  quality  price   wall    q/$  verdict
+the task fits                     1.000  1.000  1.000    1.000   1.03   1.01   0.97  Stay solo.
+multi-hop QA, same model x4       1.221  0.929  0.706    0.801   4.64   0.72   0.17  Do not split.
+six-agent debate                  1.209  0.983  0.512    0.609   6.96   0.88   0.09  Do not split.
+breadth-first research            2.833  1.117  0.729    2.306   2.20   0.41   1.05  Split for latency.
+author + clean reviewer           1.809  0.696  0.884    1.113   2.32   0.88   0.48  Split for context.
+frontier planner, cheap workers   3.242  1.023  0.705    2.337   1.66   0.53   1.41  Split on economics.
+twenty agents, serial spine       2.383  1.153  0.452    1.243   9.88   1.36   0.13  Past the optimum.
+good topology, bad messages       2.887  0.959  0.287    0.796   1.89   0.47   0.42  Fix the protocol.
+
+2. Even N is penalised by the vote term: a tie counts as wrong (rho = 0, p = 0.62)
+   N=1: 1.000  N=2: 0.620  N=3: 1.091  N=4: 0.823  N=5: 1.156  N=6: 0.945  N=7: 1.206  N=8: 1.032
+
+3. Sweeps around the breadth-first research preset, one factor at a time
+   N:
+     N=1     quality 1.000  price 1.04  wall 1.01  -> Stay solo.
+     N=2     quality 1.071  price 1.33  wall 0.58  -> Split for latency.
+     N=3     quality 2.030  price 1.62  wall 0.46  -> Split for latency.
+     N=5     quality 2.306  price 2.20  wall 0.41  -> Split for latency.
+     N=8     quality 2.327  price 3.07  wall 0.48  -> Split for latency.
+     N=12    quality 2.656  price 4.23  wall 0.67  -> Split for context.
+     N=16    quality 2.866  price 5.39  wall 0.92  -> Split for context.
+     N=24    quality 2.815  price 7.71  wall 1.55  -> Past the optimum.
+   press:
+     press=0.1   quality 0.836  price 2.20  wall 0.41  -> Do not split.
+     press=0.3   quality 1.003  price 2.20  wall 0.41  -> Split for latency.
+     press=0.5   quality 1.319  price 2.20  wall 0.41  -> Split for latency.
+     press=0.7   quality 1.749  price 2.20  wall 0.41  -> Split for latency.
+     press=0.9   quality 2.253  price 2.20  wall 0.41  -> Split for latency.
+   rho:
+     rho=0.0   quality 2.386  price 2.20  wall 0.41  -> Split for latency.
+     rho=0.25  quality 2.306  price 2.20  wall 0.41  -> Split for latency.
+     rho=0.5   quality 2.226  price 2.20  wall 0.41  -> Split for latency.
+     rho=0.75  quality 2.145  price 2.20  wall 0.41  -> Split for latency.
+     rho=0.95  quality 2.081  price 2.20  wall 0.41  -> Split for latency.
+   delta:
+     delta=0.0   quality 3.163  price 2.20  wall 0.41  -> Split for latency.
+     delta=0.1   quality 2.306  price 2.20  wall 0.41  -> Split for latency.
+     delta=0.2   quality 1.620  price 2.20  wall 0.41  -> Fix the protocol.
+     delta=0.3   quality 1.085  price 2.20  wall 0.41  -> Fix the protocol.
+     delta=0.45  quality 0.526  price 2.20  wall 0.41  -> Fix the protocol.
+   tier:
+     tier=0.05  quality 2.306  price 1.24  wall 0.41  -> Split on economics.
+     tier=0.15  quality 2.306  price 1.72  wall 0.41  -> Split on economics.
+     tier=0.25  quality 2.306  price 2.20  wall 0.41  -> Split for latency.
+     tier=0.5   quality 2.306  price 3.40  wall 0.41  -> Split for latency.
+     tier=1.0   quality 2.306  price 5.80  wall 0.41  -> Not worth it.

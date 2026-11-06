@@ -1,0 +1,205 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/how-multi-agent-systems-actually-coordinate/scripts/07_context_split.py --oracle",
+ "model": "oracle",
+ "trials": 40,
+ "k": 4,
+ "results": {
+  "32": {
+   "lookup / one agent": {
+    "accuracy": 1.0,
+    "tokens": 185.0,
+    "calls": 1.0,
+    "conflict": 0.0
+   },
+   "lookup / 4 workers": {
+    "accuracy": 1.0,
+    "tokens": 260.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "lookup / 4 workers + evidence check": {
+    "accuracy": 1.0,
+    "tokens": 260.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "lookup / 32-record slices": {
+    "accuracy": 1.0,
+    "tokens": 185.0,
+    "calls": 1.0,
+    "conflict": 0.0
+   },
+   "two-hop / one agent": {
+    "accuracy": 1.0,
+    "tokens": 235.0,
+    "calls": 1.0,
+    "conflict": 0.0
+   },
+   "two-hop / 4 workers, 1 round": {
+    "accuracy": 0.175,
+    "tokens": 316.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "two-hop / 4 workers, 2 rounds": {
+    "accuracy": 1.0,
+    "tokens": 596.0,
+    "calls": 8.0,
+    "conflict": 0.0
+   },
+   "solo_lookup_by_position": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  "128": {
+   "lookup / one agent": {
+    "accuracy": 1.0,
+    "tokens": 665.0,
+    "calls": 1.0,
+    "conflict": 0.0
+   },
+   "lookup / 4 workers": {
+    "accuracy": 1.0,
+    "tokens": 740.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "lookup / 4 workers + evidence check": {
+    "accuracy": 1.0,
+    "tokens": 740.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "lookup / 32-record slices": {
+    "accuracy": 1.0,
+    "tokens": 740.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "two-hop / one agent": {
+    "accuracy": 1.0,
+    "tokens": 859.0,
+    "calls": 1.0,
+    "conflict": 0.0
+   },
+   "two-hop / 4 workers, 1 round": {
+    "accuracy": 0.3,
+    "tokens": 940.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "two-hop / 4 workers, 2 rounds": {
+    "accuracy": 1.0,
+    "tokens": 1844.0,
+    "calls": 8.0,
+    "conflict": 0.0
+   },
+   "solo_lookup_by_position": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  "384": {
+   "lookup / one agent": {
+    "accuracy": 1.0,
+    "tokens": 1945.0,
+    "calls": 1.0,
+    "conflict": 0.0
+   },
+   "lookup / 4 workers": {
+    "accuracy": 1.0,
+    "tokens": 2020.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "lookup / 4 workers + evidence check": {
+    "accuracy": 1.0,
+    "tokens": 2020.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "lookup / 32-record slices": {
+    "accuracy": 1.0,
+    "tokens": 2220.0,
+    "calls": 12.0,
+    "conflict": 0.0
+   },
+   "two-hop / one agent": {
+    "accuracy": 1.0,
+    "tokens": 2523.0,
+    "calls": 1.0,
+    "conflict": 0.0
+   },
+   "two-hop / 4 workers, 1 round": {
+    "accuracy": 0.2,
+    "tokens": 2604.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "two-hop / 4 workers, 2 rounds": {
+    "accuracy": 1.0,
+    "tokens": 5172.0,
+    "calls": 8.0,
+    "conflict": 0.0
+   },
+   "solo_lookup_by_position": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  "768": {
+   "lookup / one agent": {
+    "accuracy": 1.0,
+    "tokens": 3865.0,
+    "calls": 1.0,
+    "conflict": 0.0
+   },
+   "lookup / 4 workers": {
+    "accuracy": 1.0,
+    "tokens": 3940.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "lookup / 4 workers + evidence check": {
+    "accuracy": 1.0,
+    "tokens": 3940.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "lookup / 32-record slices": {
+    "accuracy": 1.0,
+    "tokens": 4440.0,
+    "calls": 24.0,
+    "conflict": 0.0
+   },
+   "two-hop / one agent": {
+    "accuracy": 1.0,
+    "tokens": 5019.0,
+    "calls": 1.0,
+    "conflict": 0.0
+   },
+   "two-hop / 4 workers, 1 round": {
+    "accuracy": 0.25,
+    "tokens": 5100.0,
+    "calls": 4.0,
+    "conflict": 0.0
+   },
+   "two-hop / 4 workers, 2 rounds": {
+    "accuracy": 1.0,
+    "tokens": 10164.0,
+    "calls": 8.0,
+    "conflict": 0.0
+   },
+   "solo_lookup_by_position": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  }
+ }
+}

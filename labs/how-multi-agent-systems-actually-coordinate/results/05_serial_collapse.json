@@ -1,0 +1,50 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/how-multi-agent-systems-actually-coordinate/scripts/05_serial_collapse.py",
+ "conditions": {
+  "r_perf only": {
+   "probs": [
+    0.996,
+    0.001,
+    0.001,
+    0.002,
+    0.001
+   ],
+   "collapsed": 20,
+   "true_r_perf": 0.25
+  },
+  "+ r_parallel, never annealed": {
+   "probs": [
+    0.0,
+    0.0,
+    0.0,
+    0.002,
+    0.998
+   ],
+   "collapsed": 0,
+   "true_r_perf": 0.558
+  },
+  "+ r_parallel, annealed": {
+   "probs": [
+    0.0,
+    0.0,
+    0.0,
+    0.997,
+    0.002
+   ],
+   "collapsed": 0,
+   "true_r_perf": 0.793
+  },
+  "+ r_parallel, annealed, + r_finish": {
+   "probs": [
+    0.0,
+    0.0,
+    0.0,
+    0.999,
+    0.001
+   ],
+   "collapsed": 0,
+   "true_r_perf": 0.794
+  }
+ }
+}

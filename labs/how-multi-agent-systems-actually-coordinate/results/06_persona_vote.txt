@@ -1,0 +1,43 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/how-multi-agent-systems-actually-coordinate/scripts/06_persona_vote.py --device cuda
+model: Qwen/Qwen2.5-0.5B-Instruct, 80 questions per task, K = 15 answers per question
+
+add 3-digit, sampled: per-agent accuracy p = 0.840, mean pairwise error correlation = 0.710
+   questions all 15 agents got right: 0.66, all wrong: 0.07
+     N  plurality  strict maj  indep. prediction  best-of-N (verifier)  indep.
+     1      0.839       0.839              0.840                 0.839   0.840
+     3      0.854       0.854              0.931                 0.894   0.996
+     5      0.859       0.857              0.968                 0.903   1.000
+     9      0.861       0.860              0.993                 0.915   1.000
+    15      0.863       0.863              0.999                 0.925   1.000
+   strict majority of all 15 = 0.863; reading it as 1 - rho(1-p) gives rho ~ 0.86
+
+add 3-digit, personas: per-agent accuracy p = 0.929, mean pairwise error correlation = 0.814
+   questions all 15 agents got right: 0.88, all wrong: 0.04
+     N  plurality  strict maj  indep. prediction  best-of-N (verifier)  indep.
+     1      0.929       0.929              0.929                 0.929   0.929
+     3      0.930       0.930              0.986                 0.948   1.000
+     5      0.929       0.929              0.997                 0.955   1.000
+     9      0.926       0.926              1.000                 0.961   1.000
+    15      0.925       0.925              1.000                 0.963   1.000
+   strict majority of all 15 = 0.925; reading it as 1 - rho(1-p) gives rho ~ 1.06
+
+multiply 2-digit, sampled: per-agent accuracy p = 0.378, mean pairwise error correlation = 0.846
+   questions all 15 agents got right: 0.26, all wrong: 0.46
+     N  plurality  strict maj  indep. prediction  best-of-N (verifier)  indep.
+     1      0.379       0.379              0.378                 0.379   0.377
+     3      0.376       0.376              0.320                 0.433   0.759
+     5      0.385       0.379              0.279                 0.460   0.907
+     9      0.390       0.383              0.221                 0.498   0.986
+    15      0.388       0.388              0.164                 0.537   0.999
+
+multiply 2-digit, personas: per-agent accuracy p = 0.422, mean pairwise error correlation = 0.895
+   questions all 15 agents got right: 0.31, all wrong: 0.47
+     N  plurality  strict maj  indep. prediction  best-of-N (verifier)  indep.
+     1      0.422       0.422              0.422                 0.422   0.422
+     3      0.424       0.424              0.383                 0.460   0.807
+     5      0.426       0.426              0.356                 0.474   0.935
+     9      0.433       0.428              0.313                 0.501   0.993
+    15      0.438       0.425              0.267                 0.525   1.000
+
+bill: {'calls': 4800, 'prompt_tokens': 199520, 'output_tokens': 18374, 'seconds': 13.4}

@@ -1,0 +1,46 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/how-multi-agent-systems-actually-coordinate/scripts/02_topologies.py
+
+1. Table 1 at N = 7, computed from the graphs (post's values in brackets)
+topology        channels   msgs/round       depth  max inbox  failure
+solo            0 [  0]     0 [  0]     1 [  1]          0  drift, context rot
+pipeline        6 [  6]     6 [  6]     7 [  7]          1  cascading error
+star            6 [  6]    12 [ 12]     3 [  3]          6  coordinator overload
+hierarchy       6 [  6]    12 [ 12]     5 [  5]          3  split-brain design
+full mesh      21 [ 21]    42 [ 42]     2 [  2]          6  echo chamber
+blackboard      7 [  7]    14 [ 14] async [async]          1  write contention
+   max inbox = most messages one agent reads per round. The star coordinator reads 6;
+   a binary hierarchy caps it at 3 (two children and a parent).
+
+2. Channels as N grows: mesh is N(N-1)/2, star and hierarchy N-1, blackboard N
+   N   mesh   star   hier  board
+   4      6      3      3      4
+   8     28      7      7      8
+  16    120     15     15     16
+  32    496     31     31     32
+  64   2016     63     63     64
+
+3. The token bill, N = 8 agents, R = 4 rounds, L = 1500 tokens per message
+   all-to-all, full traces        336,000 tokens
+   all-to-all, 180-token msgs      40,320 tokens
+   blackboard, write + read        11,520 tokens
+   the work itself (N R L)         48,000 tokens
+   useful share with full traces: 12.5%
+
+4. Prompt infection: agents compromised after 3 rounds, each message carries the payload
+   with probability beta (2000 trials). Start from a random agent, or from the last agent
+   (a pipeline's final stage, a star worker, a hierarchy leaf).
+   beta = 0.5
+   topology     from random  from leaf   of 7
+   pipeline            2.17       1.00
+   star                4.65       4.36
+   hierarchy           3.62       2.96
+   full mesh           6.99       6.99
+   blackboard          4.01       4.02
+   beta = 0.2
+   topology     from random  from leaf   of 7
+   pipeline            1.51       1.00
+   star                2.28       1.96
+   hierarchy           2.07       1.69
+   full mesh           5.36       5.42
+   blackboard          1.64       1.57
