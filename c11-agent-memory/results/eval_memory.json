@@ -1,0 +1,682 @@
+{
+ "deploy": {
+  "1024": {
+   "full_transcript": {
+    "n": 480,
+    "steps": 5.033333333333333,
+    "steps_new": 5.708791208791209,
+    "steps_seen": 4.620805369127517,
+    "success": 0.725,
+    "tokens": 936.725496031746
+   },
+   "no_memory": {
+    "n": 480,
+    "steps": 5.55,
+    "steps_new": 6.126373626373627,
+    "steps_seen": 5.197986577181208,
+    "success": 0.7125,
+    "tokens": 136.99031994047618
+   },
+   "oracle": {
+    "n": 480,
+    "steps": 1.9270833333333333,
+    "steps_new": 1.901098901098901,
+    "steps_seen": 1.9429530201342282,
+    "success": 1.0,
+    "tokens": 101.66145833333333
+   },
+   "retrieved": {
+    "n": 480,
+    "steps": 2.9229166666666666,
+    "steps_new": 4.395604395604396,
+    "steps_seen": 2.023489932885906,
+    "success": 0.9291666666666667,
+    "tokens": 350.4582490079365
+   }
+  },
+  "2048": {
+   "full_transcript": {
+    "n": 480,
+    "steps": 3.8125,
+    "steps_new": 5.027472527472527,
+    "steps_seen": 3.0704697986577183,
+    "success": 0.8520833333333333,
+    "tokens": 1793.4857589285714
+   },
+   "no_memory": {
+    "n": 480,
+    "steps": 5.55,
+    "steps_new": 6.126373626373627,
+    "steps_seen": 5.197986577181208,
+    "success": 0.7125,
+    "tokens": 136.99031994047618
+   },
+   "oracle": {
+    "n": 480,
+    "steps": 1.9270833333333333,
+    "steps_new": 1.901098901098901,
+    "steps_seen": 1.9429530201342282,
+    "success": 1.0,
+    "tokens": 101.66145833333333
+   },
+   "retrieved": {
+    "n": 480,
+    "steps": 2.9229166666666666,
+    "steps_new": 4.395604395604396,
+    "steps_seen": 2.023489932885906,
+    "success": 0.9291666666666667,
+    "tokens": 350.4582490079365
+   }
+  },
+  "256": {
+   "full_transcript": {
+    "n": 480,
+    "steps": 6.34375,
+    "steps_new": 6.417582417582418,
+    "steps_seen": 6.298657718120805,
+    "success": 0.39375,
+    "tokens": 226.57307291666666
+   },
+   "no_memory": {
+    "n": 480,
+    "steps": 5.55,
+    "steps_new": 6.126373626373627,
+    "steps_seen": 5.197986577181208,
+    "success": 0.7125,
+    "tokens": 131.68392113095237
+   },
+   "oracle": {
+    "n": 480,
+    "steps": 1.9270833333333333,
+    "steps_new": 1.901098901098901,
+    "steps_seen": 1.9429530201342282,
+    "success": 1.0,
+    "tokens": 101.66145833333333
+   },
+   "retrieved": {
+    "n": 480,
+    "steps": 3.7083333333333335,
+    "steps_new": 5.104395604395604,
+    "steps_seen": 2.8557046979865772,
+    "success": 0.8208333333333333,
+    "tokens": 229.17007440476192
+   }
+  },
+  "4096": {
+   "full_transcript": {
+    "n": 480,
+    "steps": 3.002083333333333,
+    "steps_new": 4.472527472527473,
+    "steps_seen": 2.1040268456375837,
+    "success": 0.9270833333333334,
+    "tokens": 3152.026872519841
+   },
+   "no_memory": {
+    "n": 480,
+    "steps": 5.55,
+    "steps_new": 6.126373626373627,
+    "steps_seen": 5.197986577181208,
+    "success": 0.7125,
+    "tokens": 136.99031994047618
+   },
+   "oracle": {
+    "n": 480,
+    "steps": 1.9270833333333333,
+    "steps_new": 1.901098901098901,
+    "steps_seen": 1.9429530201342282,
+    "success": 1.0,
+    "tokens": 101.66145833333333
+   },
+   "retrieved": {
+    "n": 480,
+    "steps": 2.9229166666666666,
+    "steps_new": 4.395604395604396,
+    "steps_seen": 2.023489932885906,
+    "success": 0.9291666666666667,
+    "tokens": 350.4582490079365
+   }
+  },
+  "512": {
+   "full_transcript": {
+    "n": 480,
+    "steps": 5.739583333333333,
+    "steps_new": 5.961538461538462,
+    "steps_seen": 5.604026845637584,
+    "success": 0.6583333333333333,
+    "tokens": 400.70802331349205
+   },
+   "no_memory": {
+    "n": 480,
+    "steps": 5.55,
+    "steps_new": 6.126373626373627,
+    "steps_seen": 5.197986577181208,
+    "success": 0.7125,
+    "tokens": 136.99031994047618
+   },
+   "oracle": {
+    "n": 480,
+    "steps": 1.9270833333333333,
+    "steps_new": 1.901098901098901,
+    "steps_seen": 1.9429530201342282,
+    "success": 1.0,
+    "tokens": 101.66145833333333
+   },
+   "retrieved": {
+    "n": 480,
+    "steps": 2.9229166666666666,
+    "steps_new": 4.395604395604396,
+    "steps_seen": 2.023489932885906,
+    "success": 0.9291666666666667,
+    "tokens": 346.5681324404762
+   }
+  }
+ },
+ "deploy_rules": {
+  "analogy/no rules": {
+   "n": 480,
+   "steps": 2.9229166666666666,
+   "steps_new": 4.395604395604396,
+   "steps_seen": 2.023489932885906,
+   "success": 0.9291666666666667,
+   "tokens": 346.4822073412698
+  },
+  "analogy/rules": {
+   "n": 480,
+   "steps": 2.9229166666666666,
+   "steps_new": 4.395604395604396,
+   "steps_seen": 2.023489932885906,
+   "success": 0.9291666666666667,
+   "tokens": 350.4582490079365
+  },
+  "literal/no rules": {
+   "n": 480,
+   "steps": 3.59375,
+   "steps_new": 6.126373626373627,
+   "steps_seen": 2.046979865771812,
+   "success": 0.88125,
+   "tokens": 397.48622023809526
+  },
+  "literal/rules": {
+   "n": 480,
+   "steps": 3.3,
+   "steps_new": 5.373626373626373,
+   "steps_seen": 2.033557046979866,
+   "success": 0.9041666666666667,
+   "tokens": 378.3425421626984
+  }
+ },
+ "facts": {
+  "1024": {
+   "full_transcript": {
+    "accuracy": 0.74875,
+    "after_today": 0.0,
+    "ci95": [
+     0.72875,
+     0.77
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 0.06451612903225806,
+    "stated": 0.6737804878048781,
+    "today": 1.0,
+    "tokens": 970.4975,
+    "unseen": 1.0,
+    "updated": 0.8679245283018868
+   },
+   "no_memory": {
+    "accuracy": 0.5775,
+    "after_today": 0.0,
+    "ci95": [
+     0.55625,
+     0.59875
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 0.0,
+    "stated": 0.3079268292682927,
+    "today": 1.0,
+    "tokens": 517.34375,
+    "unseen": 1.0,
+    "updated": 0.6226415094339622
+   },
+   "oracle": {
+    "accuracy": 1.0,
+    "after_today": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 1.0,
+    "tokens": 79.59875,
+    "unseen": 1.0,
+    "updated": 1.0
+   },
+   "retrieved": {
+    "accuracy": 0.99875,
+    "after_today": 1.0,
+    "ci95": [
+     0.9962500000000001,
+     1.0
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 0.99,
+    "tokens": 581.53875,
+    "unseen": 1.0,
+    "updated": 1.0
+   }
+  },
+  "2048": {
+   "full_transcript": {
+    "accuracy": 0.8925,
+    "after_today": 0.20689655172413793,
+    "ci95": [
+     0.8800000000000001,
+     0.90625
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 0.45161290322580644,
+    "stated": 0.9146341463414634,
+    "today": 1.0,
+    "tokens": 1701.0225,
+    "unseen": 1.0,
+    "updated": 0.9811320754716981
+   },
+   "no_memory": {
+    "accuracy": 0.5775,
+    "after_today": 0.0,
+    "ci95": [
+     0.55625,
+     0.59875
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 0.0,
+    "stated": 0.3079268292682927,
+    "today": 1.0,
+    "tokens": 517.34375,
+    "unseen": 1.0,
+    "updated": 0.6226415094339622
+   },
+   "oracle": {
+    "accuracy": 1.0,
+    "after_today": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 1.0,
+    "tokens": 79.59875,
+    "unseen": 1.0,
+    "updated": 1.0
+   },
+   "retrieved": {
+    "accuracy": 0.99875,
+    "after_today": 1.0,
+    "ci95": [
+     0.9962500000000001,
+     1.0
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 0.99,
+    "tokens": 581.53875,
+    "unseen": 1.0,
+    "updated": 1.0
+   }
+  },
+  "256": {
+   "full_transcript": {
+    "accuracy": 0.38875,
+    "after_today": 0.0,
+    "ci95": [
+     0.365,
+     0.41500000000000004
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 0.0,
+    "stated": 0.0975609756097561,
+    "today": 0.39,
+    "tokens": 170.865,
+    "unseen": 1.0,
+    "updated": 0.22641509433962265
+   },
+   "no_memory": {
+    "accuracy": 0.38875,
+    "after_today": 0.0,
+    "ci95": [
+     0.365,
+     0.41500000000000004
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 0.0,
+    "stated": 0.0975609756097561,
+    "today": 0.39,
+    "tokens": 170.865,
+    "unseen": 1.0,
+    "updated": 0.22641509433962265
+   },
+   "oracle": {
+    "accuracy": 1.0,
+    "after_today": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 1.0,
+    "tokens": 79.59875,
+    "unseen": 1.0,
+    "updated": 1.0
+   },
+   "retrieved": {
+    "accuracy": 0.955,
+    "after_today": 1.0,
+    "ci95": [
+     0.94375,
+     0.9662499999999999
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 0.64,
+    "tokens": 225.3275,
+    "unseen": 1.0,
+    "updated": 1.0
+   }
+  },
+  "4096": {
+   "full_transcript": {
+    "accuracy": 1.0,
+    "after_today": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 1.0,
+    "tokens": 2291.6625,
+    "unseen": 1.0,
+    "updated": 1.0
+   },
+   "no_memory": {
+    "accuracy": 0.5775,
+    "after_today": 0.0,
+    "ci95": [
+     0.55625,
+     0.59875
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 0.0,
+    "stated": 0.3079268292682927,
+    "today": 1.0,
+    "tokens": 517.34375,
+    "unseen": 1.0,
+    "updated": 0.6226415094339622
+   },
+   "oracle": {
+    "accuracy": 1.0,
+    "after_today": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 1.0,
+    "tokens": 79.59875,
+    "unseen": 1.0,
+    "updated": 1.0
+   },
+   "retrieved": {
+    "accuracy": 0.99875,
+    "after_today": 1.0,
+    "ci95": [
+     0.9962500000000001,
+     1.0
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 0.99,
+    "tokens": 581.53875,
+    "unseen": 1.0,
+    "updated": 1.0
+   }
+  },
+  "512": {
+   "full_transcript": {
+    "accuracy": 0.545,
+    "after_today": 0.0,
+    "ci95": [
+     0.52125,
+     0.56875
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 0.0,
+    "stated": 0.2926829268292683,
+    "today": 0.87,
+    "tokens": 450.94125,
+    "unseen": 1.0,
+    "updated": 0.4716981132075472
+   },
+   "no_memory": {
+    "accuracy": 0.5425,
+    "after_today": 0.0,
+    "ci95": [
+     0.51875,
+     0.5662499999999999
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 0.0,
+    "stated": 0.2865853658536585,
+    "today": 0.87,
+    "tokens": 450.31625,
+    "unseen": 1.0,
+    "updated": 0.4716981132075472
+   },
+   "oracle": {
+    "accuracy": 1.0,
+    "after_today": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 1.0,
+    "tokens": 79.59875,
+    "unseen": 1.0,
+    "updated": 1.0
+   },
+   "retrieved": {
+    "accuracy": 0.99875,
+    "after_today": 1.0,
+    "ci95": [
+     0.9962500000000001,
+     1.0
+    ],
+    "deleted": 1.0,
+    "n": 800,
+    "rumor": 1.0,
+    "stated": 1.0,
+    "today": 0.99,
+    "tokens": 472.09125,
+    "unseen": 1.0,
+    "updated": 1.0
+   }
+  }
+ },
+ "facts_ablations": {
+  "append-only (no SUPERSEDE)": {
+   "accuracy": 0.96625,
+   "after_today": 0.9310344827586207,
+   "deleted": 0.9431818181818182,
+   "n": 800,
+   "rumor": 0.967741935483871,
+   "stated": 1.0,
+   "today": 1.0,
+   "tokens": 581.42,
+   "unseen": 1.0,
+   "updated": 0.660377358490566
+  },
+  "corrupted values": {
+   "accuracy": 0.585,
+   "after_today": 0.0,
+   "deleted": 1.0,
+   "n": 800,
+   "rumor": 0.03225806451612903,
+   "stated": 0.3079268292682927,
+   "today": 0.99,
+   "tokens": 581.565,
+   "unseen": 1.0,
+   "updated": 0.7169811320754716
+  },
+  "full system": {
+   "accuracy": 0.99875,
+   "after_today": 1.0,
+   "deleted": 1.0,
+   "n": 800,
+   "rumor": 1.0,
+   "stated": 1.0,
+   "today": 0.99,
+   "tokens": 581.53875,
+   "unseen": 1.0,
+   "updated": 1.0
+  },
+  "no writer, no margin": {
+   "accuracy": 0.87875,
+   "after_today": 0.0,
+   "deleted": 1.0,
+   "n": 800,
+   "rumor": 0.0,
+   "stated": 0.9817073170731707,
+   "today": 1.0,
+   "tokens": 724.37125,
+   "unseen": 1.0,
+   "updated": 1.0
+  },
+  "no writer, no scope gate": {
+   "accuracy": 0.94625,
+   "after_today": 0.0,
+   "deleted": 1.0,
+   "n": 800,
+   "rumor": 0.8709677419354839,
+   "stated": 0.9817073170731707,
+   "today": 1.0,
+   "tokens": 734.865,
+   "unseen": 1.0,
+   "updated": 1.0
+  },
+  "recency only (a=0,b=1,g=0)": {
+   "accuracy": 0.68625,
+   "after_today": 0.10344827586206896,
+   "deleted": 1.0,
+   "n": 800,
+   "rumor": 0.12903225806451613,
+   "stated": 0.49390243902439024,
+   "today": 0.99,
+   "tokens": 581.8775,
+   "unseen": 1.0,
+   "updated": 0.9245283018867925
+  },
+  "semantic only (a=1,b=0,g=0)": {
+   "accuracy": 0.99875,
+   "after_today": 1.0,
+   "deleted": 1.0,
+   "n": 800,
+   "rumor": 1.0,
+   "stated": 1.0,
+   "today": 0.99,
+   "tokens": 583.525,
+   "unseen": 1.0,
+   "updated": 1.0
+  }
+ },
+ "hardware": "Apple M5 CPU, 2 threads",
+ "harness": {
+  "1024": {
+   "no_memory": {
+    "n": 480,
+    "steps": 5.55,
+    "steps_new": 6.126373626373627,
+    "steps_seen": 5.197986577181208,
+    "success": 0.7125,
+    "tokens": 827.5408854166667
+   },
+   "oracle": {
+    "n": 480,
+    "steps": 1.9270833333333333,
+    "steps_new": 1.901098901098901,
+    "steps_seen": 1.9429530201342282,
+    "success": 1.0,
+    "tokens": 712.3663194444445
+   },
+   "retrieved": {
+    "n": 480,
+    "steps": 3.0125,
+    "steps_new": 4.565934065934066,
+    "steps_seen": 2.063758389261745,
+    "success": 0.9229166666666667,
+    "tokens": 909.2381655092593
+   }
+  },
+  "2048": {
+   "no_memory": {
+    "n": 480,
+    "steps": 5.55,
+    "steps_new": 6.126373626373627,
+    "steps_seen": 5.197986577181208,
+    "success": 0.7125,
+    "tokens": 893.6783854166666
+   },
+   "oracle": {
+    "n": 480,
+    "steps": 1.9270833333333333,
+    "steps_new": 1.901098901098901,
+    "steps_seen": 1.9429530201342282,
+    "success": 1.0,
+    "tokens": 712.3663194444445
+   },
+   "retrieved": {
+    "n": 480,
+    "steps": 2.9625,
+    "steps_new": 4.5,
+    "steps_seen": 2.023489932885906,
+    "success": 0.9270833333333334,
+    "tokens": 955.5723958333333
+   }
+  }
+ },
+ "seeds": 20
+}

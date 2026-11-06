@@ -1,0 +1,33 @@
+tool log: 2573 tokens, budget 60
+strategy                 tokens  keeps the assertion?  keeps the summary line?
+head                         55  False                 False
+tail                         55  False                 True
+head and tail                48  False                 True
+extract_lines                55  True                  True
+
+extract_lines output:
+[... 120 lines ...]
+tests/test_core.py::test_median_even FAILED
+E   assert 2 == 2.5
+[... 121 lines ...]
+=== 1 failed, 240 passed in 3.21s ===
+
+conversation: 86 tokens
+extractive_summary, 45 tokens (39 used):
+- atlas deploy region: us-east-2
+- atlas owner: priya
+- Thanks, that helps.
+- The design review moved to Thursday.
+- Let's grab lunch after this.
+
+compact_history keep_recent=2: 8 blocks -> 3 blocks
+(summary of 6 earlier events)
+- atlas deploy region: us-east-2
+- atlas owner: priya
+- Thanks, that helps.
+---
+Forget the database for atlas.
+---
+Let's grab lunch after this.
+
+edge_order by value: ['a', 'c', 'e', 'd', 'b']

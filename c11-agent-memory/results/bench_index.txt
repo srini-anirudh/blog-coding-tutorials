@@ -1,0 +1,27 @@
+index query latency, D=384, top-10 (Apple M5 CPU, 2 threads)
+       N    naive ms   tensor ms  speed-up  matrix MB
+    1000        22.9        0.04      518x        1.5
+   10000       161.9        0.31      530x       15.4
+  100000     skipped        4.31                153.6
+ 1000000     skipped       61.09               1536.0
+
+incremental add of 1,000 single memories
+  tensor index: 28.2 ms total
+
+embedding 256 short memories (Apple M5 CPU, 2 threads)
+embedder                  dim  ms total  ms/memory
+HashingEmbedder           512      36.9      0.144
+all-MiniLM-L6-v2          384     588.9      2.301
+
+paraphrase test: cosine of a question with the memory that answers it vs. an unrelated memory
+embedder                  answering  unrelated
+HashingEmbedder               0.158      0.000
+all-MiniLM-L6-v2              0.507      0.035
+
+token estimate vs. the SmolLM2 tokenizer
+  estimate   real   ratio
+        24     24    1.00
+        29     37    1.28
+        41     42    1.02
+
+packing 1,000 candidate blocks under B=800: 2.45 ms

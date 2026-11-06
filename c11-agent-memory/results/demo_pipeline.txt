@@ -1,0 +1,65 @@
+WRITER AND FACT STORE
+   t source   nov  stab   imp  conf scope    score store  op          event
+ 1.1 user   1.00  0.85  0.30  0.90 project   0.67 True   ADD         The deploy region for atlas is eu-west-1.
+ 1.2 user   1.00  0.20  0.30  0.90 global    0.41 False  -           Thanks, that helps.
+ 1.3 tool   1.00  0.10  0.30  0.85 global    0.36 False  -           12:01:33 INFO api request id=9f3a2b77c1d0 status=200
+ 1.4 user   0.85  0.85  0.30  0.90 project   0.67 True   ADD         The owner for atlas is priya.
+ 1.5 user   0.85  0.85  0.30  0.90 project   0.67 True   ADD         The test command for atlas is `pytest -x`.
+ 2.1 user   0.87  0.85  0.60  0.90 global    0.78 True   NOTE        Remember: never deploy on Fridays.
+ 2.2 user   1.00  0.85  0.30  0.90 project   0.67 True   ADD         The database for cobalt is postgres.
+ 3.1 user   0.30  0.85  0.30  0.90 project   0.67 True   UPDATE      Atlas's deploy region is eu-west-1.
+ 4.1 user   0.57  0.60  0.30  0.90 project   0.57 True   SUPERSEDE   Heads up: we moved the deploy region for atlas to us
+ 4.2 user   0.54  0.60  0.30  0.45 project   0.46 False  -           I think the deploy region for atlas might be ap-sout
+ 4.3 user   0.55  0.45  0.30  0.90 session   0.51 False  -           Just for today, the owner for atlas is marco.
+ 5.1 user   0.54  0.85  0.30  0.90 project   0.67 True   DELETE      Forget the test command for atlas, we no longer use 
+
+FACT HISTORY for (atlas, deploy region)
+  eu-west-1    from t=1.1 to t=4.1 status=superseded support=2 conf=0.99
+  us-east-2    from t=4.1 to t=None status=active support=1 conf=0.90
+  as_of(t=2.0) -> eu-west-1
+  as_of(t=4.5) -> us-east-2
+  conflicts logged: []
+  session notes   : ['Just for today, the owner for atlas is marco.']
+
+THE VECTOR INDEX
+  matrix (1024, 512)  alive 4  high-water 5  norm of row 0 1.0000
+
+HYBRID RETRIEVAL  query: 'which region does atlas deploy to'  now=6.0  half_life=3
+       S    sem    rec    imp  memory
+   1.009  0.596  0.645  0.300  atlas deploy region: us-east-2
+   0.552  0.169  0.406  0.600  Remember: never deploy on Fridays.
+   0.463  0.200  0.345  0.300  atlas owner: priya
+   0.298  0.000  0.416  0.300  cobalt database: postgres
+
+CONSOLIDATION
+  episode t0 (session 5): `deploy atlas` -> MigrationError; `clear_cache atlas` -> ok; `deploy atlas` -> MigrationError; `migrate atlas` -> ok; `deploy atlas` -> ok
+  episode t1 (session 6): `deploy cobalt` -> MigrationError; `clear_cache cobalt` -> ok; `deploy cobalt` -> MigrationError; `migrate cobalt` -> ok; `deploy cobalt` -> ok
+  episode t2 (session 7): `deploy dune` -> AuthError; `clear_cache dune` -> ok; `deploy dune` -> AuthError; `login dune` -> ok; `deploy dune` -> ok
+  -> rule: when `deploy {entity}` fails with MigrationError, run `migrate {entity}` and retry (from 2 episodes over 2 projects)
+  dune alone gave no rule: one project is a quirk, not a pattern
+
+CONTEXT PACKER, B=160
+  tokens by section {'instructions': 13, 'task': 24, 'memory': 77, 'events': 27, 'request': 9}  total 150  rendered 130
+  dropped ['m00017', 'm00029', 'm00023', 'obs']  compressed []
+  ---
+  ## Instructions
+  You are an ops agent.
+  
+  ## Task state
+  goal: deploy atlas
+  current step: run the deploy
+  open question: which region?
+  
+  ## Relevant memory
+  - rule: when `deploy {entity}` fails with MigrationError, run `migrate {entity}` and retry (from 2 episodes over 2 projects)
+  - atlas deploy region: us-east-2
+  - Remember: never deploy on Fridays.
+  - atlas owner: priya
+  - cobalt database: postgres
+  
+  ## Recent events
+  [s8t1] user asked for a deploy
+  [s8t1] `deploy atlas` -> AuthError
+  
+  ## Request
+  Deploy atlas.

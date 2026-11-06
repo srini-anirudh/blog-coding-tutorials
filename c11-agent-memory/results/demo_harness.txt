@@ -1,0 +1,10 @@
+no memory (plain C10 agent)
+  context tokens by section: {'instructions': 100, 'repo': 10, 'task': 22, 'tools': 137, 'history': 11}
+  tool call: {'project': 'atlas', 'region': 'NO-REGION-IN-CONTEXT'}
+  tool result: deployed atlas to NO-REGION-IN-CONTEXT
+with memory (attach_memory, one call)
+  context tokens by section: {'instructions': 100, 'memory': 15, 'task': 22, 'tools': 137, 'history': 11}
+  tool call: {'project': 'atlas', 'region': 'us-east-2'}
+  tool result: deployed atlas to us-east-2
+episodes written by the hook: ['deploy atlas us-east-2']
+episodic memory from end_task: ['episode task (session 1): `deploy atlas us-east-2` -> ok']

@@ -1,0 +1,108 @@
+
+FACTS  budget B=256  (probes per condition: 800)
+condition          accuracy         95% CI  tokens
+no_memory             0.389   [0.365,0.415]     171
+full_transcript       0.389   [0.365,0.415]     171
+retrieved             0.955   [0.944,0.966]     225
+oracle                1.000   [1.000,1.000]      80
+
+FACTS  budget B=512  (probes per condition: 800)
+condition          accuracy         95% CI  tokens
+no_memory             0.542   [0.519,0.566]     450
+full_transcript       0.545   [0.521,0.569]     451
+retrieved             0.999   [0.996,1.000]     472
+oracle                1.000   [1.000,1.000]      80
+
+FACTS  budget B=1024  (probes per condition: 800)
+condition          accuracy         95% CI  tokens
+no_memory             0.578   [0.556,0.599]     517
+full_transcript       0.749   [0.729,0.770]     970
+retrieved             0.999   [0.996,1.000]     582
+oracle                1.000   [1.000,1.000]      80
+
+FACTS  budget B=2048  (probes per condition: 800)
+condition          accuracy         95% CI  tokens
+no_memory             0.578   [0.556,0.599]     517
+full_transcript       0.892   [0.880,0.906]    1701
+retrieved             0.999   [0.996,1.000]     582
+oracle                1.000   [1.000,1.000]      80
+
+FACTS  budget B=4096  (probes per condition: 800)
+condition          accuracy         95% CI  tokens
+no_memory             0.578   [0.556,0.599]     517
+full_transcript       1.000   [1.000,1.000]    2292
+retrieved             0.999   [0.996,1.000]     582
+oracle                1.000   [1.000,1.000]      80
+
+FACTS  accuracy by probe kind, B=1024
+condition               stated     updated       rumor     deleted       today after_today      unseen
+no_memory                 0.31        0.62        0.00        1.00        1.00        0.00        1.00
+full_transcript           0.67        0.87        0.06        1.00        1.00        0.00        1.00
+retrieved                 1.00        1.00        1.00        1.00        0.99        1.00        1.00
+oracle                    1.00        1.00        1.00        1.00        1.00        1.00        1.00
+
+FACTS  ablations of the retrieved condition, B=1024
+variant                        accuracy  updated  rumor  today+1  stated  tokens
+full system                       0.999     1.00   1.00     1.00    1.00     582
+append-only (no SUPERSEDE)        0.966     0.66   0.97     0.93    1.00     581
+no writer, no scope gate          0.946     1.00   0.87     0.00    0.98     735
+no writer, no margin              0.879     1.00   0.00     0.00    0.98     724
+recency only (a=0,b=1,g=0)        0.686     0.92   0.13     0.10    0.49     582
+semantic only (a=1,b=0,g=0)       0.999     1.00   1.00     1.00    1.00     584
+corrupted values                  0.585     0.72   0.03     0.00    0.31     582
+
+DEPLOY  budget B=256  (tasks per condition: 480)
+condition           success  steps   seen    new  tokens
+no_memory             0.713   5.55   5.20   6.13     132
+full_transcript       0.394   6.34   6.30   6.42     227
+retrieved             0.821   3.71   2.86   5.10     229
+oracle                1.000   1.93   1.94   1.90     102
+
+DEPLOY  budget B=512  (tasks per condition: 480)
+condition           success  steps   seen    new  tokens
+no_memory             0.713   5.55   5.20   6.13     137
+full_transcript       0.658   5.74   5.60   5.96     401
+retrieved             0.929   2.92   2.02   4.40     347
+oracle                1.000   1.93   1.94   1.90     102
+
+DEPLOY  budget B=1024  (tasks per condition: 480)
+condition           success  steps   seen    new  tokens
+no_memory             0.713   5.55   5.20   6.13     137
+full_transcript       0.725   5.03   4.62   5.71     937
+retrieved             0.929   2.92   2.02   4.40     350
+oracle                1.000   1.93   1.94   1.90     102
+
+DEPLOY  budget B=2048  (tasks per condition: 480)
+condition           success  steps   seen    new  tokens
+no_memory             0.713   5.55   5.20   6.13     137
+full_transcript       0.852   3.81   3.07   5.03    1793
+retrieved             0.929   2.92   2.02   4.40     350
+oracle                1.000   1.93   1.94   1.90     102
+
+DEPLOY  budget B=4096  (tasks per condition: 480)
+condition           success  steps   seen    new  tokens
+no_memory             0.713   5.55   5.20   6.13     137
+full_transcript       0.927   3.00   2.10   4.47    3152
+retrieved             0.929   2.92   2.02   4.40     350
+oracle                1.000   1.93   1.94   1.90     102
+
+DEPLOY  consolidation ablation, retrieved condition, B=1024
+reader    memory          success  steps   steps on new projects
+analogy   rules             0.929   2.92                    4.40
+analogy   no rules          0.929   2.92                    4.40
+literal   rules             0.904   3.30                    5.37
+literal   no rules          0.881   3.59                    6.13
+
+HARNESS  harness.Agent loop, budget B=1024
+condition           success  steps   seen    new  prompt tokens
+no_memory             0.713   5.55   5.20   6.13            828
+retrieved             0.923   3.01   2.06   4.57            909
+oracle                1.000   1.93   1.94   1.90            712
+
+HARNESS  harness.Agent loop, budget B=2048
+condition           success  steps   seen    new  prompt tokens
+no_memory             0.713   5.55   5.20   6.13            894
+retrieved             0.927   2.96   2.02   4.50            956
+oracle                1.000   1.93   1.94   1.90            712
+
+wall time 82s on Apple M5 CPU, 2 threads

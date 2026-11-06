@@ -1,0 +1,2954 @@
+{
+ "query": "which region does atlas deploy to",
+ "hybrid": [
+  {
+   "text": "atlas owner: priya",
+   "kind": "semantic",
+   "semantic": 0.2,
+   "recency": 0.2031,
+   "importance": 0.3
+  },
+  {
+   "text": "cobalt database: postgres",
+   "kind": "semantic",
+   "semantic": 0.0,
+   "recency": 0.2078,
+   "importance": 0.3
+  },
+  {
+   "text": "Remember: never deploy on Fridays.",
+   "kind": "episodic",
+   "semantic": 0.169,
+   "recency": 0.25,
+   "importance": 0.6
+  },
+  {
+   "text": "atlas test command: pytest -x",
+   "kind": "semantic",
+   "semantic": 0.1491,
+   "recency": 0.315,
+   "importance": 0.3
+  },
+  {
+   "text": "atlas deploy region: us-east-2",
+   "kind": "semantic",
+   "semantic": 0.5963,
+   "recency": 0.3969,
+   "importance": 0.3
+  },
+  {
+   "text": "atlas release branch: stable",
+   "kind": "semantic",
+   "semantic": 0.169,
+   "recency": 0.5,
+   "importance": 0.3
+  },
+  {
+   "text": "cobalt owner: chen",
+   "kind": "semantic",
+   "semantic": 0.0,
+   "recency": 0.63,
+   "importance": 0.3
+  },
+  {
+   "text": "Important: the staging cluster is shared, so run smoke tests only.",
+   "kind": "episodic",
+   "semantic": 0.0,
+   "recency": 0.7937,
+   "importance": 0.6
+  }
+ ],
+ "candidates": [
+  {
+   "id": "instructions",
+   "section": "instructions",
+   "tokens": 29,
+   "value": 0.0,
+   "density": 0.0,
+   "required": true
+  },
+  {
+   "id": "task state",
+   "section": "task",
+   "tokens": 23,
+   "value": 0.0,
+   "density": 0.0,
+   "required": true
+  },
+  {
+   "id": "request",
+   "section": "request",
+   "tokens": 8,
+   "value": 0.0,
+   "density": 0.0,
+   "required": true
+  },
+  {
+   "id": "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+   "section": "memory",
+   "tokens": 35,
+   "value": 0.996,
+   "density": 0.0284,
+   "required": false
+  },
+  {
+   "id": "atlas deploy region: us-east-2",
+   "section": "memory",
+   "tokens": 11,
+   "value": 0.587,
+   "density": 0.0533,
+   "required": false
+  },
+  {
+   "id": "Important: the staging cluster is shared, so run smoke tests only.",
+   "section": "memory",
+   "tokens": 17,
+   "value": 0.577,
+   "density": 0.0339,
+   "required": false
+  },
+  {
+   "id": "atlas release branch: stable",
+   "section": "memory",
+   "tokens": 7,
+   "value": 0.509,
+   "density": 0.0727,
+   "required": false
+  },
+  {
+   "id": "Remember: never deploy on Fridays.",
+   "section": "memory",
+   "tokens": 10,
+   "value": 0.474,
+   "density": 0.0474,
+   "required": false
+  },
+  {
+   "id": "cobalt owner: chen",
+   "section": "memory",
+   "tokens": 6,
+   "value": 0.405,
+   "density": 0.0675,
+   "required": false
+  },
+  {
+   "id": "atlas owner: priya",
+   "section": "memory",
+   "tokens": 6,
+   "value": 0.392,
+   "density": 0.0653,
+   "required": false
+  },
+  {
+   "id": "step 1: `deploy atlas` -> AuthError",
+   "section": "events",
+   "tokens": 12,
+   "value": 0.533,
+   "density": 0.0444,
+   "required": false
+  },
+  {
+   "id": "step 2: `clear_cache atlas` -> ok",
+   "section": "events",
+   "tokens": 12,
+   "value": 0.767,
+   "density": 0.0639,
+   "required": false
+  },
+  {
+   "id": "step 3: `deploy atlas` -> AuthError",
+   "section": "events",
+   "tokens": 12,
+   "value": 1.0,
+   "density": 0.0833,
+   "required": false
+  },
+  {
+   "id": "deploy log",
+   "section": "observation",
+   "tokens": 133,
+   "value": 0.9,
+   "density": 0.0068,
+   "required": false
+  }
+ ],
+ "grid": [
+  {
+   "budget": 40,
+   "error": "required context needs ~77 tokens, budget is 40"
+  },
+  {
+   "budget": 48,
+   "error": "required context needs ~77 tokens, budget is 48"
+  },
+  {
+   "budget": 56,
+   "error": "required context needs ~77 tokens, budget is 56"
+  },
+  {
+   "budget": 64,
+   "error": "required context needs ~77 tokens, budget is 64"
+  },
+  {
+   "budget": 72,
+   "error": "required context needs ~77 tokens, budget is 72"
+  },
+  {
+   "budget": 80,
+   "total": 77,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "atlas deploy region: us-east-2",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "atlas release branch: stable",
+    "Remember: never deploy on Fridays.",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "step 1: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 3: `deploy atlas` -> AuthError",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 88,
+   "total": 77,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "atlas deploy region: us-east-2",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "atlas release branch: stable",
+    "Remember: never deploy on Fridays.",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "step 1: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 3: `deploy atlas` -> AuthError",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 96,
+   "total": 95,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "events": 18,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "atlas deploy region: us-east-2",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "atlas release branch: stable",
+    "Remember: never deploy on Fridays.",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "step 1: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 104,
+   "total": 95,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "events": 18,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "atlas deploy region: us-east-2",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "atlas release branch: stable",
+    "Remember: never deploy on Fridays.",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "step 1: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 112,
+   "total": 107,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "events": 30,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "atlas deploy region: us-east-2",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "atlas release branch: stable",
+    "Remember: never deploy on Fridays.",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "step 1: `deploy atlas` -> AuthError",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 120,
+   "total": 119,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "atlas deploy region: us-east-2",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "atlas release branch: stable",
+    "Remember: never deploy on Fridays.",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 128,
+   "total": 119,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "atlas deploy region: us-east-2",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "atlas release branch: stable",
+    "Remember: never deploy on Fridays.",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 136,
+   "total": 133,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 14,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "atlas deploy region: us-east-2",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "Remember: never deploy on Fridays.",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 144,
+   "total": 139,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 20,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "atlas deploy region: us-east-2",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "Remember: never deploy on Fridays.",
+    "atlas owner: priya",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 152,
+   "total": 145,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 26,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "atlas deploy region: us-east-2",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "Remember: never deploy on Fridays.",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 160,
+   "total": 156,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 37,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2"
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "Remember: never deploy on Fridays.",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 168,
+   "total": 166,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 47,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays."
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 176,
+   "total": 166,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 47,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays."
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 184,
+   "total": 183,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 64,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only."
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 192,
+   "total": 183,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 64,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only."
+   ],
+   "compressed": [],
+   "out": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 200,
+   "total": 200,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 81,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only."
+   ],
+   "compressed": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "out": [
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 208,
+   "total": 208,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 89,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only."
+   ],
+   "compressed": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "out": [
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 216,
+   "total": 215,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 96,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only."
+   ],
+   "compressed": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "out": [
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 224,
+   "total": 218,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [],
+   "out": [
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 232,
+   "total": 218,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [],
+   "out": [
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 240,
+   "total": 218,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [],
+   "out": [
+    "deploy log"
+   ]
+  },
+  {
+   "budget": 248,
+   "total": 248,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 30,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 256,
+   "total": 256,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 38,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 264,
+   "total": 260,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 42,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 272,
+   "total": 250,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 32,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 280,
+   "total": 267,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 49,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 288,
+   "total": 267,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 49,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 296,
+   "total": 267,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 49,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 304,
+   "total": 284,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 66,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 312,
+   "total": 301,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 83,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 320,
+   "total": 301,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 83,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 328,
+   "total": 301,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 83,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 336,
+   "total": 301,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 83,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 344,
+   "total": 318,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 100,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 352,
+   "total": 335,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 117,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry"
+   ],
+   "compressed": [
+    "deploy log"
+   ],
+   "out": []
+  },
+  {
+   "budget": 360,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 368,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 376,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 384,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 392,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 400,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 408,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 416,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 424,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 432,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 440,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 448,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 456,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 464,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 472,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 480,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 488,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 496,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 504,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 512,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  },
+  {
+   "budget": 520,
+   "total": 358,
+   "by_section": {
+    "instructions": 35,
+    "task": 29,
+    "memory": 99,
+    "events": 42,
+    "observation": 140,
+    "request": 13
+   },
+   "in": [
+    "instructions",
+    "task state",
+    "request",
+    "step 3: `deploy atlas` -> AuthError",
+    "step 2: `clear_cache atlas` -> ok",
+    "step 1: `deploy atlas` -> AuthError",
+    "atlas release branch: stable",
+    "cobalt owner: chen",
+    "atlas owner: priya",
+    "atlas deploy region: us-east-2",
+    "Remember: never deploy on Fridays.",
+    "Important: the staging cluster is shared, so run smoke tests only.",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry",
+    "deploy log"
+   ],
+   "compressed": [],
+   "out": []
+  }
+ ],
+ "rendered_at_160": "## Instructions\nYou are a deploy agent. Tools: deploy, migrate, login, build_assets. If a deploy fails, fix the cause and retry.\n\n## Task state\ngoal: deploy atlas\ncurrent step: fix the failed deploy\nopen question: why was the token rejected?\n\n## Relevant memory\n- atlas deploy region: us-east-2\n- atlas release branch: stable\n- cobalt owner: chen\n- atlas owner: priya\n\n## Recent events\n[s8t1] `deploy atlas` -> AuthError\n[s8t1] `clear_cache atlas` -> ok\n[s8t1] `deploy atlas` -> AuthError\n\n## Request\nDeploy atlas to its current region.",
+ "search": {
+  "dim": 512,
+  "buckets": [
+   273,
+   308,
+   309,
+   376,
+   434
+  ],
+  "q": [
+   0.447,
+   0.447,
+   0.447,
+   -0.447,
+   -0.447
+  ],
+  "texts": [
+   "atlas owner: priya",
+   "cobalt database: postgres",
+   "Remember: never deploy on Fridays.",
+   "atlas test command: pytest -x",
+   "atlas deploy region: us-east-2",
+   "atlas release branch: stable",
+   "cobalt owner: chen",
+   "Important: the staging cluster is shared, so run smoke tests only.",
+   "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episodes over 3 projects)"
+  ],
+  "rows": [
+   [
+    0.447,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -0.378
+   ],
+   [
+    0.333,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.333,
+    0.333,
+    0.333,
+    0.0,
+    -0.333
+   ],
+   [
+    0.378,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.243
+   ],
+   [
+    0.187,
+    0.0,
+    0.0,
+    0.0,
+    -0.187
+   ]
+  ],
+  "cos": [
+   0.2,
+   0.0,
+   0.169,
+   0.149,
+   0.596,
+   0.169,
+   0.0,
+   -0.108,
+   0.167
+  ],
+  "shape": [
+   9,
+   512
+  ]
+ },
+ "trace": [
+  {
+   "task": "s1t1",
+   "project": "ember",
+   "tokens": 56,
+   "action": "deploy ember",
+   "rules": 0,
+   "memories": [],
+   "steps": 7,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t1",
+   "project": "ember",
+   "tokens": 211,
+   "action": "clear_cache ember",
+   "rules": 0,
+   "memories": [],
+   "steps": 7,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t1",
+   "project": "ember",
+   "tokens": 92,
+   "action": "deploy ember",
+   "rules": 0,
+   "memories": [],
+   "steps": 7,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t1",
+   "project": "ember",
+   "tokens": 233,
+   "action": "build_assets ember",
+   "rules": 0,
+   "memories": [],
+   "steps": 7,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t1",
+   "project": "ember",
+   "tokens": 114,
+   "action": "deploy ember",
+   "rules": 0,
+   "memories": [],
+   "steps": 7,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t1",
+   "project": "ember",
+   "tokens": 255,
+   "action": "login ember",
+   "rules": 0,
+   "memories": [],
+   "steps": 7,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t1",
+   "project": "ember",
+   "tokens": 134,
+   "action": "deploy ember",
+   "rules": 0,
+   "memories": [],
+   "steps": 7,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t2",
+   "project": "juniper",
+   "tokens": 129,
+   "action": "deploy juniper",
+   "rules": 0,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`"
+   ],
+   "steps": 3,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t2",
+   "project": "juniper",
+   "tokens": 284,
+   "action": "login juniper",
+   "rules": 0,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`"
+   ],
+   "steps": 3,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t2",
+   "project": "juniper",
+   "tokens": 163,
+   "action": "deploy juniper",
+   "rules": 0,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`"
+   ],
+   "steps": 3,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t3",
+   "project": "ember",
+   "tokens": 161,
+   "action": "login ember",
+   "rules": 0,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s1t3",
+   "project": "ember",
+   "tokens": 184,
+   "action": "deploy ember",
+   "rules": 0,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s2t1",
+   "project": "juniper",
+   "tokens": 218,
+   "action": "login juniper",
+   "rules": 1,
+   "memories": [
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s2t1",
+   "project": "juniper",
+   "tokens": 241,
+   "action": "deploy juniper",
+   "rules": 1,
+   "memories": [
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s2t2",
+   "project": "atlas",
+   "tokens": 241,
+   "action": "deploy atlas",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`"
+   ],
+   "steps": 5,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s2t2",
+   "project": "atlas",
+   "tokens": 393,
+   "action": "clear_cache atlas",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`"
+   ],
+   "steps": 5,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s2t2",
+   "project": "atlas",
+   "tokens": 277,
+   "action": "deploy atlas",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`"
+   ],
+   "steps": 5,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s2t2",
+   "project": "atlas",
+   "tokens": 415,
+   "action": "build_assets atlas",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`"
+   ],
+   "steps": 5,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s2t2",
+   "project": "atlas",
+   "tokens": 299,
+   "action": "deploy atlas",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`"
+   ],
+   "steps": 5,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s2t3",
+   "project": "juniper",
+   "tokens": 292,
+   "action": "login juniper",
+   "rules": 1,
+   "memories": [
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s2t1 (session 2): `login juniper` -> ok; `deploy juniper` -> ok",
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s2t3",
+   "project": "juniper",
+   "tokens": 315,
+   "action": "deploy juniper",
+   "rules": 1,
+   "memories": [
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s2t1 (session 2): `login juniper` -> ok; `deploy juniper` -> ok",
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s3t1",
+   "project": "granite",
+   "tokens": 315,
+   "action": "deploy granite",
+   "rules": 1,
+   "memories": [
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s3t1",
+   "project": "granite",
+   "tokens": 469,
+   "action": "clear_cache granite",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s3t1",
+   "project": "granite",
+   "tokens": 351,
+   "action": "deploy granite",
+   "rules": 1,
+   "memories": [
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s3t1",
+   "project": "granite",
+   "tokens": 491,
+   "action": "build_assets granite",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s3t1",
+   "project": "granite",
+   "tokens": 373,
+   "action": "deploy granite",
+   "rules": 1,
+   "memories": [
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s3t1",
+   "project": "granite",
+   "tokens": 513,
+   "action": "login granite",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s3t1",
+   "project": "granite",
+   "tokens": 393,
+   "action": "deploy granite",
+   "rules": 1,
+   "memories": [
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s3t1",
+   "project": "granite",
+   "tokens": 534,
+   "action": "migrate granite",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s3t2",
+   "project": "ember",
+   "tokens": 392,
+   "action": "login ember",
+   "rules": 1,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "episode s1t3 (session 1): `login ember` -> ok; `deploy ember` -> ok",
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s3t2",
+   "project": "ember",
+   "tokens": 415,
+   "action": "deploy ember",
+   "rules": 1,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "episode s1t3 (session 1): `login ember` -> ok; `deploy ember` -> ok",
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s3t3",
+   "project": "atlas",
+   "tokens": 392,
+   "action": "build_assets atlas",
+   "rules": 1,
+   "memories": [
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s3t1 (session 3): `deploy granite` -> MigrationError; `clear_cache granite` -> ok; `depl"
+   ],
+   "steps": 2,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s3t3",
+   "project": "atlas",
+   "tokens": 417,
+   "action": "deploy atlas",
+   "rules": 1,
+   "memories": [
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s3t1 (session 3): `deploy granite` -> MigrationError; `clear_cache granite` -> ok; `depl"
+   ],
+   "steps": 2,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s4t1",
+   "project": "ember",
+   "tokens": 393,
+   "action": "login ember",
+   "rules": 1,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "episode s3t2 (session 3): `login ember` -> ok; `deploy ember` -> ok",
+    "episode s1t3 (session 1): `login ember` -> ok; `deploy ember` -> ok"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s4t1",
+   "project": "ember",
+   "tokens": 416,
+   "action": "deploy ember",
+   "rules": 1,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "episode s3t2 (session 3): `login ember` -> ok; `deploy ember` -> ok",
+    "episode s1t3 (session 1): `login ember` -> ok; `deploy ember` -> ok"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s4t2",
+   "project": "dune",
+   "tokens": 393,
+   "action": "deploy dune",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "episode s4t1 (session 4): `login ember` -> ok; `deploy ember` -> ok"
+   ],
+   "steps": 3,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s4t2",
+   "project": "dune",
+   "tokens": 545,
+   "action": "build_assets dune",
+   "rules": 1,
+   "memories": [
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s4t1 (session 4): `login ember` -> ok; `deploy ember` -> ok"
+   ],
+   "steps": 3,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s4t2",
+   "project": "dune",
+   "tokens": 429,
+   "action": "deploy dune",
+   "rules": 1,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "episode s4t1 (session 4): `login ember` -> ok; `deploy ember` -> ok"
+   ],
+   "steps": 3,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s4t3",
+   "project": "ember",
+   "tokens": 348,
+   "action": "login ember",
+   "rules": 1,
+   "memories": [
+    "episode s4t1 (session 4): `login ember` -> ok; `deploy ember` -> ok",
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "episode s3t2 (session 3): `login ember` -> ok; `deploy ember` -> ok"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s4t3",
+   "project": "ember",
+   "tokens": 371,
+   "action": "deploy ember",
+   "rules": 1,
+   "memories": [
+    "episode s4t1 (session 4): `login ember` -> ok; `deploy ember` -> ok",
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "episode s3t2 (session 3): `login ember` -> ok; `deploy ember` -> ok"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s5t1",
+   "project": "atlas",
+   "tokens": 316,
+   "action": "build_assets atlas",
+   "rules": 2,
+   "memories": [
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s3t3 (session 3): `build_assets atlas` -> ok; `deploy atlas` -> ok"
+   ],
+   "steps": 2,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s5t1",
+   "project": "atlas",
+   "tokens": 341,
+   "action": "deploy atlas",
+   "rules": 2,
+   "memories": [
+    "episode s2t2 (session 2): `deploy atlas` -> AssetError; `clear_cache atlas` -> ok; `deploy atlas",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "episode s3t3 (session 3): `build_assets atlas` -> ok; `deploy atlas` -> ok"
+   ],
+   "steps": 2,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s5t2",
+   "project": "ember",
+   "tokens": 323,
+   "action": "login ember",
+   "rules": 2,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "episode s4t3 (session 4): `login ember` -> ok; `deploy ember` -> ok",
+    "episode s4t1 (session 4): `login ember` -> ok; `deploy ember` -> ok"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s5t2",
+   "project": "ember",
+   "tokens": 346,
+   "action": "deploy ember",
+   "rules": 2,
+   "memories": [
+    "episode s1t1 (session 1): `deploy ember` -> AuthError; `clear_cache ember` -> ok; `deploy ember`",
+    "episode s4t3 (session 4): `login ember` -> ok; `deploy ember` -> ok",
+    "episode s4t1 (session 4): `login ember` -> ok; `deploy ember` -> ok"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s5t3",
+   "project": "juniper",
+   "tokens": 288,
+   "action": "login juniper",
+   "rules": 2,
+   "memories": [
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s5t2 (session 5): `login ember` -> ok; `deploy ember` -> ok",
+    "episode s4t2 (session 4): `deploy dune` -> AssetError; `build_assets dune` -> ok; `deploy dune` "
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s5t3",
+   "project": "juniper",
+   "tokens": 311,
+   "action": "deploy juniper",
+   "rules": 2,
+   "memories": [
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s5t2 (session 5): `login ember` -> ok; `deploy ember` -> ok",
+    "episode s4t2 (session 4): `deploy dune` -> AssetError; `build_assets dune` -> ok; `deploy dune` "
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s6t1",
+   "project": "borealis",
+   "tokens": 317,
+   "action": "deploy borealis",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "episode s4t2 (session 4): `deploy dune` -> AssetError; `build_assets dune` -> ok; `deploy dune` "
+   ],
+   "steps": 3,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s6t1",
+   "project": "borealis",
+   "tokens": 498,
+   "action": "login borealis",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "episode s4t2 (session 4): `deploy dune` -> AssetError; `build_assets dune` -> ok; `deploy dune` "
+   ],
+   "steps": 3,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s6t1",
+   "project": "borealis",
+   "tokens": 354,
+   "action": "deploy borealis",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 2 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "episode s4t2 (session 4): `deploy dune` -> AssetError; `build_assets dune` -> ok; `deploy dune` "
+   ],
+   "steps": 3,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s6t2",
+   "project": "juniper",
+   "tokens": 299,
+   "action": "login juniper",
+   "rules": 2,
+   "memories": [
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s5t3 (session 5): `login juniper` -> ok; `deploy juniper` -> ok",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s6t2",
+   "project": "juniper",
+   "tokens": 322,
+   "action": "deploy juniper",
+   "rules": 2,
+   "memories": [
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s5t3 (session 5): `login juniper` -> ok; `deploy juniper` -> ok",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s6t3",
+   "project": "harbor",
+   "tokens": 318,
+   "action": "deploy harbor",
+   "rules": 2,
+   "memories": [
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal",
+    "episode s4t2 (session 4): `deploy dune` -> AssetError; `build_assets dune` -> ok; `deploy dune` ",
+    "episode s5t2 (session 5): `login ember` -> ok; `deploy ember` -> ok"
+   ],
+   "steps": 1,
+   "quirk": null
+  },
+  {
+   "task": "s7t1",
+   "project": "fjord",
+   "tokens": 310,
+   "action": "deploy fjord",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s7t1",
+   "project": "fjord",
+   "tokens": 464,
+   "action": "clear_cache fjord",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s7t1",
+   "project": "fjord",
+   "tokens": 346,
+   "action": "deploy fjord",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s7t1",
+   "project": "fjord",
+   "tokens": 486,
+   "action": "build_assets fjord",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s7t1",
+   "project": "fjord",
+   "tokens": 368,
+   "action": "deploy fjord",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s7t1",
+   "project": "fjord",
+   "tokens": 508,
+   "action": "login fjord",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s7t1",
+   "project": "fjord",
+   "tokens": 388,
+   "action": "deploy fjord",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s7t1",
+   "project": "fjord",
+   "tokens": 529,
+   "action": "migrate fjord",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 8,
+   "quirk": "MigrationError"
+  },
+  {
+   "task": "s7t2",
+   "project": "dune",
+   "tokens": 336,
+   "action": "build_assets dune",
+   "rules": 2,
+   "memories": [
+    "episode s4t2 (session 4): `deploy dune` -> AssetError; `build_assets dune` -> ok; `deploy dune` ",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod"
+   ],
+   "steps": 2,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s7t2",
+   "project": "dune",
+   "tokens": 361,
+   "action": "deploy dune",
+   "rules": 2,
+   "memories": [
+    "episode s4t2 (session 4): `deploy dune` -> AssetError; `build_assets dune` -> ok; `deploy dune` ",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod"
+   ],
+   "steps": 2,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s7t3",
+   "project": "borealis",
+   "tokens": 338,
+   "action": "login borealis",
+   "rules": 2,
+   "memories": [
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from "
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s7t3",
+   "project": "borealis",
+   "tokens": 363,
+   "action": "deploy borealis",
+   "rules": 2,
+   "memories": [
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from "
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s8t1",
+   "project": "iris",
+   "tokens": 347,
+   "action": "deploy iris",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 3,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s8t1",
+   "project": "iris",
+   "tokens": 527,
+   "action": "build_assets iris",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal",
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod"
+   ],
+   "steps": 3,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s8t1",
+   "project": "iris",
+   "tokens": 383,
+   "action": "deploy iris",
+   "rules": 2,
+   "memories": [
+    "rule: when `deploy {entity}` fails with AuthError, run `login {entity}` and retry (from 3 episod",
+    "rule: when `deploy {entity}` fails with AssetError, run `build_assets {entity}` and retry (from ",
+    "episode s6t1 (session 6): `deploy borealis` -> AuthError; `login borealis` -> ok; `deploy boreal"
+   ],
+   "steps": 3,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s8t2",
+   "project": "juniper",
+   "tokens": 299,
+   "action": "login juniper",
+   "rules": 2,
+   "memories": [
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s8t1 (session 8): `deploy iris` -> AssetError; `build_assets iris` -> ok; `deploy iris` ",
+    "episode s6t2 (session 6): `login juniper` -> ok; `deploy juniper` -> ok"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s8t2",
+   "project": "juniper",
+   "tokens": 322,
+   "action": "deploy juniper",
+   "rules": 2,
+   "memories": [
+    "episode s1t2 (session 1): `deploy juniper` -> AuthError; `login juniper` -> ok; `deploy juniper`",
+    "episode s8t1 (session 8): `deploy iris` -> AssetError; `build_assets iris` -> ok; `deploy iris` ",
+    "episode s6t2 (session 6): `login juniper` -> ok; `deploy juniper` -> ok"
+   ],
+   "steps": 2,
+   "quirk": "AuthError"
+  },
+  {
+   "task": "s8t3",
+   "project": "dune",
+   "tokens": 357,
+   "action": "build_assets dune",
+   "rules": 2,
+   "memories": [
+    "episode s4t2 (session 4): `deploy dune` -> AssetError; `build_assets dune` -> ok; `deploy dune` ",
+    "episode s7t2 (session 7): `build_assets dune` -> ok; `deploy dune` -> ok",
+    "episode s8t1 (session 8): `deploy iris` -> AssetError; `build_assets iris` -> ok; `deploy iris` "
+   ],
+   "steps": 2,
+   "quirk": "AssetError"
+  },
+  {
+   "task": "s8t3",
+   "project": "dune",
+   "tokens": 382,
+   "action": "deploy dune",
+   "rules": 2,
+   "memories": [
+    "episode s4t2 (session 4): `deploy dune` -> AssetError; `build_assets dune` -> ok; `deploy dune` ",
+    "episode s7t2 (session 7): `build_assets dune` -> ok; `deploy dune` -> ok",
+    "episode s8t1 (session 8): `deploy iris` -> AssetError; `build_assets iris` -> ok; `deploy iris` "
+   ],
+   "steps": 2,
+   "quirk": "AssetError"
+  }
+ ]
+}

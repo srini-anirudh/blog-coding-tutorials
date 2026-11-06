@@ -1,0 +1,68 @@
+{
+ "hardware": "Apple M5 CPU, 2 threads",
+ "index": [
+  {
+   "n": 1000,
+   "naive_ms": 22.908708000159095,
+   "tensor_ms": 0.04418700007136067,
+   "matrix_mb": 1.536
+  },
+  {
+   "n": 10000,
+   "naive_ms": 161.8714579999505,
+   "tensor_ms": 0.3056255001183672,
+   "matrix_mb": 15.36
+  },
+  {
+   "n": 100000,
+   "naive_ms": null,
+   "tensor_ms": 4.307749999952648,
+   "matrix_mb": 153.6
+  },
+  {
+   "n": 1000000,
+   "naive_ms": null,
+   "tensor_ms": 61.088792000077774,
+   "matrix_mb": 1536.0
+  }
+ ],
+ "embed": [
+  {
+   "name": "HashingEmbedder",
+   "dim": 512,
+   "ms": 36.89699999995355,
+   "ms_per": 0.14412890624981856
+  },
+  {
+   "name": "all-MiniLM-L6-v2",
+   "dim": 384,
+   "ms": 588.942999999972,
+   "ms_per": 2.3005585937498907
+  },
+  {
+   "name": "HashingEmbedder",
+   "paraphrase_answering": 0.15835312008857727,
+   "paraphrase_unrelated": 0.0
+  },
+  {
+   "name": "all-MiniLM-L6-v2",
+   "paraphrase_answering": 0.5066398978233337,
+   "paraphrase_unrelated": 0.035090021789073944
+  }
+ ],
+ "tokens": {
+  "The deploy region fo": [
+   24,
+   24
+  ],
+  "[3/7] compile atlas:": [
+   29,
+   37
+  ],
+  "def retrieve(self, q": [
+   41,
+   42
+  ]
+ },
+ "pack_ms": 2.4539169999115984
+}

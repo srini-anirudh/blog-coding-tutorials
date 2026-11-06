@@ -1,0 +1,16 @@
+1. append-only memory: the old value keeps its place in the ranking
+   supersede    ['atlas deploy region: us-east-2']
+   append-only  ['atlas deploy region: us-east-2', 'atlas deploy region: eu-west-1']
+2. no confidence margin: a hedge replaces a confirmed fact
+   margin=0.3: current owner = priya
+   margin=1.0: current owner = chen
+3. a budget smaller than the required blocks fails loudly, not silently
+   BudgetError: required context needs ~67 tokens, budget is 20
+4. keep-the-newest truncation evicts the instructions first
+   kept 10 of 40 blocks; instructions kept: False
+   same bug in the deploy world, transcript at B=256 vs. no memory at all:
+   full_transcript  success 0.33  mean steps 6.71
+   no_memory        success 0.69  mean steps 5.74
+5. Python hash() in the embedder: a different bucket in every process
+   PYTHONHASHSEED=1: hash('atlas') % 512 = 303
+   PYTHONHASHSEED=2: hash('atlas') % 512 = 474
