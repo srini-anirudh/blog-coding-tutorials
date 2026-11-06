@@ -1,0 +1,28 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# python labs/the-geometry-of-normalization/scripts/09_interface.py
+Part A. One update of norm C = 1, at angle phi to h. Measured angle vs the formula, degrees.
+  ||h||   phi  measured  formula
+    0.8    90    51.340   51.340
+    0.8    45    25.135   25.135
+    5.0    90    11.310   11.310
+    5.0    45     7.063    7.063
+   29.0    90     1.975    1.975
+   29.0    45     1.364    1.364
+   72.0    90     0.795    0.796
+   72.0    45     0.557    0.557
+
+  The same direction at four norms through one random Pre-LN MLP block, x + MLP(RMSNorm(x)):
+  ||h||   0.8:  ||update|| 4.698   rotation 80.36 deg
+  ||h||   5.0:  ||update|| 4.701   rotation 43.24 deg
+  ||h||  29.0:  ||update|| 4.701   rotation 9.21 deg
+  ||h||  72.0:  ||update|| 4.701   rotation 3.74 deg
+  The update is identical in size at every norm. The rotation it causes falls roughly as 1 / ||h||.
+
+Part B. encoder Linear(64, 576) -> projector Linear(576, 576) -> interface. Encoder outputs start at norm ~72.
+  A fixed upstream gradient G (unit norm per token) stands in for the LLM. Gain init T/sqrt(D) = 0.0333.
+interface                          visual norm  ratio to text  ||grad encoder||
+bare projector                           41.41           51.8            52.835
+LayerNorm, gain 1                        24.00           30.0            30.564
+LayerNorm, gain T/sqrt(D)                 0.80            1.0             1.019
+LayerNorm, gain T/sqrt(D) + hook          0.80            1.0            30.564
+  The small gain fixes the norm ratio but cuts the encoder's gradient by the same factor. The hook restores it.

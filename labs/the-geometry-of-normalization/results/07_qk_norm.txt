@@ -1,0 +1,21 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# python labs/the-geometry-of-normalization/scripts/07_qk_norm.py
+Part A. 8 heads, 256 keys, head dim 64. Uniform attention has entropy ln 256 = 5.55.
+ scale s | no norm: max logit  entropy   max p  ||dL/dS|| | QK-Norm: max logit  entropy   max p  ||dL/dS||
+       1 |                5.3     5.05   0.043     36.058 |                4.3     5.06   0.040     35.411
+       2 |               21.3     1.81   0.502    110.581 |                4.3     5.06   0.040     35.411
+       4 |               85.0     0.33   0.873     83.001 |                4.3     5.06   0.040     35.411
+       8 |              340.1     0.08   0.967     47.770 |                4.3     5.06   0.040     35.411
+      16 |             1360.5     0.02   0.992     23.299 |                4.3     5.06   0.040     35.411
+      32 |             5441.9     0.00   0.999      9.034 |                4.3     5.06   0.040     35.411
+Without the norm, entropy collapses towards 0 and, past s = 2, the gradient on the logits falls as s grows.
+With QK-Norm, |logit| <= ||q|| ||k|| / sqrt(d) = sqrt(d) = 8 (gain 1). A learned gain can
+still sharpen attention, but only by growing the gain itself, which is a parameter you can watch.
+
+Part B. RoPE and RMSNorm, max abs difference over all heads and positions
+  | ||RoPE(q)|| - ||q|| |                           3.8e-06
+  RMSNorm(RoPE(q)) vs RoPE(RMSNorm(q)), gain = 1     7.2e-07
+  same, gain ~ 1 + 0.3 N(0,1) per channel          2.7e+00
+  same, gain shared within each rotated pair       1.2e-06
+  The scale commutes with the rotation. A per-channel gain does not, so the order is a real choice once
+  the gain has trained. The post notes that Gemma 3 and OLMo 2 normalize first, then rotate.

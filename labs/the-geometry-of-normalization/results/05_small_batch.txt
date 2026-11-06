@@ -1,0 +1,14 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# python labs/the-geometry-of-normalization/scripts/05_small_batch.py
+CIFAR-10, 10000 train / 2000 test images, 2 epochs, SGD momentum 0.9, lr = 0.05 * batch / 64, random flips.
+norm        batch  steps  train loss  test acc (eval)  test-batch stats  time s
+batchnorm       2  10000       1.778            0.407             0.445      66
+batchnorm       8   2500       1.543            0.485             0.508      29
+batchnorm      64    312       1.542            0.435             0.489      14
+groupnorm       2  10000       1.659            0.433                 -     111
+groupnorm       8   2500       1.694            0.413                 -      51
+groupnorm      64    312       1.827            0.288                 -      20
+none            2  10000       1.606            0.391                 -      82
+none            8   2500       1.601            0.408                 -      25
+none           64    312       1.799            0.363                 -      12
+train loss = mean over the last 10% of steps.

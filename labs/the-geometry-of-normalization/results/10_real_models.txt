@@ -1,0 +1,35 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# python labs/the-geometry-of-normalization/scripts/10_real_models.py
+Part A. HuggingFaceTB/SmolLM2-135M, fp32, 8 windows x 256 tokens of Tiny Shakespeare (no BOS added).
+  loss 3.269. Stream norm per token (mean over positions 1+), norm at position 0, largest |activation|.
+  after layer  mean ||h||  ||h|| pos 0   max |h|   at (pos, channel)  median |h|
+            0        2.78         2.93       1.1          (231, 481)       0.071
+            3       75.25       651.69     814.0            (8, 507)       0.780
+            6       90.64       641.55     805.7            (8, 507)       1.174
+            9      121.91       530.24     728.4            (8, 507)       1.575
+           12      143.08     19663.07   20063.1            (0, 507)       1.642
+           15      156.84     19630.76   20027.4            (0, 507)       1.862
+           18      191.41     19587.59   19981.6            (0, 507)       2.610
+           21      243.86     19572.83   19965.2            (0, 507)       3.674
+           24      381.09     19577.34   19970.3            (0, 507)       6.005
+           27      564.73     19543.23   19927.1            (0, 507)       8.540
+    30 + norm       46.72        48.44      54.6            (0, 199)       0.705
+  The last row is after the final RMSNorm, which brings the stream back to a bounded scale before the head.
+
+  Loss increase when one layer is removed:
+  0:+7.02 1:+3.37 2:+0.62 3:+0.23 4:+0.12 5:+0.17 6:+0.25 7:+0.14 8:+0.63 9:+0.61 10:+0.30 11:+2.32 12:+0.07 13:+0.10 14:+0.09 15:+0.10 16:+0.15 17:+0.09 18:+0.15 19:+0.20 20:+0.33 21:+0.22 22:+0.15 23:+0.28 24:+0.42 25:+0.14 26:+0.20 27:+0.28 28:+1.02 29:+2.55
+  mean increase, layers 0-9: 1.316;  layers 10-19: 0.358;  layers 20-29: 0.559
+
+Part B. HuggingFaceTB/SmolVLM-256M-Instruct, 16 CIFAR-10 test images (upscaled by the processor, no splitting).
+  vision tower output    (1024, 768) per image, mean token norm 15.41
+  after the connector    (64, 576) per image, mean token norm 122.93
+  text token embeddings  mean norm 2.715 (the Part A text, in SmolVLM's own table)
+  ratio visual / text after the connector: 45.3x
+
+Part C. Embedding tables. 49152 rows shared with SmolLM2-135M, 128 rows added by SmolVLM.
+  shared rows: cosine(SmolLM2 row, SmolVLM row) median 0.992
+  mean row norm: SmolLM2-135M 3.179, SmolVLM 3.107. Max: 7.468 vs 7.269
+  <fake_token_around_image>  id  49189  norm 0.965  rank 49259 of 49280 by norm
+  <global-img>               id  49152  norm 0.954  rank 49262 of 49280 by norm
+  <image>                    id  49190  norm 0.756  rank 49276 of 49280 by norm
+  <row_1_col_1>              id  49153  norm 0.924  rank 49267 of 49280 by norm

@@ -1,0 +1,12 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# python labs/the-geometry-of-normalization/scripts/01_axis_atlas.py
+x has shape (N, C, S) = (8, 6, 5). One function, normalize(x, dims), builds every operator.
+
+operator      axes       statistics  max |ours - torch|    sample 0 moves when sample 1 changes
+batchnorm     (0, 2)              6             3.6e-07                                   2.139
+layernorm     (1)                40             2.4e-07                                   0.000
+instancenorm  (2)                48             3.6e-07                                   0.000
+groupnorm     (c-grp, s)         16             4.8e-07                                   0.000
+rmsnorm       (1)                40             0.0e+00                                   0.000
+
+Only BatchNorm's output for one sample depends on the other samples in the batch.

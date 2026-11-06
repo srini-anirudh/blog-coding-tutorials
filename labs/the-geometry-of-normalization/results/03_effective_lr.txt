@@ -1,0 +1,19 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# python labs/the-geometry-of-normalization/scripts/03_effective_lr.py
+Part A. Rescale W by k. One full-batch SGD step at lr 0.2.
+     k      loss    ||grad||  k*||grad||   angle (rad)   k^2*angle   <grad,W>/(|g||W|)
+  0.25    1.5978      2.3133      0.5783      4.39e-01    2.75e-02             4.1e-05
+   0.5    1.5978      1.1568      0.5784      1.17e-01    2.92e-02             1.0e-05
+   1.0    1.5978      0.5784      0.5784      2.94e-02    2.94e-02             2.5e-06
+   2.0    1.5978      0.2892      0.5784      7.35e-03    2.94e-02             6.4e-07
+   4.0    1.5978      0.1446      0.5784      1.89e-03    3.03e-02             1.5e-07
+
+Part B. Train W with minibatch SGD (batch 64, lr 0.2) for 3000 steps, three weight decays.
+angle = mean angular step over the first or last 200 steps. sqrt(2 lr wd) is the predicted equilibrium angle.
+      wd  ||W|| start  ||W|| end  angle first  angle last  sqrt(2 lr wd)  loss end  max growth-law error
+     0.0        3.938      5.861     2.07e-02    1.03e-02              -    0.3991               2.6e-05
+   0.001        3.938      4.473     2.14e-02    1.81e-02       2.00e-02    0.4027                     -
+    0.01        3.938      2.660     3.08e-02    5.77e-02       6.32e-02    0.4258                     -
+
+With wd = 0 the norm only grows, and the angular step falls with it: an automatic learning-rate decay.
+With wd > 0 the norm stops growing and the angular step settles near sqrt(2 lr wd).

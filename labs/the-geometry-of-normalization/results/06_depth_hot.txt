@@ -1,0 +1,24 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# python labs/the-geometry-of-normalization/scripts/06_depth.py --lr 1e-2 --warmup 0 --tag hot
+24 blocks, d = 64, 4 heads, RMSNorm (DyT for 'dyt'), char-level Tiny Shakespeare, seq 64, batch 32. AdamW lr 0.01, 0 warmup steps, 400 steps, no weight decay.
+
+== init ==
+placement stream RMS after block     0      6     12     18     24   rel. update early/late   grad ratio    val loss   drop cost first/last 8
+post                              0.03   1.00   1.00   1.00   1.00      0.231 / 0.304            0.83      4.434   -
+pre                               0.03   0.80   1.13   1.43   1.72      0.796 / 0.251             8.2      4.402   -
+peri                              0.03   3.41   4.59   5.58   6.54      0.639 / 0.240               8      4.409   -
+lns                               0.03   0.45   0.51   0.54   0.55      0.535 / 0.136              14      4.404   -
+deepnorm                          0.03   1.00   1.00   1.00   1.00      0.006 / 0.006            0.73      4.377   -
+dyt                               0.03   0.03   0.03   0.03   0.03      0.102 / 0.112             1.1      4.175   -
+
+== trained ==
+placement stream RMS after block     0      6     12     18     24   rel. update early/late   grad ratio    val loss   drop cost first/last 8
+post                              0.11   0.99   1.02   1.04   0.66      0.626 / 0.460         2.9e-18      3.348     -0.000 / 0.026   
+pre                               0.19  13.07  16.34  25.92  31.82      0.241 / 0.127             7.5      2.493      0.273 / 0.006   
+peri                              0.26   6.95  11.84  17.92  22.14      0.462 / 0.095              10      2.747      0.131 / 0.011   
+lns                               0.21  13.60  14.42  15.50  16.53      0.114 / 0.081              15      2.369      0.354 / 0.009   
+deepnorm                          0.10   1.04   1.04   1.03   0.70      0.336 / 0.339         2.8e-08      3.276      0.000 / 0.035   
+dyt                               0.11  23.47  59.38  128.49  249.88      1.548 / 0.126               0      3.346      0.000 / 0.000   
+
+Notes: 'pre' and 'dyt' have no norm on the stream, so its RMS grows with depth. 'lns' divides each branch input
+by sqrt(l). 'post' and 'deepnorm' renormalize the stream every sublayer, so it stays at RMS 1.

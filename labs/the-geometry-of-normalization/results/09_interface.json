@@ -1,0 +1,48 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/the-geometry-of-normalization/scripts/09_interface.py",
+ "part_a_block": [
+  {
+   "norm": 0.8,
+   "update_norm": 4.698144912719727,
+   "angle_deg": 80.3612125219475
+  },
+  {
+   "norm": 5.0,
+   "update_norm": 4.700572967529297,
+   "angle_deg": 43.23547450807287
+  },
+  {
+   "norm": 29.0,
+   "update_norm": 4.700634479522705,
+   "angle_deg": 9.20765107302366
+  },
+  {
+   "norm": 72.0,
+   "update_norm": 4.70063591003418,
+   "angle_deg": 3.7356493301870692
+  }
+ ],
+ "part_b": [
+  {
+   "interface": "bare projector",
+   "visual_norm": 41.40676498413086,
+   "encoder_grad": 52.835174560546875
+  },
+  {
+   "interface": "LayerNorm, gain 1",
+   "visual_norm": 23.999956130981445,
+   "encoder_grad": 30.563873291015625
+  },
+  {
+   "interface": "LayerNorm, gain T/sqrt(D)",
+   "visual_norm": 0.7999986410140991,
+   "encoder_grad": 1.0187958478927612
+  },
+  {
+   "interface": "LayerNorm, gain T/sqrt(D) + hook",
+   "visual_norm": 0.7999986410140991,
+   "encoder_grad": 30.563879013061523
+  }
+ ]
+}

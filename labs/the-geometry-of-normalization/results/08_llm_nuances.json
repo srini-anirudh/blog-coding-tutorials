@@ -1,0 +1,11 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/the-geometry-of-normalization/scripts/08_llm_nuances.py",
+ "eps_rel_diff": [
+  0.908411605235251,
+  0.32880888614019815,
+  0.00578355540146849,
+  6.916119572791294e-07,
+  2.207970508579511e-07
+ ]
+}

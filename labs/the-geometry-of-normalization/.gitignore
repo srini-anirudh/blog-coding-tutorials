@@ -1,0 +1,8 @@
+# Checkpoints, datasets and caches never go in git.
+*.pt
+*.pth
+*.safetensors
+*.parquet
+data/
+runs/
+__pycache__/

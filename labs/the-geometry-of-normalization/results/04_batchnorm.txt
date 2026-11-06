@@ -1,0 +1,19 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# python labs/the-geometry-of-normalization/scripts/04_batchnorm.py
+Part A. Population N(2.0, 3.0^2) per channel, 16 channels, 2000 batches per size.
+ batch  std of batch mean  3/sqrt(B)  mean |batch std - 3|  |train - eval| output   EMA |mean err|, |std err|
+     2              2.115      2.121                 1.601                  0.718           0.582, 0.463
+     4              1.498      1.500                 0.977                  0.471           0.245, 0.214
+     8              1.062      1.061                 0.645                  0.324           0.232, 0.106
+    32              0.530      0.530                 0.304                  0.157           0.087, 0.068
+   128              0.265      0.265                 0.151                  0.078           0.052, 0.044
+   512              0.133      0.133                 0.075                  0.039           0.016, 0.016
+The training-time function is a different function from the eval-time one. The gap grows as the batch shrinks.
+The EMA (momentum 0.1) averages about 19 batches, so its error is smaller than one batch's, but at batch 2
+it is still far from the truth: the eval-time function is itself noisy at small batch.
+
+Part B. 8 sequences, lengths 4 to 64, padded to 64 with zeros. True per-feature mean 1.0, std 1.0.
+  BatchNorm mean with pads counted: 0.413. With pads masked out: 1.016.
+  Fraction of the (sample, position) grid that is padding: 0.59.
+  Real sequences that contribute at each position: pos 0: 8, pos 8: 6, pos 16: 4, pos 32: 2, pos 48: 1, pos 63: 1
+  With masking, late positions get statistics from 1 to 2 sequences. LayerNorm is per token: pads never enter.

@@ -1,0 +1,30 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# python labs/the-geometry-of-normalization/scripts/02_anatomy.py
+1. Invariances, max |Norm(T(x)) - Norm(x)| over 512 vectors of dim 64, float64
+   transform                LayerNorm     RMSNorm
+   x -> 7.3 x                 8.2e-06     8.0e-06
+   x -> 0.01 x                8.1e-02     7.9e-02
+   x -> x + 3 * 1             1.3e-15     3.0e+00
+   (the 0.01 x row is not exactly zero because eps inside the sqrt starts to matter at small scale)
+
+2. Hand-derived backward vs autograd, max abs error, float64
+   LayerNorm   8.9e-16
+   RMSNorm     8.9e-16
+
+3. Where the gradient points: mean |<dx, u>| / (||dx|| ||u||) over 512 vectors
+                    u = 1  u = xhat
+   LayerNorm      2.0e-17   2.7e-07
+   RMSNorm        1.0e-01   2.4e-07
+   input g        1.0e-01   1.0e-01   (before the projection)
+
+4. Geometry. 2000 points in 3D drawn with an offset and unequal scales. eps = 1e-12 here, so only geometry is left.
+   LayerNorm  ||y|| in [1.7321, 1.7321] (sqrt 3 = 1.7321)   x+y+z in [-0.000, +0.000]
+   RMSNorm    ||y|| in [1.7321, 1.7321] (sqrt 3 = 1.7321)   x+y+z in [-1.915, +3.000]
+   In 16 dims, rank of 4096 outputs: LayerNorm 15, RMSNorm 16, input 16
+
+5. Forward + backward, (2048 tokens x 1024 features), fp32, median of 30 runs on a shared machine
+   LayerNorm    0.81 ms
+   RMSNorm      3.97 ms
+   RMSNorm / LayerNorm time ratio: 4.88
+   torch's CPU LayerNorm is one native kernel. Its CPU rms_norm is not faster here, so the saved reduction
+   only pays when the kernel is written to use it. Fused GPU kernels were not measured.

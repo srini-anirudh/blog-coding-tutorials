@@ -1,0 +1,89 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/the-geometry-of-normalization/scripts/05_small_batch.py",
+ "args": {
+  "train": 10000,
+  "test": 2000,
+  "epochs": 2,
+  "batches": [
+   2,
+   8,
+   64
+  ],
+  "base_lr": 0.05
+ },
+ "rows": [
+  {
+   "norm": "batchnorm",
+   "batch": 2,
+   "steps": 10000,
+   "train_loss": 1.7778380233347415,
+   "test_acc": 0.407,
+   "test_acc_batch_stats": 0.4445
+  },
+  {
+   "norm": "batchnorm",
+   "batch": 8,
+   "steps": 2500,
+   "train_loss": 1.5425214323997498,
+   "test_acc": 0.4855,
+   "test_acc_batch_stats": 0.5085
+  },
+  {
+   "norm": "batchnorm",
+   "batch": 64,
+   "steps": 312,
+   "train_loss": 1.5419124941672049,
+   "test_acc": 0.435,
+   "test_acc_batch_stats": 0.489
+  },
+  {
+   "norm": "groupnorm",
+   "batch": 2,
+   "steps": 10000,
+   "train_loss": 1.6585850510597229,
+   "test_acc": 0.433,
+   "test_acc_batch_stats": NaN
+  },
+  {
+   "norm": "groupnorm",
+   "batch": 8,
+   "steps": 2500,
+   "train_loss": 1.6942995643615724,
+   "test_acc": 0.4135,
+   "test_acc_batch_stats": NaN
+  },
+  {
+   "norm": "groupnorm",
+   "batch": 64,
+   "steps": 312,
+   "train_loss": 1.8273378264519475,
+   "test_acc": 0.2885,
+   "test_acc_batch_stats": NaN
+  },
+  {
+   "norm": "none",
+   "batch": 2,
+   "steps": 10000,
+   "train_loss": 1.605698052689433,
+   "test_acc": 0.391,
+   "test_acc_batch_stats": NaN
+  },
+  {
+   "norm": "none",
+   "batch": 8,
+   "steps": 2500,
+   "train_loss": 1.6007043483257293,
+   "test_acc": 0.408,
+   "test_acc_batch_stats": NaN
+  },
+  {
+   "norm": "none",
+   "batch": 64,
+   "steps": 312,
+   "train_loss": 1.7991636953046244,
+   "test_acc": 0.3635,
+   "test_acc_batch_stats": NaN
+  }
+ ]
+}

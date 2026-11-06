@@ -1,0 +1,56 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/the-geometry-of-normalization/scripts/04_batchnorm.py",
+ "part_a": [
+  {
+   "batch": 2,
+   "mean_spread": 2.115147590637207,
+   "std_err": 1.6012874841690063,
+   "train_eval_gap": 0.7184992331564426,
+   "ema_mean_err": 0.5818089246749878,
+   "ema_std_err": 0.4630393385887146
+  },
+  {
+   "batch": 4,
+   "mean_spread": 1.497742772102356,
+   "std_err": 0.9768079519271851,
+   "train_eval_gap": 0.47091231000423434,
+   "ema_mean_err": 0.24460753798484802,
+   "ema_std_err": 0.21441838145256042
+  },
+  {
+   "batch": 8,
+   "mean_spread": 1.0618748664855957,
+   "std_err": 0.6446759700775146,
+   "train_eval_gap": 0.32353766030073167,
+   "ema_mean_err": 0.23200371861457825,
+   "ema_std_err": 0.10644882917404175
+  },
+  {
+   "batch": 32,
+   "mean_spread": 0.529753565788269,
+   "std_err": 0.3037372827529907,
+   "train_eval_gap": 0.15741715283691884,
+   "ema_mean_err": 0.08746886253356934,
+   "ema_std_err": 0.06789609789848328
+  },
+  {
+   "batch": 128,
+   "mean_spread": 0.26523494720458984,
+   "std_err": 0.1509714424610138,
+   "train_eval_gap": 0.07814649607241153,
+   "ema_mean_err": 0.051619112491607666,
+   "ema_std_err": 0.044174328446388245
+  },
+  {
+   "batch": 512,
+   "mean_spread": 0.13252116739749908,
+   "std_err": 0.07454586029052734,
+   "train_eval_gap": 0.03892439854331314,
+   "ema_mean_err": 0.01615998148918152,
+   "ema_std_err": 0.016341015696525574
+  }
+ ],
+ "pad_mean": 0.4129336476325989,
+ "masked_mean": 1.0164519548416138
+}

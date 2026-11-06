@@ -1,0 +1,34 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# python labs/the-geometry-of-normalization/scripts/08_llm_nuances.py
+1. eps placement, eps = 1e-6. Max relative difference between the two conventions.
+   input RMS  0.0001:  9.1e-01
+   input RMS   0.001:  3.3e-01
+   input RMS    0.01:  5.8e-03
+   input RMS       1:  6.9e-07
+   input RMS     100:  2.2e-07
+   They agree for normal activations and disagree badly when the RMS is near sqrt(eps).
+
+2. RMSNorm in bf16, 4096-dim vectors, values ~ N(0, 100^2). Error vs a float64 reference.
+   upcast to fp32 inside:   max rel error 6.90e-03   (bf16 output rounding only)
+   reduce in bf16 (torch):  max rel error 1.06e-02
+   mean(x^2) by a bf16 running sum: 4768 vs true 1.029e+04 (54% off). Once the sum is large, small terms round to nothing.
+
+3. Gemma's (1 + w) gain, with trained-looking w ~ N(0, 0.05^2)
+   output RMS: Gemma layer 1.004, same tensor in a plain-gain layer 0.050
+   relative error of the ported layer: 0.996
+   decay only, 2000 AdamW steps (lr 1e-2, wd 0.1), gain 0.5 -> 0.932   [Gemma (1 + w)]
+   decay only, 2000 AdamW steps (lr 1e-2, wd 0.1), gain 0.5 -> 0.068   [plain w]
+   Decay pulls the plain gain towards 0 and the Gemma gain towards 1.
+
+4. Weight-decay groups for a 4-block TinyLM
+   decay:    17 tensors, 200,768 parameters (all matrices)
+   no decay: 11 tensors, 8,832 parameters: 0, 1, final_norm.weight, pos.weight, tok.weight
+
+5. Folding an RMSNorm gain into the next bias-free linear layer, fp64
+   W (g * x/rms)  vs  (W diag g)(x/rms):   4.2e-07
+   W (g * x/rms)  vs  ((W diag g) x)/rms:  4.2e-07   (division after the GEMM)
+
+6. With QK-Norm, the RMSNorm before attention is redundant on the q and k paths, fp64
+   q path, pre-norm kept vs deleted + folded:  1.6e-07
+   v path, pre-norm kept vs deleted + folded:  2.01 relative
+   The head norm divides out the scale the pre-norm removed, so on q and k it is redundant. v has no head norm.
