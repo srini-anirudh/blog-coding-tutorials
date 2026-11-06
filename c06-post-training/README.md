@@ -194,8 +194,8 @@ never true.
 | synthetic near-miss | 1e-6 | 800 | 79.5% | 66.5% | 96 / 70 / 52 / 48 | 0.30 |
 | on-policy | 1e-6 | 305 | 79.5% | 65.5% | 96 / 66 / 48 / 52 | 0.19 |
 
-DPO made the model worse in all four runs, and the pairs were always ranked correctly during training (pair accuracy
-0.75 to 1.0, margin above 0). The loss matches TRL's `DPOTrainer` on the same batch (`tests/test_dpo.py`), so this is
+DPO made the model worse in all four runs, while the training signals looked as expected (the last logged batch of
+4 pairs ranked 3 or 4 correctly in each run; over all logged batches the pair accuracy ranged from 0.0 to 1.0). The loss matches TRL's `DPOTrainer` on the same batch (`tests/test_dpo.py`), so this is
 not a loss bug. A likely cause, which I did not measure, is the known likelihood-displacement effect: the chosen and
 rejected answers share almost every token, so pushing down the rejected one can pull down the chosen one too, and
 the margin still grows. `inspect_state.py` shows how little separates a pair: only the wrong digits differ, and the
@@ -252,8 +252,8 @@ The same measurement on the H100, with the checkpoint trained on the H100:
 Pure noise gives an SNR of about 1/11 = 0.091 with 12 estimates, so every estimator on both machines sits close to
 noise: two independent 32-rollout gradients barely agree on a direction. That is the point of the measurement. It
 does not rank the estimators. The CPU run had the highest SNR for the version with no baseline, and the H100 run
-did not, which suggests the CPU ordering was luck. A rerun of the CPU measurement gave the same numbers to every
-digit, so the difference comes from the checkpoint or the hardware, not from the sampling.
+did not, so the CPU ordering may be luck. A rerun of the CPU measurement was not saved here, so the cause of the
+difference (sampling, checkpoint or hardware) is not isolated.
 
 Rollouts per second (`bench_rollout.py`, AMD EPYC 7R13 with 8 threads, 64 rollouts of up to 48 new tokens):
 

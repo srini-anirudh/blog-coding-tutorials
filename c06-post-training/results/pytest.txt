@@ -39,7 +39,7 @@ PASSED c06-post-training/tests/test_lora_and_reward.py::test_merge_preserves_out
 PASSED c06-post-training/tests/test_lora_and_reward.py::test_pairwise_loss_by_hand
 38 passed, 10 deselected in 21.42s
 
-$ python -m pytest c06-post-training -m network -rA   # downloads SmolLM2-135M; compares against TRL, PEFT and the HF chat template
+$ python -m pytest c06-post-training -m network -rA   # downloads SmolLM2-135M; compares against TRL and the HF chat template
 PASSED c06-post-training/tests/test_chat_and_packing.py::test_manual_ids_match_chat_template
 PASSED c06-post-training/tests/test_chat_and_packing.py::test_assistant_mask_matches_hf_generation_mask
 PASSED c06-post-training/tests/test_chat_and_packing.py::test_only_assistant_content_and_im_end_are_targets
