@@ -1,0 +1,6 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, 1 GPU
+device cuda, 8,192 tokens/step, 30 steps (first 3 dropped as warmup)
+precision   median step ms    tokens/s  final loss
+fp32                  45.8     178,750      5.6707
+bf16                  60.5     135,372      5.6676
+max |loss_fp32 - loss_bf16| over the run: 0.0079

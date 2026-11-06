@@ -145,7 +145,8 @@ def oom(device: torch.device) -> None:
     x = torch.randint(0, cfg.model.vocab_size, (128, 256))
     micro = [(x, torch.roll(x, -1, 1))]
     limit_mb = 1024
-    print(f"memory cap {limit_mb} MiB above current use, one micro-batch of {x.size(0)}")
+    cap = "above current use" if device.type == "cpu" else "for the whole process"
+    print(f"memory cap {limit_mb} MiB {cap}, one micro-batch of {x.size(0)}")
     fn = lambda mb: train_step(model, opt, None, mb, device, precision, 1.0)  # noqa: E731
     release = cap_memory(device, limit_mb)
     try:

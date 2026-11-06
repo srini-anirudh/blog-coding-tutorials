@@ -131,7 +131,7 @@ checkpointing gradients, bitwise resume on both models, corrupt checkpoints, eve
 ## Results
 
 Hardware for every number here: **AMD EPYC 7R13, 8 threads**, CPU only, PyTorch 2.15.0. That CPU has no native bf16. Ranks in
-the two-process runs share those 8 threads. The GPU section at the end is not yet measured.
+the two-process runs share those 8 threads. The GPU numbers are in their own section at the end.
 
 ### Training
 
@@ -194,7 +194,7 @@ Read these with care:
 - Peak growth is process memory on a CPU, and the allocator adds noise to it. The autograd figure is the steadier one.
 - The MFU peak is the best matmul this CPU reached on this shared machine, not a datasheet value. It moved between 0.62 and
   0.73 TFLOP/s across runs, so the MFU is a rough figure.
-- bf16 is only this slow on a CPU that emulates it. This says nothing about bf16 on a GPU.
+- bf16 is this slow because this CPU emulates it. The GPU section measures bf16 separately.
 
 ### Failure modes
 
@@ -213,11 +213,41 @@ All real, from `results/break_it.txt` and `results/dead_process.txt`.
 The dead process case first failed for real. torchrun's static rendezvous keeps its store across a restart, so the new rank 1
 read the old address of rank 0 and got `Connection refused`. `init_distributed` now uses a new key prefix per restart attempt.
 
-### GPU: not yet measured
+### GPU
 
-These are written but have not run on a GPU, so no numbers exist yet.
+Hardware: **NVIDIA H100 80GB HBM3**, PyTorch 2.15.0, CUDA 13.2. Every run used one GPU or two, with no other job on them.
+These are the same configs as above, at full length. Files are `results/gpu_*`.
 
-- Multi-GPU DDP on NCCL, and its scaling against one GPU.
-- FSDP's peak GPU memory and speed. The gloo run above shows only the shard sizes.
-- fp32 against native bf16, activation checkpointing on GPU memory, MFU on a GPU, and a CUDA out-of-memory.
-- DeepSpeed ZeRO stages 1 to 3. `scripts/deepspeed_train.py` has never executed, on any hardware. Treat it as untested.
+| Run | Val loss at 800 | Median tokens/s | Median step ms | Time | File |
+|---|---:|---:|---:|---:|---|
+| HF Llama, 1 GPU, bf16 | 2.6142 | 148,000 | 55.4 | 52 s | `gpu_train_1gpu.log` |
+| HF Llama, 2 GPUs, DDP on NCCL | 2.3521 | 270,500 | 60.5 | 54 s | `gpu_train_ddp.log` |
+| C4 TinyLLM, 2 GPUs, DDP on NCCL | 2.0171 | 273,500 | 59.3 | 53 s | `gpu_train_ddp_tinyllm.log` |
+
+The 1-GPU run reaches 2.6142, against 2.6135 for the same run on the CPU in fp32. DDP keeps the per-GPU batch, so two GPUs
+see twice the tokens per step (16,384). That is why the DDP runs end lower. It is not the same run as the 1-GPU one. Two GPUs
+give 1.83 times the tokens per second of one.
+
+| Check or benchmark | Result | File |
+|---|---|---|
+| DDP on NCCL against one big batch | 3.73e-09, ranks identical | `gpu_ddp_equivalence.txt` |
+| Resume on a GPU | bitwise equal | `gpu_resume_test.txt` |
+| fp32 against bf16, main config | 45.8 against 60.5 ms per step, largest loss gap 0.0079 | `gpu_bench_precision.txt` |
+| Activation checkpointing | autograd saved 571.7 to 104.1 MiB, peak growth 620.0 to 188.1 MiB, step time 1.71x | `gpu_bench_checkpointing.txt` |
+| MFU | 147,784 tokens/s is 5.487 TFLOP/s, 0.8% of a measured 687.7 TFLOP/s bf16 matmul peak | `gpu_bench_mfu.txt` |
+| Real CUDA out-of-memory at a 1 GiB cap | splits from 1 micro-batch of 128 to 8 of 16, all 32,768 tokens finish | `gpu_break_oom.txt` |
+| FSDP2 against DDP, 2 GPUs, 141M params, 100 steps | per GPU: params 544.0 to 272.0 MiB, optimizer state 1088.0 to 544.0 MiB, peak 2769.1 to 1854.4 MiB | `gpu_fsdp_train.txt` |
+| GPU-marked test | 1 passed | `gpu_pytest.txt` |
+
+Read these with care:
+
+- This 5.4M-parameter model is far too small for an H100. Each step is a few short kernels, so the GPU waits on kernel
+  launches. That is why MFU is 0.8%, and why bf16 is slower than fp32 here: autocast adds casts that cost more than the
+  smaller matmuls save. Expect the opposite on a model large enough to keep the GPU busy.
+- FSDP ends with a max weight gap of 9.52e-04 from DDP after 100 steps. On the CPU the gap was 3.70e-07 after 5. FSDP sums
+  gradients in a different order (reduce-scatter instead of all-reduce), and AdamW carries the rounding difference forward
+  for 100 steps. The losses agree to about 4e-05.
+- The FSDP model is built for this check (width 1024, 12 layers). It is not the model trained above.
+
+Not measured: DeepSpeed ZeRO stages 1 to 3. DeepSpeed is not installed, and `scripts/deepspeed_train.py` has never executed on
+any hardware. Treat it as untested.

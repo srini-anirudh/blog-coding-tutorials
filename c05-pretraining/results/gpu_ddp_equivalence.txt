@@ -1,0 +1,5 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, 2 GPUs
+world size 2, backend nccl, local batch (4, 32), global batch (8, 32)
+max |DDP - single process big batch|  3.73e-09
+max |all-reduce by hand - DDP|        0.00e+00
+weights identical on every rank:      True

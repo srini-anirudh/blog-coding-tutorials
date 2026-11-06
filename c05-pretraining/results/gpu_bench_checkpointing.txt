@@ -1,0 +1,6 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, 1 GPU
+model llama, device cuda, batch (16, 256), 6 layers, fp32, one fresh process per mode
+mode              autograd saved   peak growth   step ms
+plain                  571.7 MiB     620.0 MiB        22
+checkpointed           104.1 MiB     188.1 MiB        38
+autograd saved 0.18x, peak growth 0.30x, step time 1.71x

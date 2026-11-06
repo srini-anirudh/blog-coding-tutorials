@@ -41,18 +41,20 @@ def main() -> None:
     args = ap.parse_args()
     torch.set_num_threads(1)
     info = init_distributed()
+    # NCCL only moves CUDA tensors, so on GPUs every model and batch lives on this rank's GPU.
+    dev = torch.device(f"cuda:{info.local_rank}") if torch.cuda.is_available() else CPU
     g = torch.Generator().manual_seed(1)
-    x = torch.randint(0, A.vocab_size, (8, 32), generator=g)  # the same global batch on every rank
+    x = torch.randint(0, A.vocab_size, (8, 32), generator=g).to(dev)  # the same global batch on every rank
     y = torch.roll(x, -1, 1)
     xl, yl = x[info.rank :: info.world_size], y[info.rank :: info.world_size]  # (4, 32) on each rank
 
-    single = fresh()
-    train_step(single, torch.optim.SGD(single.parameters(), lr=0.1), None, [(x, y)], CPU, "fp32", float("inf"))
+    single = fresh().to(dev)
+    train_step(single, torch.optim.SGD(single.parameters(), lr=0.1), None, [(x, y)], dev, "fp32", float("inf"))
 
-    ddp = wrap_ddp(fresh(), info, CPU)
-    train_step(ddp, torch.optim.SGD(ddp.parameters(), lr=0.1), None, [(xl, yl)], CPU, "fp32", float("inf"))
+    ddp = wrap_ddp(fresh().to(dev), info, dev)
+    train_step(ddp, torch.optim.SGD(ddp.parameters(), lr=0.1), None, [(xl, yl)], dev, "fp32", float("inf"))
 
-    hand = fresh()
+    hand = fresh().to(dev)
     F.cross_entropy(hand(xl).logits.reshape(-1, A.vocab_size), yl.reshape(-1)).backward()
     allreduce_gradients_by_hand(hand)
     torch.optim.SGD(hand.parameters(), lr=0.1).step()

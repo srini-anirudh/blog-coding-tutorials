@@ -1,0 +1,8 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, 1 GPU
+
+=== oom (cuda) ===
+memory cap 1024 MiB for the whole process, one micro-batch of 128
+[oom] retrying with 2 micro-batches of 64
+[oom] retrying with 4 micro-batches of 32
+[oom] retrying with 8 micro-batches of 16
+finished with 8 micro-batches, loss 8.3717, tokens 32,768 (all of them)

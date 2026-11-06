@@ -1,0 +1,100 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, 1 GPU
+measured matmul peak on cuda: 684.61 TFLOP/s
+time 0 event start params 5401856 flops_per_token 37129728 tokens_per_step 8192 device cuda world_size 1
+time 2.6000 step 1 loss 8.3876 lr 5e-05 grad_norm 2.8296 param_norm 74.0943 tok_s 3154.1557 step_ms 2597.2085 mem_mb 61.8477 epoch 0 mfu 0.000171
+time 3.3000 step 10 loss 7.3486 lr 0.0005 grad_norm 1.7336 param_norm 74.1452 tok_s 1.07e+05 step_ms 76.5578 mem_mb 61.8477 epoch 0 mfu 0.0058
+time 4.0400 step 20 loss 6.1249 lr 0.001 grad_norm 0.9168 param_norm 74.6800 tok_s 1.11e+05 step_ms 73.8236 mem_mb 61.8477 epoch 0 mfu 0.00602
+time 4.6900 step 30 loss 5.8436 lr 0.0015 grad_norm 0.5613 param_norm 75.8513 tok_s 1.27e+05 step_ms 64.7549 mem_mb 61.8477 epoch 0 mfu 0.00686
+time 5.3200 step 40 loss 5.6292 lr 0.002 grad_norm 0.4800 param_norm 77.1072 tok_s 1.33e+05 step_ms 61.7204 mem_mb 61.8477 epoch 0 mfu 0.0072
+time 5.9300 step 50 loss 5.2998 lr 0.002 grad_norm 0.8070 param_norm 78.2615 tok_s 1.36e+05 step_ms 60.4124 mem_mb 61.8477 epoch 0 mfu 0.00735
+time 6.6200 step 50 val_loss 5.3245 val_ppl 205.3058 tokens_seen 409600
+time 7.2300 step 60 loss 5.1712 lr 0.002 grad_norm 0.4372 param_norm 79.2298 tok_s 1.35e+05 step_ms 60.6708 mem_mb 61.8477 epoch 0 mfu 0.00732
+time 7.8400 step 70 loss 4.9286 lr 0.00199 grad_norm 1.2239 param_norm 80.2016 tok_s 1.36e+05 step_ms 60.3448 mem_mb 61.8477 epoch 0 mfu 0.00736
+time 8.4500 step 80 loss 4.6348 lr 0.00199 grad_norm 0.5051 param_norm 81.2050 tok_s 1.37e+05 step_ms 59.9202 mem_mb 61.8477 epoch 0 mfu 0.00741
+time 9.0700 step 90 loss 4.5476 lr 0.00198 grad_norm 0.5194 param_norm 82.2528 tok_s 1.32e+05 step_ms 62.2766 mem_mb 61.8477 epoch 0 mfu 0.00713
+time 9.6700 step 100 loss 4.3647 lr 0.00197 grad_norm 1.3096 param_norm 83.3660 tok_s 1.39e+05 step_ms 58.7382 mem_mb 61.8477 epoch 0 mfu 0.00756
+time 9.8300 step 100 val_loss 4.4291 val_ppl 83.8597 tokens_seen 819200
+time 10.4300 step 110 loss 4.2449 lr 0.00196 grad_norm 0.6079 param_norm 84.4234 tok_s 1.38e+05 step_ms 59.2430 mem_mb 61.8477 epoch 0 mfu 0.0075
+time 11.0600 step 120 loss 4.1482 lr 0.00195 grad_norm 0.7496 param_norm 85.5088 tok_s 1.31e+05 step_ms 62.5962 mem_mb 61.8477 epoch 0 mfu 0.0071
+time 11.6800 step 130 loss 4.0135 lr 0.00194 grad_norm 0.9417 param_norm 86.5776 tok_s 1.33e+05 step_ms 61.4581 mem_mb 61.8477 epoch 0 mfu 0.00723
+time 12.2700 step 140 loss 4.0540 lr 0.00193 grad_norm 0.7091 param_norm 87.5493 tok_s 1.39e+05 step_ms 58.7581 mem_mb 61.8477 epoch 0 mfu 0.00756
+time 12.8500 step 150 loss 3.9019 lr 0.00191 grad_norm 0.5769 param_norm 88.5191 tok_s 1.44e+05 step_ms 56.9713 mem_mb 61.8477 epoch 0 mfu 0.0078
+time 13.0100 step 150 val_loss 3.9139 val_ppl 50.0924 tokens_seen 1228800
+time 13.5800 step 160 loss 3.9613 lr 0.00189 grad_norm 0.6661 param_norm 89.4817 tok_s 1.43e+05 step_ms 57.1869 mem_mb 61.8477 epoch 0 mfu 0.00777
+time 14.1600 step 170 loss 3.8993 lr 0.00188 grad_norm 0.8501 param_norm 90.4332 tok_s 1.43e+05 step_ms 57.3829 mem_mb 61.8477 epoch 0 mfu 0.00774
+time 14.7300 step 180 loss 3.7760 lr 0.00186 grad_norm 0.7400 param_norm 91.3761 tok_s 1.45e+05 step_ms 56.5704 mem_mb 61.8477 epoch 0 mfu 0.00785
+time 15.3100 step 190 loss 3.5695 lr 0.00183 grad_norm 0.6196 param_norm 92.3178 tok_s 1.44e+05 step_ms 56.9073 mem_mb 61.8477 epoch 0 mfu 0.00781
+time 15.8800 step 200 loss 3.5774 lr 0.00181 grad_norm 0.5723 param_norm 93.2297 tok_s 1.45e+05 step_ms 56.5620 mem_mb 61.8477 epoch 0 mfu 0.00785
+time 16.0400 step 200 val_loss 3.6239 val_ppl 37.4819 tokens_seen 1638400
+time 17.1200 step 210 loss 3.5398 lr 0.00179 grad_norm 0.5931 param_norm 94.1406 tok_s 1.44e+05 step_ms 56.9787 mem_mb 61.8477 epoch 0 mfu 0.0078
+time 17.6900 step 220 loss 3.4901 lr 0.00176 grad_norm 0.6941 param_norm 95.0175 tok_s 1.47e+05 step_ms 55.8104 mem_mb 61.8477 epoch 0 mfu 0.00796
+time 18.2400 step 230 loss 3.4244 lr 0.00174 grad_norm 0.5465 param_norm 95.9128 tok_s 1.49e+05 step_ms 54.8651 mem_mb 61.8477 epoch 0 mfu 0.0081
+time 18.7900 step 240 loss 3.4164 lr 0.00171 grad_norm 0.6522 param_norm 96.7929 tok_s 1.49e+05 step_ms 54.8259 mem_mb 61.8477 epoch 0 mfu 0.0081
+time 19.3500 step 250 loss 3.3373 lr 0.00168 grad_norm 0.6183 param_norm 97.6407 tok_s 1.48e+05 step_ms 55.3845 mem_mb 61.8477 epoch 0 mfu 0.00802
+time 19.5100 step 250 val_loss 3.4126 val_ppl 30.3437 tokens_seen 2048000
+time 20.0600 step 260 loss 3.4456 lr 0.00166 grad_norm 0.6789 param_norm 98.5088 tok_s 1.51e+05 step_ms 54.1774 mem_mb 61.8477 epoch 0 mfu 0.0082
+time 20.6200 step 270 loss 3.4481 lr 0.00163 grad_norm 0.6278 param_norm 99.3384 tok_s 1.48e+05 step_ms 55.3371 mem_mb 61.8477 epoch 0 mfu 0.00803
+time 21.2100 step 280 loss 3.2459 lr 0.0016 grad_norm 0.5493 param_norm 100.1579 tok_s 1.39e+05 step_ms 58.7881 mem_mb 61.8477 epoch 0 mfu 0.00756
+time 21.8000 step 290 loss 3.1537 lr 0.00156 grad_norm 0.5754 param_norm 100.9672 tok_s 1.41e+05 step_ms 57.9960 mem_mb 61.8477 epoch 0 mfu 0.00766
+time 22.3700 step 300 loss 3.2774 lr 0.00153 grad_norm 0.5944 param_norm 101.7652 tok_s 1.45e+05 step_ms 56.6516 mem_mb 61.8477 epoch 0 mfu 0.00784
+time 22.5300 step 300 val_loss 3.2605 val_ppl 26.0632 tokens_seen 2457600
+time 23.1100 step 310 loss 3.2658 lr 0.0015 grad_norm 0.5910 param_norm 102.5730 tok_s 1.43e+05 step_ms 57.1980 mem_mb 61.8477 epoch 0 mfu 0.00777
+time 23.6700 step 320 loss 3.2748 lr 0.00146 grad_norm 0.5793 param_norm 103.3153 tok_s 1.48e+05 step_ms 55.4798 mem_mb 61.8477 epoch 0 mfu 0.00801
+time 24.2800 step 330 loss 3.1307 lr 0.00143 grad_norm 0.5741 param_norm 104.0259 tok_s 1.34e+05 step_ms 61.0394 mem_mb 61.8477 epoch 0 mfu 0.00728
+time 24.9100 step 340 loss 3.1596 lr 0.0014 grad_norm 0.4602 param_norm 104.7247 tok_s 1.33e+05 step_ms 61.7132 mem_mb 61.8477 epoch 0 mfu 0.0072
+time 25.5000 step 350 loss 3.0774 lr 0.00136 grad_norm 0.5789 param_norm 105.4188 tok_s 1.38e+05 step_ms 59.1697 mem_mb 61.8477 epoch 0 mfu 0.00751
+time 25.6800 step 350 val_loss 3.1087 val_ppl 22.3913 tokens_seen 2867200
+time 26.2900 step 360 loss 3.0816 lr 0.00132 grad_norm 0.5657 param_norm 106.0870 tok_s 1.35e+05 step_ms 60.5413 mem_mb 61.8477 epoch 0 mfu 0.00734
+time 26.9000 step 370 loss 3.0713 lr 0.00129 grad_norm 0.5378 param_norm 106.5086 tok_s 1.35e+05 step_ms 60.6483 mem_mb 61.8477 epoch 0 mfu 0.00733
+time 27.5100 step 380 loss 3.0378 lr 0.00125 grad_norm 0.5619 param_norm 106.9477 tok_s 1.37e+05 step_ms 59.9498 mem_mb 61.8477 epoch 0 mfu 0.00741
+time 28.1200 step 390 loss 3.0085 lr 0.00122 grad_norm 0.5495 param_norm 107.4022 tok_s 1.36e+05 step_ms 60.3005 mem_mb 61.8477 epoch 0 mfu 0.00737
+time 28.7000 step 400 loss 3.1363 lr 0.00118 grad_norm 0.5719 param_norm 107.9055 tok_s 1.41e+05 step_ms 57.9700 mem_mb 61.8477 epoch 0 mfu 0.00766
+time 28.8700 step 400 val_loss 3.0094 val_ppl 20.2751 tokens_seen 3276800
+time 29.9500 step 410 loss 2.9883 lr 0.00114 grad_norm 0.5328 param_norm 108.3975 tok_s 1.41e+05 step_ms 58.0880 mem_mb 61.8477 epoch 0 mfu 0.00765
+time 30.5200 step 420 loss 3.0359 lr 0.0011 grad_norm 0.5585 param_norm 108.9043 tok_s 1.44e+05 step_ms 56.7185 mem_mb 61.8477 epoch 0 mfu 0.00783
+time 31.1300 step 430 loss 2.8887 lr 0.00107 grad_norm 0.5145 param_norm 109.3767 tok_s 1.35e+05 step_ms 60.8571 mem_mb 61.8477 epoch 0 mfu 0.0073
+time 31.7100 step 440 loss 2.8138 lr 0.00103 grad_norm 0.5475 param_norm 109.8505 tok_s 1.44e+05 step_ms 56.9913 mem_mb 61.8477 epoch 0 mfu 0.0078
+time 32.2500 step 450 loss 2.7942 lr 0.000992 grad_norm 0.5155 param_norm 110.2813 tok_s 1.54e+05 step_ms 53.3202 mem_mb 61.8477 epoch 0 mfu 0.00833
+time 32.4100 step 450 val_loss 2.9235 val_ppl 18.6061 tokens_seen 3686400
+time 32.9800 step 460 loss 2.8393 lr 0.000956 grad_norm 0.5316 param_norm 110.6189 tok_s 1.46e+05 step_ms 56.2627 mem_mb 61.8477 epoch 0 mfu 0.0079
+time 33.5100 step 470 loss 2.9542 lr 0.000919 grad_norm 0.5025 param_norm 110.9677 tok_s 1.56e+05 step_ms 52.5993 mem_mb 61.8477 epoch 0 mfu 0.00845
+time 34.0300 step 480 loss 2.7305 lr 0.000883 grad_norm 0.5570 param_norm 111.3044 tok_s 1.58e+05 step_ms 51.8409 mem_mb 61.8477 epoch 0 mfu 0.00857
+time 34.5500 step 490 loss 2.9227 lr 0.000847 grad_norm 0.4732 param_norm 111.6359 tok_s 1.6e+05 step_ms 51.1950 mem_mb 61.8477 epoch 0 mfu 0.00868
+time 35.0500 step 500 loss 2.7331 lr 0.000811 grad_norm 0.4784 param_norm 111.9717 tok_s 1.65e+05 step_ms 49.6064 mem_mb 61.8477 epoch 0 mfu 0.00896
+time 35.2100 step 500 val_loss 2.8449 val_ppl 17.1994 tokens_seen 4096000
+time 35.7300 step 510 loss 2.9054 lr 0.000776 grad_norm 0.5266 param_norm 112.2639 tok_s 1.57e+05 step_ms 52.0253 mem_mb 61.8477 epoch 0 mfu 0.00854
+time 36.2500 step 520 loss 2.8499 lr 0.000742 grad_norm 0.5092 param_norm 112.5233 tok_s 1.58e+05 step_ms 51.8778 mem_mb 61.8477 epoch 0 mfu 0.00856
+time 36.7700 step 530 loss 2.9262 lr 0.000708 grad_norm 0.4802 param_norm 112.7918 tok_s 1.61e+05 step_ms 51.0290 mem_mb 61.8477 epoch 0 mfu 0.00871
+time 37.3000 step 540 loss 2.8282 lr 0.000675 grad_norm 0.5389 param_norm 113.0458 tok_s 1.56e+05 step_ms 52.5649 mem_mb 61.8477 epoch 0 mfu 0.00845
+time 37.8300 step 550 loss 2.7578 lr 0.000643 grad_norm 0.5156 param_norm 113.2933 tok_s 1.57e+05 step_ms 52.3396 mem_mb 61.8477 epoch 0 mfu 0.00849
+time 37.9900 step 550 val_loss 2.7850 val_ppl 16.1997 tokens_seen 4505600
+time 38.5200 step 560 loss 2.7862 lr 0.000611 grad_norm 0.5461 param_norm 113.5209 tok_s 1.55e+05 step_ms 52.7572 mem_mb 61.8477 epoch 0 mfu 0.00842
+time 39.0600 step 570 loss 2.7370 lr 0.00058 grad_norm 0.5487 param_norm 113.7358 tok_s 1.54e+05 step_ms 53.0320 mem_mb 61.8477 epoch 0 mfu 0.00838
+time 39.6000 step 580 loss 2.8006 lr 0.00055 grad_norm 0.4866 param_norm 113.9312 tok_s 1.54e+05 step_ms 53.3016 mem_mb 61.8477 epoch 0 mfu 0.00834
+time 40.1600 step 590 loss 2.8310 lr 0.000521 grad_norm 0.4900 param_norm 114.0946 tok_s 1.48e+05 step_ms 55.5095 mem_mb 61.8477 epoch 0 mfu 0.008
+time 40.6800 step 600 loss 2.7253 lr 0.000493 grad_norm 0.5115 param_norm 114.2246 tok_s 1.58e+05 step_ms 51.9671 mem_mb 61.8477 epoch 0 mfu 0.00855
+time 40.8400 step 600 val_loss 2.7357 val_ppl 15.4213 tokens_seen 4915200
+time 41.8800 step 610 loss 2.7699 lr 0.000466 grad_norm 0.5318 param_norm 114.3702 tok_s 1.56e+05 step_ms 52.3613 mem_mb 61.8477 epoch 0 mfu 0.00849
+time 42.4000 step 620 loss 2.7487 lr 0.00044 grad_norm 0.4994 param_norm 114.5258 tok_s 1.58e+05 step_ms 51.9225 mem_mb 61.8477 epoch 0 mfu 0.00856
+time 42.9300 step 630 loss 2.7251 lr 0.000416 grad_norm 0.5072 param_norm 114.6686 tok_s 1.57e+05 step_ms 52.3418 mem_mb 61.8477 epoch 0 mfu 0.00849
+time 43.4800 step 640 loss 2.6376 lr 0.000392 grad_norm 0.5177 param_norm 114.7949 tok_s 1.53e+05 step_ms 53.7002 mem_mb 61.8477 epoch 0 mfu 0.00827
+time 44.0200 step 650 loss 2.6514 lr 0.00037 grad_norm 0.5114 param_norm 114.9055 tok_s 1.52e+05 step_ms 53.7261 mem_mb 61.8477 epoch 0 mfu 0.00827
+time 44.1800 step 650 val_loss 2.6932 val_ppl 14.7787 tokens_seen 5324800
+time 44.7000 step 660 loss 2.6503 lr 0.000349 grad_norm 0.5043 param_norm 115.0126 tok_s 1.58e+05 step_ms 51.7041 mem_mb 61.8477 epoch 0 mfu 0.00859
+time 45.2100 step 670 loss 2.7239 lr 0.000329 grad_norm 0.5164 param_norm 115.1096 tok_s 1.62e+05 step_ms 50.4637 mem_mb 61.8477 epoch 0 mfu 0.0088
+time 45.7100 step 680 loss 2.6033 lr 0.00031 grad_norm 0.4975 param_norm 115.1904 tok_s 1.65e+05 step_ms 49.5445 mem_mb 61.8477 epoch 0 mfu 0.00897
+time 46.2200 step 690 loss 2.6072 lr 0.000293 grad_norm 0.5226 param_norm 115.2681 tok_s 1.6e+05 step_ms 51.0414 mem_mb 61.8477 epoch 0 mfu 0.0087
+time 46.7100 step 700 loss 2.6305 lr 0.000277 grad_norm 0.4905 param_norm 115.3416 tok_s 1.69e+05 step_ms 48.4156 mem_mb 61.8477 epoch 0 mfu 0.00918
+time 46.8700 step 700 val_loss 2.6574 val_ppl 14.2587 tokens_seen 5734400
+time 47.3500 step 710 loss 2.6850 lr 0.000263 grad_norm 0.5052 param_norm 115.4166 tok_s 1.72e+05 step_ms 47.7382 mem_mb 61.8477 epoch 0 mfu 0.00931
+time 47.8700 step 720 loss 2.6380 lr 0.00025 grad_norm 0.4720 param_norm 115.4917 tok_s 1.6e+05 step_ms 51.1968 mem_mb 61.8477 epoch 0 mfu 0.00868
+time 48.3800 step 730 loss 2.7766 lr 0.000238 grad_norm 0.5089 param_norm 115.5622 tok_s 1.61e+05 step_ms 50.8366 mem_mb 61.8477 epoch 0 mfu 0.00874
+time 48.9000 step 740 loss 2.4432 lr 0.000228 grad_norm 0.5104 param_norm 115.6186 tok_s 1.61e+05 step_ms 51.0374 mem_mb 61.8477 epoch 0 mfu 0.00871
+time 49.4200 step 750 loss 2.7398 lr 0.00022 grad_norm 0.4916 param_norm 115.6748 tok_s 1.58e+05 step_ms 51.6937 mem_mb 61.8477 epoch 0 mfu 0.00859
+time 49.5800 step 750 val_loss 2.6332 val_ppl 13.9182 tokens_seen 6144000
+time 50.0800 step 760 loss 2.5531 lr 0.000213 grad_norm 0.5080 param_norm 115.7329 tok_s 1.65e+05 step_ms 49.6265 mem_mb 61.8477 epoch 0 mfu 0.00895
+time 50.5900 step 770 loss 2.5318 lr 0.000207 grad_norm 0.4847 param_norm 115.7891 tok_s 1.63e+05 step_ms 50.3659 mem_mb 61.8477 epoch 0 mfu 0.00882
+time 51.1000 step 780 loss 2.6920 lr 0.000203 grad_norm 0.5075 param_norm 115.8382 tok_s 1.63e+05 step_ms 50.3847 mem_mb 61.8477 epoch 0 mfu 0.00882
+time 51.6200 step 790 loss 2.6689 lr 0.000201 grad_norm 0.5216 param_norm 115.8846 tok_s 1.58e+05 step_ms 51.7049 mem_mb 61.8477 epoch 0 mfu 0.00859
+time 52.1200 step 800 loss 2.5737 lr 0.0002 grad_norm 0.5099 param_norm 115.9317 tok_s 1.64e+05 step_ms 49.8683 mem_mb 61.8477 epoch 0 mfu 0.00891
+time 52.2800 step 800 val_loss 2.6142 val_ppl 13.6560 tokens_seen 6553600

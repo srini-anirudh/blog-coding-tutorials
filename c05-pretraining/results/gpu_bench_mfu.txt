@@ -1,0 +1,8 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, 1 GPU
+params 5,401,856, matmul params N 5,401,856
+formula  6N + 12 n_layers d T = 32,411,136 + 4,718,592 = 37,129,728 FLOPs per token
+FlopCounterMode (forward + backward): 37,896,192 FLOPs per token, ratio formula/counted 0.98
+
+measured peak, best large square matmul: cuda torch.bfloat16 687.697 TFLOP/s
+training run: median 147,784 tokens/s on cuda (bf16)
+achieved 5.487 TFLOP/s, MFU against that peak 0.8%
