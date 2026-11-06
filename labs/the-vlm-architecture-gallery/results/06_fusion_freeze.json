@@ -1,0 +1,134 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, float32",
+ "command": "python labs/the-vlm-architecture-gallery/scripts/06_fusion_freeze.py --report",
+ "data": {
+  "rows": [
+   {
+    "recipe": "prefix, LM frozen",
+    "trainable_params": 8320,
+    "fine": [
+     0.99609375,
+     0.99755859375
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "text_lookup_after": [
+     1.0,
+     1.0
+    ],
+    "text_add_after": [
+     1.0,
+     1.0
+    ],
+    "text_identical_at_init": true
+   },
+   {
+    "recipe": "prefix, LM trains",
+    "trainable_params": 213888,
+    "fine": [
+     0.9990234375,
+     0.99951171875
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "text_lookup_after": [
+     1.0,
+     0.99951171875
+    ],
+    "text_add_after": [
+     0.67919921875,
+     0.6708984375
+    ],
+    "text_identical_at_init": true
+   },
+   {
+    "recipe": "gated xattn, LM frozen",
+    "trainable_params": 208264,
+    "fine": [
+     0.337890625,
+     0.24169921875
+    ],
+    "coarse": [
+     1.0,
+     0.99560546875
+    ],
+    "text_lookup_after": [
+     1.0,
+     1.0
+    ],
+    "text_add_after": [
+     1.0,
+     1.0
+    ],
+    "text_identical_at_init": true
+   },
+   {
+    "recipe": "visual expert, LM frozen",
+    "trainable_params": 207232,
+    "fine": [
+     0.99853515625,
+     1.0
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "text_lookup_after": [
+     1.0,
+     1.0
+    ],
+    "text_add_after": [
+     1.0,
+     1.0
+    ],
+    "text_identical_at_init": true
+   },
+   {
+    "recipe": "PLoRA r=8, LM frozen",
+    "trainable_params": 41088,
+    "fine": [
+     0.9970703125,
+     0.99853515625
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "text_lookup_after": [
+     1.0,
+     1.0
+    ],
+    "text_add_after": [
+     1.0,
+     1.0
+    ],
+    "text_identical_at_init": true
+   },
+   {
+    "recipe": "encoder-free, LM trains",
+    "trainable_params": 206656,
+    "fine": [
+     0.99853515625,
+     0.9990234375
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "text_lookup_after": [
+     0.90234375,
+     0.82861328125
+    ],
+    "text_add_after": [
+     0.14111328125,
+     0.0322265625
+    ],
+    "text_identical_at_init": true
+   }
+  ]
+ }
+}

@@ -1,0 +1,14 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, float32
+# command: python labs/the-vlm-architecture-gallery/scripts/05_connector_bench.py --report
+# merged from 2 seeds: 05_connector_bench_seed0.json, 05_connector_bench_seed1.json
+# each seed run on: AMD EPYC 7R13, 4 threads, torch 2.15.0, float32; 2500 steps, batch 128, encoder frozen, LM + connector train
+accuracy on 2048 fresh pages, mean over seeds (min to max). chance is 0.125 for both questions.
+connector                  tokens        fine: cell r,c      coarse: majority    params  train s
+linear (1:1)                   16    0.999 (0.999-0.999)    1.000 (1.000-1.000)   209,728      164
+mlp (1:1)                      16    0.999 (0.999-1.000)    1.000 (1.000-1.000)   213,888      200
+pixel_shuffle (fold 2x2)        4    0.816 (0.803-0.829)    1.000 (1.000-1.000)   226,688       95
+avg_pool (mean 2x2)             4    0.399 (0.395-0.403)    1.000 (1.000-1.000)   213,888      109
+attn_pool (attend 2x2)          4    0.404 (0.400-0.408)    1.000 (1.000-1.000)   230,528      137
+resampler (4 queries)           4    0.372 (0.369-0.375)    1.000 (1.000-1.000)   260,800      349
+resampler (16 queries)         16    0.941 (0.929-0.954)    1.000 (1.000-1.000)   261,568      463
+trainable params = connector + LM; the encoder is frozen and not counted.

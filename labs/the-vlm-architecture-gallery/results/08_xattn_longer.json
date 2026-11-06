@@ -1,0 +1,45 @@
+{
+ "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0, float32",
+ "command": "python labs/the-vlm-architecture-gallery/scripts/08_xattn_longer.py",
+ "data": [
+  {
+   "steps": 2500,
+   "fine": 0.337890625,
+   "coarse": 1.0,
+   "tanh_gate_attn_per_layer": [
+    0.16075432300567627,
+    -0.09720616042613983,
+    0.08909785002470016,
+    -0.06550939381122589
+   ],
+   "train_seconds": 125.7,
+   "trainable_params": 208264
+  },
+  {
+   "steps": 5000,
+   "fine": 0.90087890625,
+   "coarse": 1.0,
+   "tanh_gate_attn_per_layer": [
+    0.046840768307447433,
+    -0.2480144053697586,
+    0.099074587225914,
+    -0.060247112065553665
+   ],
+   "train_seconds": 225.2,
+   "trainable_params": 208264
+  },
+  {
+   "steps": 10000,
+   "fine": 0.99755859375,
+   "coarse": 1.0,
+   "tanh_gate_attn_per_layer": [
+    0.008775000460445881,
+    -0.3255366086959839,
+    0.09873348474502563,
+    -0.051020488142967224
+   ],
+   "train_seconds": 373.0,
+   "trainable_params": 208264
+  }
+ ]
+}

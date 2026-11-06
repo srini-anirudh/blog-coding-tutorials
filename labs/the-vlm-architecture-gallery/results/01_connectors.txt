@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, float32
+# command: python labs/the-vlm-architecture-gallery/scripts/01_connectors.py
+input: 32 x 32 = 1024 patches, d_vis 1024 -> d_model 2048
+connector       tokens out   ratio       params   used by
+linear                1024      1x    2,099,200   LLaVA, PaliGemma
+mlp                   1024      1x    6,295,552   LLaVA-1.5, VILA
+pixel_shuffle          256      4x   12,595,200   InternVL 1.5+, Idefics3
+avg_pool               256      4x    6,295,552   Gemma 3 (4 x 4 there)
+attn_pool              256      4x   10,493,952   Molmo
+resampler               64     16x   14,774,272   Flamingo, IDEFICS2, MiniCPM-V
+
+resampler, 64 queries, on grids 16x16, 32x32, 48x64: tokens out [64, 64, 64]
+pixel shuffle, s = 2, on the same grids: tokens out [64, 256, 768]
+
+pixel shuffle undone exactly: max |x - unshuffle(shuffle(x))| = 0.0e+00
+swap two patches inside every 2x2 window: avg-pool output changes by 1.5e-07, pixel-shuffle output by 0.93
+  (average pooling cannot tell where inside the window a feature was; pixel shuffle can)

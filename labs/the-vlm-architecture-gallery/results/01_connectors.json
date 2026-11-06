@@ -1,0 +1,65 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, float32",
+ "command": "python labs/the-vlm-architecture-gallery/scripts/01_connectors.py",
+ "data": {
+  "connectors": [
+   {
+    "connector": "linear",
+    "kwargs": {},
+    "tokens": 1024,
+    "ratio": 1.0,
+    "params": 2099200
+   },
+   {
+    "connector": "mlp",
+    "kwargs": {},
+    "tokens": 1024,
+    "ratio": 1.0,
+    "params": 6295552
+   },
+   {
+    "connector": "pixel_shuffle",
+    "kwargs": {
+     "s": 2
+    },
+    "tokens": 256,
+    "ratio": 4.0,
+    "params": 12595200
+   },
+   {
+    "connector": "avg_pool",
+    "kwargs": {
+     "k": 2
+    },
+    "tokens": 256,
+    "ratio": 4.0,
+    "params": 6295552
+   },
+   {
+    "connector": "attn_pool",
+    "kwargs": {
+     "k": 2
+    },
+    "tokens": 256,
+    "ratio": 4.0,
+    "params": 10493952
+   },
+   {
+    "connector": "resampler",
+    "kwargs": {
+     "n_queries": 64
+    },
+    "tokens": 64,
+    "ratio": 16.0,
+    "params": 14774272
+   }
+  ],
+  "resampler_tokens_by_grid": {
+   "(16, 16)": 64,
+   "(32, 32)": 64,
+   "(48, 64)": 64
+  },
+  "pool_change_after_swap": 1.4901161193847656e-07,
+  "shuffle_change_after_swap": 0.925395131111145
+ }
+}

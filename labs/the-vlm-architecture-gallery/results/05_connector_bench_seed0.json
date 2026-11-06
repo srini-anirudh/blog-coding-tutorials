@@ -1,0 +1,88 @@
+{
+ "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0, float32",
+ "command": "python labs/the-vlm-architecture-gallery/scripts/05_connector_bench.py --seed 0",
+ "steps": 2500,
+ "seed": 0,
+ "rows": [
+  {
+   "connector": "linear",
+   "kwargs": {},
+   "how": "1:1",
+   "tokens": 16,
+   "fine": 0.99853515625,
+   "coarse": 1.0,
+   "train_seconds": 162.6,
+   "trainable_params": 209728
+  },
+  {
+   "connector": "mlp",
+   "kwargs": {},
+   "how": "1:1",
+   "tokens": 16,
+   "fine": 0.9990234375,
+   "coarse": 1.0,
+   "train_seconds": 202.4,
+   "trainable_params": 213888
+  },
+  {
+   "connector": "pixel_shuffle",
+   "kwargs": {
+    "s": 2
+   },
+   "how": "fold 2x2",
+   "tokens": 4,
+   "fine": 0.8291015625,
+   "coarse": 1.0,
+   "train_seconds": 94.4,
+   "trainable_params": 226688
+  },
+  {
+   "connector": "avg_pool",
+   "kwargs": {
+    "k": 2
+   },
+   "how": "mean 2x2",
+   "tokens": 4,
+   "fine": 0.40283203125,
+   "coarse": 1.0,
+   "train_seconds": 109.0,
+   "trainable_params": 213888
+  },
+  {
+   "connector": "attn_pool",
+   "kwargs": {
+    "k": 2
+   },
+   "how": "attend 2x2",
+   "tokens": 4,
+   "fine": 0.39990234375,
+   "coarse": 1.0,
+   "train_seconds": 132.9,
+   "trainable_params": 230528
+  },
+  {
+   "connector": "resampler",
+   "kwargs": {
+    "n_queries": 4
+   },
+   "how": "4 queries",
+   "tokens": 4,
+   "fine": 0.36865234375,
+   "coarse": 1.0,
+   "train_seconds": 341.9,
+   "trainable_params": 260800
+  },
+  {
+   "connector": "resampler",
+   "kwargs": {
+    "n_queries": 16
+   },
+   "how": "16 queries",
+   "tokens": 16,
+   "fine": 0.9541015625,
+   "coarse": 1.0,
+   "train_seconds": 493.2,
+   "trainable_params": 261568
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, float32
+# command: python labs/the-vlm-architecture-gallery/scripts/07_hub_configs.py
+model         repo                                post says                      from config  match KV KiB/tok  KV MiB
+LLaVA-1.5     llava-hf/llava-1.5-7b-hf            576 tokens                             576    yes        512   288.0
+LLaVA-NeXT    llava-hf/llava-v1.6-mistral-7b-hf   up to 2 880 tokens                   2,928     NO        128   366.0
+IDEFICS2      HuggingFaceM4/idefics2-8b           64 / image (resampler)                  64    yes        128     8.0
+IDEFICS3      HuggingFaceM4/Idefics3-8B-Llama3    169 per tile (pixel shuffle)           169    yes        128    21.1
+InternVL 2.5  OpenGVLab/InternVL2_5-1B            256 per tile (pixel shuffle)           256    yes         12     3.0
+Qwen2-VL      Qwen/Qwen2-VL-2B-Instruct           variable, 4 to 16 384               16,384    yes         28   448.0
+Pixtral 12B   mistral-community/pixtral-12b       variable, up to 4 096                4,096    yes        160   640.0
+CogVLM        THUDM/cogvlm-chat-hf                1 225 tokens                         1,225    yes        512   612.5
+Gemma 3       unsloth/gemma-3-4b-it               256 per window (pooling)               256    yes        136    34.0
+
+LLaVA-1.5     (336/14)^2, CLS dropped=True; LM {'layers': 32, 'kv_heads': 32, 'head_dim': 128}
+LLaVA-NeXT    largest over the 5 canvases: 24^2 global + unpadded tiles + one newline token per row; LM {'layers': 32, 'kv_heads': 8, 'head_dim': 128}
+IDEFICS2      perceiver resampler latents; LM {'layers': 32, 'kv_heads': 8, 'head_dim': 128}
+IDEFICS3      (364/14)^2 / 2^2; LM {'layers': 32, 'kv_heads': 8, 'head_dim': 128}
+InternVL 2.5  (448/14)^2 * 0.5^2, up to 12 tiles + thumbnail; LM {'layers': 24, 'kv_heads': 2, 'head_dim': 64}
+Qwen2-VL      min_pixels/28^2 = 4 to max_pixels/28^2 = 16384; LM {'layers': 28, 'kv_heads': 2, 'head_dim': 128}
+Pixtral 12B   (1024/16)^2 patches at the largest size, plus one [IMG_BREAK] per row; LM {'layers': 40, 'kv_heads': 8, 'head_dim': 128}
+CogVLM        (490/14)^2; LM {'layers': 32, 'kv_heads': 32, 'head_dim': 128}
+Gemma 3       (896/14)^2 = 4096 patches pooled to mm_tokens_per_image; LM {'layers': 34, 'kv_heads': 4, 'head_dim': 256}
+
+KV KiB/tok = 2 * layers * kv_heads * head_dim * 2 bytes (bf16), from the LM config; KV MiB = that times
+the token count in the 'from config' column. Gemma 3 uses sliding-window attention in most layers, so its
+real cache for long contexts is smaller than this full-attention figure.

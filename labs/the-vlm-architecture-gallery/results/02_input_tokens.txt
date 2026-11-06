@@ -1,0 +1,15 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, float32
+# command: python labs/the-vlm-architecture-gallery/scripts/02_input_tokens.py
+visual tokens per image (the number in brackets is tiles or crops encoded, including any global view)
+strategy                                   post example 1024x768   phone photo 4032x3024        receipt 600x2000      A4 page at 150 dpi
+fixed 336 (LLaVA-1.5)                                   576 ( 1)                576 ( 1)                576 ( 1)                576 ( 1)
+anyres tiles (LLaVA-NeXT)                             2,340 ( 5)              2,340 ( 5)              2,232 ( 4)              2,256 ( 5)
+448 tiles, <=12 + thumb (InternVL 2.5)                3,328 (13)              3,328 (13)              1,024 ( 4)              1,792 ( 7)
+native, 2x2 merge (Qwen2-VL)                            999 ( 1)             15,552 ( 1)              1,491 ( 1)              2,772 ( 1)
+336 crops, 56 px overlap                              1,872 (13)              1,872 (13)                720 ( 5)              1,872 (13)
+
+the 'multi-crop' row is a generic overlapping-window rule (Molmo-like crop size, 144 tokens per crop
+after 2x2 pooling of a 24x24 grid), not any one model's exact recipe.
+
+InternVL with max_tiles = 40: an A4 page uses grid (5, 7) -> 9,216 tokens; the 40-tile maximum (grid (8, 5)) is 10,496 tokens.
+Qwen2-VL resizes 1024x768 to 1036x756: 999 tokens (plus 2 vision start/end markers).

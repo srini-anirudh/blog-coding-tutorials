@@ -1,0 +1,128 @@
+{
+ "hardware": "AMD EPYC 7R13, 4 threads, torch 2.15.0, float32",
+ "command": "python labs/the-vlm-architecture-gallery/scripts/06_fusion_freeze.py --seed 0",
+ "steps": 2500,
+ "seed": 0,
+ "rows": [
+  {
+   "recipe": "prefix, LM frozen",
+   "schedule": "connector",
+   "fine": 0.99609375,
+   "coarse": 1.0,
+   "text_before": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 1.0
+   },
+   "text_after": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 1.0
+   },
+   "text_identical_at_init": true,
+   "lm_seq_len": 19,
+   "train_seconds": 161.1,
+   "trainable_params": 8320
+  },
+  {
+   "recipe": "prefix, LM trains",
+   "schedule": "all",
+   "fine": 0.9990234375,
+   "coarse": 1.0,
+   "text_before": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 1.0
+   },
+   "text_after": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 0.67919921875
+   },
+   "text_identical_at_init": true,
+   "lm_seq_len": 19,
+   "train_seconds": 230.6,
+   "trainable_params": 213888
+  },
+  {
+   "recipe": "gated xattn, LM frozen",
+   "schedule": "connector",
+   "fine": 0.337890625,
+   "coarse": 1.0,
+   "text_before": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 1.0
+   },
+   "text_after": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 1.0
+   },
+   "text_identical_at_init": true,
+   "lm_seq_len": 3,
+   "train_seconds": 177.2,
+   "trainable_params": 208264
+  },
+  {
+   "recipe": "visual expert, LM frozen",
+   "schedule": "connector",
+   "fine": 0.99853515625,
+   "coarse": 1.0,
+   "text_before": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 1.0
+   },
+   "text_after": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 1.0
+   },
+   "text_identical_at_init": true,
+   "lm_seq_len": 19,
+   "train_seconds": 549.8,
+   "trainable_params": 207232
+  },
+  {
+   "recipe": "PLoRA r=8, LM frozen",
+   "schedule": "connector",
+   "fine": 0.9970703125,
+   "coarse": 1.0,
+   "text_before": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 1.0
+   },
+   "text_after": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 1.0
+   },
+   "text_identical_at_init": true,
+   "lm_seq_len": 19,
+   "train_seconds": 407.3,
+   "trainable_params": 41088
+  },
+  {
+   "recipe": "encoder-free, LM trains",
+   "schedule": "all",
+   "fine": 0.99853515625,
+   "coarse": 1.0,
+   "text_before": {
+    "fine": 1.0,
+    "coarse": 1.0,
+    "add": 1.0
+   },
+   "text_after": {
+    "fine": 0.90234375,
+    "coarse": 0.9130859375,
+    "add": 0.14111328125
+   },
+   "text_identical_at_init": true,
+   "lm_seq_len": 19,
+   "train_seconds": 233.2,
+   "trainable_params": 206656
+  }
+ ]
+}

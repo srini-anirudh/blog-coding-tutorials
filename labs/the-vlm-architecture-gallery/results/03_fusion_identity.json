@@ -1,0 +1,39 @@
+{
+ "hardware": "AMD EPYC 7R13, 2 threads, torch 2.15.0, float32",
+ "command": "python labs/the-vlm-architecture-gallery/scripts/03_fusion_identity.py",
+ "data": {
+  "lm_params": 205568,
+  "rows": [
+   {
+    "fusion": "prefix",
+    "added_lm_params": 0,
+    "text_only_identical": true,
+    "max_logit_change_with_image": 10.605110168457031
+   },
+   {
+    "fusion": "gated xattn",
+    "added_lm_params": 199944,
+    "text_only_identical": true,
+    "max_logit_change_with_image": 0.0
+   },
+   {
+    "fusion": "visual expert",
+    "added_lm_params": 198912,
+    "text_only_identical": true,
+    "max_logit_change_with_image": 10.605110168457031
+   },
+   {
+    "fusion": "PLoRA r=8",
+    "added_lm_params": 32768,
+    "text_only_identical": true,
+    "max_logit_change_with_image": 10.605110168457031
+   },
+   {
+    "fusion": "encoder-free",
+    "added_lm_params": 0,
+    "text_only_identical": true,
+    "max_logit_change_with_image": 11.437723159790039
+   }
+  ]
+ }
+}

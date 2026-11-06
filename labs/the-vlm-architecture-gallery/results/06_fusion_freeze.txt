@@ -1,0 +1,20 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, float32
+# command: python labs/the-vlm-architecture-gallery/scripts/06_fusion_freeze.py --report
+# merged from 2 seeds: 06_fusion_freeze_seed0.json, 06_fusion_freeze_seed1.json
+# each seed run on: AMD EPYC 7R13, 4 threads, torch 2.15.0, float32; 2500 steps, batch 128, no text replay
+mean over seeds (min to max); chance 0.125.
+seed 0: pretrained LM text accuracy before visual training: fine 1.000, coarse 1.000, add 1.000
+seed 1: pretrained LM text accuracy before visual training: fine 1.000, coarse 1.000, add 1.000
+recipe                     trainable  seq    fine  coarse  text lookup after  text add after
+prefix, LM frozen              8,320   19   0.997   1.000              1.000           1.000   [fine 0.996-0.998, add 1.000-1.000]
+prefix, LM trains            213,888   19   0.999   1.000              1.000           0.675   [fine 0.999-1.000, add 0.671-0.679]
+gated xattn, LM frozen       208,264    3   0.290   0.998              1.000           1.000   [fine 0.242-0.338, add 1.000-1.000]
+visual expert, LM frozen     207,232   19   0.999   1.000              1.000           1.000   [fine 0.999-1.000, add 1.000-1.000]
+PLoRA r=8, LM frozen          41,088   19   0.998   1.000              1.000           1.000   [fine 0.997-0.999, add 1.000-1.000]
+encoder-free, LM trains      206,656   19   0.999   1.000              0.865           0.087   [fine 0.999-0.999, add 0.032-0.141]
+seq = LM sequence length for a 3-token question (visual tokens + text; xattn keeps vision out of the stream).
+all recipes give bit-identical text logits at init: True
+
+attention-score cost per sequence for a real-size picture (576 visual + 64 text tokens, d 4096, 32 layers):
+  prefix  decoder sequence  640   attention MACs  107.4 G   cached K/V positions 20,480
+  xattn   decoder sequence   64   attention MACs   10.7 G   cached K/V positions 20,480

@@ -1,0 +1,12 @@
+# hardware: AMD EPYC 7R13, 2 threads, torch 2.15.0, float32
+# command: python labs/the-vlm-architecture-gallery/scripts/03_fusion_identity.py
+pretrained tiny LM: 205,568 parameters
+fusion                 added params   x LM  text-only identical    with image: max |dlogit| at question
+prefix                            0   0.00                 True                                1.06e+01
+gated xattn                 199,944   0.97                 True                                0.00e+00
+visual expert               198,912   0.97                 True                                1.06e+01
+PLoRA r=8                    32,768   0.16                 True                                1.06e+01
+encoder-free                      0   0.00                 True                                1.14e+01
+
+gated xattn changes nothing even with an image attached (tanh(0) = 0): the frozen LM is reproduced exactly.
+prefix-style fusions change the question logits as soon as an image is in front: the LM attends to it.

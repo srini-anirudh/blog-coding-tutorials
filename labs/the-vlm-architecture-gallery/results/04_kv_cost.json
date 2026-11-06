@@ -1,0 +1,44 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, float32",
+ "command": "python labs/the-vlm-architecture-gallery/scripts/04_kv_cost.py",
+ "data": {
+  "rows": [
+   {
+    "setting": "336^2 fixed",
+    "visual_tokens": 576,
+    "kv_per_token_kib": 128.0,
+    "kv_mib": 72.0,
+    "approx_words": 432,
+    "images_in_context": 222,
+    "kv_mib_measured": 72.0
+   },
+   {
+    "setting": "2x2 tiles + global",
+    "visual_tokens": 2880,
+    "kv_per_token_kib": 128.0,
+    "kv_mib": 360.0,
+    "approx_words": 2160,
+    "images_in_context": 44,
+    "kv_mib_measured": 360.0
+   },
+   {
+    "setting": "native 1024^2",
+    "visual_tokens": 1300,
+    "kv_per_token_kib": 128.0,
+    "kv_mib": 162.5,
+    "approx_words": 975,
+    "images_in_context": 98,
+    "kv_mib_measured": 162.5
+   },
+   {
+    "setting": "40-tile document page",
+    "visual_tokens": 10240,
+    "kv_per_token_kib": 128.0,
+    "kv_mib": 1280.0,
+    "approx_words": 7680,
+    "images_in_context": 12,
+    "kv_mib_measured": 1280.0
+   }
+  ]
+ }
+}

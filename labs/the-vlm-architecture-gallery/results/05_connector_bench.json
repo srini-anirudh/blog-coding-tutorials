@@ -1,0 +1,99 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, float32",
+ "command": "python labs/the-vlm-architecture-gallery/scripts/05_connector_bench.py --report",
+ "data": {
+  "rows": [
+   {
+    "connector": "linear (1:1)",
+    "tokens": 16,
+    "fine": [
+     0.99853515625,
+     0.9990234375
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "trainable_params": 209728
+   },
+   {
+    "connector": "mlp (1:1)",
+    "tokens": 16,
+    "fine": [
+     0.9990234375,
+     0.99951171875
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "trainable_params": 213888
+   },
+   {
+    "connector": "pixel_shuffle (fold 2x2)",
+    "tokens": 4,
+    "fine": [
+     0.8291015625,
+     0.802734375
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "trainable_params": 226688
+   },
+   {
+    "connector": "avg_pool (mean 2x2)",
+    "tokens": 4,
+    "fine": [
+     0.40283203125,
+     0.39453125
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "trainable_params": 213888
+   },
+   {
+    "connector": "attn_pool (attend 2x2)",
+    "tokens": 4,
+    "fine": [
+     0.39990234375,
+     0.40771484375
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "trainable_params": 230528
+   },
+   {
+    "connector": "resampler (4 queries)",
+    "tokens": 4,
+    "fine": [
+     0.36865234375,
+     0.375
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "trainable_params": 260800
+   },
+   {
+    "connector": "resampler (16 queries)",
+    "tokens": 16,
+    "fine": [
+     0.9541015625,
+     0.9287109375
+    ],
+    "coarse": [
+     1.0,
+     1.0
+    ],
+    "trainable_params": 261568
+   }
+  ]
+ }
+}

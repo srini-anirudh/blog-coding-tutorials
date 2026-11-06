@@ -1,0 +1,12 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, float32
+# command: python labs/the-vlm-architecture-gallery/scripts/04_kv_cost.py
+shape: 32 layers, 8 KV heads, head dim 128, bf16  ->  KV per token = 2*32*8*128*2 B = 128 KiB
+setting                   tokens  KV MiB (formula)  KV MiB (measured)  ~words  images in 128K
+336^2 fixed                  576              72.0               72.0     432             222
+2x2 tiles + global         2,880             360.0              360.0   2,160              44
+native 1024^2              1,300             162.5              162.5     975              98
+40-tile document page     10,240            1280.0             1280.0   7,680              12
+
+measured = bytes in the KV cache of a transformers LlamaForCausalLM with that attention shape after a
+forward pass over the prefix (tiny hidden size; only the attention shape sets the cache size).
+~words uses the post's rule of thumb of 0.75 words per token; it is not measured.

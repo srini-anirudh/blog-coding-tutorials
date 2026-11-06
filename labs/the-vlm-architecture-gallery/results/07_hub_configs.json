@@ -1,0 +1,141 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, float32",
+ "command": "python labs/the-vlm-architecture-gallery/scripts/07_hub_configs.py",
+ "data": [
+  {
+   "repo": "llava-hf/llava-1.5-7b-hf",
+   "model": "LLaVA-1.5",
+   "post_says": "576 tokens",
+   "tokens_from_config": 576,
+   "how": "(336/14)^2, CLS dropped=True",
+   "matches_post": true,
+   "lm_shape": {
+    "layers": 32,
+    "kv_heads": 32,
+    "head_dim": 128
+   },
+   "kv_kib_per_token_bf16": 512.0,
+   "kv_mib_for_these_tokens": 288.0
+  },
+  {
+   "repo": "llava-hf/llava-v1.6-mistral-7b-hf",
+   "model": "LLaVA-NeXT",
+   "post_says": "up to 2 880 tokens",
+   "tokens_from_config": 2928,
+   "how": "largest over the 5 canvases: 24^2 global + unpadded tiles + one newline token per row",
+   "matches_post": false,
+   "lm_shape": {
+    "layers": 32,
+    "kv_heads": 8,
+    "head_dim": 128
+   },
+   "kv_kib_per_token_bf16": 128.0,
+   "kv_mib_for_these_tokens": 366.0
+  },
+  {
+   "repo": "HuggingFaceM4/idefics2-8b",
+   "model": "IDEFICS2",
+   "post_says": "64 / image (resampler)",
+   "tokens_from_config": 64,
+   "how": "perceiver resampler latents",
+   "matches_post": true,
+   "lm_shape": {
+    "layers": 32,
+    "kv_heads": 8,
+    "head_dim": 128
+   },
+   "kv_kib_per_token_bf16": 128.0,
+   "kv_mib_for_these_tokens": 8.0
+  },
+  {
+   "repo": "HuggingFaceM4/Idefics3-8B-Llama3",
+   "model": "IDEFICS3",
+   "post_says": "169 per tile (pixel shuffle)",
+   "tokens_from_config": 169,
+   "how": "(364/14)^2 / 2^2",
+   "matches_post": true,
+   "lm_shape": {
+    "layers": 32,
+    "kv_heads": 8,
+    "head_dim": 128
+   },
+   "kv_kib_per_token_bf16": 128.0,
+   "kv_mib_for_these_tokens": 21.1
+  },
+  {
+   "repo": "OpenGVLab/InternVL2_5-1B",
+   "model": "InternVL 2.5",
+   "post_says": "256 per tile (pixel shuffle)",
+   "tokens_from_config": 256,
+   "how": "(448/14)^2 * 0.5^2, up to 12 tiles + thumbnail",
+   "matches_post": true,
+   "lm_shape": {
+    "layers": 24,
+    "kv_heads": 2,
+    "head_dim": 64
+   },
+   "kv_kib_per_token_bf16": 12.0,
+   "kv_mib_for_these_tokens": 3.0
+  },
+  {
+   "repo": "Qwen/Qwen2-VL-2B-Instruct",
+   "model": "Qwen2-VL",
+   "post_says": "variable, 4 to 16 384",
+   "tokens_from_config": 16384,
+   "how": "min_pixels/28^2 = 4 to max_pixels/28^2 = 16384",
+   "matches_post": true,
+   "lm_shape": {
+    "layers": 28,
+    "kv_heads": 2,
+    "head_dim": 128
+   },
+   "kv_kib_per_token_bf16": 28.0,
+   "kv_mib_for_these_tokens": 448.0
+  },
+  {
+   "repo": "mistral-community/pixtral-12b",
+   "model": "Pixtral 12B",
+   "post_says": "variable, up to 4 096",
+   "tokens_from_config": 4096,
+   "how": "(1024/16)^2 patches at the largest size, plus one [IMG_BREAK] per row",
+   "matches_post": true,
+   "lm_shape": {
+    "layers": 40,
+    "kv_heads": 8,
+    "head_dim": 128
+   },
+   "kv_kib_per_token_bf16": 160.0,
+   "kv_mib_for_these_tokens": 640.0
+  },
+  {
+   "repo": "THUDM/cogvlm-chat-hf",
+   "model": "CogVLM",
+   "post_says": "1 225 tokens",
+   "tokens_from_config": 1225,
+   "how": "(490/14)^2",
+   "matches_post": true,
+   "lm_shape": {
+    "layers": 32,
+    "kv_heads": 32,
+    "head_dim": 128
+   },
+   "kv_kib_per_token_bf16": 512.0,
+   "kv_mib_for_these_tokens": 612.5
+  },
+  {
+   "repo": "unsloth/gemma-3-4b-it",
+   "model": "Gemma 3",
+   "post_says": "256 per window (pooling)",
+   "tokens_from_config": 256,
+   "how": "(896/14)^2 = 4096 patches pooled to mm_tokens_per_image",
+   "matches_post": true,
+   "lm_shape": {
+    "layers": 34,
+    "kv_heads": 4,
+    "head_dim": 256
+   },
+   "kv_kib_per_token_bf16": 136.0,
+   "kv_mib_for_these_tokens": 34.0
+  }
+ ]
+}
