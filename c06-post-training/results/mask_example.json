@@ -1,0 +1,1232 @@
+{
+  "tokens": [
+    {
+      "pos": 0,
+      "id": 1,
+      "text": "<|im_start|>",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 1,
+      "id": 9690,
+      "text": "system",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 2,
+      "id": 198,
+      "text": "\n",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 3,
+      "id": 2683,
+      "text": "You",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 4,
+      "id": 359,
+      "text": " are",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 5,
+      "id": 253,
+      "text": " a",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 6,
+      "id": 5649,
+      "text": " careful",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 7,
+      "id": 17993,
+      "text": " calculator",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 8,
+      "id": 30,
+      "text": ".",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 9,
+      "id": 5917,
+      "text": " Work",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 10,
+      "id": 1833,
+      "text": " step",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 11,
+      "id": 411,
+      "text": " by",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 12,
+      "id": 1833,
+      "text": " step",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 13,
+      "id": 28,
+      "text": ",",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 14,
+      "id": 965,
+      "text": " then",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 15,
+      "id": 9199,
+      "text": " finish",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 16,
+      "id": 351,
+      "text": " with",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 17,
+      "id": 637,
+      "text": " '",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 18,
+      "id": 504,
+      "text": "The",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 19,
+      "id": 2988,
+      "text": " answer",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 20,
+      "id": 314,
+      "text": " is",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 21,
+      "id": 442,
+      "text": " N",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 22,
+      "id": 6662,
+      "text": ".'",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 23,
+      "id": 2,
+      "text": "<|im_end|>",
+      "role": "system",
+      "label": -100
+    },
+    {
+      "pos": 24,
+      "id": 198,
+      "text": "\n",
+      "role": "sep",
+      "label": -100
+    },
+    {
+      "pos": 25,
+      "id": 1,
+      "text": "<|im_start|>",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 26,
+      "id": 4093,
+      "text": "user",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 27,
+      "id": 198,
+      "text": "\n",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 28,
+      "id": 1780,
+      "text": "What",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 29,
+      "id": 314,
+      "text": " is",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 30,
+      "id": 216,
+      "text": " ",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 31,
+      "id": 37,
+      "text": "5",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 32,
+      "id": 41,
+      "text": "9",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 33,
+      "id": 1232,
+      "text": " +",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 34,
+      "id": 216,
+      "text": " ",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 35,
+      "id": 38,
+      "text": "6",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 36,
+      "id": 35,
+      "text": "3",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 37,
+      "id": 731,
+      "text": " -",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 38,
+      "id": 216,
+      "text": " ",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 39,
+      "id": 33,
+      "text": "1",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 40,
+      "id": 37,
+      "text": "5",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 41,
+      "id": 47,
+      "text": "?",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 42,
+      "id": 2,
+      "text": "<|im_end|>",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 43,
+      "id": 198,
+      "text": "\n",
+      "role": "sep",
+      "label": -100
+    },
+    {
+      "pos": 44,
+      "id": 1,
+      "text": "<|im_start|>",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 45,
+      "id": 520,
+      "text": "ass",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 46,
+      "id": 9531,
+      "text": "istant",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 47,
+      "id": 198,
+      "text": "\n",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 48,
+      "id": 37,
+      "text": "5",
+      "role": "assistant",
+      "label": 37
+    },
+    {
+      "pos": 49,
+      "id": 41,
+      "text": "9",
+      "role": "assistant",
+      "label": 41
+    },
+    {
+      "pos": 50,
+      "id": 1232,
+      "text": " +",
+      "role": "assistant",
+      "label": 1232
+    },
+    {
+      "pos": 51,
+      "id": 216,
+      "text": " ",
+      "role": "assistant",
+      "label": 216
+    },
+    {
+      "pos": 52,
+      "id": 38,
+      "text": "6",
+      "role": "assistant",
+      "label": 38
+    },
+    {
+      "pos": 53,
+      "id": 35,
+      "text": "3",
+      "role": "assistant",
+      "label": 35
+    },
+    {
+      "pos": 54,
+      "id": 446,
+      "text": " =",
+      "role": "assistant",
+      "label": 446
+    },
+    {
+      "pos": 55,
+      "id": 216,
+      "text": " ",
+      "role": "assistant",
+      "label": 216
+    },
+    {
+      "pos": 56,
+      "id": 33,
+      "text": "1",
+      "role": "assistant",
+      "label": 33
+    },
+    {
+      "pos": 57,
+      "id": 34,
+      "text": "2",
+      "role": "assistant",
+      "label": 34
+    },
+    {
+      "pos": 58,
+      "id": 34,
+      "text": "2",
+      "role": "assistant",
+      "label": 34
+    },
+    {
+      "pos": 59,
+      "id": 30,
+      "text": ".",
+      "role": "assistant",
+      "label": 30
+    },
+    {
+      "pos": 60,
+      "id": 216,
+      "text": " ",
+      "role": "assistant",
+      "label": 216
+    },
+    {
+      "pos": 61,
+      "id": 33,
+      "text": "1",
+      "role": "assistant",
+      "label": 33
+    },
+    {
+      "pos": 62,
+      "id": 34,
+      "text": "2",
+      "role": "assistant",
+      "label": 34
+    },
+    {
+      "pos": 63,
+      "id": 34,
+      "text": "2",
+      "role": "assistant",
+      "label": 34
+    },
+    {
+      "pos": 64,
+      "id": 731,
+      "text": " -",
+      "role": "assistant",
+      "label": 731
+    },
+    {
+      "pos": 65,
+      "id": 216,
+      "text": " ",
+      "role": "assistant",
+      "label": 216
+    },
+    {
+      "pos": 66,
+      "id": 33,
+      "text": "1",
+      "role": "assistant",
+      "label": 33
+    },
+    {
+      "pos": 67,
+      "id": 37,
+      "text": "5",
+      "role": "assistant",
+      "label": 37
+    },
+    {
+      "pos": 68,
+      "id": 446,
+      "text": " =",
+      "role": "assistant",
+      "label": 446
+    },
+    {
+      "pos": 69,
+      "id": 216,
+      "text": " ",
+      "role": "assistant",
+      "label": 216
+    },
+    {
+      "pos": 70,
+      "id": 33,
+      "text": "1",
+      "role": "assistant",
+      "label": 33
+    },
+    {
+      "pos": 71,
+      "id": 32,
+      "text": "0",
+      "role": "assistant",
+      "label": 32
+    },
+    {
+      "pos": 72,
+      "id": 39,
+      "text": "7",
+      "role": "assistant",
+      "label": 39
+    },
+    {
+      "pos": 73,
+      "id": 30,
+      "text": ".",
+      "role": "assistant",
+      "label": 30
+    },
+    {
+      "pos": 74,
+      "id": 378,
+      "text": " The",
+      "role": "assistant",
+      "label": 378
+    },
+    {
+      "pos": 75,
+      "id": 2988,
+      "text": " answer",
+      "role": "assistant",
+      "label": 2988
+    },
+    {
+      "pos": 76,
+      "id": 314,
+      "text": " is",
+      "role": "assistant",
+      "label": 314
+    },
+    {
+      "pos": 77,
+      "id": 216,
+      "text": " ",
+      "role": "assistant",
+      "label": 216
+    },
+    {
+      "pos": 78,
+      "id": 33,
+      "text": "1",
+      "role": "assistant",
+      "label": 33
+    },
+    {
+      "pos": 79,
+      "id": 32,
+      "text": "0",
+      "role": "assistant",
+      "label": 32
+    },
+    {
+      "pos": 80,
+      "id": 39,
+      "text": "7",
+      "role": "assistant",
+      "label": 39
+    },
+    {
+      "pos": 81,
+      "id": 30,
+      "text": ".",
+      "role": "assistant",
+      "label": 30
+    },
+    {
+      "pos": 82,
+      "id": 2,
+      "text": "<|im_end|>",
+      "role": "assistant",
+      "label": 2
+    },
+    {
+      "pos": 83,
+      "id": 198,
+      "text": "\n",
+      "role": "sep",
+      "label": -100
+    },
+    {
+      "pos": 84,
+      "id": 1,
+      "text": "<|im_start|>",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 85,
+      "id": 4093,
+      "text": "user",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 86,
+      "id": 198,
+      "text": "\n",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 87,
+      "id": 2696,
+      "text": "Now",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 88,
+      "id": 803,
+      "text": " add",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 89,
+      "id": 216,
+      "text": " ",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 90,
+      "id": 38,
+      "text": "6",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 91,
+      "id": 288,
+      "text": " to",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 92,
+      "id": 338,
+      "text": " that",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 93,
+      "id": 30,
+      "text": ".",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 94,
+      "id": 2,
+      "text": "<|im_end|>",
+      "role": "user",
+      "label": -100
+    },
+    {
+      "pos": 95,
+      "id": 198,
+      "text": "\n",
+      "role": "sep",
+      "label": -100
+    },
+    {
+      "pos": 96,
+      "id": 1,
+      "text": "<|im_start|>",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 97,
+      "id": 520,
+      "text": "ass",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 98,
+      "id": 9531,
+      "text": "istant",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 99,
+      "id": 198,
+      "text": "\n",
+      "role": "header",
+      "label": -100
+    },
+    {
+      "pos": 100,
+      "id": 33,
+      "text": "1",
+      "role": "assistant",
+      "label": 33
+    },
+    {
+      "pos": 101,
+      "id": 32,
+      "text": "0",
+      "role": "assistant",
+      "label": 32
+    },
+    {
+      "pos": 102,
+      "id": 39,
+      "text": "7",
+      "role": "assistant",
+      "label": 39
+    },
+    {
+      "pos": 103,
+      "id": 1232,
+      "text": " +",
+      "role": "assistant",
+      "label": 1232
+    },
+    {
+      "pos": 104,
+      "id": 216,
+      "text": " ",
+      "role": "assistant",
+      "label": 216
+    },
+    {
+      "pos": 105,
+      "id": 38,
+      "text": "6",
+      "role": "assistant",
+      "label": 38
+    },
+    {
+      "pos": 106,
+      "id": 446,
+      "text": " =",
+      "role": "assistant",
+      "label": 446
+    },
+    {
+      "pos": 107,
+      "id": 216,
+      "text": " ",
+      "role": "assistant",
+      "label": 216
+    },
+    {
+      "pos": 108,
+      "id": 33,
+      "text": "1",
+      "role": "assistant",
+      "label": 33
+    },
+    {
+      "pos": 109,
+      "id": 33,
+      "text": "1",
+      "role": "assistant",
+      "label": 33
+    },
+    {
+      "pos": 110,
+      "id": 35,
+      "text": "3",
+      "role": "assistant",
+      "label": 35
+    },
+    {
+      "pos": 111,
+      "id": 30,
+      "text": ".",
+      "role": "assistant",
+      "label": 30
+    },
+    {
+      "pos": 112,
+      "id": 378,
+      "text": " The",
+      "role": "assistant",
+      "label": 378
+    },
+    {
+      "pos": 113,
+      "id": 2988,
+      "text": " answer",
+      "role": "assistant",
+      "label": 2988
+    },
+    {
+      "pos": 114,
+      "id": 314,
+      "text": " is",
+      "role": "assistant",
+      "label": 314
+    },
+    {
+      "pos": 115,
+      "id": 216,
+      "text": " ",
+      "role": "assistant",
+      "label": 216
+    },
+    {
+      "pos": 116,
+      "id": 33,
+      "text": "1",
+      "role": "assistant",
+      "label": 33
+    },
+    {
+      "pos": 117,
+      "id": 33,
+      "text": "1",
+      "role": "assistant",
+      "label": 33
+    },
+    {
+      "pos": 118,
+      "id": 35,
+      "text": "3",
+      "role": "assistant",
+      "label": 35
+    },
+    {
+      "pos": 119,
+      "id": 30,
+      "text": ".",
+      "role": "assistant",
+      "label": 30
+    },
+    {
+      "pos": 120,
+      "id": 2,
+      "text": "<|im_end|>",
+      "role": "assistant",
+      "label": 2
+    },
+    {
+      "pos": 121,
+      "id": 198,
+      "text": "\n",
+      "role": "sep",
+      "label": -100
+    }
+  ],
+  "labels": {
+    "assistant": [
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      37,
+      41,
+      1232,
+      216,
+      38,
+      35,
+      446,
+      216,
+      33,
+      34,
+      34,
+      30,
+      216,
+      33,
+      34,
+      34,
+      731,
+      216,
+      33,
+      37,
+      446,
+      216,
+      33,
+      32,
+      39,
+      30,
+      378,
+      2988,
+      314,
+      216,
+      33,
+      32,
+      39,
+      30,
+      2,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      33,
+      32,
+      39,
+      1232,
+      216,
+      38,
+      446,
+      216,
+      33,
+      33,
+      35,
+      30,
+      378,
+      2988,
+      314,
+      216,
+      33,
+      33,
+      35,
+      30,
+      2,
+      -100
+    ],
+    "last": [
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      33,
+      32,
+      39,
+      1232,
+      216,
+      38,
+      446,
+      216,
+      33,
+      33,
+      35,
+      30,
+      378,
+      2988,
+      314,
+      216,
+      33,
+      33,
+      35,
+      30,
+      2,
+      -100
+    ],
+    "all": [
+      1,
+      9690,
+      198,
+      2683,
+      359,
+      253,
+      5649,
+      17993,
+      30,
+      5917,
+      1833,
+      411,
+      1833,
+      28,
+      965,
+      9199,
+      351,
+      637,
+      504,
+      2988,
+      314,
+      442,
+      6662,
+      2,
+      198,
+      1,
+      4093,
+      198,
+      1780,
+      314,
+      216,
+      37,
+      41,
+      1232,
+      216,
+      38,
+      35,
+      731,
+      216,
+      33,
+      37,
+      47,
+      2,
+      198,
+      1,
+      520,
+      9531,
+      198,
+      37,
+      41,
+      1232,
+      216,
+      38,
+      35,
+      446,
+      216,
+      33,
+      34,
+      34,
+      30,
+      216,
+      33,
+      34,
+      34,
+      731,
+      216,
+      33,
+      37,
+      446,
+      216,
+      33,
+      32,
+      39,
+      30,
+      378,
+      2988,
+      314,
+      216,
+      33,
+      32,
+      39,
+      30,
+      2,
+      198,
+      1,
+      4093,
+      198,
+      2696,
+      803,
+      216,
+      38,
+      288,
+      338,
+      30,
+      2,
+      198,
+      1,
+      520,
+      9531,
+      198,
+      33,
+      32,
+      39,
+      1232,
+      216,
+      38,
+      446,
+      216,
+      33,
+      33,
+      35,
+      30,
+      378,
+      2988,
+      314,
+      216,
+      33,
+      33,
+      35,
+      30,
+      2,
+      198
+    ]
+  }
+}
