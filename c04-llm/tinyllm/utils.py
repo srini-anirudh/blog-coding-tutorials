@@ -39,6 +39,18 @@ def synchronize(device: torch.device) -> None:
         torch.mps.synchronize()
 
 
+def disable_cudnn_sdp() -> None:
+    """Stop PyTorch from choosing the cuDNN attention backend for F.scaled_dot_product_attention.
+
+    Measured on an H100 with PyTorch 2.15, bf16: for the decode shape (one query, a growing cache,
+    grouped heads) PyTorch picks cuDNN attention, which spends about 10 ms of CPU per call on
+    something that takes 4 microseconds on the GPU, so a decode step of the tiny model takes
+    about 48 ms instead of about 5 ms. FlashAttention has no such cost. Call this once before
+    generating on CUDA. See results/bench_generation_gpu_cudnn_default.txt.
+    """
+    torch.backends.cuda.enable_cudnn_sdp(False)
+
+
 class Timer:
     """with Timer(device) as t: ...; t.seconds"""
 

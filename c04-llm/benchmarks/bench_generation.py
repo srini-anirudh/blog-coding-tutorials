@@ -19,7 +19,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tinyllm import KVCache, TinyLLM, get_config  # noqa: E402
-from tinyllm.utils import device_label, pick_device, synchronize  # noqa: E402
+from tinyllm.utils import device_label, disable_cudnn_sdp, pick_device, synchronize  # noqa: E402
 
 
 @torch.no_grad()
@@ -52,10 +52,14 @@ def main() -> None:
     p.add_argument("--new-tokens", type=int, default=496)
     p.add_argument("--batch-size", type=int, default=1)
     p.add_argument("--dtype", default="float32", choices=["float32", "bf16"])
+    p.add_argument("--allow-cudnn-sdp", action="store_true",
+                   help="CUDA only: keep PyTorch's default backend choice (slow for decode, see utils.disable_cudnn_sdp)")
     args = p.parse_args()
 
     torch.manual_seed(0)
     device = pick_device(args.device)
+    if device.type == "cuda" and not args.allow_cudnn_sdp:
+        disable_cudnn_sdp()
     config = get_config(args.preset, max_seq_len=args.prompt_len + args.new_tokens)
     dtype = torch.float32 if args.dtype == "float32" else torch.bfloat16
     model = TinyLLM(config).to(device, dtype=dtype).eval()  # random weights: speed does not depend on them
@@ -66,6 +70,8 @@ def main() -> None:
     step_latencies(model, prompt, warmup, False)
 
     dtype_note = "" if args.dtype == "float32" else f" dtype={args.dtype}"
+    if device.type == "cuda":
+        dtype_note += " cudnn_sdp=" + ("on" if args.allow_cudnn_sdp else "off")
     print(f"preset={args.preset} params={model.num_parameters():,} device={device_label(device)}{dtype_note} "
           f"batch={args.batch_size} "
           f"prompt={args.prompt_len} new={args.new_tokens}")

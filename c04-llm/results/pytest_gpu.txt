@@ -1,0 +1,5 @@
+# NVIDIA H100 80GB HBM3, PyTorch 2.15.0, CUDA 13.2, 8 CPU threads for the host
+$ python -m pytest c04-llm -m gpu
+
+.....                                                                    [100%]
+5 passed, 76 deselected in 1.81s

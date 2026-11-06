@@ -1,0 +1,17 @@
+# NVIDIA H100 80GB HBM3, PyTorch 2.15.0, CUDA 13.2, 8 CPU threads for the host
+$ python c04-llm/benchmarks/bench_generation.py --device cuda --dtype bf16
+
+preset=tiny params=4,295,936 device=cuda (NVIDIA H100 80GB HBM3) dtype=bf16 cudnn_sdp=off batch=1 prompt=16 new=496
+  cache=off  total    2.81s     176.3 tok/s
+  cache=on   total    2.51s     197.4 tok/s
+
+  per-step latency (ms) at sequence length T
+       T   no cache      cache
+      17       5.39       5.00
+      48       5.82       5.06
+      80       5.46       5.11
+     144       5.55       5.11
+     272       5.57       4.95
+     511       5.49       4.93
+
+  speed-up from the cache: 1.1x

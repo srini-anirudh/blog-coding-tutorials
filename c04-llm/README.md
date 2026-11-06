@@ -115,7 +115,7 @@ Run `train_sanity.py` first. It downloads Tiny Shakespeare to `c04-llm/data/` an
 | `python c04-llm/benchmarks/bench_generation.py --device cpu` | Generation speed with and without the cache, tiny preset | `results/bench_generation_cpu.txt` |
 | `python c04-llm/benchmarks/bench_generation.py --device cpu --preset smollm2-135m --new-tokens 128` | The same at the size of SmolLM2-135M, with random weights | `results/bench_generation_smollm2_cpu.txt` |
 
-Both benchmarks accept `--dtype bf16`. On CUDA, `bench_attention.py` also reports peak allocated memory.
+Both benchmarks accept `--dtype bf16`. On CUDA, `bench_attention.py` also reports peak allocated memory, and `bench_generation.py` turns off cuDNN attention unless you pass `--allow-cudnn-sdp` (see the GPU section).
 
 ## Results
 
@@ -203,14 +203,54 @@ Same data and seed, 400 steps. This is one seed on a small corpus, so these loss
 | Unshifted loss | Loss falls to 0.0048 and the model only copies its input |
 | Residual projections without the depth scaling, 48 layers | Residual RMS 0.690 at layer 48, against 0.059 |
 
-## GPU: not yet measured
+## GPU results
 
-No GPU number exists for this folder. FlashAttention, GPU timings and GPU memory are **not yet measured**, and the tests in `tests/test_gpu.py` have never run on a GPU.
-
-FlashAttention accepts only bf16 and half, so a float32 run on a GPU does not reach it. Use `--dtype bf16` to measure it:
+Hardware: **NVIDIA H100 80GB HBM3**, PyTorch 2.15.0, CUDA 13.2, one GPU, bf16 unless noted. The host is a shared machine, so the timings carry the same caveat as the CPU ones. Commands and raw output: `results/bench_attention_gpu_*.txt`, `results/bench_generation_*gpu*.txt`, `results/pytest_gpu.txt`.
 
 ```bash
 python -m pytest c04-llm -m gpu
 python c04-llm/benchmarks/bench_attention.py --device cuda --dtype bf16
 python c04-llm/benchmarks/bench_generation.py --device cuda --dtype bf16
 ```
+
+### GPU tests
+
+All 5 tests in `tests/test_gpu.py` pass. They force the FlashAttention kernel, so PyTorch raises an error instead of falling back, and compare it with the naive attention for MHA, GQA and MQA. They also check a single cached decode step, and a chunked prefill in float32 that uses the shifted mask.
+
+### Naive attention against SDPA on the GPU
+
+Tiny preset, batch 8, forward and backward, bf16. Peak memory is `torch.cuda.max_memory_allocated`.
+
+| Sequence length | Naive | SDPA | Speed-up | Naive peak | SDPA peak |
+|---|---|---|---|---|---|
+| 128 | 25.1 ms | 20.3 ms | 1.23x | 163 MiB | 117 MiB |
+| 256 | 26.1 ms | 20.0 ms | 1.30x | 342 MiB | 184 MiB |
+| 512 | 27.3 ms | 20.1 ms | 1.36x | 1001 MiB | 323 MiB |
+| 1024 | 27.1 ms | 20.0 ms | 1.36x | 3460 MiB | 594 MiB |
+
+The memory gap is the clear result. The naive path stores a score matrix per head, so its peak grows much faster than linearly with the length (about 3.5x from 512 to 1024 tokens), while SDPA's grows about 1.8x. The times are nearly flat from 128 to 1024 tokens, which is what a step limited by the many small kernel launches of a 6-layer model would look like. This model is too small to be limited by attention arithmetic, so the 1.2x to 1.4x speed-up says little about large models. In float32 the same run gives speed-ups of 1.24x to 1.56x, with a 1024-token peak of 3242 MiB for naive and 1045 MiB for SDPA.
+
+An earlier run of this benchmark, made while the host was heavily loaded, gave times that varied by 2x between neighbouring lengths. It was discarded.
+
+### Generation on the GPU
+
+Batch 1, 16-token prompt, 496 new tokens, random weights.
+
+| Model | Cache | tok/s | Per step |
+|---|---|---|---|
+| Tiny (4.3M) | off | 176.3 | about 5.5 ms |
+| Tiny (4.3M) | on | 197.4 | about 5.0 ms |
+| SmolLM2-135M size | off | 39.3 | about 25 ms |
+| SmolLM2-135M size | on | 40.4 | about 24 ms |
+
+The cache gives almost no speed-up here, and that is a measured result, not a bug: `tests/test_cache.py` shows the two paths produce the same tokens. At batch 1 the step time is the same whether the forward pass covers 17 or 511 tokens, which is consistent with a step limited by launching kernels from Python rather than by arithmetic. I did not profile this case. If that is right, avoiding the recomputation saves nothing. The CPU numbers above show the cache helping because there the arithmetic is the cost. A larger batch, a longer context or a bigger model would shift this, and none of those were measured.
+
+### A slow default for decode
+
+With PyTorch's default backend choice, a decode step of the tiny model takes about 50 ms instead of 5 ms, and the SmolLM2-size model takes about 73 ms instead of 24 ms. A profile of one step showed the cause: `aten::_cudnn_attention_forward` spends about 9.7 ms of CPU per call and about 4 microseconds on the GPU. PyTorch chooses cuDNN attention for the decode shape here, which is one query against a growing cache with grouped heads. The prefill step (5.5 ms) and the training benchmark were not slowed. I did not profile which kernel they use, and I did not find out why the cuDNN call is slow on the host.
+
+`tinyllm.utils.disable_cudnn_sdp()` turns that backend off, and `bench_generation.py` calls it on CUDA unless you pass `--allow-cudnn-sdp`. The library does not call it for you, because it sets a global PyTorch flag. If you generate on a GPU, call it once first. Both settings are saved: `results/bench_generation_gpu.txt` and `results/bench_generation_smollm2_gpu.txt` with it off, and the `_cudnn_default` files with PyTorch's default.
+
+### Not measured on the GPU
+
+Batch sizes above 1, long contexts, float16, multi-GPU runs and any comparison of the FlashAttention kernel against other kernels on its own.

@@ -36,7 +36,7 @@ def patched(obj, name: str, value):
 
 # ---------------------------------------------------------------------------------------------
 def buggy_sdpa(q, k, v, n_rep):
-    """The bug: always is_causal=True. With a cache, SDPA aligns the triangle top-left."""
+    """The bug: is_causal=True whenever more than one query arrives. With a cache, SDPA aligns the triangle top-left."""
     return F.scaled_dot_product_attention(q, k, v, is_causal=q.shape[2] > 1, enable_gqa=n_rep > 1)
 
 

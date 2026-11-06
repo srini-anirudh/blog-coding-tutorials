@@ -1,0 +1,9 @@
+# NVIDIA H100 80GB HBM3, PyTorch 2.15.0, CUDA 13.2, 8 CPU threads for the host
+$ python c04-llm/benchmarks/bench_attention.py --device cuda --dtype float32
+
+device=cuda (NVIDIA H100 80GB HBM3) batch=8  (tiny preset, forward + backward per step)
+   seq   naive ms    sdpa ms  speed-up  naive MiB   sdpa MiB
+   128       21.9       17.6     1.24x        220        188
+   256       23.9       17.7     1.35x        431        311
+   512       23.0       17.4     1.32x       1062        560
+  1024       27.8       17.8     1.56x       3242       1045
