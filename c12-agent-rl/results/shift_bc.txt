@@ -1,0 +1,39 @@
+9 distinct abstract states in 5000 demonstrations
+mistakes  success  expert  unseen-state rate  submitted
+       0    0.797   1.000              0.000      1.000
+       1    0.177   1.000              0.946      0.963
+       2    0.087   1.000              0.992      0.933
+       3    0.043   1.000              1.000      0.740
+
+task [2]: set ttl to 0
+  0: read jobs/main               -> workers = 48 ; host = 76 ; ttl = 87 (forced)
+  1: edit edit db/dev ttl 30      -> error invalid input
+  2: edit 0 ttl 0                 -> error no such file
+  3: submit                       -> submitted
+  success=False submitted=True truncated=False
+   step 0: state seen in demos = True
+   step 1: state seen in demos = False
+   step 2: state seen in demos = False
+   step 3: state seen in demos = False
+
+task [3]: set depth in cache/base to value of timeout
+  0: search host                  -> found jobs/dev (forced)
+  1: read jobs/dev                -> mode = 42 ; host = 80 ; level = 63
+  2: edit cache/base depth 42     -> ok
+  3: submit                       -> submitted
+  success=False submitted=True truncated=False
+   step 0: state seen in demos = True
+   step 1: state seen in demos = True
+   step 2: state seen in demos = True
+   step 3: state seen in demos = True
+
+task [2]: set size to 72
+  0: read db/dev                  -> port = 13 ; rate = 18 ; host = 13 (forced)
+  1: edit edit edit edit 72       -> error invalid input
+  2: edit 72 size 65              -> error no such file
+  3: submit                       -> submitted
+  success=False submitted=True truncated=False
+   step 0: state seen in demos = True
+   step 1: state seen in demos = False
+   step 2: state seen in demos = False
+   step 3: state seen in demos = False

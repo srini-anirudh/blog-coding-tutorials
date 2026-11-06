@@ -1,0 +1,127 @@
+{
+ "rows": [
+  {
+   "k": 0,
+   "success": 0.7966666666666666,
+   "expert": 1.0,
+   "unseen": 0.0,
+   "submitted": 1.0
+  },
+  {
+   "k": 1,
+   "success": 0.17666666666666667,
+   "expert": 1.0,
+   "unseen": 0.945748987854251,
+   "submitted": 0.9633333333333334
+  },
+  {
+   "k": 2,
+   "success": 0.08666666666666667,
+   "expert": 1.0,
+   "unseen": 0.9917695473251029,
+   "submitted": 0.9333333333333333
+  },
+  {
+   "k": 3,
+   "success": 0.043333333333333335,
+   "expert": 1.0,
+   "unseen": 1.0,
+   "submitted": 0.74
+  }
+ ],
+ "examples": [
+  {
+   "task": "set ttl to 0",
+   "steps": [
+    [
+     "read jobs/main",
+     "workers = 48 ; host = 76 ; ttl = 87",
+     true
+    ],
+    [
+     "edit edit db/dev ttl 30",
+     "error invalid input",
+     false
+    ],
+    [
+     "edit 0 ttl 0",
+     "error no such file",
+     false
+    ],
+    [
+     "submit",
+     "submitted",
+     false
+    ]
+   ],
+   "seen": [
+    true,
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "task": "set depth in cache/base to value of timeout",
+   "steps": [
+    [
+     "search host",
+     "found jobs/dev",
+     true
+    ],
+    [
+     "read jobs/dev",
+     "mode = 42 ; host = 80 ; level = 63",
+     false
+    ],
+    [
+     "edit cache/base depth 42",
+     "ok",
+     false
+    ],
+    [
+     "submit",
+     "submitted",
+     false
+    ]
+   ],
+   "seen": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "task": "set size to 72",
+   "steps": [
+    [
+     "read db/dev",
+     "port = 13 ; rate = 18 ; host = 13",
+     true
+    ],
+    [
+     "edit edit edit edit 72",
+     "error invalid input",
+     false
+    ],
+    [
+     "edit 72 size 65",
+     "error no such file",
+     false
+    ],
+    [
+     "submit",
+     "submitted",
+     false
+    ]
+   ],
+   "seen": [
+    true,
+    false,
+    false,
+    false
+   ]
+  }
+ ]
+}

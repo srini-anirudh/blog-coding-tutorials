@@ -1,0 +1,19 @@
+device=cpu vocab=174 params=686,465 demos=30000
+step     1  loss 5.2665
+step   200  loss 0.1486
+step   400  loss 0.0771
+step   600  loss 0.0655
+step   800  loss 0.0444
+step  1000  loss 0.0666
+step  1200  loss 0.0292
+step  1400  loss 0.0425
+step  1600  loss 0.0414
+step  1800  loss 0.0335
+step  2000  loss 0.0345
+step  2200  loss 0.0276
+step  2400  loss 0.0251
+step  2600  loss 0.0322
+step  2800  loss 0.0262
+step  3000  loss 0.0436
+trained in 576s
+success (greedy, 300 unseen tasks per suite): {'clean': 0.797, 'perturbed': 0.143, 'failures': 0.2, 'long': 0.0}

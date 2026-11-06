@@ -1,0 +1,66 @@
+task [1]: set workers in db/base to 67
+  0: edit db/base workers 67      -> ok
+  1: submit                       -> submitted
+  success=True submitted=True truncated=False 
+
+task [2]: set ttl to 0
+  0: search ttl                   -> found jobs/main
+  1: edit jobs/main ttl 0         -> ok
+  2: submit                       -> submitted
+  success=True submitted=True truncated=False 
+
+task [3]: set ttl in web/base to value of host
+  0: search host                  -> found jobs/main
+  1: read jobs/main               -> mode = 84 ; timeout = 84 ; host = 43
+  2: edit web/base ttl 43         -> ok
+  3: submit                       -> submitted
+  success=True submitted=True truncated=False 
+
+task [4]: set timeout in app/main to 17
+  0: edit app/main timeout 17     -> error no such file
+  1: search timeout               -> error timeout
+  2: search timeout               -> error timeout
+  3: search timeout               -> found auth/base
+  4: edit auth/base timeout 17    -> ok
+  5: submit                       -> submitted
+  success=True submitted=True truncated=False 
+
+task [5]: set limit in web/main to value of timeout and set ttl to 8
+  0: search timeout               -> found db/prod
+  1: read db/prod                 -> timeout = 54 ; depth = 97 ; rate = 50
+  2: edit web/main limit 54       -> ok
+  3: search ttl                   -> error timeout
+  4: search ttl                   -> found web/base
+  5: edit web/base ttl 8          -> ok
+  6: submit                       -> submitted
+  success=True submitted=True truncated=False 
+
+files: {'web/prod': {'mode': '48', 'retries': '65', 'workers': '36'}, 'jobs/main': {'workers': '48', 'host': '76', 'ttl': '87'}, 'cache/main': {'rate': '92', 'port': '82', 'level': '79'}, 'db/prod': {'limit': '24', 'rate': '63', 'level': '21'}, 'db/main': {'host': '53', 'size': '48', 'level': '94'}, 'cache/dev': {'level': '29', 'size': '70', 'limit': '39'}}
+
+token  id  mask step
+<bos>        1  0  -1
+set         11  0  -1
+ttl         69  0  -1
+to          13  0  -1
+0           74  0  -1
+<act>        2  0  -1
+search       8  1   0
+ttl         69  1   0
+<eos>        3  1   0
+<obs>        4  0  -1
+found       17  0  -1
+jobs/main   58  0  -1
+<act>        2  0  -1
+edit         9  1   1
+jobs/main   58  1   1
+ttl         69  1   1
+0           74  1   1
+<eos>        3  1   1
+<obs>        4  0  -1
+ok          19  0  -1
+<act>        2  0  -1
+submit      10  1   2
+<eos>        3  1   2
+
+tokens torch.Size([1, 23])  action_mask torch.Size([1, 23])  actions tokens 10
+state positions (the <act> tokens): [5, 12, 20]
