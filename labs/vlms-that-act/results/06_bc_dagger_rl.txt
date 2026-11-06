@@ -1,0 +1,57 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+# command: python labs/vlms-that-act/scripts/06_bc_dagger_rl.py
+Part 1. The no-recovery model (1 - eps)^T, checked in the app with a noisy expert (1000 episodes each).
+  T = 30 steps (6 reports). Budget x1.0 leaves no spare step; x2.0 lets the expert recover from slips.
+  eps 0.02: (1-eps)^30 = 0.545   measured, budget x1.0 = 0.551   budget x2.0 = 1.000
+  eps 0.05: (1-eps)^30 = 0.215   measured, budget x1.0 = 0.215   budget x2.0 = 1.000
+
+Part 2. Train the pixel policies.
+  200 clean demonstrations, 1910 (screenshot, action) pairs
+  bc step   500  loss 0.0176  (1910 examples)
+  BC done (114 s)
+  BC with 800 demonstrations done (213 s)
+  dagger iter 1: learner success 0.20, +1955 relabelled states
+  dagger iter 2: learner success 0.97, +1089 relabelled states
+  dagger iter 3: learner success 0.99, +1087 relabelled states
+  DAgger done (384 s)
+  rl iter  10: mean sampled success over last 10 iters 0.28
+  rl iter  20: mean sampled success over last 10 iters 0.27
+  rl iter  30: mean sampled success over last 10 iters 0.28
+  rl iter  40: mean sampled success over last 10 iters 0.25
+  rl iter  50: mean sampled success over last 10 iters 0.27
+  rl iter  60: mean sampled success over last 10 iters 0.24
+  BC + RL (KL 1.0 to the BC policy) done (474 s)
+  rl iter  10: mean sampled success over last 10 iters 0.27
+  rl iter  20: mean sampled success over last 10 iters 0.30
+  rl iter  30: mean sampled success over last 10 iters 0.26
+  rl iter  40: mean sampled success over last 10 iters 0.24
+  rl iter  50: mean sampled success over last 10 iters 0.23
+  rl iter  60: mean sampled success over last 10 iters 0.19
+  BC + RL without KL done (540 s). RL used no expert labels, only the checker's 0/1 reward,
+  with 10% of actions replaced by clicks on random on-screen elements for exploration.
+
+Part 3. Static versus interactive evaluation (200 live episodes per cell, greedy actions).
+  static = next-action match on held-out expert histories; interactive = checker on the saved records
+  policy            static  live, no pop-ups  live, pop-ups
+  BC                 0.981             0.910          0.480
+  BC, 4x demos       0.998             0.995          0.525
+  DAgger             1.000             1.000          0.990
+  BC + RL            0.971             0.915          0.475
+  BC + RL, no KL     0.874             0.555          0.295
+
+Part 4. Longer tasks: success against the number of reports (5 expert steps each), pop-ups on, budget x2.
+  policy              k=1 (T=5)   k=2 (T=10)   k=4 (T=20)   k=6 (T=30)
+  BC                      0.465        0.225        0.045        0.000
+  BC, 4x demos            0.480        0.265        0.045        0.005
+  DAgger                  0.995        0.995        0.990        0.970
+  BC + RL                 0.475        0.215        0.045        0.005
+  BC + RL, no KL          0.275        0.075        0.035        0.000
+
+Part 5. Step budget: 2 reports (10 expert steps), pop-ups on.
+  policy               x1.0     x1.2     x1.5     x2.0     x3.0
+  BC                  0.190    0.190    0.190    0.190    0.190
+  BC, 4x demos        0.230    0.230    0.230    0.230    0.230
+  DAgger              0.230    0.995    0.995    0.995    0.995
+  BC + RL             0.190    0.190    0.190    0.190    0.190
+  BC + RL, no KL      0.100    0.100    0.100    0.100    0.100
+total time 624 s

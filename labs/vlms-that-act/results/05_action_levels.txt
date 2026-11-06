@@ -1,0 +1,15 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+# command: python labs/vlms-that-act/scripts/05_action_levels.py
+2000 single-report tasks per row, random layouts. Exact budget: 5 steps for the pixel agent, no retries.
+agent                                    decisions with coords hit/click   hit^4  success
+pixel, sigma 1px, budget 5                    5.00        4.00    1.0000   1.000    1.000
+pixel, sigma 1px, budget 10                   5.00        4.00    1.0000   1.000    1.000
+pixel, sigma 2px, budget 5                    5.00        4.00    0.9908   0.964    0.964
+pixel, sigma 2px, budget 10                   5.06        4.06    0.9897   0.959    1.000
+pixel, sigma 3px, budget 5                    5.00        4.00    0.9025   0.663    0.673
+pixel, sigma 3px, budget 10                   5.62        4.62    0.9007   0.658    0.994
+element ids                                   4.00        0.00         -       -    1.000
+element ids, options missing from tree        3.00        0.00         -       -    0.000   harness rejected: opt-meals...
+API call                                      1.00        0.00         -       -    1.000
+
+Post's example: 0.98^4 = 0.9224

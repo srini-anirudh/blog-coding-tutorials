@@ -1,0 +1,73 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "python labs/vlms-that-act/scripts/05_action_levels.py",
+  "n": 2000,
+  "rows": [
+    {
+      "agent": "pixel, sigma 1px, budget 5",
+      "decisions": 5.0,
+      "pointing": 4.0,
+      "hit": 1.0,
+      "hit4": 1.0,
+      "success": 1.0
+    },
+    {
+      "agent": "pixel, sigma 1px, budget 10",
+      "decisions": 5.0,
+      "pointing": 4.0,
+      "hit": 1.0,
+      "hit4": 1.0,
+      "success": 1.0
+    },
+    {
+      "agent": "pixel, sigma 2px, budget 5",
+      "decisions": 5.0,
+      "pointing": 4.0,
+      "hit": 0.99075,
+      "hit4": 0.9635102165084415,
+      "success": 0.9635
+    },
+    {
+      "agent": "pixel, sigma 2px, budget 10",
+      "decisions": 5.062,
+      "pointing": 4.062,
+      "hit": 0.9896602658788775,
+      "hit4": 0.9592781138673471,
+      "success": 1.0
+    },
+    {
+      "agent": "pixel, sigma 3px, budget 5",
+      "decisions": 5.0,
+      "pointing": 4.0,
+      "hit": 0.9025,
+      "hit4": 0.6634204312890624,
+      "success": 0.6735
+    },
+    {
+      "agent": "pixel, sigma 3px, budget 10",
+      "decisions": 5.6225,
+      "pointing": 4.6225,
+      "hit": 0.900703082747431,
+      "hit4": 0.6581525929641389,
+      "success": 0.994
+    },
+    {
+      "agent": "element ids",
+      "decisions": 4.0,
+      "pointing": 0,
+      "success": 1.0
+    },
+    {
+      "agent": "element ids, options missing from tree",
+      "decisions": 3.0,
+      "pointing": 0,
+      "success": 0.0
+    },
+    {
+      "agent": "API call",
+      "decisions": 1,
+      "pointing": 0,
+      "success": 1.0
+    }
+  ]
+}

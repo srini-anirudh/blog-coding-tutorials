@@ -1,0 +1,33 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "python labs/vlms-that-act/scripts/02_observations.py",
+  "costs": {
+    "screenshot": 966,
+    "a11y_tree": 46,
+    "dom": 233,
+    "set_of_mark": 983,
+    "hybrid": 996
+  },
+  "locators": {
+    "screenshot, fixed coordinates": [
+      true,
+      false
+    ],
+    "screenshot, visual cue (primary colour)": [
+      true,
+      true
+    ],
+    "accessibility tree, role + name 'Submit'": [
+      true,
+      false
+    ],
+    "DOM, id 'btn-submit'": [
+      true,
+      false
+    ],
+    "Set-of-Mark, mark 4": [
+      true,
+      false
+    ]
+  }
+}

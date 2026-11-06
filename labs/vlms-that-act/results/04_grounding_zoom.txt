@@ -1,0 +1,19 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+# command: python labs/vlms-that-act/scripts/04_grounding_zoom.py --steps 3000 --eval 300
+step   500  crop 384 ->  96px  loss 3.973
+step  1000  crop  96 ->  48px  loss 1.682
+step  1500  crop  96 ->  48px  loss 1.575
+step  2000  crop  96 ->  48px  loss 1.225
+step  2500  crop 384 -> 192px  loss 1.827
+step  3000  crop 384 -> 192px  loss 2.123
+training: 3000 steps, 866 s
+screen 384 x 384 px, icons 12 x 12 px, one target glyph among 8 kinds; a click counts if inside the icon box
+300 held-out screens, the same weights for every row
+
+method                                     visual tokens  px per token  click accuracy
+single pass, 48px input                               36          64.0           0.013
+single pass, 96px input                              144          32.0           0.103
+single pass, 192px input                             576          16.0           0.517
+zoom search, 9 tiles of 192px at 48px                324          32.0           0.077
+zoom search, 25 tiles of 96px at 48px                900          16.0           0.577
+total time 1005 s

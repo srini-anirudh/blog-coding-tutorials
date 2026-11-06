@@ -1,0 +1,36 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "python labs/vlms-that-act/scripts/07_harness.py",
+  "memory": {
+    "every screenshot": [
+      1074,
+      10380,
+      20720,
+      31060
+    ],
+    "last 3 images, rest as text": [
+      1074,
+      3422,
+      3822,
+      4222
+    ],
+    "last image, rest as text": [
+      1074,
+      1434,
+      1834,
+      2234
+    ]
+  },
+  "injection": {
+    "no gate": {
+      "exfiltrations": 296,
+      "reports_submitted": 1000,
+      "confirmations_asked": 0
+    },
+    "gate: human ok for submit, not export": {
+      "exfiltrations": 0,
+      "reports_submitted": 1000,
+      "confirmations_asked": 1279
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "python labs/vlms-that-act/scripts/03_resolution.py",
+  "table": [
+    {
+      "w": 1280,
+      "h": 720,
+      "tokens": 256,
+      "px_per_token": 60.0
+    },
+    {
+      "w": 1280,
+      "h": 720,
+      "tokens": 1024,
+      "px_per_token": 30.0
+    },
+    {
+      "w": 1280,
+      "h": 720,
+      "tokens": 4096,
+      "px_per_token": 15.0
+    },
+    {
+      "w": 1920,
+      "h": 1080,
+      "tokens": 256,
+      "px_per_token": 90.0
+    },
+    {
+      "w": 1920,
+      "h": 1080,
+      "tokens": 1024,
+      "px_per_token": 45.0
+    },
+    {
+      "w": 1920,
+      "h": 1080,
+      "tokens": 4096,
+      "px_per_token": 22.5
+    },
+    {
+      "w": 2560,
+      "h": 1440,
+      "tokens": 256,
+      "px_per_token": 120.0
+    },
+    {
+      "w": 2560,
+      "h": 1440,
+      "tokens": 1024,
+      "px_per_token": 60.0
+    },
+    {
+      "w": 2560,
+      "h": 1440,
+      "tokens": 4096,
+      "px_per_token": 30.0
+    },
+    {
+      "w": 3840,
+      "h": 2160,
+      "tokens": 256,
+      "px_per_token": 180.0
+    },
+    {
+      "w": 3840,
+      "h": 2160,
+      "tokens": 1024,
+      "px_per_token": 90.0
+    },
+    {
+      "w": 3840,
+      "h": 2160,
+      "tokens": 4096,
+      "px_per_token": 45.0
+    }
+  ]
+}

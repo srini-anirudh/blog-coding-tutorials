@@ -1,0 +1,33 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "python labs/vlms-that-act/scripts/04_grounding_zoom.py --steps 3000 --eval 300",
+  "steps": 3000,
+  "n_eval": 300,
+  "results": {
+    "single pass, 48px input": {
+      "tokens": 36,
+      "px_per_token": 64.0,
+      "accuracy": 0.013333333333333334
+    },
+    "single pass, 96px input": {
+      "tokens": 144,
+      "px_per_token": 32.0,
+      "accuracy": 0.10333333333333333
+    },
+    "single pass, 192px input": {
+      "tokens": 576,
+      "px_per_token": 16.0,
+      "accuracy": 0.5166666666666667
+    },
+    "zoom search, 9 tiles of 192px at 48px": {
+      "tokens": 324,
+      "px_per_token": 32.0,
+      "accuracy": 0.07666666666666666
+    },
+    "zoom search, 25 tiles of 96px at 48px": {
+      "tokens": 900,
+      "px_per_token": 16.0,
+      "accuracy": 0.5766666666666667
+    }
+  }
+}

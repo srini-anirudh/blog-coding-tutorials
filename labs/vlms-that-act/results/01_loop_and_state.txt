@@ -1,0 +1,16 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+# command: python labs/vlms-that-act/scripts/01_loop_and_state.py
+Part 1. One episode of observe -> decide -> ground -> act. The expert plays the model.
+  turn 1: screenshot 96x96 -> click 'Amount'         at (27, 25)          -> records on server: 0
+  turn 2: screenshot 96x96 -> type '42.50'           into focused field   -> records on server: 0
+  turn 3: screenshot 96x96 -> click 'Category'       at (27, 40)          -> records on server: 0
+  turn 4: screenshot 96x96 -> click 'Travel'         at (27, 50)          -> records on server: 0
+  turn 5: screenshot 96x96 -> click 'Submit'         at (74, 79)          -> records on server: 1
+  checker (reads records, not pixels): success = True
+
+Part 2. Submit once versus submit twice, on a form that keeps its values after saving.
+  1 submit(s): records = [('Travel', '42.50')], checker success = True, action log length = 5
+  2 submit(s): records = [('Travel', '42.50'), ('Travel', '42.50')], checker success = False, action log length = 6
+  final screenshots identical, pixel for pixel: True
+  -> a grader that looks only at the final picture cannot tell these apart; the record count and the log can.
+  wrote results/01_episode.png (the screenshots of part 1, left to right)

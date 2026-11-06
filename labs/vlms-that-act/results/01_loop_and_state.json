@@ -1,0 +1,23 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+  "command": "python labs/vlms-that-act/scripts/01_loop_and_state.py",
+  "identical_screens": true,
+  "records": [
+    [
+      [
+        "Travel",
+        "42.50"
+      ]
+    ],
+    [
+      [
+        "Travel",
+        "42.50"
+      ],
+      [
+        "Travel",
+        "42.50"
+      ]
+    ]
+  ]
+}

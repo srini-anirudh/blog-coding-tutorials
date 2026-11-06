@@ -1,0 +1,21 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+# command: python labs/vlms-that-act/scripts/03_resolution.py
+     screen  tokens  px/token  24px icons per token width
+ 1280x720       256      60.0                        2.50
+ 1280x720      1024      30.0                        1.25
+ 1280x720      4096      15.0                        0.62
+ 1920x1080      256      90.0                        3.75
+ 1920x1080     1024      45.0                        1.88
+ 1920x1080     4096      22.5                        0.94
+ 2560x1440      256     120.0                        5.00
+ 2560x1440     1024      60.0                        2.50
+ 2560x1440     4096      30.0                        1.25
+ 3840x2160      256     180.0                        7.50
+ 3840x2160     1024      90.0                        3.75
+ 3840x2160     4096      45.0                        1.88
+
+A strip of 16 adjacent 24-pixel icons. How many icons own a token column alone?
+  1920x1080, 4096 tokens: p =  22.5px, icons per token column = [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], alone: 16/16
+  1920x1080, 1024 tokens: p =  45.0px, icons per token column = [2, 2, 2, 1, 2, 2, 2, 2, 1], alone: 2/16
+  3840x2160, 1024 tokens: p =  90.0px, icons per token column = [4, 3, 4, 4, 1], alone: 1/16
+  3840x2160,  256 tokens: p = 180.0px, icons per token column = [7, 8, 1], alone: 1/16
