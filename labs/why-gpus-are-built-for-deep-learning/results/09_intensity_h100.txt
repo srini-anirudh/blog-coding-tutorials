@@ -1,0 +1,14 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/09_intensity.py --device cuda
+
+Ridge point: 989 TFLOP/s / 3.35 TB/s = 295 FLOP/byte (spec).
+Tensors 8192 x 8192, torch.float16. Bytes are the minimum: read inputs once, write outputs once.
+
+             op | FLOP/byte |     ms | TFLOP/s |    GB/s | of 989 TFLOP/s | of 3.35 TB/s
+----------------+-----------+--------+---------+---------+----------------+-------------
+           copy |      0.00 | 0.0921 |       0 | 2,916.0 |           0.0% |          87%
+elementwise add |      0.17 |  0.134 |   0.502 | 3,010.1 |           0.1% |          90%
+    GELU (tanh) |      2.50 | 0.0923 |    7.27 | 2,906.8 |           0.7% |          87%
+      LayerNorm |      2.00 |  0.144 |    3.73 | 1,866.6 |           0.4% |          56%
+        softmax |      1.25 |   0.27 |    1.24 |   994.9 |           0.1% |          30%
+  matmul 8192^3 |   2730.67 |   1.46 |   752.9 |   275.7 |          76.1% |           8%

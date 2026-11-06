@@ -1,0 +1,37 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/01_latency_vs_throughput.py --device cuda
+
+One thread, 1,000,000 dependent fp32 FMAs: 4.44 cycles per FMA (clock64)
+Little's Law: 4.44 cycles x 16,896 lanes (132 SMs x 128) = 74,979 FMAs in flight
+Each thread below runs one dependent chain, so threads in flight = FMAs in flight.
+
+threads | x Little |     ms | T FMA/s | TFLOP/s | of best
+--------+----------+--------+---------+---------+--------
+     32 |     0.00 | 0.0719 |  0.0089 |  0.0178 |      0%
+    512 |     0.01 | 0.0628 |   0.163 |   0.326 |      1%
+   4224 |     0.06 | 0.0623 |    1.36 |    2.71 |      5%
+  16896 |     0.23 | 0.0645 |    5.24 |    10.5 |     20%
+  33792 |     0.45 | 0.0615 |    11.0 |    22.0 |     42%
+  67584 |     0.90 |  0.074 |    18.3 |    36.5 |     70%
+ 135168 |     1.80 |  0.126 |    21.5 |    43.0 |     83%
+ 270336 |     3.61 |  0.228 |    23.8 |    47.5 |     92%
+ 540672 |     7.21 |  0.417 |    25.9 |    51.9 |    100%
+
+Best 51.9 TFLOP/s fp32 vs 67 spec (FMA = 2 FLOP; the spec assumes the boost clock).
+
+Dependent chain of 2,000 one-element ops launched from Python: 6.65 us per op
+
+One elementwise op, z = x + y (fp32, 12 bytes moved per element), as the array grows:
+elements |      us | G elem/s | GB/s moved
+---------+---------+----------+-----------
+     2^8 |    4.84 |   0.0529 |      0.635
+    2^10 |    4.86 |    0.211 |       2.53
+    2^12 |    4.65 |     0.88 |       10.6
+    2^14 |    4.79 |     3.42 |       41.0
+    2^16 |    4.79 |     13.7 |      164.3
+    2^18 |    4.84 |     54.1 |      649.7
+    2^20 |    4.69 |    223.7 |    2,684.1
+    2^22 |    19.6 |    213.7 |    2,564.2
+    2^24 |    69.8 |    240.2 |    2,882.3
+    2^26 |   264.7 |    253.5 |    3,042.2
+    2^28 | 1,043.0 |    257.4 |    3,088.5

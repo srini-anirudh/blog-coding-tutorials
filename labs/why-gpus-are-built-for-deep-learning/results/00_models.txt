@@ -1,0 +1,65 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/00_models.py
+
+Figure 05, vectorising a loop (n = 37 and n = 1024):
+   n |   width | vector instr | wasted lanes | utilisation | speed-up
+-----+---------+--------------+--------------+-------------+---------
+  37 |  scalar |           37 |            0 |        100% |        1
+  37 |     SSE |           10 |            3 |         92% |      3.7
+  37 |    AVX2 |            5 |            3 |         92% |      7.4
+  37 | AVX-512 |            3 |           11 |         77% |     12.3
+1024 |  scalar |         1024 |            0 |        100% |        1
+1024 |     SSE |          256 |            0 |        100% |        4
+1024 |    AVX2 |          128 |            0 |        100% |        8
+1024 | AVX-512 |           64 |            0 |        100% |     16.0
+
+Figure 09, divergence: 256 threads, slowdown = passes / passes without divergence:
+paths | mapping | slowdown
+------+---------+---------
+    1 |    warp |        1
+    1 |     tid |        1
+    1 |  random |        1
+    2 |    warp |        1
+    2 |     tid |        2
+    2 |  random |        2
+    4 |    warp |        1
+    4 |     tid |        4
+    4 |  random |        4
+    8 |    warp |        1
+    8 |     tid |        8
+    8 |  random |        8
+
+Figure 11, occupancy (CC 9.0). The full model adds the 1 KB per-block reserve and per-partition registers:
+threads | regs | smem B | post's blocks | full model blocks | occupancy |                   binding
+--------+------+--------+---------------+-------------------+-----------+--------------------------
+    256 |   32 |      0 |             8 |                 8 |      100% | warp slots, register file
+    256 |   64 |      0 |             4 |                 4 |       50% |             register file
+    256 |  128 |      0 |             2 |                 2 |       25% |             register file
+    256 |  255 |      0 |             1 |                 1 |       12% |             register file
+     64 |  102 |      0 |             9 |                 8 |       25% |             register file
+    128 |   32 |  58368 |             4 |                 3 |       19% |             shared memory
+    256 |   32 | 102400 |             2 |                 2 |       25% |             shared memory
+
+Figure 13, one warp's fp32 load:
+       pattern | sectors | bytes moved | efficiency
+---------------+---------+-------------+-----------
+      stride 1 |       4 |         128 |     100.0%
+      stride 2 |       8 |         256 |      50.0%
+      stride 4 |      16 |         512 |      25.0%
+      stride 8 |      32 |        1024 |      12.5%
+     stride 16 |      32 |        1024 |      12.5%
+     stride 32 |      32 |        1024 |      12.5%
+stride 1, +4 B |       5 |         160 |      80.0%
+
+Figure 14, 32 x 32 float tile in shared memory:
+       access | conflict degree
+--------------+----------------
+          row |               1
+       column |              32
+column, pad 1 |               1
+     stride 2 |               2
+    stride 16 |              16
+     stride 3 |               1
+    broadcast |               1
+
+Ridge point, H100 SXM5 spec: 295 FLOP per byte

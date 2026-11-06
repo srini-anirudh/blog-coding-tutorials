@@ -1,0 +1,25 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/03_divergence.py --device cuda
+
+2,162,688 threads (132 SMs x 2,048 x 8 waves), each runs one path body of 2048 dependent FMAs.
+
+P = 1 (no divergence): 0.175 ms
+paths | mapping | model slowdown | measured slowdown |    ms
+------+---------+----------------+-------------------+------
+    2 |    warp |              1 |             0.998 | 0.174
+    2 |     tid |              2 |              1.91 | 0.333
+    2 |  random |              2 |               1.9 | 0.332
+    4 |    warp |              1 |              1.01 | 0.176
+    4 |     tid |              4 |              3.71 | 0.649
+    4 |  random |              4 |              3.71 | 0.649
+    8 |    warp |              1 |             0.998 | 0.174
+    8 |     tid |              8 |              7.36 |  1.29
+    8 |  random |           7.89 |              7.33 |  1.28
+
+mapping: warp = path (tid / 32) % P, tid = path tid % P, random = path drawn per thread.
+
+A loop whose trip count varies per thread, uniform in [16, 4096] (same multiset of counts in both rows):
+                     mapping | model cost / useful |    ms | measured ratio
+-----------------------------+---------------------+-------+---------------
+same count within each block |                   1 | 0.187 |              1
+       shuffled across warps |                1.94 | 0.325 |           1.74

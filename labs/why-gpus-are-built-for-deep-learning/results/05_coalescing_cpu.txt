@@ -1,0 +1,13 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/05_coalescing.py --device cpu
+
+numpy, one thread, 16,777,216 useful fp32 elements, strided view .sum(), fastest of 7.
+
+  pattern | 64B-line efficiency | useful GB/s | vs stride 1
+----------+---------------------+-------------+------------
+ stride 1 |              100.0% |        17.4 |        1.00
+ stride 2 |               50.0% |        11.3 |        0.65
+ stride 4 |               25.0% |        3.63 |        0.21
+ stride 8 |               12.5% |        2.28 |        0.13
+stride 16 |                6.2% |       0.894 |        0.05
+stride 32 |                6.2% |       0.454 |        0.03

@@ -1,0 +1,25 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/08_tensor_cores.py --device cuda
+
+Length-4,096 dot product of fp16 values in [0, 1):
+  fp64 reference 1009.6238 | summed in fp16 925.5000 (rel err 8.33e-02) | summed in fp32 1009.6242 (rel err 4.46e-07)
+  GPU fp16 matmul, K = 4,096: max rel err vs fp64 4.99e-04 (near fp16 output rounding, so the sum was not kept in fp16)
+
+Dense matmul, n = 8192:
+               dtype | TFLOP/s | spec dense peak | of peak
+---------------------+---------+-----------------+--------
+      fp32, TF32 off |    51.9 |            67.0 |     77%
+fp32 inputs, TF32 on |   371.7 |           494.5 |     75%
+                bf16 |   777.7 |           989.0 |     79%
+                fp16 |   665.0 |           989.0 |     67%
+
+bf16 matmul at sizes that do and do not divide the tile shape:
+   n | TFLOP/s
+-----+--------
+4096 |   669.6
+4090 |   201.4
+4088 |   661.0
+8192 |   681.1
+8190 |   273.7
+8184 |   682.1
+Spec peaks: H100 SXM5 published dense figures (TF32 494.5 TFLOP/s dense).

@@ -1,0 +1,13 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/07_tiling.py --device cpu
+
+Counted matmul, n = 32, loads from slow memory:
+ tile | loads counted | 2n^3/T | reuse factor | max |C - C_naive|
+------+---------------+--------+--------------+------------------
+naive |         65536 |  65536 |            1 |                 0
+    2 |         32768 |  32768 |            2 |          8.88e-15
+    4 |         16384 |  16384 |            4 |          7.11e-15
+    8 |          8192 |   8192 |            8 |          5.33e-15
+   16 |          4096 |   4096 |         16.0 |          7.11e-15
+
+n = 2048, fp32 torch.mm on the CPU: 33.2 ms, 517 GFLOP/s

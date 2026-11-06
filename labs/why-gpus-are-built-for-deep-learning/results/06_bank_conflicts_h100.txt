@@ -1,0 +1,18 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/06_bank_conflicts.py --device cuda
+
+132 blocks of 1024 threads, one per SM. Each lane does 8,000 shared loads.
+
+                 access | model conflict degree | cycles per warp access (per SM) | vs row
+------------------------+-----------------------+---------------------------------+-------
+                    row |                     1 |                               1 |      1
+     column, no padding |                    32 |                            32.0 |   31.9
+ column, 1 word padding |                     1 |                               1 |      1
+               stride 2 |                     2 |                               2 |   1.99
+               stride 4 |                     4 |                               4 |   3.99
+               stride 8 |                     8 |                               8 |   7.97
+              stride 16 |                    16 |                            16.0 |   15.9
+               stride 3 |                     1 |                               1 |      1
+one address (broadcast) |                     1 |                               1 |      1
+
+Cycles come from clock64 around the loop in each block; the median block is reported.

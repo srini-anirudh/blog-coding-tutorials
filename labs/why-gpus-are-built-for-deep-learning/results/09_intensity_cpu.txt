@@ -1,0 +1,13 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/09_intensity.py --device cpu
+
+Tensors 2048 x 8192, torch.float32. Bytes are the minimum: read inputs once, write outputs once.
+
+             op | FLOP/byte |   ms | GFLOP/s | GB/s
+----------------+-----------+------+---------+-----
+           copy |      0.00 | 1.97 |       0 | 68.0
+elementwise add |      0.08 | 3.01 |    5.58 | 66.9
+    GELU (tanh) |      1.25 | 21.1 |    7.94 | 6.35
+      LayerNorm |      1.00 | 17.7 |     7.6 |  7.6
+        softmax |      0.62 | 16.8 |       5 |    8
+  matmul 2048^3 |    341.33 | 25.1 |   684.2 |    2

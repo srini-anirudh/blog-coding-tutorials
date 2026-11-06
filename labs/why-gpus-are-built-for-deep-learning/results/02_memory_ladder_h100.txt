@@ -1,0 +1,14 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/02_memory_ladder.py --device cuda
+
+                  array |                 rung | cycles/load | ns/load | GHz (cyc/ns)
+------------------------+----------------------+-------------+---------+-------------
+      16 KB, plain load |                   L1 |        39.0 |    20.0 |         1.95
+16 KB, __ldcg (skip L1) |                   L2 |       283.9 |   142.6 |         1.99
+           4 MB, __ldcg |                   L2 |       284.5 |   143.1 |         1.99
+          32 MB, __ldcg |      L2, both halves |       284.6 |   143.6 |         1.98
+         256 MB, __ldcg |                  HBM |       693.4 |   349.6 |         1.98
+           2 GB, __ldcg | HBM, more TLB misses |       700.6 |   353.3 |         1.98
+
+Little's Law at 350 ns and 3.35 TB/s: 1.17 MB in flight, 8.7 KB per SM, 554 16-byte loads per SM.
+ns/load comes from CUDA events and includes one launch (amortised over all steps).

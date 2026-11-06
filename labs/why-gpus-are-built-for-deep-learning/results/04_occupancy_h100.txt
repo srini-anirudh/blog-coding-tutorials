@@ -1,0 +1,48 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/04_occupancy.py --device cuda
+
+Part A: model vs driver, blocks per SM
+138 configurations. The full model (1 KB reserved per block, registers allocated per processing block) matches the driver in 138. The post's calculator matches in 119.
+Configurations where either model differs from the driver:
+regs | threads | smem B | driver | full model | post's calculator
+-----+---------+--------+--------+------------+------------------
+  32 |      64 |  10000 |     20 |         20 |                23
+  32 |      64 |  58368 |      3 |          3 |                 4
+  32 |     128 |  58368 |      3 |          3 |                 4
+  32 |     256 |  58368 |      3 |          3 |                 4
+  32 |     512 |  58368 |      3 |          3 |                 4
+  40 |      64 |      0 |     24 |         24 |                25
+  40 |      64 |  10000 |     20 |         20 |                23
+  40 |      64 |  58368 |      3 |          3 |                 4
+  40 |     128 |  58368 |      3 |          3 |                 4
+  40 |     256 |  58368 |      3 |          3 |                 4
+  64 |      64 |  58368 |      3 |          3 |                 4
+  64 |     128 |  58368 |      3 |          3 |                 4
+  64 |     256 |  58368 |      3 |          3 |                 4
+  72 |      64 |  58368 |      3 |          3 |                 4
+  72 |     128 |  58368 |      3 |          3 |                 4
+ 102 |      64 |      0 |      8 |          8 |                 9
+ 102 |      64 |  10000 |      8 |          8 |                 9
+ 102 |      64 |  58368 |      3 |          3 |                 4
+ 102 |     128 |  58368 |      3 |          3 |                 4
+
+Part B: streaming 1 GiB, bandwidth vs occupancy and loads in flight per thread (ILP)
+ILP | regs | target blocks | blocks/SM | occupancy |    GB/s | of 3.35 TB/s
+----+------+---------------+-----------+-----------+---------+-------------
+  1 |   18 |             1 |         1 |     12.5% | 1,261.1 |          38%
+  1 |   18 |             2 |         2 |     25.0% | 2,189.8 |          65%
+  1 |   18 |             4 |         4 |     50.0% | 2,900.8 |          87%
+  1 |   18 |             8 |         8 |    100.0% | 3,030.1 |          90%
+  2 |   22 |             1 |         1 |     12.5% | 2,002.7 |          60%
+  2 |   22 |             2 |         2 |     25.0% | 2,811.9 |          84%
+  2 |   22 |             4 |         4 |     50.0% | 3,043.8 |          91%
+  2 |   22 |             8 |         8 |    100.0% | 3,049.1 |          91%
+  4 |   26 |             1 |         1 |     12.5% | 2,725.4 |          81%
+  4 |   26 |             2 |         2 |     25.0% | 3,020.7 |          90%
+  4 |   26 |             4 |         4 |     50.0% | 3,070.6 |          92%
+  4 |   26 |             8 |         8 |    100.0% | 3,074.5 |          92%
+  8 |   32 |             1 |         1 |     12.5% | 2,743.0 |          82%
+  8 |   32 |             2 |         2 |     25.0% | 3,028.1 |          90%
+  8 |   32 |             4 |         4 |     50.0% | 3,065.2 |          91%
+  8 |   32 |             8 |         8 |    100.0% | 3,067.4 |          92%
+16-byte loads in flight per SM = blocks x 256 threads x ILP.

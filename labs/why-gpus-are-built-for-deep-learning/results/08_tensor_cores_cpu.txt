@@ -1,0 +1,9 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/08_tensor_cores.py --device cpu
+
+Length-4,096 dot product of fp16 values in [0, 1):
+  fp64 reference 1009.6238 | summed in fp16 925.5000 (rel err 8.33e-02) | summed in fp32 1009.6242 (rel err 4.46e-07)
+   dtype |    n | GFLOP/s
+---------+------+--------
+ float32 | 1024 |   643.3
+bfloat16 | 1024 |    1.02

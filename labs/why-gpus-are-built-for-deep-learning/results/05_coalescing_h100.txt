@@ -1,0 +1,16 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/why-gpus-are-built-for-deep-learning/scripts/05_coalescing.py --device cuda
+
+67,108,864 useful fp32 loads per run. 'implied GB/s' = useful GB/s / model efficiency.
+The gather also reads its int32 index array (another 4 bytes per load), not counted as useful.
+
+                 pattern | sectors/warp | model efficiency | useful GB/s | implied GB/s | useful of spec
+-------------------------+--------------+------------------+-------------+--------------+---------------
+                stride 1 |            4 |           100.0% |     2,093.0 |      2,093.0 |            62%
+                stride 2 |            8 |            50.0% |     1,398.0 |      2,795.9 |            42%
+                stride 4 |           16 |            25.0% |       760.5 |      3,041.8 |            23%
+                stride 8 |           32 |            12.5% |       390.7 |      3,125.8 |            12%
+               stride 16 |           32 |            12.5% |       199.8 |      1,598.0 |             6%
+               stride 32 |           32 |            12.5% |       174.7 |      1,397.8 |             5%
+stride 1, base + 4 bytes |            5 |            80.0% |     2,070.3 |      2,587.9 |            62%
+           random gather |           32 |            12.5% |       120.6 |        965.0 |             4%
