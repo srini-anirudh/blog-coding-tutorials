@@ -1,0 +1,6 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0, model tinyllm
+model tinyllm, device cpu, batch (16, 256), 6 layers, fp32, one fresh process per mode
+mode              autograd saved   peak growth   step ms
+plain                  572.6 MiB     768.5 MiB       622
+checkpointed           105.1 MiB     370.2 MiB       793
+autograd saved 0.18x, peak growth 0.48x, step time 1.28x

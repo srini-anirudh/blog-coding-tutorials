@@ -45,19 +45,23 @@ def synchronize(device: torch.device) -> None:
         torch.mps.synchronize()
 
 
-def memory_mb(device: torch.device) -> float:
-    """Memory currently held by tensors on the device, in MiB.
+def peak_rss_mb() -> float:
+    """Highest resident memory this process has reached, in MiB."""
+    rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return rss / 2**20 if sys.platform == "darwin" else rss / 2**10  # bytes on macOS, KiB on Linux
 
-    CUDA: allocated tensor memory. MPS: allocated tensor memory. CPU: peak process RSS,
-    because CPU tensors live in ordinary process memory.
+
+def memory_mb(device: torch.device) -> float:
+    """Memory currently in use, in MiB.
+
+    CUDA and MPS: allocated tensor memory. CPU: the process's resident memory, because CPU
+    tensors live in ordinary process memory. macOS has no /proc, so there it is the peak.
     """
     if device.type == "cuda":
         return torch.cuda.memory_allocated() / 2**20
     if device.type == "mps":
         return torch.mps.current_allocated_memory() / 2**20
-    rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    return rss / 2**20 if sys.platform == "darwin" else rss / 2**10  # bytes on macOS, KiB on Linux
-
-
-def env_int(name: str, default: int) -> int:
-    return int(os.environ.get(name, default))
+    statm = Path("/proc/self/statm")
+    if statm.exists():
+        return int(statm.read_text().split()[1]) * os.sysconf("SC_PAGE_SIZE") / 2**20
+    return peak_rss_mb()

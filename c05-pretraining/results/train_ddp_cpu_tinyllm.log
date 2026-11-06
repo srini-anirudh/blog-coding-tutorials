@@ -1,0 +1,13 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0, 2 processes on gloo, 4 threads each, model tinyllm
+time 0 event start params 1250432 flops_per_token 8289024 tokens_per_step 4096 device cpu world_size 2
+time 0.3600 step 1 loss 8.3465 lr 0.00015 grad_norm 1.7025 param_norm 39.5933 tok_s 1.19e+04 step_ms 342.5527 mem_mb 497.9062 epoch 0
+time 6.0500 step 25 loss 5.7369 lr 0.003 grad_norm 0.7376 param_norm 45.4306 tok_s 1.73e+04 step_ms 236.4096 mem_mb 500.3516 epoch 0
+time 11.8800 step 50 loss 5.0489 lr 0.00283 grad_norm 0.7357 param_norm 51.8939 tok_s 1.75e+04 step_ms 233.1704 mem_mb 581.4102 epoch 0
+time 17.4100 step 75 loss 4.3546 lr 0.00244 grad_norm 0.4765 param_norm 56.1315 tok_s 1.89e+04 step_ms 213.7229 mem_mb 494.6289 epoch 0
+time 23.1200 step 100 loss 4.1225 lr 0.00191 grad_norm 0.5286 param_norm 58.9576 tok_s 1.8e+04 step_ms 228.0002 mem_mb 533.9609 epoch 0
+time 23.2800 step 100 val_loss 4.2009 val_ppl 66.7458 tokens_seen 409600
+time 29.5100 step 125 loss 3.8371 lr 0.00132 grad_norm 0.4597 param_norm 60.8535 tok_s 1.67e+04 step_ms 241.7750 mem_mb 490.7148 epoch 0
+time 35.4200 step 150 loss 3.8278 lr 0.0008 grad_norm 0.6260 param_norm 62.1260 tok_s 1.73e+04 step_ms 236.4124 mem_mb 521.2148 epoch 0
+time 41.9000 step 175 loss 3.5878 lr 0.000437 grad_norm 0.5755 param_norm 62.8729 tok_s 1.6e+04 step_ms 251.8973 mem_mb 548.9414 epoch 0
+time 47.7800 step 200 loss 3.7271 lr 0.0003 grad_norm 0.5411 param_norm 63.3619 tok_s 1.75e+04 step_ms 234.6106 mem_mb 519.0078 epoch 0
+time 47.9300 step 200 val_loss 3.7687 val_ppl 43.3247 tokens_seen 819200

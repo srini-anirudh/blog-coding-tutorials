@@ -1,0 +1,15 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0, 2 processes on gloo, 1 thread each
+attempt 0 rank 0: starting
+attempt 0 rank 1: starting
+time 0 event start params 353088 flops_per_token 2216832 tokens_per_step 2048 device cpu world_size 2
+time 0.1700 step 1 loss 8.3329 lr 0.0003 grad_norm 0.6234 param_norm 21.4684 tok_s 1.23e+04 step_ms 164.9058 mem_mb 495.8047 epoch 0
+time 1.1700 step 10 loss 7.5073 lr 0.003 grad_norm 0.9604 param_norm 22.4051 tok_s 1.85e+04 step_ms 110.5127 mem_mb 500.5938 epoch 0
+rank 1: simulated crash at step 15
+attempt 1 rank 0: starting
+attempt 1 rank 1: starting
+[resume] ckpt_000010.pt: step 10, data epoch 0 batch 20
+[resume] ckpt_000010.pt: step 10, data epoch 0 batch 20
+time 1.1000 step 20 loss 6.4415 lr 0.00186 grad_norm 0.8014 param_norm 26.5493 tok_s 1.88e+04 step_ms 108.9750 mem_mb 504.1172 epoch 0
+time 2.2800 step 30 loss 6.0912 lr 0.000317 grad_norm 0.7556 param_norm 27.9602 tok_s 1.81e+04 step_ms 108.9697 mem_mb 504.1680 epoch 0
+time 2.3200 step 30 val_loss 6.1583 val_ppl 472.6136 tokens_seen 61440
+finished after restart

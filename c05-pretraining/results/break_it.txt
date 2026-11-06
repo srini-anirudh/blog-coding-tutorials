@@ -1,0 +1,61 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0
+
+=== too_high_lr (cpu) ===
+step          lr=3e-3          lr=3e-1          lr=3e+0  lr=3e+0 no clip
+   1            8.341            8.341            8.341            8.341
+   2            8.170            8.925          171.355          171.355
+   3            7.944           19.425          169.103          155.356
+   5            7.605            7.273          288.904          256.115
+  10            6.697            6.115          172.407          222.916
+  20            5.996            6.068          116.423           99.624
+  50            5.564            5.948          112.948           55.378
+ 100            4.662            5.858          144.537          180.041
+ 150            4.394            5.959           39.352          146.761
+
+=== nan_gradient (cpu) ===
+step  1 loss   8.3413 grad_norm   0.7593 skipped False weights moved True
+step  2 loss   8.3219 grad_norm   0.7628 skipped False weights moved True
+step  3 loss   8.2758 grad_norm   0.8790 skipped False weights moved True
+step  4 loss   8.1882 grad_norm   1.2071 skipped False weights moved True
+step  5 loss      nan grad_norm      nan skipped True  weights moved False
+step  6 loss   8.1058 grad_norm   1.1599 skipped False weights moved True
+step  7 loss   7.9720 grad_norm   0.9933 skipped False weights moved True
+step  8 loss   7.8272 grad_norm   1.0104 skipped False weights moved True
+step  9 loss   7.7095 grad_norm   0.9442 skipped False weights moved True
+step 10 loss      nan grad_norm      nan skipped True  weights moved False
+step 11 loss      nan grad_norm      nan skipped True  weights moved False
+step 12 loss      nan grad_norm      nan skipped True  weights moved False
+TrainingDiverged: 3 non-finite steps in a row. The loop would now reload the last good checkpoint and lower the LR.
+
+=== bad_batch (cpu) ===
+with the guard: BadBatchError: input ids in [17, 5000], vocab is [0, 4096)
+without the guard on cpu: IndexError: index out of range in self
+
+=== spike (cpu) ===
+step  98 loss 5.438 recent median 5.673 spread 0.162 grad_norm 1.049 spike False
+step  99 loss 5.479 recent median 5.660 spread 0.153 grad_norm 0.748 spike False
+step 100 loss 10.586 recent median 5.660 spread 0.153 grad_norm 8.459 spike True
+step 101 loss 5.624 recent median 5.650 spread 0.141 grad_norm 1.067 spike False
+step 102 loss 5.440 recent median 5.647 spread 0.141 grad_norm 1.127 spike False
+
+=== oom (cpu) ===
+memory cap 1024 MiB above current use, one micro-batch of 128
+[oom] retrying with 2 micro-batches of 64
+[oom] retrying with 4 micro-batches of 32
+[oom] retrying with 8 micro-batches of 16
+[oom] retrying with 16 micro-batches of 8
+finished with 16 micro-batches, loss 8.3717, tokens 32,768 (all of them)
+
+=== corrupt_checkpoint (cpu) ===
+time 0 event start params 353088 flops_per_token 2216832 tokens_per_step 1024 device cpu world_size 1
+time 0.0700 step 1 loss 8.3303 lr 0.0003 grad_norm 0.6659 param_norm 21.4653 tok_s 1.54e+04 step_ms 66.3371 mem_mb 1241.9531 epoch 0
+time 0.9100 step 20 val_loss 6.6114 val_ppl 743.4866 tokens_seen 20480
+truncated ckpt_000020.pt; verify -> False
+plain torch.load: RuntimeError: PytorchStreamReader failed reading zip archive: failed finding central directory
+[checkpoint] ckpt_000020.pt failed verification, trying an older one
+latest valid: ckpt_000010.pt
+resumable from step 10, data position epoch 0 batch 20
+[checkpoint] ckpt_000020.pt failed verification, trying an older one
+[resume] ckpt_000010.pt: step 10, data epoch 0 batch 20
+time 0.3900 step 20 val_loss 6.6114 val_ppl 743.4866 tokens_seen 20480
+finished; newest checkpoint is ckpt_000020.pt

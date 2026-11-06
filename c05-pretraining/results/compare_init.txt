@@ -1,0 +1,9 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0, fp32, 800 steps each
+
+ step    llama, flat init             tinyllm  llama, scaled init
+   50              5.3276              4.4215              4.4133
+  100              4.4436              3.6507              3.6288
+  200              3.6379              3.0837              3.0695
+  400              3.0108              2.6083              2.5965
+  600              2.7305              2.3667              2.3586
+  800              2.6135              2.2611              2.2529

@@ -1,5 +1,6 @@
-130,015 windows, batch 32, Apple M5 CPU
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0
+130,015 windows, batch 32
  workers  first batch ms  batches/s      tokens/s
-       0            19.9        284     2,329,904
-       2          8060.3        544     4,452,827
-       4          9632.7       1151     9,426,767
+       0            15.5       1910    15,644,537
+       2            87.1        718     5,878,219
+       4            69.6       1161     9,506,953

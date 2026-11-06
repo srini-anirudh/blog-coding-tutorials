@@ -2,7 +2,7 @@
 
     torchrun --nproc_per_node 2 c05-pretraining/scripts/zero_train.py
 
-Stages 2 and 3 need DeepSpeed and GPUs. The script prints the config and exact launch command.
+Stages 2 and 3 need DeepSpeed and GPUs: see scripts/deepspeed_train.py.
 """
 
 from __future__ import annotations
@@ -53,11 +53,11 @@ def main() -> None:
     dist.barrier()
     print(f"rank {info.rank}: optimizer state DDP+AdamW {plain_bytes / 2**20:.2f} MiB, "
           f"ZeRO-1 {zero_bytes / 2**20:.2f} MiB, final-loss gap "
-          f"{abs(plain_losses[-1] - zero_losses[-1]):.2e}, max weight gap {diff:.2e}", flush=True)
+          f"{abs(plain_losses[-1] - zero_losses[-1]):.2e}, max weight gap {diff:.2e}\n", end="", flush=True)
     if info.is_main:
         path = Path(__file__).resolve().parents[1] / "configs/deepspeed_zero3.json"
         path.write_text(json.dumps(deepspeed_config(3, 16, 2, 3e-3, 1.0), indent=2) + "\n")
-        print(f"GPU only, not run here: deepspeed --num_gpus 4 your_script.py --deepspeed_config {path.name}")
+        print(f"wrote {path.name}. Stages 2 and 3 are GPU only: scripts/deepspeed_train.py --stage 3")
     dist.barrier()
     cleanup()
 

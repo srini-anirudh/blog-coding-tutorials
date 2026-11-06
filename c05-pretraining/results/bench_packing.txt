@@ -1,3 +1,4 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0
 163,746 documents, 33,284,335 tokens, length p10 138 median 180 p90 279 max 1876
     L strategy                 utilisation  tokens cut  multi-doc windows  split docs
   128 pad to L                       99.6%       37.3%                  -           -

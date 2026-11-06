@@ -1,3 +1,4 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0
 packed data, every micro-batch has the same number of targets
   token-weighted accumulation  max |diff| 3.73e-09
   mean of means                max |diff| 3.73e-09

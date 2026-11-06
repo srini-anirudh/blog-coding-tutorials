@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0, model tinyllm
+step 800, device cpu, temperature 0.8, top-k 40
+
+[Once upon a time] , there was a little girl called Lily. She had a magic dress in her room. Lily loved to play with her new doll. One day, she went outside to play in the park.
+As they played, Sara saw a boy crying. The little girl was sad. She went to the girl and asked, "Why are you sad?" The boy said, "I lost my dog."
+Lily thought for a moment and said, "I have something fun to play with." They went to the dog and they all played together. The big dog said, "Thank you, Lily.
+  (120 tokens, hit the limit)
+
+[Lily found a]  small toy stuck in a box. She picked up the toy with her toy. She thought it would be fun to play with it.
+Lily took the toy to her mom. She showed her the toy and took it to her room. "Look, mommy! I found a shiny toy!" she said. Her mom came to work and said, "Wow, Lily! I had a great day!"
+Lily and her mom played with the toy and had lots of fun. They had fun with the toys and was happy. And they never forgot to play again.<|endoftext|>
+  (115 tokens, stopped at EOS)
+
+[The little dog was sad because]  he could not play because he was faster.
+The dog saw how he did not know the little cat. Then, he saw the cat and wanted to help. He went to the big dog and wagged his tail. The cat did not fight. The cat got all the way back to the park where the dog ran away.
+The kind dog came home, but the little dog was still sad. The cat knew that the dog wanted to help the little dog. They both went to find food and learned that it is better to listen to each other. From that day on, the cat and
+  (120 tokens, hit the limit)

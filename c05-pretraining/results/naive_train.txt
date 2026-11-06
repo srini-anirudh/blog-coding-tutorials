@@ -1,6 +1,7 @@
-step    1  loss 8.319  6,478 tok/s
-step   40  loss 6.317  8,430 tok/s
-step   80  loss 5.779  8,657 tok/s
-step  120  loss 5.492  8,745 tok/s
-step  160  loss 5.135  9,021 tok/s
-step  200  loss 4.965  9,541 tok/s
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0
+step    1  loss 8.319  1,762 tok/s
+step   40  loss 6.317  18,292 tok/s
+step   80  loss 5.779  20,378 tok/s
+step  120  loss 5.492  21,301 tok/s
+step  160  loss 5.135  21,691 tok/s
+step  200  loss 4.965  21,471 tok/s

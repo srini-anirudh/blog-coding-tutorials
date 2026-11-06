@@ -37,7 +37,7 @@ def flops_per_token(model: nn.Module, a: ModelArgs, seq_len: int) -> float:
 def measure_matmul_peak(device: torch.device, dtype: torch.dtype, n: int = 4096, iters: int = 20) -> float:
     """Best FLOP/s of a large square matmul on this device.
 
-    Vendors publish a peak for datacenter GPUs; use that number there. For a laptop we
+    Vendors publish a peak for datacenter GPUs; use that number there. Elsewhere we
     measure what the hardware actually reaches on the friendliest possible workload,
     and report MFU against that. It is an upper bound we can defend, not a datasheet value.
     """

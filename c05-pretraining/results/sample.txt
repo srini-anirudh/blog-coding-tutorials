@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0, model llama
+step 800, device cpu, temperature 0.8, top-k 40
+
+[Once upon a time] , there was a little girl called Lily. She loved to play with her red ball. One day, she went to the park with her mom.
+At the park, Lily saw a big, pretty rock. She was very happy. She picked it up and put it on the ground. She was sad and decided to try the apple for their friend.
+While they were playing, Mia saw the ball and wanted to play with it. She asked her mom, "Why are you scared, Kitty?" Her mom said, "I love you to make a new friend. Do you want to
+  (120 tokens, hit the limit)
+
+[Lily found a]  small apple on the beak. He thought the secret was a nice place to climb the leaf. So he found a big pile of paper. He looked at the apple and found the key!
+Mom took the bug to the tree and showed it to the plant. Now, the rock was happy. Sue and the plant played together. They had lots of fun. But then, a big wind came and blew the key away. The bug was very happy.
+The moral of the story is: always be careful.<|endoftext|>
+  (105 tokens, stopped at EOS)
+
+[The little dog was sad because]  he could have a new home. He asked his dog, "Can I help me eat the ball?" His dad said, "Yes, can we play together?"
+The dog replied, "Yes, I want to play. But you can take your ball, we can use it." The cat wagged its tail and made a big mess. The cat was a small dog.
+The cat was sad, but he could not play with the dog. The dog wanted to help the cat. So, he heard the cat and the cat. The dog was happy and had a new home. The
+  (120 tokens, hit the limit)

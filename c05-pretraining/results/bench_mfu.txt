@@ -1,0 +1,8 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0, fp32, run runs/tinystories
+params 5,401,856, matmul params N 5,401,856
+formula  6N + 12 n_layers d T = 32,411,136 + 4,718,592 = 37,129,728 FLOPs per token
+FlopCounterMode (forward + backward): 37,896,192 FLOPs per token, ratio formula/counted 0.98
+
+measured peak, best large square matmul: cpu torch.float32 0.731 TFLOP/s
+training run: median 6,972 tokens/s on cpu (fp32)
+achieved 0.259 TFLOP/s, MFU against that peak 35.4%

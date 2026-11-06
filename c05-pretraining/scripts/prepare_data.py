@@ -63,7 +63,7 @@ def main() -> None:
         lens = np.load(out / f"{split}_doc_lens.npy")
         print(f"{split}: {meta[split]['tokens']:,} tokens in {len(meta[split]['shards'])} shard(s); "
               f"doc length mean {lens.mean():.0f}, median {np.median(lens):.0f}, max {lens.max()}")
-    print(f"wrote {out} ({time.time() - t0:.1f}s)")
+    print(f"wrote {out.name}/ ({time.time() - t0:.1f}s)")
 
 
 if __name__ == "__main__":

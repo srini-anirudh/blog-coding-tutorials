@@ -2,7 +2,7 @@
 
 The files are plain text with stories separated by the literal string "<|endoftext|>".
 The train file is 2.2 GB, so we fetch only its first `train_bytes` with an HTTP Range
-request. That is enough text for a ~10 minute laptop run.
+request. That is far more text than an 800-step run can read.
 """
 
 from __future__ import annotations

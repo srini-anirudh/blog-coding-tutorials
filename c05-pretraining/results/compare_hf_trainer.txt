@@ -1,0 +1,9 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0
+20 steps, 2 micro-batches of 8 per step, seq_len 64, fp32, same init and same batches
+ step   our loop  HF Trainer
+    1     8.3234      8.3234
+    2     8.2918      8.2918
+    5     7.9845      7.9845
+   10     7.1485      7.1485
+   20     6.6148      6.6148
+max |weights ours - weights HF| after the last step: 0.00e+00

@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -26,8 +27,10 @@ def main() -> None:
     info = init_distributed(timeout_s=60)
     cfg = TrainConfig.from_yaml(resolve("configs/smoke.yaml"), max_steps=30, ckpt_every=10, log_every=10,
                                 eval_every=10_000, out_dir="runs/dead_process")
-    print(f"attempt {attempt} rank {info.rank}: starting", flush=True)
+    print(f"attempt {attempt} rank {info.rank}: starting\n", end="", flush=True)  # one write, so ranks do not mix
     if attempt == 0:
+        if info.is_main:  # an old run's newer checkpoint would otherwise win the resume
+            shutil.rmtree(resolve(cfg.out_dir), ignore_errors=True)
         train(cfg, info, resume=False, stop_after=15)
         if info.rank == 1:
             print("rank 1: simulated crash at step 15", flush=True)

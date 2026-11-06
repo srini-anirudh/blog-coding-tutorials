@@ -1,13 +1,29 @@
 """Corpus, tokenizer, shards and packing."""
 
 import numpy as np
+import pytest
 import torch
 
-from pretrain.corpus import split_documents
+from pretrain.corpus import SEPARATOR, download, split_documents
 from pretrain.packing import (block_causal_mask, document_ids, greedy_packing_utilization, pack_stream,
                               pad_batch, padding_utilization, position_ids, best_fit_packing_utilization)
 from pretrain.shards import TokenShards
-from pretrain.tokenizer import load_file
+from pretrain.tokenizer import load_file, load_pretrained
+
+
+@pytest.mark.network
+def test_existing_tokenizer_from_the_hub():
+    tok = load_pretrained("openai-community/gpt2")
+    assert tok.vocab_size == 50257 and tok.eos_id == 50256
+    assert tok.decode(tok.encode("Once upon a time")) == "Once upon a time"
+
+
+@pytest.mark.network
+def test_range_download_keeps_only_whole_documents(tmp_path):
+    path = download("train", tmp_path, max_bytes=2**20)
+    assert path.stat().st_size == 2**20
+    docs = split_documents(path.read_text(encoding="utf-8", errors="ignore"), drop_last_partial=True)
+    assert len(docs) > 100 and all(SEPARATOR not in d for d in docs)
 
 
 def test_split_documents_drops_partial_tail():

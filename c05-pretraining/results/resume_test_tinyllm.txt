@@ -1,0 +1,13 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0
+[resume] ckpt_000020.pt: step 20, data epoch 0 batch 40
+model tinyllm, device cpu, 40 steps, interrupted at step 20
+ step   straight    resumed  weights only
+   19   6.211168   6.211168      6.211168
+   20   6.142965   6.142965      6.142965
+   21   6.099074   6.099074      5.949845
+   22   6.128401   6.128401      5.930741
+   23   6.214840   6.214840      5.917652
+   25   6.142109   6.142109      5.930954
+   30   5.980656   5.980656      5.710034
+   40   6.138419   6.138419      5.780779
+bitwise equal: True  (max |straight - resumed| = 0.00e+00)

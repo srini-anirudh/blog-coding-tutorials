@@ -1,4 +1,4 @@
-W1106 23:53:23.362000 9447 .venv/lib/python3.12/site-packages/torch/distributed/run.py:982] 
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0, 2 processes on gloo, 1 thread each
 world size 2, backend gloo, local batch (4, 32), global batch (8, 32)
 max |DDP - single process big batch|  3.73e-09
 max |all-reduce by hand - DDP|        0.00e+00

@@ -26,7 +26,6 @@ def main() -> None:
     ap.add_argument("--steps", type=int, default=200)
     ap.add_argument("--lr", type=float, default=1e-3)
     args = ap.parse_args()
-    torch.set_num_threads(2)
     torch.manual_seed(0)
     L, B = 64, 8
     tokens = np.memmap(resolve("data_cache/tinystories/train_000.bin"), dtype=np.uint16, mode="r")

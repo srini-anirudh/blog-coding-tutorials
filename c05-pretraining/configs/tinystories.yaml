@@ -1,4 +1,4 @@
-# ~10 minute pretraining run on a laptop GPU (Apple MPS). About 6M parameters.
+# The main pretraining run. 5.4M parameters. bf16 suits a GPU; on a CPU pass --precision fp32.
 data_dir: data_cache/tinystories
 out_dir: runs/tinystories
 seq_len: 256

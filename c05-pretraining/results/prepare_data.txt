@@ -1,0 +1,8 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0
+documents: train 163,746  val 27,630  (6.2s)
+first document (730 chars): 'Once upon a time there was a little boy named Ben. Ben loved to explore the world around him. He saw many amazing things, like beautiful vases that were on disp'...
+tokenizer bpe-4096: vocab 4,096, eos id 0 (16.3s)
+compression on 2,000 val docs: 3.97 chars/token
+train: 33,284,335 tokens in 5 shard(s); doc length mean 203, median 180, max 1876
+val: 5,578,843 tokens in 1 shard(s); doc length mean 202, median 180, max 1176
+wrote tinystories/ (52.1s)

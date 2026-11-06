@@ -1,3 +1,4 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0
 bpe-4096: vocab 4,096, eos 0, 12 tokens
   ids    [429, 438, 259, 398, 401, 283, 259, 391, 498, 402, 544, 14]
   pieces Once _upon _a _time _there _was _a _little _boy _named _Ben .

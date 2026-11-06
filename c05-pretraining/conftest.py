@@ -7,5 +7,5 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-# Many tutorials share one laptop; keep each test process polite.
+# Keep each test process light: the suite also starts its own DDP workers.
 torch.set_num_threads(2)

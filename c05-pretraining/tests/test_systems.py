@@ -1,5 +1,6 @@
 """Guards, MFU, DDP, ZeRO, FSDP and the C4 integration."""
 
+import copy
 import json
 import subprocess
 import sys
@@ -15,6 +16,7 @@ from pretrain.guards import (BadBatchError, NonFiniteGuard, SpikeDetector, Train
 from pretrain.mfu import flops_per_token, matmul_params, mfu
 from pretrain.model import C4_DIR, build_model, count_params
 from pretrain.step import lm_loss_sum, train_step
+from pretrain.trainer import train
 from pretrain.zero import deepspeed_config
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -43,10 +45,17 @@ def test_spike_detector_flags_jump_and_keeps_stats_clean():
     det = SpikeDetector(k=6, warmup=20)
     for i in range(50):
         assert not det.update(3.0 + 0.01 * (-1) ** i)
-    mean = det.mean
+    window = list(det.recent)
     assert det.update(4.0)
-    assert det.mean == mean
+    assert det.recent == window
     assert det.update(float("nan"))
+
+
+def test_spike_detector_is_not_blinded_by_the_early_descent():
+    det = SpikeDetector(k=6, warmup=20)
+    for i in range(100):  # a fast fall from 8 to 6, then flat with small noise
+        assert not det.update(max(6.0, 8.0 - 0.05 * i) + 0.02 * (-1) ** i)
+    assert det.update(8.0)
 
 
 def test_nonfinite_guard_escalates_only_when_consecutive():
@@ -145,6 +154,28 @@ def test_tinyllm_activation_checkpointing_same_grads():
     lm_loss_sum(ckpt(x).logits, y).backward()
     for p, q in zip(plain.parameters(), ckpt.parameters()):
         torch.testing.assert_close(p.grad, q.grad, rtol=1e-4, atol=1e-5)
+
+
+@pytest.mark.skipif(not C4_DIR.exists(), reason="C4 not present")
+def test_tinyllm_full_trainer_and_exact_resume(tiny_cfg):
+    """The whole trainer on C4's model: real shards, eval, checkpoints, and a bitwise resume."""
+    tiny_cfg.model_type = "tinyllm"
+    straight = copy.deepcopy(tiny_cfg)
+    straight.out_dir = tiny_cfg.out_dir + "_straight"
+    full = train(straight)
+    assert any("val_loss" in r for r in full)
+
+    first = [r["loss"] for r in train(tiny_cfg, stop_after=4) if "loss" in r]
+    second = [r["loss"] for r in train(tiny_cfg) if "loss" in r]
+    assert first + second == [r["loss"] for r in full if "loss" in r]
+
+
+def test_our_loop_matches_hf_trainer(tiny_data, tmp_path):
+    """Same init, batches, optimizer and schedule: Trainer must end on the same weights."""
+    out = tmp_path / "compare.json"
+    subprocess.run([sys.executable, str(ROOT / "scripts/compare_hf_trainer.py"), "--data-dir", str(tiny_data),
+                    "--steps", "6", "--out", str(out)], check=True, capture_output=True, timeout=120)
+    assert json.loads(out.read_text())["weight_gap"] < 1e-5
 
 
 @pytest.mark.gpu

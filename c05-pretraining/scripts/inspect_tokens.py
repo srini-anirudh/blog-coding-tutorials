@@ -10,8 +10,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from pretrain.config import TrainConfig  # noqa: E402
 from pretrain.corpus import load_documents  # noqa: E402
 from pretrain.loader import PackedWindows  # noqa: E402
+from pretrain.model import build_model, count_params  # noqa: E402
 from pretrain.packing import document_ids, position_ids  # noqa: E402
 from pretrain.shards import TokenShards  # noqa: E402
 from pretrain.tokenizer import load_file, load_pretrained  # noqa: E402
@@ -48,7 +50,8 @@ def main() -> None:
     print(f"  {changed} of {len(joined)} real neighbouring document pairs tokenize differently when joined")
 
     # Parameter budget for the same model width with each vocabulary.
-    d, blocks = 256, 4_376_000
+    cfg = TrainConfig.from_yaml(resolve("configs/tinystories.yaml"))
+    d, blocks = cfg.model.hidden_size, count_params(build_model(cfg.model), non_embedding=True)
     for name, v in (("bpe-4096", 4096), ("gpt2", 50257)):
         print(f"embedding {name:9s} {v:6d} x {d} = {v * d / 1e6:5.2f}M params, "
               f"{100 * v * d / (v * d + blocks):.0f}% of a {blocks / 1e6:.1f}M-block model")

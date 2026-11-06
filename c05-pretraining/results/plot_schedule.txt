@@ -1,3 +1,4 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0
 step    0  lr 5.000e-05
 step    1  lr 1.000e-04
 step   20  lr 1.050e-03

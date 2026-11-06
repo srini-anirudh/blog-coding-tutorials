@@ -1,0 +1,1 @@
+AMD EPYC 7R13, 8 threads

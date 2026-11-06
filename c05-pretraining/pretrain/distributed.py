@@ -2,7 +2,7 @@
 
 torchrun starts the processes and sets RANK, LOCAL_RANK, WORLD_SIZE, MASTER_ADDR and
 MASTER_PORT in each one's environment. The backend is NCCL on CUDA GPUs and gloo on CPU,
-which is how this tutorial runs real two-process DDP on a laptop.
+which is how this tutorial runs real two-process DDP without a GPU.
 """
 
 from __future__ import annotations
@@ -37,7 +37,18 @@ def init_distributed(timeout_s: int = 300) -> DistInfo:
         return DistInfo()
     backend = "nccl" if torch.cuda.is_available() else "gloo"
     # A finite timeout turns a dead peer into an error instead of a hang forever.
-    dist.init_process_group(backend, timeout=datetime.timedelta(seconds=timeout_s))
+    timeout = datetime.timedelta(seconds=timeout_s)
+    attempt = int(os.environ.get("TORCHELASTIC_RESTART_COUNT", 0))
+    if attempt == 0:
+        dist.init_process_group(backend, timeout=timeout)
+    else:
+        # After a restart torchrun's store still holds the addresses the dead processes published,
+        # and ranks would try to connect to those. A new key prefix gives each attempt a clean slate.
+        agent_store = dist.TCPStore(os.environ["MASTER_ADDR"], int(os.environ["MASTER_PORT"]),
+                                    is_master=False, timeout=timeout)
+        dist.init_process_group(backend, store=dist.PrefixStore(f"attempt_{attempt}", agent_store),
+                                rank=int(os.environ["RANK"]), world_size=int(os.environ["WORLD_SIZE"]),
+                                timeout=timeout)
     info = DistInfo(dist.get_rank(), int(os.environ["LOCAL_RANK"]), dist.get_world_size())
     if torch.cuda.is_available():
         torch.cuda.set_device(info.local_rank)

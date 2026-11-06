@@ -52,7 +52,6 @@ def mean_of_means(micro) -> torch.Tensor:
 
 
 def main() -> None:
-    torch.set_num_threads(2)
     ds = PackedWindows(TokenShards(resolve("data_cache/tinystories"), "train"), 64)
     x, y = map(torch.stack, zip(*(ds[i] for i in range(8))))
     split = lambda a, b: [(a[i : i + 2], b[i : i + 2]) for i in range(0, 8, 2)]  # noqa: E731

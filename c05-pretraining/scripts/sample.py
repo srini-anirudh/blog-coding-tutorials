@@ -31,7 +31,6 @@ def main() -> None:
     ap.add_argument("--top-k", type=int, default=40)
     ap.add_argument("--device", default="auto")
     args = ap.parse_args()
-    torch.set_num_threads(2)
     device = pick_device(args.device)
     if args.ckpt:
         state = torch.load(args.ckpt, map_location="cpu", weights_only=True)

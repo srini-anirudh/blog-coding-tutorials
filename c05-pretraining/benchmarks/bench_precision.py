@@ -51,7 +51,6 @@ def main() -> None:
     ap.add_argument("--device", default="auto")
     ap.add_argument("--steps", type=int, default=30)
     args = ap.parse_args()
-    torch.set_num_threads(2)
     cfg = TrainConfig.from_yaml(args.config)
     device = pick_device(args.device)
     seed_everything(0)

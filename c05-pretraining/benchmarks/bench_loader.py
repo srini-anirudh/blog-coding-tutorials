@@ -18,7 +18,7 @@ from pretrain.utils import resolve  # noqa: E402
 
 def main() -> None:
     ds = PackedWindows(TokenShards(resolve("data_cache/tinystories"), "train"), 256)
-    print(f"{len(ds):,} windows, batch 32, Apple M5 CPU")
+    print(f"{len(ds):,} windows, batch 32")
     print(f"{'workers':>8}{'first batch ms':>16}{'batches/s':>11}{'tokens/s':>14}")
     for workers in (0, 2, 4):
         loader = ResumableLoader(ds, 32, seed=0, num_workers=workers, prefetch_factor=2)

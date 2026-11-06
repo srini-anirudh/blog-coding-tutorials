@@ -1,0 +1,6 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0, model llama
+model llama, device cpu, batch (16, 256), 6 layers, fp32, one fresh process per mode
+mode              autograd saved   peak growth   step ms
+plain                  571.7 MiB     749.7 MiB       604
+checkpointed           104.1 MiB     528.2 MiB       665
+autograd saved 0.18x, peak growth 0.70x, step time 1.10x

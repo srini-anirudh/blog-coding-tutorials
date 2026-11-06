@@ -1,0 +1,6 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0. Small smoke config, because bf16 is emulated on this CPU
+device cpu, 1,024 tokens/step, 30 steps (first 3 dropped as warmup)
+precision   median step ms    tokens/s  final loss
+fp32                  41.9      24,447      5.9233
+bf16                 460.8       2,222      5.9239
+max |loss_fp32 - loss_bf16| over the run: 0.0010

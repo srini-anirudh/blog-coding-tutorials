@@ -10,7 +10,9 @@
 
 from __future__ import annotations
 
+import gc
 import math
+import statistics
 
 import torch
 
@@ -42,30 +44,40 @@ def check_batch(x: torch.Tensor, y: torch.Tensor, vocab_size: int, ignore: int =
 
 
 class SpikeDetector:
-    """Flag a loss more than `k` standard deviations above its exponential moving average."""
+    """Flag a loss more than `k` robust deviations above the median of recent steps.
 
-    def __init__(self, k: float = 6.0, beta: float = 0.98, warmup: int = 50):
-        self.k, self.beta, self.warmup = k, beta, warmup
-        self.mean, self.var, self.n = 0.0, 0.0, 0
+    The window forgets the early descent, which would otherwise inflate the spread for a long
+    time and hide real jumps. Median and MAD are not moved by one outlier, and a flagged value
+    is not added to the window, so a spike cannot widen the threshold for the next one.
+    """
+
+    def __init__(self, k: float = 6.0, window: int = 50, warmup: int = 20):
+        self.k, self.window, self.warmup = k, window, warmup
+        self.recent: list[float] = []
+
+    @property
+    def median(self) -> float:
+        return statistics.median(self.recent)
+
+    @property
+    def spread(self) -> float:
+        """Median absolute deviation, scaled to match a standard deviation on normal data."""
+        med = self.median
+        return 1.4826 * statistics.median(abs(v - med) for v in self.recent)
 
     def update(self, loss: float) -> bool:
         if not math.isfinite(loss):
             return True
-        if self.n == 0:
-            self.mean = loss  # start the average at the first value, not at zero
-        spike = self.n >= self.warmup and loss > self.mean + self.k * math.sqrt(self.var) + 1e-3
-        if not spike:  # spikes do not pollute the statistics
-            delta = loss - self.mean
-            self.mean += (1 - self.beta) * delta
-            self.var = self.beta * (self.var + (1 - self.beta) * delta * delta)
-            self.n += 1
+        spike = len(self.recent) >= self.warmup and loss > self.median + self.k * self.spread + 1e-3
+        if not spike:
+            self.recent = (self.recent + [loss])[-self.window :]
         return spike
 
     def state_dict(self) -> dict:
-        return {"mean": self.mean, "var": self.var, "n": self.n}
+        return {"recent": self.recent}
 
     def load_state_dict(self, s: dict) -> None:
-        self.mean, self.var, self.n = s["mean"], s["var"], s["n"]
+        self.recent = list(s["recent"])
 
 
 class NonFiniteGuard:
@@ -85,7 +97,9 @@ class NonFiniteGuard:
 
 
 def is_oom(err: BaseException) -> bool:
-    return isinstance(err, torch.OutOfMemoryError) or "out of memory" in str(err).lower()
+    # The CPU allocator raises a plain RuntimeError with its own wording.
+    text = str(err).lower()
+    return isinstance(err, torch.OutOfMemoryError) or "out of memory" in text or "can't allocate memory" in text
 
 
 def split_micro_batches(micro: list[tuple[torch.Tensor, torch.Tensor]]) -> list[tuple[torch.Tensor, torch.Tensor]]:
@@ -111,7 +125,10 @@ def step_with_oom_retry(step_fn, micro, opt, empty_cache, max_splits: int = 3):
         except (torch.OutOfMemoryError, RuntimeError) as err:
             if not is_oom(err) or attempt == max_splits:
                 raise
-            opt.zero_grad(set_to_none=True)  # drop partial gradients from the failed attempt
-            empty_cache()
-            micro = split_micro_batches(micro)
-            print(f"[oom] retrying with {len(micro)} micro-batches of {micro[0][0].size(0)}")
+        # Outside the except block on purpose: until it ends, the traceback keeps every tensor
+        # of the failed attempt alive, and emptying the cache there would free nothing.
+        opt.zero_grad(set_to_none=True)  # drop partial gradients from the failed attempt
+        gc.collect()
+        empty_cache()
+        micro = split_micro_batches(micro)
+        print(f"[oom] retrying with {len(micro)} micro-batches of {micro[0][0].size(0)}")

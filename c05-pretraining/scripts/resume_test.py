@@ -1,6 +1,7 @@
 """Exact resume on real data: uninterrupted, interrupted and resumed, and a weights-only restart.
 
     python c05-pretraining/scripts/resume_test.py --steps 40
+    python c05-pretraining/scripts/resume_test.py --steps 40 --model tinyllm
 """
 
 from __future__ import annotations
@@ -28,12 +29,13 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--steps", type=int, default=40)
     ap.add_argument("--device", default="cpu")
+    ap.add_argument("--model", default="llama", choices=["llama", "tinyllm"])
+    ap.add_argument("--out", help="where to write the JSON (default: results/resume[_<model>].json)")
     args = ap.parse_args()
-    torch.set_num_threads(2)
     half = args.steps // 2
     base = TrainConfig.from_yaml(resolve("configs/smoke.yaml"), max_steps=args.steps, log_every=1,
                                  ckpt_every=half, eval_every=10_000, device=args.device,
-                                 warmup_steps=5, out_dir="runs/resume/straight")
+                                 warmup_steps=5, out_dir="runs/resume/straight", model_type=args.model)
     root = resolve("runs/resume")
     shutil.rmtree(root, ignore_errors=True)
 
@@ -53,7 +55,7 @@ def main() -> None:
     fresh.out_dir = "runs/resume/weights_only_2"
     wrong |= {half + k: v for k, v in losses(_train_from_weights(fresh, keep["model"], half)).items()}
 
-    print(f"device {args.device}, {args.steps} steps, interrupted at step {half}")
+    print(f"model {args.model}, device {args.device}, {args.steps} steps, interrupted at step {half}")
     print(f"{'step':>5} {'straight':>10} {'resumed':>10} {'weights only':>13}")
     for s in [half - 1, half, half + 1, half + 2, half + 3, half + 5, half + 10, args.steps]:
         if s in straight:
@@ -61,7 +63,8 @@ def main() -> None:
     same = all(straight[s] == resumed[s] for s in straight)
     gap = max(abs(straight[s] - resumed[s]) for s in straight)
     print(f"bitwise equal: {same}  (max |straight - resumed| = {gap:.2e})")
-    out = resolve("results/resume.json")
+    default = "results/resume.json" if args.model == "llama" else f"results/resume_{args.model}.json"
+    out = resolve(args.out or default)
     out.parent.mkdir(exist_ok=True)
     out.write_text(json.dumps({"straight": straight, "resumed": resumed, "weights_only": wrong, "half": half}))
     shutil.rmtree(root, ignore_errors=True)
