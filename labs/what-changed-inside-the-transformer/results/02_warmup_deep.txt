@@ -1,0 +1,13 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+command: python labs/what-changed-inside-the-transformer/scripts/02_warmup.py --layers 24 --lr 1e-2 --steps 200 --seeds 1 --runs post:0,post:100,pre:0 --out 02_warmup_deep
+
+24 layers, d=128, 4 heads, RMSNorm, RoPE, SwiGLU. AdamW lr 0.01, batch 16 x 64 bytes,
+200 steps, no clipping. Loss is bytes cross-entropy in nats (uniform guess = 5.55).
+
+placement         | val loss per seed | spikes per seed | max train loss after step 20 | s per run
+------------------+-------------------+-----------------+------------------------------+----------
+post              | 3.330             | 0               | 3.49                         | 96       
+post + warmup 100 | 3.337             | 1               | 4.05                         | 88       
+pre               | 2.984             | 0               | 3.49                         | 89       
+
+A spike is a step whose loss is over 1.5x the median of the previous 20 steps.

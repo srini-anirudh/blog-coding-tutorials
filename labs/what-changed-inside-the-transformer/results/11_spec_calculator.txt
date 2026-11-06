@@ -1,0 +1,14 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+command: python labs/what-changed-inside-the-transformer/scripts/11_spec_calculator.py
+
+Figure 10 formulas. P_attn = 2 L d d_h (n_q + n_kv) (MLA: its own projections), P_ffn = 3 L d d_ff or
+3 L d d_e (N + shared), FLOPs/token = 2 P_active + 4 L n_q d_h s. KV in bf16. Norms not counted.
+model           | total   | active | KV/token  | s       | KV at s   | GFLOPs/token | attention share
+----------------+---------+--------+-----------+---------+-----------+--------------+----------------
+GPT-2 XL        | 1.55B   | 1.55B  | 300.0 KiB | 1,024   | 0.29 GiB  | 3.4          | 9.2%           
+Llama 2 7B      | 6.74B   | 6.61B  | 512.0 KiB | 4,096   | 2.00 GiB  | 15.4         | 14.0%          
+Llama 3 8B      | 8.03B   | 7.50B  | 128.0 KiB | 8,192   | 1.00 GiB  | 19.3         | 22.2%          
+Olmo 3 32B      | 32.23B  | 31.72B | 256.0 KiB | 65,536  | 16.00 GiB | 149.3        | 57.5%          
+Qwen3-235B-A22B | 235.09B | 21.52B | 188.0 KiB | 32,768  | 5.88 GiB  | 144.0        | 70.1%          
+gpt-oss-120b    | 116.79B | 5.12B  | 72.0 KiB  | 131,072 | 9.00 GiB  | 87.5         | 88.3%          
+DeepSeek-V3     | 671.03B | 36.52B | 68.6 KiB  | 131,072 | 8.58 GiB  | 597.0        | 87.8%          

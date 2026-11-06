@@ -1,0 +1,21 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+command: python labs/what-changed-inside-the-transformer/scripts/05_ffn_gate.py
+
+1. The 8/3 accounting: 3 d d_ff = 8 d^2 gives d_ff = 8d/3, rounded up to a multiple of 256.
+model      | d    | 8d/3     | next x256 | shipped d_ff | d_ff / d | params vs 4d GELU FFN
+-----------+------+----------+-----------+--------------+----------+----------------------
+Llama 2 7B | 4096 | 10,922.7 | 11,008    | 11,008       | 2.688    | 1.008                
+Llama 3 8B | 4096 | 10,922.7 | 11,008    | 14,336       | 3.500    | 1.312                
+Olmo 3 32B | 5120 | 13,653.3 | 13,824    | 27,648       | 5.400    | 2.025                
+Llama 2 ships the parity width. Llama 3 and Olmo 3 spend more than parity on the FFN.
+
+2. Toy regression, d = 16, 8 outputs through a shared linear read-out.
+   GELU FFN: 2 matrices, width 64, 2048 parameters. SwiGLU: 3 matrices, width 43, 2064 parameters.
+   product: y_j = x_2j * x_2j+1.   control: y_j = sin(x_2j) + cos(x_2j+1).
+   Test MSE / Var(y) after 3000 Adam steps (0 is perfect, 1 is predicting the mean). Three seeds.
+target  | FFN                | per seed             | mean  
+--------+--------------------+----------------------+-------
+product | GELU, 2 matrices   | 0.0063 0.0065 0.0063 | 0.0064
+product | SwiGLU, 3 matrices | 0.0001 0.0001 0.0001 | 0.0001
+control | GELU, 2 matrices   | 0.1063 0.1094 0.1057 | 0.1071
+control | SwiGLU, 3 matrices | 0.2271 0.2501 0.2342 | 0.2372

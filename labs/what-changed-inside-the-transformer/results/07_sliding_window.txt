@@ -1,0 +1,31 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+command: python labs/what-changed-inside-the-transformer/scripts/07_sliding_window.py
+
+1. A window-w layer only ever needs the last w keys. Decode 512 tokens one at a time through a
+   ring buffer of w slots, and compare with full attention under a sliding-window mask (d = 64, fp64).
+window | max |ring - masked| | ring cache bytes | full cache bytes at t=512
+-------+---------------------+------------------+--------------------------
+16     | 2.7e-15             | 16,384           | 524,288                  
+64     | 1.6e-15             | 65,536           | 524,288                  
+256    | 1.3e-15             | 262,144          | 524,288                  
+
+2. Olmo 3 32B at 65,536 tokens: 64 layers, 8 KV heads, d_h 128, bf16 -> 4096 bytes per layer per token.
+   all global: 16.00 GiB   3:1 with window 4096: 4.75 GiB   ratio 3.37x
+context | all global GiB | 3:1 SWA GiB
+--------+----------------+------------
+4,096   | 1.00           | 1.00       
+16,384  | 4.00           | 1.75       
+65,536  | 16.00          | 4.75       
+262,144 | 64.00          | 16.75      
+   Past the window, only the 16 global layers keep growing.
+
+3. Receptive field: how far back the last of 1024 tokens can see after l layers, window 32.
+   Computed by composing the boolean masks layer by layer (a path through the masks).
+scheme              | l=1 | l=2  | l=4  | l=6  | l=8  | l=12
+--------------------+-----+------+------+------+------+-----
+all local (Mistral) | 31  | 62   | 124  | 186  | 248  | 372 
+1:1 (gpt-oss)       | 31  | 1023 | 1023 | 1023 | 1023 | 1023
+3:1 (Olmo 3)        | 31  | 62   | 1023 | 1023 | 1023 | 1023
+5:1 (Gemma 3)       | 31  | 62   | 124  | 1023 | 1023 | 1023
+   All-local grows by w - 1 = 31 tokens per layer: L (w - 1) after L layers. One global layer reaches
+   everything (1023 = the whole prefix).

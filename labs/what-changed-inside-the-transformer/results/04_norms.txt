@@ -1,0 +1,31 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+command: python labs/what-changed-inside-the-transformer/scripts/04_norms.py
+
+1. What each norm computes (no gain, no shift), x of shape (4096, 1024) with mean 0.7:
+   ours vs F.layer_norm, max |diff|                 9.54e-07
+   ours vs F.rms_norm, max |diff|                   0.00e+00
+   LN(x) vs RMS(x - mean(x)), max |diff|            4.77e-07
+   LN(x) vs RMS(x) on this x, max |diff|            5.45e-01   (they differ by the mean)
+   LN vs RMS once the mean is zero, max |diff|      4.77e-07
+   LayerNorm = center, then RMSNorm. RMSNorm drops the centering and its reduction.
+
+   CPU timing, median of 30, (16384, 4096) fp32. A sanity check, not the post's GPU argument:
+   op                 | ms   
+----------------------+------
+two reductions (ours) | 163.9
+one reduction (ours)  | 126.6
+F.layer_norm          | 66.4 
+F.rms_norm            | 139.2
+
+2. QK-norm. One head, d = 256, d_h = 64, T = 128, causal. Scale W_q and W_k by s, as if training had
+   grown them. Without QK-norm the logits grow as s^2 and softmax saturates; with it they stay bounded.
+s  | max|logit| | entropy | softmax grad | max|logit| QK | entropy QK | softmax grad QK
+---+------------+---------+--------------+---------------+------------+----------------
+1  | 4.5        | 4.09    | 4.766        | 3.8           | 4.08       | 4.772          
+2  | 17.9       | 1.52    | 6.821        | 3.8           | 4.08       | 4.772          
+4  | 71.7       | 0.30    | 4.439        | 3.8           | 4.08       | 4.772          
+8  | 286.7      | 0.06    | 2.377        | 3.8           | 4.08       | 4.772          
+16 | 1146.8     | 0.01    | 1.103        | 3.8           | 4.08       | 4.772          
+   Entropy is over query rows 64..127 (uniform = log 65..128, about 4.5 nats).
+   bf16 has 8 bits of mantissa: at a logit of 100 its spacing is 0.5, so large logits also lose precision.
+   bf16 spacing at 100: 0.5

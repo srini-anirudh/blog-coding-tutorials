@@ -1,0 +1,4 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2
+command: python -m pytest labs/what-changed-inside-the-transformer -m gpu
+
+4 passed, 53 deselected in 3.74s

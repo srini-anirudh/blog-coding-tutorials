@@ -1,0 +1,32 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+command: python labs/what-changed-inside-the-transformer/scripts/03_position.py
+
+1. <R_m q, R_n k> depends only on m - n. Same q, k (d_h = 128, base 1e4), different absolute positions:
+m    | n    | m - n | logit    
+-----+------+-------+----------
+5    | 2    | 3     | +1.908099
+103  | 100  | 3     | +1.908090
+4003 | 4000 | 3     | +1.908000
+3    | 0    | 3     | +1.908099
+10   | 2    | 8     | +1.624739
+2    | 10   | -8    | +6.813015
+The first four rows share an offset of 3 and give the same logit up to float32 rounding.
+
+2. The base is a context-length dial. Wavelength of pair i = 2 pi b^(2i/d), d_h = 128.
+model                 | base b | fastest pair | slowest pair | 2 pi b    | pairs > 4k tokens | pairs > 8k tokens
+----------------------+--------+--------------+--------------+-----------+-------------------+------------------
+Llama 2               | 1e+04  | 6.28         | 54,410       | 62,832    | 18                | 14               
+Llama 3 / Olmo 3      | 5e+05  | 6.28         | 2,559,196    | 3,141,593 | 32                | 29               
+Qwen3, Gemma 3 global | 1e+06  | 6.28         | 5,063,256    | 6,283,185 | 33                | 30               
+The post rounds the slowest wavelength to 2 pi b. With d_h = 128 the exact slowest pair is 2 pi b^(126/128).
+A pair whose wavelength is longer than the training context never completes a turn during training;
+those are the dials that YaRN and NTK scaling stretch and leave the fast ones alone.
+
+3. NoPE: the causal mask alone carries position. One random attention head, no position signal,
+random byte embeddings (d = 64, T = 64, 64 sequences). A ridge probe reads log(1 + position) from the output.
+mask          | max |f(Px) - P f(x)| | probe R^2 for log(1+pos)
+--------------+----------------------+-------------------------
+bidirectional | 1.78e-15             | -0.146                  
+causal        | 4.29e+00             | 0.471                   
+Without a mask, shuffling the input shuffles the output exactly: position is invisible.
+With the causal mask, token m averages over m+1 values, so its output carries its position.

@@ -1,0 +1,39 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+command: python labs/what-changed-inside-the-transformer/scripts/09_beyond_softmax.py
+
+1. Causal linear attention, (B=2, H=4, T=256, d=32), phi = elu + 1, C3's implementations:
+   parallel vs recurrent, max |diff| = 8.9e-16
+   state per sequence: 33,792 bytes at any length. A KV cache at T = 256: 524,288 bytes,
+   and it keeps growing with T.
+
+2. Associative recall in a 64 x 64 state, random unit values, mean over 3 seeds. Each cell is the mean
+   cosine between the read-out and the stored value (1 = perfect, 0 = noise). Softmax reads a full cache.
+keys        | pairs n | softmax (scale 30) | linear S += v k^T | delta rule | cache bytes | state bytes
+------------+---------+--------------------+-------------------+------------+-------------+------------
+independent | 16      | 1.000              | 0.899             | 0.932      | 16,384      | 32,768     
+independent | 32      | 1.000              | 0.827             | 0.847      | 32,768      | 32,768     
+independent | 64      | 1.000              | 0.713             | 0.681      | 65,536      | 32,768     
+independent | 128     | 1.000              | 0.582             | 0.442      | 131,072     | 32,768     
+correlated  | 16      | 1.000              | 0.448             | 0.597      | 16,384      | 32,768     
+correlated  | 32      | 1.000              | 0.327             | 0.511      | 32,768      | 32,768     
+correlated  | 64      | 1.000              | 0.238             | 0.446      | 65,536      | 32,768     
+correlated  | 128     | 1.000              | 0.171             | 0.327      | 131,072     | 32,768     
+   independent: random keys, nearly orthogonal. The two state rules are close up to n = 32; past n = d
+   the delta rule's overwrites cost more than the additive blur. Both lose to the full cache.
+   correlated: keys share a direction (mean cosine about 0.5). The additive state blurs them together;
+   the delta rule removes what the state already returns for k before writing, and does better.
+
+3. Updating a memory: write 16 pairs, then write the same 16 keys again with new values.
+state      | cosine to new value | cosine to old value
+-----------+---------------------+--------------------
+linear     | 0.624               | 0.641              
+delta rule | 0.908               | 0.057              
+   The additive state returns a blend of old and new; the delta rule returns the new value.
+
+4. The gate: decay alpha < 1 fades old memories. n = 48 pairs, delta rule, beta = 1.
+alpha | oldest 8 pairs | newest 8 pairs
+------+----------------+---------------
+1.0   | 0.555          | 0.963         
+0.98  | 0.341          | 0.964         
+0.9   | -0.033         | 0.949         
+   Cosine ignores scale, so the decay shows only once interference from later writes dominates.

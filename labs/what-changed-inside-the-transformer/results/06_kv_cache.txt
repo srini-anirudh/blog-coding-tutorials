@@ -1,0 +1,33 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+command: python labs/what-changed-inside-the-transformer/scripts/06_kv_cache.py
+
+1. bytes_KV = 2 L n_kv d_h s b bytes. Llama 3 8B shape: L = 32, d_h = 128, bf16.
+attention               | per token | 128k tokens | decode FLOPs/byte
+------------------------+-----------+-------------+------------------
+MHA, n_kv = 32          | 512 KiB   | 64.0 GiB    | 1                
+GQA, n_kv = 8 (shipped) | 128 KiB   | 16.0 GiB    | 4                
+MQA, n_kv = 1           | 16 KiB    | 2.0 GiB     | 32               
+Weights: 8.03e9 params x 2 bytes = 16.1 GB (15.0 GiB). H100 SXM ridge point: 989e12 / 3.35e12 = 295 FLOPs/byte.
+Decode intensity does not depend on d_h or s:
+d_h | s      | FLOPs/byte for 32 q heads over 8 KV heads
+----+--------+------------------------------------------
+64  | 1024   | 4.00                                     
+128 | 8192   | 4.00                                     
+256 | 131072 | 4.00                                     
+
+2. Check the formula against real cache tensors: C4's TinyLLM, 4 layers, 8 q heads, 2 KV heads, d_h 32,
+   one prefill of 96 tokens, batch 3, fp32 (4 bytes).
+   bytes held by the cache: 589,824   formula: 589,824   equal: True
+
+3. MLA, DeepSeek-V3 shape: 61 layers, r = 512, decoupled RoPE key of 64, 128 heads, K 192 + V 128, bf16.
+   MLA per token: 70,272 B = 68.6 KiB     equivalent MHA: 4,997,120 B = 4.77 MiB
+   ratio 71.1x     at 128k tokens: 8.6 GiB vs 610 GiB
+
+4. Absorption, on one random token (d = 64, latent r = 16, d_h = 32, float64):
+   q^T (W_UK c) = -226.2393353600
+   (W_UK^T q)^T c = -226.2393353600   (same number, K never built)
+   With RoPE on the key: true logit at key position 9          -28.898596
+   absorbed matrix built at position 5, used at position 9      -242.292812
+   ||R_9 W_UK - W_UK|| / ||W_UK|| = 0.886: the rotation does not pass through W_UK,
+   so an absorbed matrix would be needed per position. That is why DeepSeek adds a separate RoPE key.
+   C3 (c03-attention/attnzoo/mla.py) builds the full MLA layer with the decoupled key and absorb=True.

@@ -1,0 +1,29 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2
+command: python labs/what-changed-inside-the-transformer/benchmarks/gpu_bench.py
+
+1. One decode step of attention, batch 8, n_q = 32, d_h = 128, s = 32,768, bf16. Median of 50.
+n_kv | KV MiB read | grouped ms | grouped GB/s | grouped TFLOP/s | SDPA ms | SDPA GB/s
+-----+-------------+------------+--------------+-----------------+---------+----------
+32   | 4096        | 1.503      | 2857         | 2.9             | 1.371   | 3133     
+8    | 1024        | 0.469      | 2289         | 9.2             | 0.376   | 2855     
+4    | 512         | 0.303      | 1772         | 14.2            | 0.209   | 2571     
+1    | 128         | 0.217      | 618          | 19.8            | 0.092   | 1462     
+   H100 SXM spec: 3.35 TB/s HBM, about 989 dense bf16 TFLOP/s. Grouped = einsum-style code that reads
+   each KV head once per group. SDPA = F.scaled_dot_product_attention(enable_gqa=True), whatever kernel
+   PyTorch picks for a single query.
+
+2. Normalization over (65536, 4096) bf16, forward only. Median of 50.
+op                    | ms    | effective GB/s (1 read + 1 write)
+----------------------+-------+----------------------------------
+F.layer_norm          | 0.534 | 2009                             
+F.rms_norm            | 0.539 | 1992                             
+two reductions, eager | 2.131 | 504                              
+one reduction, eager  | 1.232 | 872                              
+
+3. Cross-entropy peak memory, S = 8192 tokens, d = 4096, V = 151,936, bf16 weights, fp32 logits.
+cross-entropy | loss    | peak extra GiB (fwd + bwd)
+--------------+---------+---------------------------
+full          | 12.7710 | 13.91                     
+chunked 1024  | 12.7710 | 3.55                      
+chunked 256   | 12.7710 | 3.54                      
+   One fp32 logits tensor is 4.64 GiB. Peak extra includes the weight and hidden grads (1.22 GiB).

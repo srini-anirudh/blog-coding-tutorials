@@ -1,0 +1,37 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+command: python labs/what-changed-inside-the-transformer/scripts/10_small_changes.py
+
+1. The logits tensor for cross-entropy, fp32:
+vocab   | V       | GiB for B = 8, S = 8192
+--------+---------+------------------------
+GPT-2   | 50,257  | 12.3                   
+Llama 3 | 128,256 | 31.3                   
+Qwen3   | 151,936 | 37.1                   
+Gemma 3 | 262,144 | 64.0                   
+
+2. Chunked cross-entropy gives the same loss and gradients as the full one (N = 4096, d = 256, V = 32,000):
+chunk | loss      | |loss - full| | max |grad diff| | largest logits block
+------+-----------+---------------+-----------------+---------------------
+4096  | 10.682172 | 0.0e+00       | 0.0e+00         | 500 MiB             
+1024  | 10.682173 | 9.5e-07       | 1.2e-09         | 125 MiB             
+256   | 10.682173 | 9.5e-07       | 8.1e-10         | 31 MiB              
+   full loss 10.682172; the full logits block is 500 MiB.
+
+3. Weight tying saves V d parameters. How much that is depends on the model:
+model             | V d  | share of reported total
+------------------+------+------------------------
+Qwen3-0.6B (tied) | 156M | 25.9%                  
+Gemma 3 1B (tied) | 302M | 30.2%                  
+Llama 3 8B        | 525M | 6.5%                   
+DeepSeek-V3       | 927M | 0.1%                   
+   Reported totals are the model names' sizes, rounded; treat the shares as approximate.
+
+4. Attention sinks. One query, 8 keys. Token 0 is the head's dumping ground (logit 6, value 0);
+   the other 7 keys are irrelevant (logits near 0, random values).
+                       | weights sum | ||output|| | ||output|| after evicting token 0
+-----------------------+-------------+------------+----------------------------------
+plain softmax          | 1.000       | 0.021      | 1.289                            
+softmax + sink logit 6 | 0.019       | 0.021      | 0.021                            
+   Without a sink, evicting the first token (streaming) removes the dumping ground and the 'say nothing'
+   output becomes an average of irrelevant values. With a learned sink logit, mass leaves the sequence
+   and eviction changes nothing important.

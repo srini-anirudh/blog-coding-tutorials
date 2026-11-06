@@ -1,0 +1,30 @@
+hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+command: python labs/what-changed-inside-the-transformer/scripts/08_moe.py
+
+1. Same total and active expert budget, different granularity:
+   C(8, 2) = 28     C(256, 8) = 409,663,695,276,000 = 4.10e+14     ratio 1.5e+13
+
+2. Total and active parameters from the post's Figure 10 formulas (norms and biases not counted).
+   'Post' is the post's MoE table, which quotes the model reports.
+model           | total  | active | fraction | post        | train FLOPs/token = 6 N_active
+----------------+--------+--------+----------+-------------+-------------------------------
+Qwen3-235B-A22B | 235.1B | 21.5B  | 9.2%     | 235B / 22B  | 1.29e+11                      
+gpt-oss-120b    | 116.8B | 5.1B   | 4.4%     | 117B / 5.1B | 3.07e+10                      
+DeepSeek-V3     | 671.0B | 36.5B  | 5.4%     | 671B / 37B  | 2.19e+11                      
+   The formulas land within about 2% of the reported numbers; they skip norms, biases and DeepSeek-V3's
+   multi-token-prediction module.
+
+3. Load balancing on a toy task: 16 experts, top-2, d = 32, 600 Adam steps. 'head start' adds a
+   learnable +4 to expert 0's router score at init, the 'slightly better early' case from the post.
+   load = share of routing slots on the test set. max/mean 1.0 is perfect, 8.0 means one expert is in
+   every token's top-2. dead = experts below 10% of the mean load.
+head start | balancing     | max/mean | min/mean | dead | load entropy / log E | test MSE
+-----------+---------------+----------+----------+------+----------------------+---------
+no         | none          | 1.55     | 0.49     | 0.0  | 0.983                | 0.0550  
+no         | aux loss 0.01 | 1.36     | 0.60     | 0.0  | 0.992                | 0.0542  
+no         | aux-free bias | 1.08     | 0.90     | 0.0  | 0.999                | 0.0544  
+yes        | none          | 4.16     | 0.20     | 0.5  | 0.905                | 0.0554  
+yes        | aux loss 0.01 | 2.45     | 0.57     | 0.0  | 0.973                | 0.0528  
+yes        | aux-free bias | 1.08     | 0.88     | 0.0  | 0.999                | 0.0526  
+   Means over 2 seeds. The bias rule: b_e += 0.01 * sign(1/E - load_e) after every step,
+   used only to choose the top-k, never in the gate weights or the loss.
