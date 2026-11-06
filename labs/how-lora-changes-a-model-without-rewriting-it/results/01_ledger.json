@@ -1,0 +1,166 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python scripts/01_ledger.py",
+ "arithmetic": {
+  "llama2_7b_params": 6738415616,
+  "attn_per_layer": 67108864,
+  "mlp_per_layer": 135266304,
+  "nf4_bits_single": 4.5,
+  "nf4_bits_double": 4.126953125,
+  "gpt3_qv_r4_params": 18874368,
+  "rows": [
+   [
+    1,
+    "Q,V only",
+    "0.52 M",
+    "0.008%",
+    "13.49"
+   ],
+   [
+    1,
+    "All attention",
+    "1.05 M",
+    "0.016%",
+    "13.49"
+   ],
+   [
+    1,
+    "All linear",
+    "2.50 M",
+    "0.037%",
+    "13.52"
+   ],
+   [
+    8,
+    "Q,V only",
+    "4.19 M",
+    "0.062%",
+    "13.54"
+   ],
+   [
+    8,
+    "All attention",
+    "8.39 M",
+    "0.124%",
+    "13.61"
+   ],
+   [
+    8,
+    "All linear",
+    "19.99 M",
+    "0.297%",
+    "13.80"
+   ],
+   [
+    16,
+    "Q,V only",
+    "8.39 M",
+    "0.124%",
+    "13.61"
+   ],
+   [
+    16,
+    "All attention",
+    "16.78 M",
+    "0.249%",
+    "13.75"
+   ],
+   [
+    16,
+    "All linear",
+    "39.98 M",
+    "0.593%",
+    "14.12"
+   ],
+   [
+    64,
+    "Q,V only",
+    "33.55 M",
+    "0.498%",
+    "14.01"
+   ],
+   [
+    64,
+    "All attention",
+    "67.11 M",
+    "0.996%",
+    "14.55"
+   ],
+   [
+    64,
+    "All linear",
+    "159.91 M",
+    "2.373%",
+    "16.04"
+   ],
+   [
+    256,
+    "Q,V only",
+    "134.22 M",
+    "1.992%",
+    "15.62"
+   ],
+   [
+    256,
+    "All attention",
+    "268.44 M",
+    "3.984%",
+    "17.77"
+   ],
+   [
+    256,
+    "All linear",
+    "639.63 M",
+    "9.492%",
+    "23.71"
+   ],
+   [
+    512,
+    "Q,V only",
+    "268.44 M",
+    "3.984%",
+    "17.77"
+   ],
+   [
+    512,
+    "All attention",
+    "536.87 M",
+    "7.967%",
+    "22.07"
+   ],
+   [
+    512,
+    "All linear",
+    "1279.26 M",
+    "18.985%",
+    "33.95"
+   ]
+  ]
+ },
+ "measured_smollm2_shape": {
+  "full fine-tuning": {
+   "params_total": 134515008,
+   "params_trainable": 134515008,
+   "weights_bytes": 538060032,
+   "grad_bytes": 538060032,
+   "adam_state_bytes": 1076120064,
+   "checkpoint_bytes": 538090376
+  },
+  "LoRA r=8, all linear": {
+   "params_total": 136957248,
+   "params_trainable": 2442240,
+   "weights_bytes": 547828992,
+   "grad_bytes": 9768960,
+   "adam_state_bytes": 19537920,
+   "checkpoint_bytes": 9813104
+  },
+  "LoRA r=64, all linear": {
+   "params_total": 154052928,
+   "params_trainable": 19537920,
+   "weights_bytes": 616211712,
+   "grad_bytes": 78151680,
+   "adam_state_bytes": 156303360,
+   "checkpoint_bytes": 78197064
+  }
+ }
+}

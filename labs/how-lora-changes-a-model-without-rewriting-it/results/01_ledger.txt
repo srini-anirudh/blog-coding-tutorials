@@ -1,0 +1,48 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python scripts/01_ledger.py
+## Part 1: arithmetic, Llama-2-7B geometry (d=4096, 32 layers, SwiGLU 11008, vocab 32000)
+total parameters: 6.738 B
+bytes per parameter, full fine-tuning: weights (bf16) 2, gradients (bf16) 2, master weights (fp32) 4, Adam m (fp32) 4, Adam v (fp32) 4 = 16
+7B x 16 B = 112 GB; the bf16 weights alone are 14 GB (0.125 of the total)
+per layer: attention 67.1 M, MLP 135.3 M, MLP share 0.668
+square d x d, r=8: r(2d)/d^2 = 0.3906%
+break-even rank (adapter stores as many numbers as the matrix): 4096x4096 -> 2048, 11008x4096 -> 2985
+
+LoRA trainable parameters and training memory (frozen bf16 at 2 B, trainable at 16 B, no activations)
+rank        targets  trainable    share  memory GB
+----  -------------  ---------  -------  ---------
+   1       Q,V only     0.52 M   0.008%      13.49
+   1  All attention     1.05 M   0.016%      13.49
+   1     All linear     2.50 M   0.037%      13.52
+   8       Q,V only     4.19 M   0.062%      13.54
+   8  All attention     8.39 M   0.124%      13.61
+   8     All linear    19.99 M   0.297%      13.80
+  16       Q,V only     8.39 M   0.124%      13.61
+  16  All attention    16.78 M   0.249%      13.75
+  16     All linear    39.98 M   0.593%      14.12
+  64       Q,V only    33.55 M   0.498%      14.01
+  64  All attention    67.11 M   0.996%      14.55
+  64     All linear   159.91 M   2.373%      16.04
+ 256       Q,V only   134.22 M   1.992%      15.62
+ 256  All attention   268.44 M   3.984%      17.77
+ 256     All linear   639.63 M   9.492%      23.71
+ 512       Q,V only   268.44 M   3.984%      17.77
+ 512  All attention   536.87 M   7.967%      22.07
+ 512     All linear  1279.26 M  18.985%      33.95
+
+ full (r=16, all linear): frozen 0.00 GB + trainable 107.81 GB = 107.81 GB
+ lora (r=16, all linear): frozen 13.48 GB + trainable 0.64 GB = 14.12 GB
+qlora (r=16, all linear): frozen 3.48 GB + trainable 0.64 GB = 4.12 GB
+NF4 bits/param: single quant 4.500, double quant 4.1270 (saving 0.373 bits); 6.74 B at 4.127 bits = 3.48 GB vs bf16 13.48 GB
+
+GPT-3 175B (d=12288, 96 layers): Wq,Wv at r=4 -> 18.87 M params = 37.7 MB in fp16; Wq alone at r=8 -> 18.87 M (the 18 M budget of Table 5)
+GPT-3 weights in fp16: 350 GB, so the checkpoint shrinks by 9272x
+
+## Part 2: measured, SmolLM2-135M shapes (576 wide, 30 layers, GQA 9/3 heads), random weights, fp32
+              setting  trainable  weights MB  grads MB  Adam m+v MB  checkpoint MB
+---------------------  ---------  ----------  --------  -----------  -------------
+     full fine-tuning   134.52 M         538     538.1       1076.1         538.09
+ LoRA r=8, all linear     2.44 M         548       9.8         19.5           9.81
+LoRA r=64, all linear    19.54 M         616      78.2        156.3          78.20
+grads + Adam state: full 1614 MB, LoRA r=8 29.3 MB; both are exactly 12 B per trainable parameter in fp32 (12.0)
+checkpoint: full 538 MB vs LoRA r=8 9.81 MB (55x smaller)

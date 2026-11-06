@@ -1,0 +1,34 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python scripts/07_finetune.py --device cuda
+HuggingFaceTB/SmolLM2-135M; train on 19702 rows of 256 reversed-word WikiText-2 tokens; 600 steps x batch 16 = 2.46 M tokens; eval 128 rows per domain; AdamW, no weight decay, linear warmup over 5% of steps, clip 1.0, fp32
+full: target 5.583 -> 2.685, source 3.113 -> 3.196, 124 ms/step
+lora8: target 5.583 -> 2.992, source 3.113 -> 3.975, 179 ms/step
+lora64: target 5.583 -> 2.661, source 3.113 -> 4.325, 193 ms/step
+lora256: target 5.583 -> 2.521, source 3.113 -> 5.514, 184 ms/step
+dora8: target 5.583 -> 2.976, source 3.113 -> 3.943, 261 ms/step
+qlora8: target 5.719 -> 3.010, source 3.355 -> 4.333, 214 ms/step
+
+losses are mean next-token cross entropy in nats
+ config  trainable  Adam MB  peak GB  ms/step  target before  target after  source before  source after  forgetting
+-------  ---------  -------  -------  -------  -------------  ------------  -------------  ------------  ----------
+   full   134.52 M   1076.1    10.06      124          5.583         2.685          3.113         3.196      +0.083
+  lora8     2.44 M     19.5     8.43      179          5.583         2.992          3.113         3.975      +0.861
+ lora64    19.54 M    156.3     8.83      193          5.583         2.661          3.113         4.325      +1.211
+lora256    78.15 M    625.2    10.31      184          5.583         2.521          3.113         5.514      +2.400
+  dora8     2.60 M     20.8    10.97      261          5.583         2.976          3.113         3.943      +0.830
+ qlora8     2.44 M     19.5     8.55      214          5.719         3.010          3.355         4.333      +0.978
+
+weight-space diagnostics
+ config  corr(dM, dD) q,v  final dM  final dD  intruders / matrix (top 10)  q_proj  down_proj
+-------  ----------------  --------  --------  ---------------------------  ------  ---------
+   full             +0.31  1.98e-03  1.17e-04                         0.00     0.0        0.0
+  lora8             +0.67  4.80e-03  8.16e-04                         0.12     0.0        0.0
+ lora64             +0.71  1.08e-02  2.58e-03                         0.20     0.0        0.1
+lora256             +0.72  2.46e-02  7.46e-03                         0.28     0.0        0.2
+  dora8             +0.47  1.60e-02  8.19e-04                         0.09     0.0        0.0
+ qlora8             +0.61  4.62e-03  7.64e-04                         0.08     0.0        0.0
+corr is Pearson over (layer, checkpoint) points for q_proj and v_proj, every 50 steps. Intruder: top-10 left singular vector with max |cos| < 0.5 against every pretrained singular vector.
+lora8: target loss unmerged 2.99185, merged 2.99185
+lora64: target loss unmerged 2.66100, merged 2.66100
+lora256: target loss unmerged 2.52135, merged 2.52135
+dora8: target loss unmerged 2.97623, merged 2.97623

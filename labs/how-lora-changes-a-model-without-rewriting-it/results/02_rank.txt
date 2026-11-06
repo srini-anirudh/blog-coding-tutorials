@@ -1,0 +1,45 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python scripts/02_rank.py
+## Part 1: rank-r truncation of a 24 x 24 matrix (seed 0)
+
+fast decay: sigma_1 = 10.0, sigma_24 = 7.9e-05
+rank  ||M - M_r||_F  sqrt(tail sum sigma^2)  relative error
+----  -------------  ----------------------  --------------
+   1            7.5                     7.5             0.6
+   2            4.5                     4.5            0.36
+   4           1.62                    1.62          0.1296
+   8           0.21                    0.21          0.0168
+  12        0.02721                 0.02721        0.002177
+  16       0.003526                0.003526       0.0002821
+  20      0.0004532               0.0004532       3.625e-05
+  24      4.937e-14                       0        3.95e-15
+
+slow decay: sigma_1 = 10.0, sigma_24 = 5.4
+rank  ||M - M_r||_F  sqrt(tail sum sigma^2)  relative error
+----  -------------  ----------------------  --------------
+   1             37                      37          0.9654
+   2          35.68                   35.68          0.9309
+   4          33.05                   33.05          0.8624
+   8          27.85                   27.85          0.7265
+  12          22.64                   22.64          0.5908
+  16           17.3                    17.3          0.4514
+  20          11.41                   11.41          0.2977
+  24      1.049e-13                       0       2.736e-15
+
+## Part 2: LoRA-style search (B = 0, A random, Adam lr 1e-2, 3000 steps) vs the Eckart-Young optimum
+ spectrum    shape  rank  Eckart-Young  Adam on B A  ratio
+---------  -------  ----  ------------  -----------  -----
+     fast    24x24     1           7.5          7.5      1
+     fast    24x24     4          1.62         1.62      1
+     fast    24x24     8          0.21         0.21      1
+     fast    24x24    16      0.003526      0.01749  4.959
+     slow    24x24     1            37           37      1
+     slow    24x24     4         33.05        33.05      1
+     slow    24x24     8         27.85        27.85      1
+     slow    24x24    16          17.3         17.3      1
+power-law  256x256     1         8.006        8.006      1
+power-law  256x256     4         4.663        4.663      1
+power-law  256x256     8         3.371        3.371      1
+power-law  256x256    16         2.381        2.384  1.001
+A ratio near 1 means gradient descent on the factors found the best rank-r matrix without an SVD.
+This is a pure approximation problem. In fine-tuning there is no fixed target matrix to approximate.

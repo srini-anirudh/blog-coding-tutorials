@@ -1,0 +1,7 @@
+# Checkpoints, model weights and datasets never go in git.
+checkpoints/
+*.safetensors
+*.bin
+*.pt
+*.pth
+__pycache__/

@@ -1,0 +1,31 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python scripts/05_merge_serve.py
+## Part 1: merge exactness, 1024 x 1024 layer, r=16, alpha=32, fp32
+max |unmerged - merged| output = 2.38e-06 (output scale 4.39)
+
+## Part 2: hot-swap drift. Each cycle: merge adapter 1, unmerge, merge adapter 2, unmerge
+   dtype  cycles  max |W - W_start|  relative Frobenius drift  share of entries changed
+--------  ------  -----------------  ------------------------  ------------------------
+bfloat16       1          0.0009766                  0.001521                    0.1887
+bfloat16      10           0.004883                  0.002914                    0.1887
+bfloat16     100           0.007324                  0.003527                    0.1887
+bfloat16    1000           0.007324                  0.003527                    0.1887
+ float32       1           1.49e-08                 1.595e-08                   0.09557
+ float32      10          1.416e-07                 6.584e-08                   0.09557
+ float32     100          1.483e-06                 6.694e-07                   0.09557
+ float32    1000          1.489e-05                 6.717e-06                   0.09557
+for scale: ||s B A||_F / ||W||_F = 0.1033
+
+## Part 3: merging into an NF4 base (blocks of 64): dequantize, add s B A, re-quantize
+NF4 error of the base itself: ||Q(W) - W||_F / ||W||_F = 0.0920
+||dW|| / ||W||  share of update kept  ||error|| / ||dW||  entries that changed
+--------------  --------------------  ------------------  --------------------
+         0.001                0.0151               1.075                0.9114
+          0.01                0.0151               1.075                0.9117
+          0.05                0.2782               1.029                0.9148
+           0.2                 0.985               0.457                0.9594
+'share kept' is <landed, dW> / ||dW||^2. 'error' is the re-quantization error measured against dW itself.
+
+## Part 4: one base, 8 adapters, a mixed batch of 32 requests
+max |batched - per-request merged| = 2.15e-06
+memory: one base (1.05 M) + 8 adapters (0.26 M) vs 8 merged copies (8.39 M)

@@ -1,0 +1,24 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python scripts/04_scaling.py
+target change: 256 x 256, full rank, sigma_i = 2 i^-0.5, ||Delta||_F = 4.949
+Adam lr 1e-3, alpha 16, 1500 steps, batch 256, 3 seeds; error is ||Delta - s B A||_F
+ scaling  rank       s  error @ 50  error @ 200  spread @ 200  reachable done @ 200  error @ 1500  best possible (E-Y)
+--------  ----  ------  ----------  -----------  ------------  --------------------  ------------  -------------------
+standard     2       8       4.632        4.304     0.0009809                   99%         4.303                4.301
+standard     8       2       4.279        3.721       0.01183                   98%         3.694                3.691
+standard    32     0.5       4.041        3.028       0.01297                   93%         2.879                2.875
+standard   128   0.125       3.909        2.159       0.01078                   85%         1.672                1.663
+standard   256  0.0625       3.886        1.767       0.01178                   64%     1.383e-06                    0
+  rslora     2    11.3       4.622        4.305     0.0009561                   99%         4.303                4.301
+  rslora     8    5.66       4.171        3.721       0.01389                   98%         3.695                3.691
+  rslora    32    2.83       3.558        2.939      0.001709                   97%         2.883                2.875
+  rslora   128    1.41       2.418        1.773      0.004834                   97%         1.685                1.663
+  rslora   256       1       1.583       0.1679       0.03984                   97%     9.041e-06                    0
+error is the mean over seeds; spread is max - min over seeds; 'reachable done' is (||Delta|| - error) / (||Delta|| - E-Y floor)
+
+LoRA+ (lr_B = ratio x lr_A), rank 32, standard scaling, seed 0
+lr_B / lr_A  error @ 50  error @ 200  error @ 1500
+-----------  ----------  -----------  ------------
+          1       4.062        3.036          2.88
+          4       3.619        2.941         2.883
+         16       3.519        2.962         2.888
