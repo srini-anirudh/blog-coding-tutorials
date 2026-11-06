@@ -1,0 +1,40 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/across-the-cnnverse/scripts/07_time_and_space.py --reps 10
+
+== Forward latency vs MACs, batch 1, fp32, eval mode, median of 10 ==
+         network  GMACs/img  ms/batch  achieved GMAC/s  MAC ratio to R50  time ratio to R50
+         AlexNet      0.724     48.69             14.9              0.18               0.67
+          VGG-16     15.470    453.90             34.1              3.78               6.23
+       GoogLeNet      1.583     45.48             34.8              0.39               0.62
+       ResNet-50      4.089     72.86             56.1              1.00               1.00
+    DenseNet-121      2.834    120.32             23.6              0.69               1.65
+     MobileNetV2      0.301     36.72              8.2              0.07               0.50
+ EfficientNet-B0      0.386     56.66              6.8              0.09               0.78
+      ConvNeXt-T      4.456     94.93             46.9              1.09               1.30
+MobileNetV2 has 13.6x fewer MACs than ResNet-50 and runs 2.0x faster here.
+
+== One operator at 56x56, 128 -> 128 channels, batch 8, fp32 ==
+            operator      MACs  MAC/byte       ms  achieved GMAC/s
+        standard 3x3     3699M     140.8   51.668             71.6
+       1x1 pointwise      411M      16.0    6.281             65.4
+   grouped 3x3, g=32      116M       4.5    8.930             12.9
+       depthwise 3x3       29M       1.1    1.424             20.3
+depthwise does 128x fewer MACs than standard 3x3 and runs 36.3x faster.
+
+== Training memory, fp32 + Adam. Saved activations measured at batch 2, shown per image and x32 ==
+       network   weights    grads  Adam m,v  outputs/img  saved/img  saved x32  saved x32 / weights
+        VGG-16    0.52Gi   0.52Gi    1.03Gi        58MiB      70MiB     2.18Gi                  4.2
+     ResNet-50    0.10Gi   0.10Gi    0.19Gi        43MiB      82MiB     2.57Gi                 27.0
+  DenseNet-121    0.03Gi   0.03Gi    0.06Gi        28MiB     125MiB     3.90Gi                131.0
+   MobileNetV2    0.01Gi   0.01Gi    0.03Gi        25MiB      75MiB     2.33Gi                178.8
+    ConvNeXt-T    0.11Gi   0.11Gi    0.21Gi        51MiB     104MiB     3.25Gi                 30.5
+outputs/img counts only conv, linear and pool outputs (the spec engine's figure); saved/img is what
+autograd actually keeps: also BN inputs, ReLU outputs, concatenations and LayerNorm statistics.
+
+== Activation checkpointing, ResNet-50, batch 2, saved bytes after forward ==
+  segments off:    82.1 MiB per image
+  segments   2:    22.4 MiB per image
+  segments   4:     2.9 MiB per image
+  segments   8:    10.2 MiB per image
+checkpoint_sequential keeps only each segment's input, plus the last segment in full; the rest is
+recomputed during backward. The peak during backward also holds one segment's recomputed activations.

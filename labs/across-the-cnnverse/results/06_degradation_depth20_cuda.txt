@@ -1,0 +1,47 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/across-the-cnnverse/scripts/06_degradation.py --epochs 20 --depths 20 --tag _depth20_cuda
+# data: CIFAR-10, 50000 train / 10000 test images, 20 epochs, batch 128, SGD 0.1 momentum 0.9 wd 1e-4, lr /10 at 50% and 75%
+  depth  20    plain epoch   1  train err 0.7009  loss 1.8236     4.4s
+  depth  20    plain epoch   2  train err 0.5863  loss 1.5639     7.8s
+  depth  20    plain epoch   3  train err 0.4801  loss 1.3160    11.1s
+  depth  20    plain epoch   4  train err 0.3995  loss 1.1060    14.3s
+  depth  20    plain epoch   5  train err 0.3371  loss 0.9458    17.9s
+  depth  20    plain epoch   6  train err 0.2975  loss 0.8477    21.8s
+  depth  20    plain epoch   7  train err 0.2701  loss 0.7809    25.2s
+  depth  20    plain epoch   8  train err 0.2557  loss 0.7323    28.4s
+  depth  20    plain epoch   9  train err 0.2367  loss 0.6846    31.8s
+  depth  20    plain epoch  10  train err 0.2250  loss 0.6484    35.2s
+  depth  20    plain epoch  11  train err 0.1805  loss 0.5268    38.6s
+  depth  20    plain epoch  12  train err 0.1714  loss 0.4925    41.7s
+  depth  20    plain epoch  13  train err 0.1665  loss 0.4786    44.9s
+  depth  20    plain epoch  14  train err 0.1597  loss 0.4671    48.2s
+  depth  20    plain epoch  15  train err 0.1593  loss 0.4589    51.9s
+  depth  20    plain epoch  16  train err 0.1523  loss 0.4403    55.4s
+  depth  20    plain epoch  17  train err 0.1525  loss 0.4403    58.7s
+  depth  20    plain epoch  18  train err 0.1521  loss 0.4381    62.1s
+  depth  20    plain epoch  19  train err 0.1498  loss 0.4328    65.5s
+  depth  20    plain epoch  20  train err 0.1496  loss 0.4327    68.9s
+  depth  20 residual epoch   1  train err 0.6541  loss 1.7368     4.1s
+  depth  20 residual epoch   2  train err 0.4627  loss 1.2686     8.0s
+  depth  20 residual epoch   3  train err 0.3625  loss 1.0162    11.8s
+  depth  20 residual epoch   4  train err 0.3012  loss 0.8538    15.6s
+  depth  20 residual epoch   5  train err 0.2546  loss 0.7303    19.3s
+  depth  20 residual epoch   6  train err 0.2266  loss 0.6523    23.2s
+  depth  20 residual epoch   7  train err 0.2072  loss 0.6008    27.3s
+  depth  20 residual epoch   8  train err 0.1948  loss 0.5634    31.3s
+  depth  20 residual epoch   9  train err 0.1830  loss 0.5269    35.2s
+  depth  20 residual epoch  10  train err 0.1737  loss 0.5001    39.1s
+  depth  20 residual epoch  11  train err 0.1317  loss 0.3837    43.0s
+  depth  20 residual epoch  12  train err 0.1244  loss 0.3565    46.8s
+  depth  20 residual epoch  13  train err 0.1201  loss 0.3450    50.7s
+  depth  20 residual epoch  14  train err 0.1136  loss 0.3317    54.8s
+  depth  20 residual epoch  15  train err 0.1146  loss 0.3274    59.1s
+  depth  20 residual epoch  16  train err 0.1061  loss 0.3075    63.2s
+  depth  20 residual epoch  17  train err 0.1049  loss 0.3048    67.7s
+  depth  20 residual epoch  18  train err 0.1055  loss 0.3064    71.8s
+  depth  20 residual epoch  19  train err 0.1056  loss 0.3013    76.3s
+  depth  20 residual epoch  20  train err 0.1029  loss 0.2995    80.3s
+
+           net   params  train err (aug, last epoch)  train err (clean, 10k)  test err    time
+      plain-20  269,722                       0.1496                  0.1419    0.1632     69s
+     ResNet-20  269,722                       0.1029                  0.0963    0.1267     80s

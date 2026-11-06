@@ -1,0 +1,57 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/across-the-cnnverse/scripts/01_conv_from_scratch.py
+
+== The operation: a 3x3 filter on a 6x6 input, one multiply-accumulate at a time ==
+output shape (4, 4): 16 dot products of 9 terms, sharing 9 weights
+max |loops - F.conv2d| = 0.00e+00
+true convolution (flipped kernel) differs from cross-correlation by 4.635; learning the flipped weights gives it back exactly
+
+== im2col with stride, padding, dilation and groups, against F.conv2d ==
+ k  s  p  d   g        out  formula  max abs error
+ 3  1  1  1   1   (17, 17)       17  1.53e-05
+ 3  2  1  1   1     (9, 9)        9  1.91e-05
+ 5  1  2  1   1   (17, 17)       17  4.96e-05
+ 3  1  2  2   1   (17, 17)       17  1.91e-05
+ 3  1  1  1   4   (17, 17)       17  3.81e-06
+ 3  2  1  1  16     (9, 9)        9  1.43e-06
+ 7  4  3  1   1     (5, 5)        5  5.34e-05
+ 1  1  0  1   1   (17, 17)       17  0.00e+00
+transposed conv by scatter vs F.conv_transpose2d (k=3, s=2, p=1): max abs error 0.00e+00
+k=3, s=2 transposed conv of a constant image: output values [1.0, 2.0, 4.0] -> the checkerboard (k is not a multiple of s)
+
+== What a filter sees ==
+    kernel    sum  flat-region response  edge response (max |y|)
+  identity   1.00                 1.000                    1.000
+   sobel_x   0.00                 0.000                    4.000
+   sobel_y   0.00                 0.000                    0.000
+ laplacian   0.00                 0.000                    1.000
+  box_blur   1.00                 1.000                    1.000
+  gaussian   1.00                 1.000                    1.000
+   sharpen   1.00                 1.000                    2.000
+    emboss   1.00                 1.000                    4.000
+kernels that sum to zero are blind to flat regions; blurs sum to one and pass them unchanged
+sobel_x on a vertical edge 4.0, on a horizontal edge 0.0; rotate it 90 degrees and it equals sobel_y up to sign: True
+doubling every weight doubles the response: True
+template matching: cosine(sobel_x, sobel_x) = 1.000, cosine(sobel_x, a step-edge patch) = 0.471, cosine(sobel_x, the reversed edge) = -0.667
+
+== Geometry ==
+224 px through 16 unpadded 3x3 layers -> 192 px
+stride 2 quarters the output positions: 56x56 -> 28x28
+a 3x3 kernel with dilation 2 covers a 5x5 footprint with 9 weights
+three stacked 3x3 = 27C^2 = 110,592; one 7x7 = 49C^2 = 200,704 at C=64; 45% fewer
+
+== The convolution family at H=W=56, C_in=C_out=128, k=3 (post's table) ==
+              operator     params         MACs  vs standard
+          Standard 3x3    147,456      462.4 M      1.0000x
+       1x1 (pointwise)     16,384       51.4 M      0.1111x
+         Depthwise 3x3      1,152        3.6 M      0.0078x
+   Depthwise separable     17,536       55.0 M      0.1189x
+     Grouped 3x3, g=32      4,608       14.5 M      0.0312x
+      Dilated 3x3, d=2    147,456      462.4 M      1.0000x
+   Transposed 3x3, s=2    147,456     1849.7 M      4.0000x
+depthwise separable / standard = 1/C_out + 1/k^2 = 0.1189 -> 8.4x cheaper
+
+== 1D, 2D, 3D: one operator, more swept axes ==
+3x3x64->64 at 56^2: 115.6 M MACs; 3x3x3 at 16 frames of 56^2: 5549.1 M MACs; ratio 48x
+Conv1d output (6, 46), params k*C_in*C_out = 120
+Conv3d output (6, 4, 7, 7), params kt*k^2*C_in*C_out = 648

@@ -1,0 +1,23 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/across-the-cnnverse/scripts/03_equivariance.py
+
+== The parameter cost of not sharing ==
+dense layer, 224x224x3 image -> 1000 units: 150,529,000 parameters (150.5 M)
+3x3 conv, 3 -> 1000 channels: 28,000 parameters, at every one of 224x224 positions
+the 8x8 conv layer (3 -> 4 ch) written as a dense matrix: shape (256, 192), 49,152 entries, 5,808 nonzero, 108 distinct values
+dense matrix @ x vs F.conv2d: max abs error 2.86e-06 (convolution is a strict subset of dense layers)
+
+== Translation equivariance, measured (relative max error; 0 means exact) ==
+                               operation   shift 1   shift 2   shift 4
+     stride-1 conv, output shifted by dx     0.000     0.000     0.000
+   stride-2 conv, output shifted by dx/2     1.798     0.000     0.000
+    2x2 max pool, output shifted by dx/2     0.801     0.000     0.000
+         conv -> ReLU -> conv (stride 1)     0.000     0.000     0.000
+a stride-2 layer is equivariant only to even shifts: an odd shift lands between its samples (aliasing)
+after conv + ReLU, share of outputs unchanged by a 1-px shift: 2x2 max pool 0.33, plain stride-2 subsample 0.24 (max pooling buys a little local invariance; the subsample's matches are only ReLU zeros)
+global average pool after a conv: change in output for shifts 1, 3, 7 = 1.9e-09, 3.0e-09, 1.9e-09 (equivariance turned into invariance)
+a dense layer on the same image: relative change for a 1-pixel shift = 1.63 (no structure)
+
+== Motion needs a swept time axis ==
+3-D conv: shifting the clip by 2 frames shifts the output by 2 frames, max error 0.0e+00
+2-D conv over frames-as-channels: the same time shift changes the single output by 1.33 (relative); each frame has its own weight slot, so the filter is a fixed template, not a moving-edge detector

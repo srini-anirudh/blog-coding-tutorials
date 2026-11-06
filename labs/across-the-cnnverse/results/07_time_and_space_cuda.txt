@@ -1,0 +1,44 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/across-the-cnnverse/scripts/07_time_and_space.py --device cuda --reps 20
+
+== Forward latency vs MACs, batch 1, fp32, eval mode, median of 20 ==
+         network  GMACs/img  ms/batch  achieved GMAC/s  MAC ratio to R50  time ratio to R50
+         AlexNet      0.724      0.85            847.5              0.18               0.14
+          VGG-16     15.470      2.08           7423.3              3.78               0.34
+       GoogLeNet      1.583      4.64            341.1              0.39               0.75
+       ResNet-50      4.089      6.16            663.6              1.00               1.00
+    DenseNet-121      2.834     15.73            180.2              0.69               2.55
+     MobileNetV2      0.301      5.73             52.5              0.07               0.93
+ EfficientNet-B0      0.386      7.09             54.4              0.09               1.15
+      ConvNeXt-T      4.456      5.36            831.2              1.09               0.87
+MobileNetV2 has 13.6x fewer MACs than ResNet-50 and runs 1.1x faster here.
+
+== One operator at 56x56, 128 -> 128 channels, batch 64, fp32 ==
+            operator      MACs  MAC/byte       ms  achieved GMAC/s
+        standard 3x3    29595M     143.6    1.415          20913.9
+       1x1 pointwise     3288M      16.0    0.237          13859.9
+   grouped 3x3, g=32      925M       4.5    0.669           1382.9
+       depthwise 3x3      231M       1.1    0.272            850.5
+depthwise does 128x fewer MACs than standard 3x3 and runs 5.2x faster.
+
+== Forward latency vs MACs, batch 64, fp32, eval mode, median of 20 ==
+         network  GMACs/img  ms/batch  achieved GMAC/s  MAC ratio to R50  time ratio to R50
+         AlexNet      0.724      4.10          11318.7              0.18               0.19
+          VGG-16     15.470     42.79          23137.8              3.78               1.98
+       GoogLeNet      1.583      9.12          11100.5              0.39               0.42
+       ResNet-50      4.089     21.64          12096.2              1.00               1.00
+    DenseNet-121      2.834     22.11           8204.5              0.69               1.02
+     MobileNetV2      0.301      6.66           2889.7              0.07               0.31
+ EfficientNet-B0      0.386      9.10           2714.0              0.09               0.42
+      ConvNeXt-T      4.456     60.72           4695.8              1.09               2.81
+MobileNetV2 has 13.6x fewer MACs than ResNet-50 and runs 3.2x faster here.
+
+== CUDA training step, batch 32, fp32, Adam: peak allocated memory and step time ==
+       network checkpoint     peak  weights+grads+Adam  step ms
+        VGG-16        off   5.92Gi              2.06Gi     66.2
+        VGG-16         on   5.35Gi              2.06Gi     81.3
+     ResNet-50        off   2.92Gi              0.38Gi     40.6
+     ResNet-50         on   2.25Gi              0.38Gi    144.5
+  DenseNet-121        off   4.04Gi              0.12Gi     58.0
+   MobileNetV2        off   2.43Gi              0.05Gi     22.3
+    ConvNeXt-T        off   3.65Gi              0.43Gi     67.0

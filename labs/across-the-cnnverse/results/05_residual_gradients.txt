@@ -1,0 +1,16 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/across-the-cnnverse/scripts/05_residual_gradients.py
+
+|grad first layer| / |grad last layer| at initialisation, 16 channels, 16x16 inputs, mean of 3 seeds
+                     variant    depth 8   depth 20   depth 56  depth 110
+  plain, no BN, default init   1.24e-03   5.09e-09   0.00e+00   0.00e+00
+       plain, no BN, He init   1.88e-01   2.80e-01   1.49e-01   9.34e-02
+                   plain, BN   8.51e-01   5.20e+00   2.17e+03   4.59e+06
+                residual, BN   5.59e-01   6.55e-01   1.22e+00   1.80e+00
+
+A ratio near 1 means the first layer gets as much gradient as the last. Without BN and with the default
+init, the signal vanishes on the way back. He init keeps it within an order of magnitude. With BN, the plain
+stack does not lose the gradient at all: it grows toward the input, by orders of magnitude at depth 56 and 110
+(BN makes deep plain nets explode at initialisation, as Yang et al. 2019 analyse). The residual stack is the
+only one that stays near 1 at every depth. He et al. noted that vanishing gradients do not explain the
+degradation of deep plain nets with BN; 06_degradation measures that degradation directly.

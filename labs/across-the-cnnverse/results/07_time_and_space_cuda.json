@@ -1,0 +1,129 @@
+{
+ "latency_b1": {
+  "AlexNet": {
+   "macs": 724406816,
+   "seconds": 0.0008547969628125429
+  },
+  "VGG-16": {
+   "macs": 15470264320,
+   "seconds": 0.0020840129582211375
+  },
+  "GoogLeNet": {
+   "macs": 1582671872,
+   "seconds": 0.004640475963242352
+  },
+  "ResNet-50": {
+   "macs": 4089184256,
+   "seconds": 0.006162277073599398
+  },
+  "DenseNet-121": {
+   "macs": 2834161664,
+   "seconds": 0.015731284976936877
+  },
+  "MobileNetV2": {
+   "macs": 300774272,
+   "seconds": 0.005732508026994765
+  },
+  "EfficientNet-B0": {
+   "macs": 385814752,
+   "seconds": 0.0070869369665160775
+  },
+  "ConvNeXt-T": {
+   "macs": 4455531264,
+   "seconds": 0.005360390990972519
+  }
+ },
+ "operators_b64": {
+  "standard 3x3": {
+   "macs": 29595009024,
+   "intensity": 143.5879173290938,
+   "seconds": 0.0014150890056043863
+  },
+  "1x1 pointwise": {
+   "macs": 3288334336,
+   "intensity": 15.994899585591329,
+   "seconds": 0.0002372550079599023
+  },
+  "grouped 3x3, g=32": {
+   "macs": 924844032,
+   "intensity": 4.499596456790985,
+   "seconds": 0.0006687840213999152
+  },
+  "depthwise 3x3": {
+   "macs": 231211008,
+   "intensity": 1.1249747768529983,
+   "seconds": 0.0002718450268730521
+  }
+ },
+ "latency_b64": {
+  "AlexNet": {
+   "macs": 724406816,
+   "seconds": 0.004096044925972819
+  },
+  "VGG-16": {
+   "macs": 15470264320,
+   "seconds": 0.04279138194397092
+  },
+  "GoogLeNet": {
+   "macs": 1582671872,
+   "seconds": 0.009124907897785306
+  },
+  "ResNet-50": {
+   "macs": 4089184256,
+   "seconds": 0.021635575918480754
+  },
+  "DenseNet-121": {
+   "macs": 2834161664,
+   "seconds": 0.022108266013674438
+  },
+  "MobileNetV2": {
+   "macs": 300774272,
+   "seconds": 0.006661448045633733
+  },
+  "EfficientNet-B0": {
+   "macs": 385814752,
+   "seconds": 0.00909803796093911
+  },
+  "ConvNeXt-T": {
+   "macs": 4455531264,
+   "seconds": 0.06072492303792387
+  }
+ },
+ "cuda_training_step": {
+  "VGG-16": {
+   "peak_bytes": 6352278016,
+   "static_bytes": 2213720704,
+   "step_s": 0.06618706905283034
+  },
+  "VGG-16 ckpt": {
+   "peak_bytes": 5749447168,
+   "static_bytes": 2213720704,
+   "step_s": 0.08127934904769063
+  },
+  "ResNet-50": {
+   "peak_bytes": 3134446592,
+   "static_bytes": 408912512,
+   "step_s": 0.040607964037917554
+  },
+  "ResNet-50 ckpt": {
+   "peak_bytes": 2414139392,
+   "static_bytes": 408912512,
+   "step_s": 0.1445392279420048
+  },
+  "DenseNet-121": {
+   "peak_bytes": 4337438720,
+   "static_bytes": 127661696,
+   "step_s": 0.057999995071440935
+  },
+  "MobileNetV2": {
+   "peak_bytes": 2613354496,
+   "static_bytes": 56077952,
+   "step_s": 0.022267498075962067
+  },
+  "ConvNeXt-T": {
+   "peak_bytes": 3921577984,
+   "static_bytes": 457426048,
+   "step_s": 0.0670045999577269
+  }
+ }
+}

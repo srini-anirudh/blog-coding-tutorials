@@ -1,0 +1,91 @@
+{
+ "latency_b1": {
+  "AlexNet": {
+   "macs": 724406816,
+   "seconds": 0.04869478603359312
+  },
+  "VGG-16": {
+   "macs": 15470264320,
+   "seconds": 0.4538981169462204
+  },
+  "GoogLeNet": {
+   "macs": 1582671872,
+   "seconds": 0.045484269969165325
+  },
+  "ResNet-50": {
+   "macs": 4089184256,
+   "seconds": 0.07285550702363253
+  },
+  "DenseNet-121": {
+   "macs": 2834161664,
+   "seconds": 0.12032229697797447
+  },
+  "MobileNetV2": {
+   "macs": 300774272,
+   "seconds": 0.036722820019349456
+  },
+  "EfficientNet-B0": {
+   "macs": 385814752,
+   "seconds": 0.056658577057532966
+  },
+  "ConvNeXt-T": {
+   "macs": 4455531264,
+   "seconds": 0.09493023797404021
+  }
+ },
+ "operators_b8": {
+  "standard 3x3": {
+   "macs": 3699376128,
+   "intensity": 140.76807980049875,
+   "seconds": 0.05166835500858724
+  },
+  "1x1 pointwise": {
+   "macs": 411041792,
+   "intensity": 15.959287531806616,
+   "seconds": 0.006280819070525467
+  },
+  "grouped 3x3, g=32": {
+   "macs": 115605504,
+   "intensity": 4.496773679598502,
+   "seconds": 0.008929993025958538
+  },
+  "depthwise 3x3": {
+   "macs": 28901376,
+   "intensity": 1.1247982464879944,
+   "seconds": 0.001423739013262093
+  }
+ },
+ "memory": {
+  "VGG-16": {
+   "weights": 553430176,
+   "saved_per_image": 73258912.0,
+   "layer_outputs_per_image": 60348320
+  },
+  "ResNet-50": {
+   "weights": 102228128,
+   "saved_per_image": 86125984.0,
+   "layer_outputs_per_image": 45270944
+  },
+  "DenseNet-121": {
+   "weights": 31915424,
+   "saved_per_image": 130699936.0,
+   "layer_outputs_per_image": 29110176
+  },
+  "MobileNetV2": {
+   "weights": 14019488,
+   "saved_per_image": 78344864.0,
+   "layer_outputs_per_image": 26721568
+  },
+  "ConvNeXt-T": {
+   "weights": 114356512,
+   "saved_per_image": 109159808.0,
+   "layer_outputs_per_image": 53745568
+  }
+ },
+ "checkpoint_cpu": {
+  "0": 86125984.0,
+  "2": 23465888.0,
+  "4": 3022752.0,
+  "8": 10649504.0
+ }
+}

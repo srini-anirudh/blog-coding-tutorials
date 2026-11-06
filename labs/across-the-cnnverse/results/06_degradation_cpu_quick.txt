@@ -1,0 +1,13 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/across-the-cnnverse/scripts/06_degradation.py --epochs 3 --depths 20 --subset 2000 --tag _cpu_quick
+# data: CIFAR-10, 2000 train / 10000 test images, 3 epochs, batch 128, SGD 0.1 momentum 0.9 wd 1e-4, lr /10 at 50% and 75%
+  depth  20    plain epoch   1  train err 0.8573  loss 2.2248    53.3s
+  depth  20    plain epoch   2  train err 0.8057  loss 2.0281   168.5s
+  depth  20    plain epoch   3  train err 0.7849  loss 1.9419   171.8s
+  depth  20 residual epoch   1  train err 0.8422  loss 2.4903   178.2s
+  depth  20 residual epoch   2  train err 0.7771  loss 2.0977   350.5s
+  depth  20 residual epoch   3  train err 0.7292  loss 1.9172   494.8s
+
+           net   params  train err (aug, last epoch)  train err (clean, 10k)  test err    time
+      plain-20  269,722                       0.7849                  0.7795    0.7681    204s
+     ResNet-20  269,722                       0.7292                  0.7215    0.7284    536s

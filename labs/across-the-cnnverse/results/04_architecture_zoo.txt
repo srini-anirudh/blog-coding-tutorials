@@ -1,0 +1,91 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/across-the-cnnverse/scripts/04_architecture_zoo.py
+
+== Nine networks: computed from the layer specs vs published ==
+             network      params  published    gap    GMACs  published    gap  acts/img head share top-1 (paper)
+             LeNet-5      0.062M    0.06171  +0.0%    0.000     0.0004  +4.1%     0.01M      17.8%             -
+             AlexNet     60.965M         61  -0.1%    0.724       0.72  +0.6%     0.78M      96.2%          57.1
+              VGG-16    138.358M      138.4  -0.0%   15.470       15.5  -0.2%    15.09M      89.4%          71.6
+           GoogLeNet      6.999M          7  -0.0%    1.583        1.6  -1.1%     4.65M      14.6%          69.8
+           ResNet-50     25.557M       25.6  -0.2%    4.089        4.1  -0.3%    11.32M       8.0%          76.1
+        DenseNet-121      7.979M          8  -0.3%    2.834        2.9  -2.3%     7.28M      12.8%          74.4
+         MobileNetV2      3.505M        3.5  +0.1%    0.301        0.3  +0.3%     6.68M      36.5%          72.0
+     EfficientNet-B0      5.289M        5.3  -0.2%    0.386       0.39  -1.1%     6.75M      24.2%          77.1
+          ConvNeXt-T     28.589M       28.6  -0.0%    4.456        4.5  -1.0%    13.44M       2.7%          82.1
+  AlexNet, ungrouped     62.378M          -      -    1.135          -      -     0.78M      94.0%             -
+  LeNet-5, 1998 form      0.061M          -      -    0.000          -      -     0.01M      18.1%             -
+    ResNeXt-50 32x4d     25.029M         25  +0.1%    4.230        4.2  +0.7%    14.60M       8.2%          77.8
+        SE-ResNet-50     28.088M       28.1  -0.0%    4.092        4.1  -0.2%    11.33M       7.3%          77.6
+acts/img counts the outputs of every conv, linear and pooling layer for one image.
+
+LeNet-5: 61,706 parameters in the common form (dense C3); 60,840 with the 1998 sparse C3 table and trainable subsampling.
+AlexNet: grouping conv2, conv4, conv5 in two: 60.97 M params and 0.724 GMACs; ungrouped 62.38 M and 1.135 GMACs.
+VGG-16: fc6 holds 102.8 M parameters, the three FC layers 123.6 M. VGG-16 / ResNet-50 compute = 3.8x.
+
+== Where the cost sits: params and MACs by output resolution ==
+VGG-16:
+    224x224  params   0.0%   MACs  12.5%
+    112x112  params   0.2%   MACs  17.9%
+      56x56  params   1.1%   MACs  29.9%
+      28x28  params   4.3%   MACs  29.9%
+      14x14  params   5.1%   MACs   9.0%
+        7x7  params   0.0%   MACs   0.0%
+       head  params  89.4%   MACs   0.8%
+ResNet-50:
+    112x112  params   0.0%   MACs   2.9%
+      56x56  params   1.0%   MACs  18.8%
+      28x28  params   5.1%   MACs  25.1%
+      14x14  params  29.3%   MACs  35.8%
+        7x7  params  56.5%   MACs  17.3%
+        1x1  params   0.0%   MACs   0.0%
+       head  params   8.0%   MACs   0.1%
+ConvNeXt-T:
+      56x56  params   0.8%   MACs  16.9%
+      28x28  params   3.5%   MACs  17.4%
+      14x14  params  38.9%   MACs  48.7%
+        7x7  params  54.1%   MACs  17.0%
+        1x1  params   0.0%   MACs   0.0%
+       head  params   2.7%   MACs   0.0%
+
+== Inception: the 1x1 bottleneck ==
+5x5 branch, 480 -> 128 channels: 1,536,000 weights; with a 1x1 projection to 32 first: 117,760 (13.0x fewer)
+module 3a at 28x28: naive 0.39 M params, 303 M MACs, 416 out channels; shipped 0.16 M params, 128 M MACs, 256 out channels -> 2.4x fewer MACs
+module 4a at 14x14: naive 1.57 M params, 307 M MACs, 928 out channels; shipped 0.38 M params, 74 M MACs, 512 out channels -> 4.2x fewer MACs
+the naive pool branch passes all input channels through, so naive outputs are wider as well as costlier.
+
+== Residual family ==
+SE on ResNet-50: +2.53 M params, +0.06% MACs
+ResNeXt-50 32x4d vs ResNet-50: params 0.979x, MACs 1.035x
+MobileNetV2 vs ResNet-50: 13.6x fewer MACs, 7.3x fewer params
+ConvNeXt-T vs ResNet-50: params 1.12x, MACs 1.09x
+DenseNet-121 vs ResNet-50: 3.2x fewer params
+
+== EfficientNet compound scaling ==
+alpha * beta^2 * gamma^2 = 1.920 (target 2)
+phi  depth  width  res   GMACs  ratio to B0  (a b^2 g^2)^phi
+  0   1.00   1.00  224    0.39         1.00             1.00
+  1   1.20   1.10  258    0.99         2.57             1.92
+  2   1.44   1.21  296    1.81         4.69             3.69
+  3   1.73   1.33  341    3.25         8.43             7.08
+  4   2.07   1.46  392    6.32        16.38            13.60
+one axis at a time, phi=1: depth 1.2 -> 1.48x (blocks 16 -> 23), width 1.1 -> 1.15x (formula 1.21), resolution 258 -> 1.49x (formula 1.32)
+depth drifts because repeats round up to whole blocks and B0's stages have 1 to 4 blocks. Resolution drifts because every stride-2 layer rounds up: 258 -> 129 -> 65 -> 33 -> 17 -> 9, so the last map is 9x9, not 8.1x8.1. Width rounds to multiples of 8 and drifts down.
+
+Released members, computed from their (width, depth, resolution):
+     width  depth  res   params   GMACs
+ B0    1.0    1.0  224    5.29M    0.39
+ B1    1.0    1.1  240    7.79M    0.69
+ B2    1.1    1.2  260    9.11M    0.99
+ B3    1.2    1.4  300   12.23M    1.83
+ B4    1.4    1.8  380   19.34M    4.39
+ B5    1.6    2.2  456   30.39M   10.27
+ B6    1.8    2.6  528   43.04M   19.07
+ B7    2.0    3.1  600   66.35M   37.75
+published: B0 5.3 M / 0.39 G, B4 19 M / 4.2 G, B7 66 M / 37 G (post's figures).
+
+Scaling one axis alone to about 2x B0's compute, with the compound phi=1 step for comparison:
+            depth x2: 2.03x MACs, 10.22 M params
+         width x1.41: 1.93x MACs, 9.72 M params
+    resolution x1.41: 2.03x MACs, 5.29 M params
+      compound phi=1: 2.57x MACs, 9.11 M params
+which of these is most accurate needs ImageNet training; the lab does not measure it.

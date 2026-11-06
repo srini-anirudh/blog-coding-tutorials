@@ -1,0 +1,26 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/across-the-cnnverse/scripts/02_receptive_fields.py
+
+== Recursion vs measured footprint (weights all 1, gradient of the centre output unit) ==
+                            strategy  params at C=64  jump  RF recursion  RF measured
+                   3x3, stride 1, x8         294,912     1            17           17
+   3x3, stride 2 every 2nd layer, x8         294,912    16            61           61
+          3x3, dilation 1,2,4,8 (x2)         294,912     1            61           61
+                   7x7, stride 1, x3         602,112     1            19           19
+
+With stride 1, n layers of 3x3 give 2n+1:
+  n=1: 3, n=2: 5, n=4: 9, n=8: 17, n=16: 33, n=32: 65
+With a stride-2 layer every second layer, growth compounds:
+  n=2: 5, n=4: 13, n=6: 29, n=8: 61, n=10: 125
+
+== Effective receptive field: random weights, ReLU, 8 layers of 3x3 (theoretical RF 17) ==
+normalised |gradient| along the centre row, offsets -8..8:
+  0.02 0.07 0.16 0.30 0.43 0.64 0.88 0.91 1.00 0.90 0.78 0.59 0.44 0.32 0.14 0.06 0.03
+  share of gradient within the central 3x3 square (3% of the RF area): 0.13
+  share of gradient within the central 5x5 square (9% of the RF area): 0.33
+  share of gradient within the central 9x9 square (28% of the RF area): 0.74
+  share of gradient within the central 17x17 square (100% of the RF area): 1.00
+
+== The theoretical receptive field of real stems (main path, from the zoo specs) ==
+AlexNet: 8 conv/pool layers, final jump 32 px, theoretical RF 195 px
+VGG-16: 18 conv/pool layers, final jump 32 px, theoretical RF 212 px
