@@ -1,9 +1,10 @@
 """Section 18: LoRA on SmolLM2-135M-Instruct. Inspect it, check the math, train it, merge it.
 
-Run: python c02-hf-stack/scripts/11_lora.py [--steps 150] [--device auto]
+Run: python c02-hf-stack/scripts/11_lora.py [--steps 150] [--device auto] [--seed 0]
 """
 
 import argparse
+import hashlib
 import json
 import sys
 import tempfile
@@ -27,6 +28,7 @@ from hfstack.utils import CHAT_LM, be_polite, count_parameters, hardware_label, 
 parser = argparse.ArgumentParser()
 parser.add_argument("--steps", type=int, default=150)
 parser.add_argument("--device", default="auto")
+parser.add_argument("--seed", type=int, default=0, help="adapter init and batch order; the data split stays fixed")
 args = parser.parse_args()
 be_polite()
 device = pick_device() if args.device == "auto" else torch.device(args.device)
@@ -70,9 +72,11 @@ seen = {question(r) for r in train_rows}
 test_rows = [r for r in rows[1000:] if question(r) not in seen]
 replies_before = greedy_replies(base, tok, test_rows)
 
+# Trainer seeds itself only when it is built, which is after A has been drawn. Seed here too.
+torch.manual_seed(args.seed)
 model = add_lora(base, r=8, alpha=16)
 trainable, total = count_parameters(model)
-print(f"device {device} ({hardware_label(device)})")
+print(f"device {device} ({hardware_label(device)}), seed {args.seed}")
 print(f"trainable {trainable:,} of {total:,} ({100 * trainable / total:.2f}%)")
 for name, shape in lora_shapes(model)[:4]:
     print(f"  {name:<78} {shape}")
@@ -104,7 +108,7 @@ with tempfile.TemporaryDirectory() as tmp:
         report_to="none",
         disable_tqdm=True,
         use_cpu=device.type == "cpu",
-        seed=0,
+        seed=args.seed,
         remove_unused_columns=False,
     )
     trainer = Trainer(
@@ -130,6 +134,7 @@ for r, old, new in list(zip(test_rows, replies_before, replies_after))[:4]:
 
 with tempfile.TemporaryDirectory() as tmp:
     size = adapter_size_bytes(model, tmp)
+    print("adapter sha256:", hashlib.sha256((Path(tmp) / "adapter_model.safetensors").read_bytes()).hexdigest()[:16])
     print("\nadapter checkpoint:")
     for name, bytes_ in list_files(tmp):
         print(f"  {name:<28} {bytes_:>12,}")

@@ -50,10 +50,12 @@ c02-hf-stack/
 | `09_accelerate.py` | The loop under Accelerate, on one process and under DDP on CPU |
 | `10_outputs_and_generate.py` | Model outputs and shapes, KV cache growth, `generate()` as a loop |
 | `11_lora.py` | LoRA: target modules, trainable parameters, adapter checkpoint, merge |
+| `11b_lora_seeds.py` | `11_lora.py` over seeds 0, 1 and 2, plus an exact repeat of seed 0 |
 | `12_trl.py` | Dataset format for SFT, DPO, Reward and GRPO, with a very short run of each |
 | `13_hub_and_safetensors.py` | Files on disk and on the Hub, the safetensors layout, shards, index files |
 | `14_custom_model.py` | `nn.Module` against `PreTrainedModel`; a custom model through the whole stack |
 | `15_custom_vlm.py` | Sub-configs, image token, multimodal forward |
+| `16_side_checks.py` | Hash time of a mapped function, with repeats; the SmolVLM tile grid |
 
 ## Run
 
@@ -69,7 +71,7 @@ python -m pytest c02-hf-stack -m slow                                     # two-
 # Demos, in tutorial order.
 for s in 01_config_and_auto 02_tokenizer 03_chat_template 04_processor 05_datasets 06_collator \
          07_raw_vs_trainer 07b_trainer_eval_checkpoint 08_custom_trainer 09_accelerate \
-         10_outputs_and_generate 11_lora 12_trl 13_hub_and_safetensors 14_custom_model 15_custom_vlm; do
+         10_outputs_and_generate 11_lora 12_trl 13_hub_and_safetensors 14_custom_model 15_custom_vlm 16_side_checks; do
   python c02-hf-stack/scripts/$s.py
 done
 
@@ -78,7 +80,8 @@ OMP_NUM_THREADS=1 python -m torch.distributed.run --nproc_per_node 2 --master_po
     c02-hf-stack/scripts/09_accelerate.py --ddp
 
 # Options.
-python c02-hf-stack/scripts/11_lora.py --steps 150 --device auto      # auto picks CUDA, then MPS, then CPU
+python c02-hf-stack/scripts/11_lora.py --steps 150 --device auto --seed 0   # auto picks CUDA, then MPS, then CPU
+python c02-hf-stack/scripts/11b_lora_seeds.py --seeds 0 1 2                # writes 11_lora*.txt and 11_lora_seeds.txt
 
 # Benchmarks. They print tables.
 python c02-hf-stack/benchmarks/bench_map.py --rows 20000
@@ -112,9 +115,12 @@ Tests: 51 passed offline, 11 passed with `network`, 1 passed with `slow`. No tes
 | `save_pretrained` of SmolLM2-135M-Instruct in float32 | 538,090,408 bytes; 272 tensors |
 | LoRA r=8 on the 4 attention projections: trainable parameters | 921,600 of 135,436,608 (0.68%) |
 | LoRA adapter file vs full float32 model | 3,717,656 bytes, 0.69% |
-| LoRA merge, largest logit gap | 5.63e-05 |
-| LoRA training, 150 steps, batch 16 | 203 s, 1.35 s/step, loss 2.5 to 0.311 |
-| Exact-match accuracy on 182 held-out sums, before / after LoRA | 0.000 / 0.555 |
+| LoRA merge, largest logit gap, seeds 0 / 1 / 2 | 1.03e-04 / 8.39e-05 / 7.82e-05 |
+| LoRA training, 150 steps, batch 16, seeds 0 / 1 / 2: final logged loss | 0.295 / 0.326 / 0.267 (1.08 to 1.30 s/step) |
+| Exact-match accuracy on 182 held-out sums, before / after LoRA, seeds 0 / 1 / 2 | 0.000 / 0.593, 0.560, 0.566 (mean 0.573) |
+| Seed 0 run twice | identical accuracy, loss curve, merge gap and adapter hash |
+| `Hasher.hash` of the mapped tokenize function, 9 repeats x 3 processes: median per process | 0.460 / 0.521 / 0.461 s (range 0.434 to 0.548 s) |
+| SmolVLM tile grid: 640x480 / 300x300 | 3 x 4 + 1 global = 13 / 4 x 4 + 1 global = 17 |
 | `Dataset.map` tokenizing 20,000 rows: per row / batched / batched with 2 processes | 3.44 / 1.07 / 1.08 s |
 | 100 training steps, 4-layer Llama: raw loop / `Trainer` / Accelerate | 3.21 / 3.50 / 2.95 s |
 | 64 new tokens on SmolLM2-135M: no cache / our KV-cache loop / `model.generate` | 11.9 / 16.9 / 14.3 tokens/s |
@@ -123,7 +129,11 @@ How to read the weak or surprising results:
 
 - **LoRA "before" is 0.000 mostly because of format.** The base model starts every reply with an explanation such as
   "To add 86 and", and the check needs the whole reply to be the answer within 6 tokens. So the jump measures learning
-  to answer directly as well as arithmetic. It is one run on one seed.
+  to answer directly as well as arithmetic. Across seeds 0, 1 and 2 the "after" score is 0.560 to 0.593. Three seeds
+  give a range, not a confidence interval.
+- **The merge gap depends on the seed.** It is 7.82e-05 to 1.03e-04 on SmolLM2-135M. `test_merge_preserves_logits`
+  uses a bound of 1e-4, but on the tiny test model, so the bound does not cover SmolLM2.
+- **Hash timing varies with load.** The first hash of the tokenizer in a process is the slowest (0.72 to 0.91 s).
 - **Two processes did not beat one in `bench_map`.** 20,000 short rows are too few to repay the cost of starting workers.
 - **GRPO learns nothing here.** The tiny random model never earns a reward, so the loss and gradient norm are both 0.0.
   The DPO and Reward losses also stay near ln 2. The TRL runs check the data contract, not quality. C6 trains real

@@ -48,7 +48,7 @@ def test_merge_preserves_logits(base):
         if "lora_B" in name:
             torch.nn.init.normal_(p, std=0.01)
     merged, gap = merge_matches(model, torch.randint(3, 512, (2, 6)))
-    assert gap < 1e-4
+    assert gap < 1e-4  # close, not exact: folding B A into W rounds in float32
     assert isinstance(merged, LlamaForCausalLM)
 
 

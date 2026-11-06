@@ -1,0 +1,45 @@
+##### run 1 of 3, separate processes a few minutes apart, machine load average 50 to 110
+timings below: AMD EPYC 7R13, 8 threads
+
+--- Hasher.hash, 9 repeats in one process, seconds ---
+object                         first     min  median     max  distinct hashes
+function reaching nothing      0.001   0.000   0.000   0.001  1
+tokenizer alone                0.733   0.444   0.460   0.733  1
+function reaching tokenizer    0.469   0.450   0.460   0.469  1
+
+--- SmolVLM tile grid, read from the row and column tokens ---
+image_processor.size: SizeDict(height=None, width=None, longest_edge=2048, shortest_edge=None, max_height=None, max_width=None, min_pixels=None, max_pixels=None)
+max_image_size      : {'longest_edge': 512}
+640 x 480: 3 rows x 4 columns = 12 tiles, plus 1 global = 13 in pixel_values
+300 x 300: 4 rows x 4 columns = 16 tiles, plus 1 global = 17 in pixel_values
+
+##### run 2 of 3, separate processes a few minutes apart, machine load average 50 to 110
+timings below: AMD EPYC 7R13, 8 threads
+
+--- Hasher.hash, 9 repeats in one process, seconds ---
+object                         first     min  median     max  distinct hashes
+function reaching nothing      0.001   0.000   0.000   0.001  1
+tokenizer alone                0.905   0.476   0.543   0.905  1
+function reaching tokenizer    0.548   0.485   0.521   0.548  1
+
+--- SmolVLM tile grid, read from the row and column tokens ---
+image_processor.size: SizeDict(height=None, width=None, longest_edge=2048, shortest_edge=None, max_height=None, max_width=None, min_pixels=None, max_pixels=None)
+max_image_size      : {'longest_edge': 512}
+640 x 480: 3 rows x 4 columns = 12 tiles, plus 1 global = 13 in pixel_values
+300 x 300: 4 rows x 4 columns = 16 tiles, plus 1 global = 17 in pixel_values
+
+##### run 3 of 3, separate processes a few minutes apart, machine load average 50 to 110
+timings below: AMD EPYC 7R13, 8 threads
+
+--- Hasher.hash, 9 repeats in one process, seconds ---
+object                         first     min  median     max  distinct hashes
+function reaching nothing      0.001   0.000   0.000   0.001  1
+tokenizer alone                0.715   0.433   0.460   0.715  1
+function reaching tokenizer    0.470   0.434   0.461   0.486  1
+
+--- SmolVLM tile grid, read from the row and column tokens ---
+image_processor.size: SizeDict(height=None, width=None, longest_edge=2048, shortest_edge=None, max_height=None, max_width=None, min_pixels=None, max_pixels=None)
+max_image_size      : {'longest_edge': 512}
+640 x 480: 3 rows x 4 columns = 12 tiles, plus 1 global = 13 in pixel_values
+300 x 300: 4 rows x 4 columns = 16 tiles, plus 1 global = 17 in pixel_values
+

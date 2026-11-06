@@ -1,0 +1,8 @@
+182 held-out sums, 150 steps, exact match within 6 tokens
+seed  before   after  final loss  merge gap  s/step  adapter sha256
+   0   0.000   0.593       0.295   1.03e-04    1.20  acdd4ec449a3e83c
+   1   0.000   0.560       0.326   8.39e-05    1.30  8adf6e4a726343eb
+   2   0.000   0.566       0.267   7.82e-05    1.08  bb6e30d53b3971e2
+
+after: min 0.560, mean 0.573, max 0.593
+seed 0 run a second time, same accuracy, loss curve, merge gap and adapter hash: True

@@ -29,11 +29,11 @@ tensor read with seek() equals the model's: True
 index metadata: {'total_parameters': 134515008, 'total_size': 538060032}
 weight_map, first and last: ('model.embed_tokens.weight', 'model-00001-of-00003.safetensors') ('model.norm.weight', 'model-00003-of-00003.safetensors')
 tensors per shard: {'model-00001-of-00003.safetensors': 56, 'model-00002-of-00003.safetensors': 126, 'model-00003-of-00003.safetensors': 90}
-reload from shards in 0.12 s; identical weights: True
+reload from shards in 0.35 s; identical weights: True
 
 --- only the config: no weights touched ---
-config in 1.8 ms, hidden_size 576
-meta-device skeleton in 35 ms, 134,515,008 parameters, 0 bytes allocated
+config in 1.6 ms, hidden_size 576
+meta-device skeleton in 28 ms, 134,515,008 parameters, all on meta: True
 
 --- the same model on the Hub: HuggingFaceTB/SmolLM2-135M-Instruct ---
   README.md                           6,772

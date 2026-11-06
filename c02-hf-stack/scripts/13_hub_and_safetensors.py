@@ -86,7 +86,7 @@ with tempfile.TemporaryDirectory() as tmp:
     start = time.perf_counter()
     with torch.device("meta"):
         skeleton = AutoModelForCausalLM.from_config(config)
-    print(f"meta-device skeleton in {1000 * (time.perf_counter() - start):.0f} ms, {sum(p.numel() for p in skeleton.parameters()):,} parameters, 0 bytes allocated")
+    print(f"meta-device skeleton in {1000 * (time.perf_counter() - start):.0f} ms, {sum(p.numel() for p in skeleton.parameters()):,} parameters, all on meta: {all(p.is_meta for p in skeleton.parameters())}")
 
 print(f"\n--- the same model on the Hub: {CHAT_LM} ---")
 # A repo is a git repo of these files. README.md is the model card; save_pretrained does not write one.
