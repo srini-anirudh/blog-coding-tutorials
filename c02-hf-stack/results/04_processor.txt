@@ -1,0 +1,41 @@
+Idefics3Processor = GPT2Tokenizer + Idefics3ImageProcessorPil
+
+prompt text: '<|im_start|>User:<image>What does it say?<end_of_utterance>\nAssistant:'
+
+--- 640x480 image, default settings ---
+  input_ids              (1, 875)                   int64
+  attention_mask         (1, 875)                   int64
+  pixel_values           (1, 13, 3, 512, 512)       float32
+  pixel_attention_mask   (1, 13, 512, 512)          int64
+  image tokens in input_ids: 832 = 13 tiles x 64 tokens per tile
+  first 8 tokens: ['<|im_start|>', 'User', ':', '<fake_token_around_image>', '<row_1_col_1>', '<image>', '<image>', '<image>']
+  tokens per tile from config: (512/16)^2 / 4^2 = 64
+
+--- same image, do_image_splitting=False ---
+  input_ids              (1, 80)                    int64
+  attention_mask         (1, 80)                    int64
+  pixel_values           (1, 1, 3, 512, 512)        float32
+  pixel_attention_mask   (1, 1, 512, 512)           int64
+  image tokens: 64
+
+--- batch of two different images: pixel_values pad on the tile axis ---
+  input_ids              (2, 1140)                  int64
+  attention_mask         (2, 1140)                  int64
+  pixel_values           (2, 17, 3, 512, 512)       float32
+  pixel_attention_mask   (2, 17, 512, 512)          int64
+  real tiles per image: [13, 17]
+
+--- the collator for training: labels only on the assistant reply ---
+  input_ids              (2, 1146)                  int64
+  attention_mask         (2, 1146)                  int64
+  pixel_values           (2, 17, 3, 512, 512)       float32
+  pixel_attention_mask   (2, 17, 512, 512)          int64
+  labels                 (2, 1146)                  int64
+  row 0: 1146 positions, 6 labelled -> ' It says seven.<end_of_utterance>\n'
+  row 1: 1146 positions, 4 labelled -> ' Two.<end_of_utterance>\n'
+
+--- a different VLM family has different keys: Qwen2-VL's image processor ---
+  pixel_values           (1564, 1176)               float32
+  image_grid_thw         (1, 3)                     int64
+  image_grid_thw: [1, 34, 46] -> 1564 patches; merge_size 2
+  image_pad tokens the text needs: 1564 / 2^2 = 391

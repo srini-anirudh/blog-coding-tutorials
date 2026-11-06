@@ -1,0 +1,21 @@
+pad token: '<|im_end|>' 2 | eos token: '<|im_end|>' 2
+example lengths: [40, 40, 40]
+input_ids       (3, 40)
+attention_mask  (3, 40)
+labels          (3, 40)
+
+tail of each row (last 8 positions)
+ row 0 input_ids [1, 520, 9531, 198, 40, 41, 2, 198]
+ row 0 attention [1, 1, 1, 1, 1, 1, 1, 1]
+ row 0 labels    [-100, -100, -100, -100, 40, 41, 2, -100]
+ row 1 input_ids [1, 520, 9531, 198, 33, 39, 2, 198]
+ row 1 attention [1, 1, 1, 1, 1, 1, 1, 1]
+ row 1 labels    [-100, -100, -100, -100, 33, 39, 2, -100]
+ row 2 input_ids [1, 520, 9531, 198, 36, 32, 2, 198]
+ row 2 attention [1, 1, 1, 1, 1, 1, 1, 1]
+ row 2 labels    [-100, -100, -100, -100, 36, 32, 2, -100]
+
+--- break it: the library collator labels every token, then masks by VALUE ---
+real end-of-turn tokens in the batch : 9
+of those, labelled by CausalLMCollator: 9
+of those, labelled by the library     : 0

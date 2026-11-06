@@ -1,0 +1,41 @@
+--- save_pretrained + tokenizer.save_pretrained ---
+  chat_template.jinja                   368
+  config.json                           905
+  generation_config.json                132
+  model.safetensors             538,090,408
+  tokenizer.json                  3,522,871
+  tokenizer_config.json                 453
+
+generation_config.json: {'_from_model_config': True, 'bos_token_id': 1, 'eos_token_id': 2, 'pad_token_id': 2, 'transformers_version': '5.22.2'}
+
+--- inside model.safetensors, parsed by hand ---
+first 8 bytes as little-endian u64 = header length: 30368
+metadata: {'format': 'pt'}
+tensors : 272
+  model.embed_tokens.weight                      {'dtype': 'F32', 'shape': [49152, 576], 'data_offsets': [0, 113246208]}
+  model.layers.0.input_layernorm.weight          {'dtype': 'F32', 'shape': [576], 'data_offsets': [113246208, 113248512]}
+  model.layers.0.mlp.down_proj.weight            {'dtype': 'F32', 'shape': [576, 1536], 'data_offsets': [113248512, 116787456]}
+lm_head.weight in the file: False (tied, so saved once)
+tensor read with seek() equals the model's: True
+
+--- sharded: max_shard_size='200MB' ---
+  config.json                                       905
+  generation_config.json                            132
+  model-00001-of-00003.safetensors          198,217,056
+  model-00002-of-00003.safetensors          198,259,352
+  model-00003-of-00003.safetensors          141,613,808
+  model.safetensors.index.json                   22,439
+index metadata: {'total_parameters': 134515008, 'total_size': 538060032}
+weight_map, first and last: ('model.embed_tokens.weight', 'model-00001-of-00003.safetensors') ('model.norm.weight', 'model-00003-of-00003.safetensors')
+tensors per shard: {'model-00001-of-00003.safetensors': 56, 'model-00002-of-00003.safetensors': 126, 'model-00003-of-00003.safetensors': 90}
+reload from shards in 0.14 s; identical weights: True
+
+--- only the config: no weights touched ---
+config in 1.8 ms, hidden_size 576
+meta-device skeleton in 21 ms, 134,515,008 parameters, 0 bytes allocated
+
+push_to_hub (shown, not executed):
+# Not executed here. After `huggingface-cli login`:
+model.push_to_hub("your-name/smollm2-arithmetic")
+tok.push_to_hub("your-name/smollm2-arithmetic")
+

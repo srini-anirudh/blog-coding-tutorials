@@ -1,0 +1,21 @@
+--- formats ---
+SFT        {"messages": [{"role": "system", "content": "You are a careful calculator. Answer with the result only."}, {"role": "user", "content": "What is 49 - 97?"}, {"role": "assistant", "content": "-48"}]}
+preference {"prompt": [{"role": "system", "content": "You are a careful calculator. Answer with the result only."}, {"role": "user", "content": "What is 49 - 97?"}], "chosen": [{"role": "assistant", "content": "-48"}], "rejected": [{"role": "assistant", "content": "-47"}]}
+RL         {"prompt": [{"role": "system", "content": "You are a careful calculator. Answer with the result only."}, {"role": "user", "content": "What is 49 - 97?"}], "answer": "-48"}
+
+--- SFTTrainer, assistant_only_loss=True ---
+columns after preparation: ['messages', 'input_ids', 'labels']
+batch: {'input_ids': (2, 41), 'labels': (2, 41), 'attention_mask': (2, 41)}
+TRL labels == our assistant_labels_by_prefix: True
+loss per step [10.564, 10.819, 10.787], 2.7 s
+
+--- DPOTrainer ---
+columns after preparation: ['prompt', 'chosen', 'rejected', 'prompt_ids', 'chosen_ids', 'rejected_ids']
+loss per step [0.693, 0.693, 0.693], 2.7 s
+ln 2 = 0.693 (the DPO loss at step 0, when model == reference)
+
+--- GRPOTrainer ---
+columns: ['prompt', 'answer']
+loss per step [0.0, 0.0, 0.0], 1.5 s
+{'reward': 0.0, 'reward_std': 0.0, 'frac_reward_zero_std': 1.0, 'grad_norm': 0.0}
+reward test: [1.0, 0.0]

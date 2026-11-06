@@ -1,0 +1,3 @@
+[rank 0] processes=1 backend=None device=cpu
+Accelerate vs raw loop, 1 process: max |loss diff| 7.15e-07
+first losses: [6.24093, 6.27106, 6.26745, 6.28221]

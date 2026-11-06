@@ -1,0 +1,26 @@
+input_ids : [504, 17301, 1301, 35864, 26085, 30]
+tokens    : ['The', 'Ġbackward', 'Ġpass', 'Ġcomputes', 'Ġgradients', '.']
+decoded   : 'The backward pass computes gradients.'
+
+          bos             eos             pad             pad side  
+M2-135M   <|endoftext|>   <|endoftext|>   None            right     
+nstruct   <|im_start|>    <|im_end|>      <|im_end|>      right     
+BOS added automatically: False
+
+right padding
+ input_ids      [[19556, 905, 0, 0, 0, 0], [504, 17301, 1301, 35864, 26085, 30]]
+ attention_mask [[1, 1, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]]
+left padding
+ input_ids      [[0, 0, 0, 0, 19556, 905], [504, 17301, 1301, 35864, 26085, 30]]
+ attention_mask [[0, 0, 0, 0, 1, 1], [1, 1, 1, 1, 1, 1]]
+truncation, max_length=3: [504, 17301, 1301]
+
+len(tokenizer) before: 49152
+added: 2 | len(tokenizer) after: 49154
+new token ids: [49152, 104, 49153]
+embedding before resize: (49152, 64)
+forward with a new token, before resize -> IndexError: index out of range in self
+embedding after resize : (49154, 64)
+lm_head after resize   : (49154, 64)
+config.vocab_size      : 49154
+lm_head still tied     : True

@@ -1,0 +1,44 @@
+--- the template renders plain text ---
+'<|im_start|>system\nYou are concise.<|im_end|>\n<|im_start|>user\nWhat is 2+2?<|im_end|>\n<|im_start|>assistant\n4<|im_end|>\n'
+
+--- add_generation_prompt stops right where the model should start writing ---
+'<|im_start|>system\nYou are concise.<|im_end|>\n<|im_start|>user\nWhat is 2+2?<|im_end|>\n<|im_start|>assistant\n'
+
+--- tokenize=True returns a BatchEncoding in transformers 5 ---
+BatchEncoding ['input_ids', 'attention_mask']
+
+--- token by token, with the assistant-only labels ---
+pos     id token           label
+  0      1 '<|im_start|>'   -100
+  1   9690 'system'         -100
+  2    198 'Ċ'              -100
+  3   2683 'You'            -100
+  4    359 'Ġare'           -100
+  5  19484 'Ġconcise'       -100
+  6     30 '.'              -100
+  7      2 '<|im_end|>'     -100
+  8    198 'Ċ'              -100
+  9      1 '<|im_start|>'   -100
+ 10   4093 'user'           -100
+ 11    198 'Ċ'              -100
+ 12   1780 'What'           -100
+ 13    314 'Ġis'            -100
+ 14    216 'Ġ'              -100
+ 15     34 '2'              -100
+ 16     27 '+'              -100
+ 17     34 '2'              -100
+ 18     47 '?'              -100
+ 19      2 '<|im_end|>'     -100
+ 20    198 'Ċ'              -100
+ 21      1 '<|im_start|>'   -100
+ 22    520 'ass'            -100
+ 23   9531 'istant'         -100
+ 24    198 'Ċ'              -100
+ 25     36 '4'                36
+ 26      2 '<|im_end|>'        2
+ 27    198 'Ċ'              -100
+
+prefix diffing == generation tags: True
+
+--- a template adds what you did not ask for: no system message given ---
+'<|im_start|>system\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face<|im_end|>\n<|im_start|>user\nWhat is 2+2?<|im_end|>\n<|im_start|>assistant\n4<|im_end|>\n'

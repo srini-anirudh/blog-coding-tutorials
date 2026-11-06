@@ -1,0 +1,29 @@
+--- before register(): the Auto classes do not know the model type ---
+ValueError: The checkpoint you are trying to load has model type `backward_pass` but Transformers does not recognize this ...
+
+--- after register() ---
+  config.json                      477
+  generation_config.json           216
+  model.safetensors            595,472
+  architectures: ['BackwardPassForCausalLM']
+  lm_head saved separately: False
+AutoConfig           -> BackwardPassConfig
+AutoModel            -> BackwardPassModel
+AutoModelForCausalLM -> BackwardPassForCausalLM
+save/load round trip, logits identical: True
+tied after load: True
+
+--- outputs ---
+  loss             () float32
+  logits           (2, 7, 512) float32
+  past_key_values  DynamicCache: 2 layers, keys (2, 4, 7, 16), values (2, 4, 7, 16)
+  hidden_states    tuple of 3 × (2, 7, 64)
+
+--- generate(), from GenerationMixin ---
+generate equals a no-cache greedy loop: True
+
+--- Trainer treats it like any other model ---
+raw vs Trainer, max |loss diff|: 4.77e-07
+
+--- PEFT needs only module names ---
+trainable, total: (3072, 151488)

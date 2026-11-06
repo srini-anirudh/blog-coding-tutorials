@@ -1,0 +1,9 @@
+logged keys: ['grad_norm', 'loss', 'lr', 'mean_log_z', 'token_accuracy']
+max |loss diff|, default vs subclass with z=0: 9.54e-07
+
+step   z=0 loss  accuracy  mean logZ |  z=1e-3 loss  mean logZ
+   0     6.2409    0.0000      6.256 |       6.2801      6.256
+   9     5.9257    0.0221      6.244 |       5.9644      6.244
+  19     5.5949    0.0629      6.217 |       5.6341      6.216
+  29     5.4111    0.0548      6.216 |       5.4507      6.214
+  39     5.3098    0.1048      6.217 |       5.3489      6.214

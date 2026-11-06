@@ -1,0 +1,26 @@
+type(config) = LlamaConfig
+  model_type               llama
+  architectures            ['LlamaForCausalLM']
+  hidden_size              576
+  num_hidden_layers        30
+  num_attention_heads      9
+  num_key_value_heads      3
+  head_dim                 64
+  intermediate_size        1536
+  vocab_size               49152
+  max_position_embeddings  8192
+  rope_parameters          {'rope_theta': 100000, 'rope_type': 'default'}
+  tie_word_embeddings      True
+  dtype                    torch.bfloat16
+
+model_type 'llama' -> LlamaForCausalLM
+AutoModel                            -> LlamaModel                       last child: rotary_emb params: 106,816
+AutoModelForCausalLM                 -> LlamaForCausalLM                 last child: lm_head  params: 106,816
+AutoModelForSequenceClassification   -> LlamaForSequenceClassification   last child: score    params: 107,008
+
+AutoModel                    last_hidden_state (2, 7, 64)
+AutoModelForCausalLM         logits            (2, 7, 512)
+AutoModelForSequenceClass.   logits            (2, 3)
+
+LlamaForCausalLM: 134,515,008 parameters (134.5 M), dtype torch.float32
+lm_head tied to embed_tokens: True

@@ -1,0 +1,33 @@
+DatasetDict -> DatasetDict({
+    train: Dataset({
+        features: ['id', 'a', 'b', 'op', 'answer'],
+        num_rows: 2000
+    })
+})
+features: {'id': Value('int64'), 'a': Value('int64'), 'b': Value('int64'), 'op': Value('string'), 'answer': Value('int64')}
+
+row 0        : {'id': 0, 'a': 49, 'b': 97, 'op': '-', 'answer': -48}
+cache files  : ['json-train.arrow']
+arrow table  : MemoryMappedTable | nbytes: 74000
+python list  : 384184 bytes (shallow, no int objects)
+
+fingerprint            : 3972e5cfcc01e94a
+filter(answer >= 0)    : 3469f4b979444370 1486 rows
+shuffle(seed=0)        : 8ba6d979f229eb5d | indices mapping: True
+select(range(4))       : 925db5517f314b64 | ids [0, 1, 2, 3]
+first ids after shuffle: [1946, 1236, 1380, 1949, 1633, 474]
+
+first  map:   4.03 s | fingerprint 384c2d09daabf88e
+
+second map:   1.04 s | fingerprint 384c2d09daabf88e
+columns after remove_columns: ['input_ids', 'attention_mask', 'labels']
+row 0 lengths: {'input_ids': 41, 'attention_mask': 41, 'labels': 41}
+
+batched map, 4 rows in -> 8 rows out: {'id': [0, 0, 1, 1], 'copy': [0, 1, 0, 1]}
+
+ IterableDataset | has __len__: False
+first row      : {'id': 0, 'a': 49, 'b': 97, 'op': '-', 'answer': -48}
+lazy transforms: {'id': 2, 'a': 51, 'b': 38, 'op': '-', 'answer': 13, 'text': '51-38'}
+buffer shuffle, first ids: [82, 36, 20, 5, 93, 16]
+take(2)        : [0, 1]
+skip(1998) ids : [1998, 1999]
