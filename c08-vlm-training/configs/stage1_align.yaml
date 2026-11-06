@@ -1,0 +1,11 @@
+# Stage 1: projector alignment. Vision and LM are frozen; only the 2.1M-parameter projector trains.
+name: stage1_align
+freeze: align
+tasks: [caption]
+steps: 300
+batch_size: 4
+lrs: {projector: 1.0e-3}
+warmup: 20
+ppl_passages: 0
+eval_n: 32
+save: true

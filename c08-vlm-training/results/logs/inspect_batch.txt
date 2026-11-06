@@ -1,0 +1,39 @@
+task             image  tiles  visual  text  target  answer
+caption        224x224      1      49    21       5  Two blue triangles.
+vqa            224x224      1      49    23       2  yellow
+ocr            336x224      3     147    22       3  yellow honey
+doc            448x448      5     245    29      11  2026-07-15
+chart          224x224      1      49    19       2  2
+grounding      224x224      1      49    25       5  <loc_3><loc_8><loc_9><loc_14>
+text                 -      0       0    34      34  (all tokens)
+
+input_ids      (7, 274)
+attention_mask (7, 274) padding share 60.3%
+labels         (7, 274) supervised share 3.2%
+pixel_values   (12, 3, 224, 224)
+
+One VQA sample, token by token (run-length encoded):
+  '<|im_start|>' x1   -100
+  'user'         x1   -100
+  '\n'           x1   -100
+  '<image>'      x49  -100
+  'What'         x1   -100
+  ' color'       x1   -100
+  ' is'          x1   -100
+  ' the'         x1   -100
+  ' square'      x1   -100
+  '?'            x1   -100
+  ' Answer'      x1   -100
+  ' with'        x1   -100
+  ' one'         x1   -100
+  ' word'        x1   -100
+  '.'            x1   -100
+  '<|im_end|>'   x1   -100
+  '\n'           x1   -100
+  '<|im_start|>' x1   -100
+  'ass'          x1   -100
+  'istant'       x1   -100
+  '\n'           x1   -100
+  'yellow'       x1   target
+  '<|im_end|>'   x1   target
+  '\n'           x1   -100

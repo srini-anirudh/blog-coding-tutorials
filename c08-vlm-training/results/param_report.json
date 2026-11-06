@@ -1,0 +1,190 @@
+{
+ "variants": {
+  "align": {
+   "report": {
+    "vision": {
+     "trainable": 0,
+     "total": 85797120
+    },
+    "projector": {
+     "trainable": 2102400,
+     "total": 2102400
+    },
+    "lm": {
+     "trainable": 0,
+     "total": 134551872
+    }
+   },
+   "lora_linears": 0
+  },
+  "lm": {
+   "report": {
+    "vision": {
+     "trainable": 0,
+     "total": 85797120
+    },
+    "projector": {
+     "trainable": 2102400,
+     "total": 2102400
+    },
+    "lm": {
+     "trainable": 134551872,
+     "total": 134551872
+    }
+   },
+   "lora_linears": 0
+  },
+  "partial top 4": {
+   "report": {
+    "vision": {
+     "trainable": 28353024,
+     "total": 85797120
+    },
+    "projector": {
+     "trainable": 2102400,
+     "total": 2102400
+    },
+    "lm": {
+     "trainable": 134551872,
+     "total": 134551872
+    }
+   },
+   "lora_linears": 0
+  },
+  "full": {
+   "report": {
+    "vision": {
+     "trainable": 85797120,
+     "total": 85797120
+    },
+    "projector": {
+     "trainable": 2102400,
+     "total": 2102400
+    },
+    "lm": {
+     "trainable": 134551872,
+     "total": 134551872
+    }
+   },
+   "lora_linears": 0
+  },
+  "lora lm": {
+   "report": {
+    "vision": {
+     "trainable": 0,
+     "total": 85797120
+    },
+    "projector": {
+     "trainable": 0,
+     "total": 2102400
+    },
+    "lm": {
+     "trainable": 4884480,
+     "total": 139436352
+    }
+   },
+   "lora_linears": 210
+  },
+  "lora vision": {
+   "report": {
+    "vision": {
+     "trainable": 2654208,
+     "total": 88451328
+    },
+    "projector": {
+     "trainable": 0,
+     "total": 2102400
+    },
+    "lm": {
+     "trainable": 0,
+     "total": 134551872
+    }
+   },
+   "lora_linears": 72
+  },
+  "lora projector": {
+   "report": {
+    "vision": {
+     "trainable": 0,
+     "total": 85797120
+    },
+    "projector": {
+     "trainable": 76800,
+     "total": 2179200
+    },
+    "lm": {
+     "trainable": 0,
+     "total": 134551872
+    }
+   },
+   "lora_linears": 2
+  },
+  "lora all": {
+   "report": {
+    "vision": {
+     "trainable": 2654208,
+     "total": 88451328
+    },
+    "projector": {
+     "trainable": 76800,
+     "total": 2179200
+    },
+    "lm": {
+     "trainable": 4884480,
+     "total": 139436352
+    }
+   },
+   "lora_linears": 284
+  }
+ },
+ "vision_layer_params": [
+  7087872,
+  7087872,
+  7087872,
+  7087872,
+  7087872,
+  7087872,
+  7087872,
+  7087872,
+  7087872,
+  7087872,
+  7087872,
+  7087872
+ ],
+ "lm_layer_params": [
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096,
+  3540096
+ ],
+ "lm_embed_params": 28348416,
+ "vision_total": 85797120,
+ "lm_total": 134551872,
+ "projector_total": 2102400
+}

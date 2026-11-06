@@ -1,0 +1,19 @@
+# Stage 2: multimodal pretraining on a six-task mixture, starting from the Stage 1 projector.
+name: stage2_main
+init_from: outputs/stage1_align/trainable.safetensors
+freeze: lm
+steps: 300
+batch_size: 4
+lrs: {vision: 1.0e-6, projector: 2.0e-4, lm: 5.0e-5}
+loss_norm: sample        # every sample counts once, so long replay passages cannot dominate
+warmup: 20
+mixture: temperature
+temperature: 2.0
+replay_ratio: 0.1
+strategy: tile
+max_tiles: 4
+grounding_format: tokens
+eval_n: 24
+eval_every: 150
+eval_n_mid: 24
+ppl_passages: 32
