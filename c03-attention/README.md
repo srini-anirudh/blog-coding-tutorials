@@ -80,14 +80,18 @@ Each cell of the backend and zoo tables runs in a fresh process. A warm-up call 
 | `python c03-attention/benchmarks/bench_backends.py` | Latency, peak memory and scaling for each CPU backend | `results/bench_backends.txt` |
 | `python c03-attention/benchmarks/bench_zoo.py` | Training, prefill and decode for each architecture | `results/bench_zoo.txt`, `results/bench_zoo.json` |
 | `python c03-attention/benchmarks/bench_backward.py` | Backward time with `enable_gqa` against `repeat_kv`, across KV heads, threads and batch sizes. About 2 minutes | `results/bench_backward.txt` |
-| `python c03-attention/benchmarks/bench_backends.py --flash` | The same table on CUDA, with the memory-efficient and flash kernels. GPU-only | Not yet measured |
-| `python c03-attention/benchmarks/bench_zoo.py --device cuda --out results-file.json` | The zoo on CUDA, with a GQA flash row. GPU-only | Not yet measured |
+| `python -m pytest c03-attention -m gpu -rs` | The CUDA kernels against naive. GPU-only | `results/gpu_tests.txt` |
+| `python c03-attention/benchmarks/bench_backends.py --flash` | The backend table on CUDA, with the memory-efficient and flash kernels. GPU-only | `results/gpu_bench_backends.txt` |
+| `python c03-attention/benchmarks/bench_zoo.py --device cuda --out c03-attention/results/gpu_bench_zoo.json` | The zoo on CUDA, with a GQA flash row and cuDNN attention off. GPU-only | `results/gpu_bench_zoo.txt`, `results/gpu_bench_zoo.json` |
+| `python c03-attention/benchmarks/bench_zoo.py --device cuda --cudnn --out /dev/null` | The same with PyTorch's default kernel choice, cuDNN attention on. GPU-only | `results/gpu_bench_zoo_cudnn.txt` |
+
+The GPU commands are collected in the GPU queue script the coordinator runs. Run each with one CUDA GPU visible.
 
 At N = 16384 the naive, MLA and linear rows of the zoo need 18 to 25 GB of memory. On a smaller machine pass shorter lengths, for example `--lengths 512 1024 2048`.
 
-## Results
+## CPU results
 
-Hardware for every number below: **AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only, fp32**. The machine is shared with other jobs, so timings carry noise, most of all at N = 8192 and above, where each cell is one measured call. Each saved output starts by naming its hardware.
+Hardware for every number in this section: **AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only, fp32**. The machine is shared with other jobs, so timings carry noise, most of all at N = 8192 and above, where each cell is one measured call. Each saved output starts by naming its hardware.
 
 ### Backends: one causal attention call
 
@@ -100,8 +104,6 @@ H = 4, d = 32. Milliseconds per call / peak extra MB.
 | `sdpa` | 2.4 / 8 | 29.2 / 10 | 300.0 / 12 |
 | `sdpa_flash` (CPU kernel) | 2.8 / 8 | 24.7 / 9 | 282.4 / 12 |
 | `tiled` (Python, for learning) | 37.4 / 3 | 512.2 / 6 | 7771.5 / 9 |
-| `sdpa_efficient` (CUDA) | Not yet measured | Not yet measured | Not yet measured |
-| `flash` (CUDA) | Not yet measured | Not yet measured | Not yet measured |
 
 Tiling keeps peak memory near flat as N grows, even in slow Python. The materialising paths need roughly 850 to 1000 times more memory than `sdpa` at N = 16384.
 
@@ -131,7 +133,6 @@ One layer, D = 256, Hq = 8, dh = 32. The other lengths are in `results/bench_zoo
 | Local, chunked | 102.6 | 469.7 | 328 | 80.1 | 204,642 | 1.44 | 8.01 |
 | Linear | 4758.4 | 9864.6 | 17665 | 1120.2 | 14,625 | 0.23 | 0.03 |
 | GQA, naive backend | 9868.3 | 13914.6 | 25206 | 12260.0 | 1,336 | 4.09 | 8.01 |
-| GQA, flash backend (CUDA) | Not yet measured | | | | | | |
 
 Three things in this table need care.
 
@@ -204,14 +205,67 @@ MLA uses its own formula, `L B S (r + dr) b`. Part 2 of `results/bench_kv_memory
 
 Three `Linear` layers took 38.33 ms per call and one fused `Linear` took 39.21 ms, on 8 x 1024 x 512 inputs. On this CPU the fused layer is usually slightly slower, and the spread between runs exceeds the gap. The output is the same. The usual argument for fusing is fewer kernel launches, and that was not measured here.
 
-## GPU-only: not yet measured
+## GPU results
 
-These need a CUDA GPU and have no numbers yet.
+Hardware for every number in this section: **NVIDIA H100 80GB HBM3, torch 2.15.0 built for CUDA 13.2, bf16**, one GPU, through a lock so no other job shared it. The FlashAttention kernels accept only fp16 and bf16, so these runs use bf16 and the CPU runs use fp32. Do not compare the two sections cell by cell.
 
-- The `flash` backend, through `flash-attn` or through PyTorch's FlashAttention-2.
-- The `sdpa_efficient` backend.
-- The 8 tests in `tests/test_gpu.py`. They skip without a GPU and have never run on one.
+The `flash-attn` package is not installed. So the `flash` backend runs PyTorch's FlashAttention-2 through SDPA, the same kernel as `sdpa_flash`, and windows and soft-capping on `flash` raise. Tri Dao's kernels are not measured here.
 
-The CUDA benchmarks run in bf16, because the FlashAttention kernels accept only fp16 and bf16. Do not compare them directly with the fp32 CPU tables above.
+### GPU tests
 
-Without the `flash-attn` package, the `flash` and `sdpa_flash` rows run the same kernel, and windows and soft-capping raise. `bench_backends.py --flash` prints which route ran.
+`pytest c03-attention -m gpu`: 7 passed, 1 skipped. The skip is the window-and-decode test, which needs the `flash-attn` package. The `flash` backend matches naive in bf16 for causal and bidirectional attention, with Hkv = 8 and Hkv = 2, and decodes one token against a 300-token cache. The pinned FlashAttention-2 and memory-efficient kernels match naive for causal MHA.
+
+### Backends: one causal attention call
+
+H = 4, d = 32, B = 1. Milliseconds per call / peak extra MB. The table prints one decimal, so cells under 1 ms are rough.
+
+| Backend | N = 1024 | N = 4096 | N = 16384 |
+|---|---|---|---|
+| `naive` | 0.4 / 49 | 1.5 / 656 | 21.0 / 10496 |
+| `sdpa_math` | 0.5 / 62 | 1.7 / 648 | 22.2 / 10272 |
+| `sdpa_efficient` | 0.1 / 0 | 0.2 / 1 | 1.6 / 4 |
+| `sdpa_flash` (FlashAttention-2) | 0.1 / 2 | 0.1 / 1 | 0.6 / 4 |
+| `flash` (FlashAttention-2 through our wrapper) | 0.4 / 2 | 0.4 / 1 | 1.0 / 4 |
+| `tiled` (Python, for learning) | 65.8 / 33 | 970.0 / 33 | 14758.9 / 36 |
+
+At N = 16384, FlashAttention-2 is 35 times faster than `naive` and needs about 2600 times less extra memory. The `flash` row runs the same kernel as `sdpa_flash` but is slower at every length. Our wrapper adds Python work per call, including a failed `import flash_attn`, which takes about 0.09 ms on the CPU machine. That does not explain the whole gap, and we did not look further. `tiled` is slower on the GPU than on the CPU, because it launches many tiny kernels from Python.
+
+### The zoo at N = 16384
+
+One layer, D = 256, Hq = 8, dh = 32, B = 1. cuDNN attention is off: see the next section. The other lengths are in `results/gpu_bench_zoo.txt`.
+
+| Layer | Forward ms | Backward ms | Peak MB | Prefill ms | Decode ms/token | Cache MB |
+|---|---|---|---|---|---|---|
+| MHA | 2.2 | 2.5 | 83 | 1.6 | 2.64 | 16.02 |
+| GQA Hkv=2 | 2.1 | 2.8 | 75 | 2.1 | 1.47 | 4.00 |
+| MQA | 2.7 | 3.3 | 71 | 4.2 | 2.42 | 2.00 |
+| MLA r=64 | 5.2 | 8.9 | 124 | 5.0 | 2.80 | 2.25 |
+| Local, mask | 9.0 | 16.2 | 791 | 9.2 | 1.59 | 4.00 |
+| Local, chunked | 22.3 | 21.3 | 95 | 16.0 | 1.07 | 4.00 |
+| Linear | 12.3 | 18.3 | 8792 | 3467.8 | 0.67 | 0.02 |
+| GQA, naive backend | 41.9 | 56.1 | 33050 | 42.0 | 3.22 | 4.00 |
+| GQA, flash backend | 2.5 | 5.8 | 75 | 3.4 | 1.57 | 4.00 |
+
+How to read this table:
+
+- This layer is too small to keep an H100 busy. Most rows take 1 to 3 ms at every length from 512 to 16384, so they measure kernel launches and Python, not attention. The rows are not a ranking of the architectures. Each cell at N >= 8192 is one call after a warm-up, so expect noise of a few ms.
+- What does show through is memory. The naive backend holds the score matrix and peaks at 33050 MB. The fused kernels stay under 125 MB.
+- The CPU lessons do not all carry over. In the CPU zoo the chunked window layer was 5 times faster than MHA. Here it is 10 times slower, because its Python loop issues 64 small calls where FlashAttention-2 issues one. A real speed-up from a window needs a kernel that skips the tiles, such as the `flash-attn` window, which is not installed.
+- The CPU backward gap with `enable_gqa` does not appear: GQA and MQA backward are within about 1 ms of MHA. At this size that is all we can say.
+- Linear prefill takes 3.5 s, because prefill with a cache runs the recurrence one token at a time in Python.
+- Cache MB is half the CPU value, because bf16 uses 2 bytes per number.
+
+### cuDNN attention and new shapes
+
+The first GPU zoo run used PyTorch's default kernel choice. On this H100 that picked cuDNN attention, and the default `sdpa` rows reported 61 to 74 ms per prefill and 48 to 91 ms per decoded token at every length. The chunked window, which makes many calls per prefill, took 141 to 224 ms. The first prefill at N = 512 took 557 to 1131 ms. A direct probe of the SDPA call, with Nq = 1 and a cache of about 2000 keys, found the cause:
+
+| Kernel | Decode, new cache length each step | Decode, the same shape again |
+|---|---|---|
+| Default choice (cuDNN) | 78.84 ms | 0.144 ms |
+| Default, cuDNN excluded | 0.05 ms | 0.053 ms |
+| FlashAttention-2, pinned | 0.05 ms | 0.043 ms |
+| Memory-efficient, pinned | 0.17 ms | 0.166 ms |
+
+These rows are for MHA (Hkv = 8). With `enable_gqa`, the default choice took 61.61 ms per new shape. cuDNN pays about 60 to 80 ms the first time it sees each shape and is fast after that. Prefill and every decode step bring a new key length, so the zoo timed that setup and not attention. The fix is in `bench_zoo.py`: on CUDA it switches cuDNN attention off unless you pass `--cudnn`, and SDPA then picks FlashAttention-2 or the memory-efficient kernel. Training forward and backward were unaffected, because a warm-up call ran on the same shape first. The first run is kept in `results/gpu_bench_zoo_cudnn.txt`. It was made before the flag existed, on the same code path that `--cudnn` takes now.
+
+The probe script is not in this folder. The per-shape cost is measured, but its cause inside cuDNN, a setup step cached by shape, is an inference: we did not read the cuDNN or PyTorch source. A server that pads cache lengths to a few fixed sizes would pay the cost only a few times.

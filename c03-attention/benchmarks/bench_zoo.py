@@ -3,6 +3,9 @@
 Run:  python c03-attention/benchmarks/bench_zoo.py [--device cpu] [--lengths 512 1024 ...] [--out file.json]
 One attention layer, D = 256, Hq = 8, dh = 32. Each cell runs in a fresh process.
 The GQA flash row exists only on CUDA, which runs in bf16; CPU runs in fp32.
+On CUDA, cuDNN attention is switched off unless you pass --cudnn. PyTorch picks it by default on an H100,
+and it spends 60 to 80 ms setting up each new shape. Prefill and every decode step are new shapes, so
+with it on, the sdpa rows time that setup and not the attention.
 At N = 16384 the naive, MLA and linear rows need tens of GiB: pass shorter --lengths on a small machine.
 """
 
@@ -37,6 +40,8 @@ DECODE_STEPS = 16
 def child(a: dict) -> None:
     device = torch.device(a["device"])
     dtype = _common.dtype_for(a["device"])
+    if device.type == "cuda" and not a["cudnn"]:
+        torch.backends.cuda.enable_cudnn_sdp(False)  # SDPA then picks FlashAttention-2 or memory-efficient
     n = a["n"]
     cfg = AttentionConfig(hidden_size=D, num_heads=H, max_seq_len=n + DECODE_STEPS + 1, **{**ZOO, **CUDA_ONLY}[a["name"]])
     model = build_attention(cfg).to(device=device, dtype=dtype)
@@ -91,6 +96,7 @@ def main() -> None:
     p.add_argument("--child")
     p.add_argument("--device", nargs="+", default=["cpu"], help="cpu, mps or cuda")
     p.add_argument("--lengths", nargs="+", type=int, default=[512, 1024, 2048, 4096, 8192, 16384])
+    p.add_argument("--cudnn", action="store_true", help="CUDA: leave cuDNN attention on, as PyTorch's default does")
     p.add_argument("--out", type=Path, default=Path(__file__).resolve().parent.parent / "results" / "bench_zoo.json")
     args = p.parse_args()
     if args.child:
@@ -101,17 +107,18 @@ def main() -> None:
         if device == "cuda" and not torch.cuda.is_available():
             raise SystemExit("--device cuda needs a CUDA GPU, and none is visible. Nothing was measured.")
         note = _common.hardware_note(device)
-        print(f"\n{note}. One layer, D = {D}, Hq = {H}, dh = 32, {_common.dtype_for(device)}.")
-        print(f"{'layer':15}{'N':>6}{'fwd ms':>10}{'bwd ms':>10}{'peak MB':>9}{'prefill ms':>12}{'tok/s':>10}{'decode ms/tok':>15}{'cache MB':>10}")
+        cudnn = f", cuDNN attention {'on' if args.cudnn else 'off'}" if device == "cuda" else ""
+        print(f"\n{note}. One layer, D = {D}, Hq = {H}, dh = 32, {_common.dtype_for(device)}{cudnn}.")
+        print(f"{'layer':15}{'N':>6}{'fwd ms':>10}{'bwd ms':>10}{'peak MB':>9}{'prefill ms':>12}{'tok/s':>12}{'decode ms/tok':>15}{'cache MB':>10}")
         for name in [*ZOO, *(CUDA_ONLY if device == "cuda" else [])]:
             for n in args.lengths:
-                r = _common.run_child(__file__, {"device": device, "n": n, "name": name}, timeout=600)
+                r = _common.run_child(__file__, {"device": device, "n": n, "name": name, "cudnn": args.cudnn}, timeout=600)
                 if "error" in r:
                     print(f"{name:15}{n:>6}  {r['error']}", flush=True)
                     continue
                 print(f"{name:15}{n:>6}{r['fwd']:>10.1f}{r['bwd']:>10.1f}{r['peak'] / 2**20:>9.0f}{r['prefill_ms']:>12.1f}"
-                      f"{r['prefill_tok_s']:>10,.0f}{r['decode']:>15.2f}{r['cache'] / 2**20:>10.2f}", flush=True)
-                rows.append({"hardware": note, "device": device, "name": name, "n": n, **r})
+                      f"{r['prefill_tok_s']:>12,.0f}{r['decode']:>15.2f}{r['cache'] / 2**20:>10.2f}", flush=True)
+                rows.append({"hardware": note, "device": device, "cudnn": args.cudnn, "name": name, "n": n, **r})
     args.out.write_text(json.dumps(rows, indent=1))
 
 
