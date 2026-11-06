@@ -1,0 +1,41 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132. CPU flash kernel, fp32, causal.
+# Load average at the start: 90. The machine is shared, so read the brackets.
+# Median [fastest-slowest] of 5 calls after a warm-up, in ms. flag = enable_gqa=True, repeat = repeat_kv.
+# bench_zoo.py also uses B = 1.
+
+Part 1: the SDPA kernel alone, backward ms. B = 1, Hq = 8, N = 4096, d = 32.
+path                           threads = 1             threads = 2             threads = 4             threads = 8  speed-up, 1 to 8
+Hkv=8 (no flag)        474.0 [443.5-484.3]     242.9 [230.4-293.7]     128.1 [124.8-182.4]        78.7 [70.2-83.5]              6.03
+Hkv=4 flag             460.3 [415.6-490.0]     232.1 [219.2-271.4]     134.9 [123.6-156.2]     124.7 [123.1-155.5]              3.69
+Hkv=4 repeat           468.2 [449.1-490.9]     238.2 [224.2-281.6]     136.8 [123.6-158.3]       73.1 [68.7-109.6]              6.41
+Hkv=2 flag             456.9 [433.5-469.3]     246.1 [225.1-274.3]     242.6 [223.8-255.5]     238.7 [224.3-250.9]              1.91
+Hkv=2 repeat           459.4 [442.5-485.5]     243.5 [232.8-274.0]     140.6 [127.4-153.2]       76.8 [69.0-103.8]              5.98
+Hkv=1 flag             462.2 [433.0-488.8]     382.6 [280.5-414.4]     651.8 [650.9-681.5]     514.0 [499.4-545.7]              0.90
+Hkv=1 repeat           459.9 [424.7-473.3]     243.6 [221.9-253.0]     131.9 [122.9-136.6]       80.5 [72.7-104.0]              5.71
+
+Part 2: one attnzoo layer, backward ms, by batch size. 8 threads, N = 2048, D = 256, Hq = 8.
+  B  layer                              flag                      repeat  flag / repeat
+  1  MHA                    31.5 [27.7-34.4]                     no flag              -
+  1  GQA Hkv=2              85.9 [77.2-92.2]            35.2 [26.0-38.0]           2.44
+  1  MQA                 168.4 [146.3-194.8]            38.0 [33.5-68.4]           4.43
+  2  MHA                    62.8 [51.3-66.1]                     no flag              -
+  2  GQA Hkv=2              83.3 [80.8-84.4]            52.7 [47.5-62.2]           1.58
+  2  MQA                 145.9 [144.5-176.9]            65.7 [65.2-72.2]           2.22
+  4  MHA                   97.6 [93.8-126.7]                     no flag              -
+  4  GQA Hkv=2              90.6 [87.0-96.1]           97.3 [87.0-102.9]           0.93
+  4  MQA                 158.9 [155.0-185.2]           92.6 [90.3-112.5]           1.72
+  8  MHA                 199.3 [187.0-213.0]                     no flag              -
+  8  GQA Hkv=2           181.5 [174.3-206.3]         180.5 [172.0-190.9]           1.01
+  8  MQA                 214.1 [179.8-264.3]         189.5 [183.0-256.4]           1.13
+
+Part 3: one attnzoo layer. B = 1, 8 threads, N = 8192, D = 256, Hq = 8.
+layer      path                       forward ms                 backward ms
+MHA        no flag           116.6 [111.5-125.8]         288.2 [274.4-318.5]
+GQA Hkv=2  flag              109.8 [105.6-112.8]        954.1 [896.8-1005.5]
+GQA Hkv=2  repeat            130.7 [122.1-146.5]         271.2 [261.2-299.6]
+MQA        flag               101.5 [97.1-113.4]      1874.2 [1750.5-2006.6]
+MQA        repeat            120.8 [114.9-129.4]         270.0 [258.3-331.4]
+
+Same answer? One layer, B = 1, N = 1024, flag against repeat, max |difference|:
+  GQA Hkv=2  output 0.0e+00, parameter gradients 3.6e-11
+  MQA        output 0.0e+00, parameter gradients 8.7e-11

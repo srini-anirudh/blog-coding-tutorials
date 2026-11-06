@@ -79,6 +79,7 @@ Each cell of the backend and zoo tables runs in a fresh process. A warm-up call 
 | `python c03-attention/benchmarks/bench_window.py` | A sliding window through a mask and through the chunked kernel, and block-sparse masks | `results/bench_window.txt` |
 | `python c03-attention/benchmarks/bench_backends.py` | Latency, peak memory and scaling for each CPU backend | `results/bench_backends.txt` |
 | `python c03-attention/benchmarks/bench_zoo.py` | Training, prefill and decode for each architecture | `results/bench_zoo.txt`, `results/bench_zoo.json` |
+| `python c03-attention/benchmarks/bench_backward.py` | Backward time with `enable_gqa` against `repeat_kv`, across KV heads, threads and batch sizes. About 2 minutes | `results/bench_backward.txt` |
 | `python c03-attention/benchmarks/bench_backends.py --flash` | The same table on CUDA, with the memory-efficient and flash kernels. GPU-only | Not yet measured |
 | `python c03-attention/benchmarks/bench_zoo.py --device cuda --out results-file.json` | The zoo on CUDA, with a GQA flash row. GPU-only | Not yet measured |
 
@@ -135,8 +136,45 @@ One layer, D = 256, Hq = 8, dh = 32. The other lengths are in `results/bench_zoo
 Three things in this table need care.
 
 - MLA pays for its small cache here. Its q and k are wider than its v, so the CPU flash kernel refuses it and SDPA falls back to the math path. That is why its peak memory matches the naive row.
-- Backward time rises as KV heads fall, at every length: MHA, then GQA, then MQA. Forward time does not. We measured this on the CPU kernel and did not investigate the cause.
+- Backward time rises as KV heads fall, at every length: MHA, then GQA, then MQA. Forward time does not. This table uses B = 1, and the gap comes from `enable_gqa=True` on the CPU kernel. The next section measures it.
 - Linear attention holds a constant 0.03 MB of decode state. Its training path is the parallel form, which is O(N^2) again.
+
+### Backward time and `enable_gqa`
+
+`bench_zoo.py` and the tables here use B = 1 unless a batch size is stated. `bench_backward.py` compares the flag with `repeat_kv`, which copies K and V up to Hq heads first. Cells are the median of 5 calls after a warm-up, and the full file gives the fastest and slowest call. On the same weights, the two paths give the same output and parameter gradients within 8.7e-11, at N = 1024.
+
+One attnzoo layer, B = 1, 8 threads, N = 8192, backward ms:
+
+| Layer | With the flag | With `repeat_kv` |
+|---|---|---|
+| MHA | 288.2 (no flag needed) | |
+| GQA Hkv=2 | 954.1 | 271.2 |
+| MQA | 1874.2 | 270.0 |
+
+The SDPA kernel alone, B = 1, N = 4096, backward ms:
+
+| Path | 1 thread | 2 threads | 4 threads | 8 threads |
+|---|---|---|---|---|
+| Hkv=8, no flag | 474.0 | 242.9 | 128.1 | 78.7 |
+| Hkv=4, flag | 460.3 | 232.1 | 134.9 | 124.7 |
+| Hkv=2, flag | 456.9 | 246.1 | 242.6 | 238.7 |
+| Hkv=1, flag | 462.2 | 382.6 | 651.8 | 514.0 |
+| Hkv=1, `repeat_kv` | 459.9 | 243.6 | 131.9 | 80.5 |
+
+At 1 thread every path matches. With the flag, the speed-up stops once the thread count passes Hkv, and with one KV head more threads do not help.
+
+Flag time divided by `repeat_kv` time, one layer, 8 threads, N = 2048:
+
+| Batch size | GQA Hkv=2 | MQA |
+|---|---|---|
+| 1 | 2.44 | 4.43 |
+| 2 | 1.58 | 2.22 |
+| 4 | 0.93 | 1.72 |
+| 8 | 1.01 | 1.13 |
+
+The gap closes once B x Hkv reaches the thread count. An earlier run of the same script agreed: 2.69 and 5.37 at B = 1, 0.95 and 1.66 at B = 4, 0.97 and 0.98 at B = 8.
+
+These results fit a backward kernel that splits its work over B x Hkv and not over B x Hq. That mechanism is an inference from the timings. We did not read the kernel source. The numbers cover this CPU kernel in fp32 only and say nothing about a GPU. `repeat_kv` also gives up the flag's no-copy K and V, and this script does not measure that memory cost.
 
 ### KV memory formula
 
