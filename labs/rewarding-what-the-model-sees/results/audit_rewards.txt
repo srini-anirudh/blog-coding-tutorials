@@ -1,0 +1,33 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, CPU only, torch 2.15.0+cu132
+# command: python labs/rewarding-what-the-model-sees/scripts/audit_rewards.py
+Box rewards. Target covers 20% of the image; the honest miss is a box of similar size (0.75x) placed just above it.
+
+| reward     | cheap output    | cheap reward | honest miss reward | cheap beats miss? |
+|------------|-----------------|--------------|--------------------|-------------------|
+| soft IoU   | whole-image box | 0.200        | 0.000              | yes               |
+| IoU >= 0.5 | whole-image box | 0.000        | 0.000              | no                |
+| GIoU       | whole-image box | 0.200        | -0.333             | yes               |
+| coverage   | whole-image box | 1.000        | 0.000              | yes               |
+| centre hit | whole-image box | 1.000        | 0.000              | yes               |
+| IoU + size | whole-image box | 0.200        | 0.375              | no                |
+
+Other rewards. The honest miss is a wrong or partial answer a real model might give.
+
+| reward                          | cheap output                    | cheap reward | honest miss reward | cheap beats miss? |
+|---------------------------------|---------------------------------|--------------|--------------------|-------------------|
+| multiple choice, lenient parser | 'B or C' (gold C)               | 1.000        | 0.000              | yes               |
+| multiple choice, strict parser  | 'B or C' (gold C)               | 0.000        | 0.000              | no                |
+| numeric 5%, first number        | 'between 56 and 60' (gold 58)   | 1.000        | 0.000              | yes               |
+| numeric 5%, one number only     | 'between 56 and 60' (gold 58)   | 0.000        | 0.000              | no                |
+| category score (COCO-style)     | box for all 8 listed categories | 1.000        | 1.000              | no                |
+| category score, length-aware    | box for all 8 listed categories | 0.125        | 0.500              | no                |
+| JSON field recall               | every schema field guessed      | 1.000        | 0.667              | yes               |
+| JSON schema gate x F1           | every schema field guessed      | 0.545        | 0.800              | no                |
+| ANLS                            | empty string                    | 0.000        | 0.818              | no                |
+
+Checks of the box-section arithmetic:
+- whole-image box vs a 20% target: IoU = 0.200, GIoU = 0.200, coverage = 1.000
+- containing box with 1.9x the target area: IoU = 0.526, passes IoU>=0.5: True; with 2.1x: IoU = 0.476, passes: False
+- GIoU ranks misses that IoU cannot: near miss -0.013, far miss -0.573 (IoU 0.000 for both)
+- GIoU equals IoU for any containing box: 1.9x box GIoU = 0.526
+- relaxed accuracy: 57.8 vs 58 -> 1; a misreading 56 vs 58 -> 1 (inside the 5% band); 55 vs 58 -> 0

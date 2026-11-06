@@ -1,0 +1,32 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, CPU only, torch 2.15.0+cu132
+# command: python labs/rewarding-what-the-model-sees/scripts/advantage_math.py
+Group mean of the box group: 0.025
+
+| group of K = 8 rewards                | normalisation        | advantages                                     |
+|---------------------------------------|----------------------|------------------------------------------------|
+| 7 x IoU 0.30, 1 x IoU 0.31            | std (population)     | +2.645 (odd one out), -0.378 (the other seven) |
+| 7 x IoU 0.30, 1 x IoU 0.31            | std (sample, K-1)    | +2.475 (odd one out), -0.354 (the other seven) |
+| 7 x IoU 0.30, 1 x IoU 0.31            | no std (Dr. GRPO)    | +0.009 (odd one out), -0.001 (the other seven) |
+| 7 x IoU 0.30, 1 x IoU 0.31            | rounded to 0.1 first | +0.000 (odd one out), +0.000 (the other seven) |
+| 7 misses (0), 1 whole-image box (0.2) | std (population)     | +2.646 (odd one out), -0.378 (the other seven) |
+
+P(zero advantage) = p^K + (1 - p)^K, closed form / Monte Carlo over 100,000 groups
+
+| pass rate p | K = 4           | K = 8           | K = 16          |
+|-------------|-----------------|-----------------|-----------------|
+| 0.05        | 0.8145 / 0.8138 | 0.6634 / 0.6654 | 0.4401 / 0.4365 |
+| 0.1         | 0.6562 / 0.6560 | 0.4305 / 0.4285 | 0.1853 / 0.1868 |
+| 0.25        | 0.3203 / 0.3206 | 0.1001 / 0.0980 | 0.0100 / 0.0100 |
+| 0.5         | 0.1250 / 0.1241 | 0.0078 / 0.0081 | 0.0000 / 0.0000 |
+| 0.75        | 0.3203 / 0.3202 | 0.1001 / 0.1002 | 0.0100 / 0.0100 |
+| 0.9         | 0.6562 / 0.6549 | 0.4305 / 0.4279 | 0.1853 / 0.1870 |
+| 0.95        | 0.8145 / 0.8171 | 0.6634 / 0.6651 | 0.4401 / 0.4411 |
+
+200 prompts, pass rates ~ Beta around the mean (concentration 4), K = 8 binary rewards
+
+| mean pass rate | useful share, no filter | prompts kept by 0.2-0.8 filter | useful share after filter | kept if true p were known |
+|----------------|-------------------------|--------------------------------|---------------------------|---------------------------|
+| 0.3            | 0.76                    | 115                            | 0.94                      | 119                       |
+| 0.5            | 0.94                    | 148                            | 0.96                      | 174                       |
+| 0.7            | 0.79                    | 112                            | 0.93                      | 120                       |
+| 0.9            | 0.37                    | 31                             | 0.97                      | 33                        |

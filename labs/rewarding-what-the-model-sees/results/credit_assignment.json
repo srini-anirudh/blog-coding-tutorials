@@ -1,0 +1,47 @@
+{
+ "hardware": "hardware: AMD EPYC 7R13 Processor, 8 threads, CPU only, torch 2.15.0+cu132",
+ "command": "command: python labs/rewarding-what-the-model-sees/scripts/credit_assignment.py",
+ "q": 0.8,
+ "by_steps": {
+  "1": {
+   "p_reward": 0.8,
+   "credit_closed": 1.0,
+   "credit_mc": 1.0
+  },
+  "2": {
+   "p_reward": 0.6400000000000001,
+   "credit_closed": 0.8,
+   "credit_mc": 0.8005371689796448
+  },
+  "3": {
+   "p_reward": 0.5120000000000001,
+   "credit_closed": 0.6400000000000001,
+   "credit_mc": 0.6400355100631714
+  },
+  "4": {
+   "p_reward": 0.4096000000000001,
+   "credit_closed": 0.5120000000000001,
+   "credit_mc": 0.5118821263313293
+  },
+  "5": {
+   "p_reward": 0.3276800000000001,
+   "credit_closed": 0.4096000000000001,
+   "credit_mc": 0.4085378348827362
+  },
+  "6": {
+   "p_reward": 0.2621440000000001,
+   "credit_closed": 0.3276800000000001,
+   "credit_mc": 0.3277004659175873
+  },
+  "7": {
+   "p_reward": 0.20971520000000007,
+   "credit_closed": 0.2621440000000001,
+   "credit_mc": 0.2620433270931244
+  },
+  "8": {
+   "p_reward": 0.1677721600000001,
+   "credit_closed": 0.20971520000000007,
+   "credit_mc": 0.20917218923568726
+  }
+ }
+}

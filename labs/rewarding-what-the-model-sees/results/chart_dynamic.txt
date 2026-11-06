@@ -1,0 +1,18 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, CPU only, torch 2.15.0+cu132
+# command: python labs/rewarding-what-the-model-sees/scripts/train_chart_policy.py --seeds 0 1 2 --report-only
+Experiment 'dynamic': SFT warm start (150 steps on 300 examples), then GRPO for 200 steps, 32 prompts x K = 8 per step, lr 1e-3, no KL term. Seeds [0, 1, 2]. Greedy evaluation on 1000 held-out charts. 'before -> after' gives the seed mean before RL and mean [min, max] after.
+
+| config                                      | A_img (real image)            | A_blank (blank image)         | A_oracle (true readings given) | P (both readings right)       |
+|---------------------------------------------|-------------------------------|-------------------------------|--------------------------------|-------------------------------|
+| outcome / connector+llm / plain             | 0.505 -> 0.627 [0.522, 0.764] | 0.067 -> 0.067 [0.048, 0.105] | 0.562 -> 0.634 [0.560, 0.719]  | 0.793 -> 0.725 [0.558, 0.838] |
+| outcome / connector+llm / dynamic           | 0.505 -> 0.772 [0.719, 0.805] | 0.067 -> 0.086 [0.048, 0.105] | 0.562 -> 0.734 [0.725, 0.748]  | 0.793 -> 0.772 [0.753, 0.797] |
+| outcome / connector+llm / plain, 96 prompts | 0.505 -> 0.834 [0.784, 0.874] | 0.067 -> 0.086 [0.048, 0.105] | 0.562 -> 0.805 [0.785, 0.823]  | 0.793 -> 0.837 [0.821, 0.867] |
+
+| config (reward / trainable / sampling)      | useful groups, first 20 -> last 20 steps | lucky share of rewarded rollouts, first 20 -> last 20 | mean grad norm encoder / connector / llm | rollouts generated |
+|---------------------------------------------|------------------------------------------|-------------------------------------------------------|------------------------------------------|--------------------|
+| outcome / connector+llm / plain             | 0.57 -> 0.39                             | 0.168 -> 0.173                                        | 0.00 / 2.88 / 5.03                       | 51200              |
+| outcome / connector+llm / dynamic           | 0.59 -> 0.27                             | 0.130 -> 0.160                                        | 0.00 / 5.60 / 9.38                       | 153600             |
+| outcome / connector+llm / plain, 96 prompts | 0.61 -> 0.24                             | 0.104 -> 0.108                                        | 0.00 / 1.94 / 3.29                       | 153600             |
+
+The per-seed runs were trained with 3 torch threads each, CPU only; this file was written from their saved logs, so the hardware line above names the machine, not the training threads.
+wall time for all configs of one seed: 1481 s, 1234 s, 1229 s (seeds [0, 1, 2], one entry per seed)

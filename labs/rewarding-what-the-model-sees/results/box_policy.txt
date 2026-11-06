@@ -1,0 +1,15 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, CPU only, torch 2.15.0+cu132
+# command: python labs/rewarding-what-the-model-sees/scripts/train_box_policy.py --steps 300 --seeds 0 1 2
+Box-size policy, GRPO, K = 8, 64 targets per difficulty per step, 300 steps, seeds [0, 1, 2]. Location noise: easy sigma = 0.01, hard sigma = 0.15 image widths; targets have sides 0.15-0.35. Start: boxes the target's size (ratio 1.00). Mean [min, max] over seeds.
+
+| reward       | box/target area, easy | box/target area, hard   | useful groups, hard (last 50 steps) | mean IoU, hard       |
+|--------------|-----------------------|-------------------------|-------------------------------------|----------------------|
+| iou          | 1.01 [1.01, 1.02]     | 2.20 [2.12, 2.32]       | 1.00 [1.00, 1.00]                   | 0.201 [0.199, 0.203] |
+| iou>=0.5     | 0.98 [0.96, 1.02]     | 1.17 [1.15, 1.20]       | 0.47 [0.47, 0.47]                   | 0.192 [0.186, 0.195] |
+| giou         | 1.01 [1.01, 1.02]     | 4.41 [4.25, 4.56]       | 1.00 [1.00, 1.00]                   | 0.175 [0.172, 0.177] |
+| coverage     | 9.39 [9.02, 9.73]     | 108.26 [106.05, 112.50] | 0.00 [0.00, 0.00]                   | 0.063 [0.063, 0.064] |
+| hit          | 1.00 [1.00, 1.00]     | 12.71 [12.62, 12.84]    | 0.95 [0.94, 0.95]                   | 0.112 [0.110, 0.114] |
+| iou+size     | 1.02 [1.01, 1.02]     | 1.09 [1.07, 1.10]       | 1.00 [1.00, 1.00]                   | 0.189 [0.184, 0.192] |
+| iou (no std) | 1.01 [1.01, 1.01]     | 1.97 [1.91, 2.00]       | 1.00 [1.00, 1.00]                   | 0.202 [0.199, 0.204] |
+
+wall time: 19 s
