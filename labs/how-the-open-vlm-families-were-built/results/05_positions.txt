@@ -1,0 +1,48 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2
+# command: python labs/how-the-open-vlm-families-were-built/scripts/05_positions.py
+
+Part 1. mrope_ids == HF get_rope_index on 80 of 80 random text/image/video sequences
+        axis_per_freq(interleaved) == Qwen3-VL recomposition_frequencies: True
+
+Part 2. Position range used by one image (text before and after: 10 tokens each)
+image         image tokens  1D positions used  M-RoPE positions used
+------------  ------------  -----------------  ---------------------
+Square photo          1369               1389                     57
+Phone photo          15552              15572                    164
+Letter scan           4819               4839                     99
+Receipt               1491               1511                     91
+Slide                 2691               2711                     89
+Small icon             121                141                     31
+
+Part 3. One 60 s clip, 448 x 448 frames, two frames per temporal patch. Temporal ids of the video tokens:
+sampling  temporal patches  Qwen2-VL time ids  Qwen2.5-VL time ids  Qwen2.5 step
+--------  ----------------  -----------------  -------------------  ------------
+1 fps                   30              0..29               0..116             4
+2 fps                   60              0..59               0..118             2
+4 fps                  120             0..119               0..119             1
+  Qwen2-VL counts patches, so the same clip gets a different range at each frame rate. Qwen2.5-VL ties the id
+  to seconds (2 ids per second), so 60 s always spans about 120 ids.
+  A 1-hour video at 1 fps reaches time id 7196; Qwen3-VL instead writes '<t seconds>' as text
+  and keeps the time axis small (post: 'large and sparse on long videos').
+
+Part 4. Which rotary frequencies each axis gets (head_dim 128 -> 64 frequencies, fastest first)
+model              axis  frequencies  index range  shortest wavelength  longest wavelength
+-----------------  ----  -----------  -----------  -------------------  ------------------
+Qwen2-VL / 2.5-VL     T           16        0..15                  6.3                 160
+Qwen2-VL / 2.5-VL     H           24       16..39                198.7            2.85e+04
+Qwen2-VL / 2.5-VL     W           24       40..63              35332.9            5.06e+06
+Qwen3-VL              T           24        0..63                  6.3            2.47e+07
+Qwen3-VL              H           20        1..58                  8.0             7.4e+06
+Qwen3-VL              W           20        2..59                 10.2            9.41e+06
+  Contiguous blocks give time only fast frequencies and width only slow ones. Interleaving gives every axis
+  both, which is what the post means by 'each cover both high and low frequencies'.
+
+Part 5. V2PE (InternVL3): positions used by 4 letter-scan images (13 tiles x 256 tokens each) plus 400 text tokens
+visual step delta  tokens  position range used
+-----------------  ------  -------------------
+1                   13712                13712
+0.25                13712                 3729
+0.0625              13712                 1233
+0.015625            13712                  609
+  The delta values are illustrative. Text keeps its step of 1, so the language model's sense of distance in
+  text is unchanged while images take a fraction of the position range.

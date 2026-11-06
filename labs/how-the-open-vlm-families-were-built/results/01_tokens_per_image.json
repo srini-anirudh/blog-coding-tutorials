@@ -1,0 +1,105 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2",
+ "command": "python labs/how-the-open-vlm-families-were-built/scripts/01_tokens_per_image.py",
+ "data": {
+  "LLaVA-1.5": {
+   "kind": "fixed",
+   "Square photo": 576,
+   "Phone photo": 576,
+   "Letter scan": 576,
+   "Receipt": 576,
+   "Slide": 576,
+   "Small icon": 576
+  },
+  "Qwen-VL": {
+   "kind": "fixed",
+   "Square photo": 256,
+   "Phone photo": 256,
+   "Letter scan": 256,
+   "Receipt": 256,
+   "Slide": 256,
+   "Small icon": 256
+  },
+  "Gemma 3": {
+   "kind": "fixed",
+   "Square photo": 256,
+   "Phone photo": 256,
+   "Letter scan": 256,
+   "Receipt": 256,
+   "Slide": 256,
+   "Small icon": 256
+  },
+  "MiniCPM-V 2.5": {
+   "kind": "tiling",
+   "Square photo": 672,
+   "Phone photo": 960,
+   "Letter scan": 960,
+   "Receipt": 672,
+   "Slide": 960,
+   "Small icon": 96
+  },
+  "Idefics3": {
+   "kind": "tiling",
+   "Square photo": 2873,
+   "Phone photo": 2197,
+   "Letter scan": 2873,
+   "Receipt": 1521,
+   "Slide": 2197,
+   "Small icon": 2873
+  },
+  "DeepSeek-VL2": {
+   "kind": "tiling",
+   "Square photo": 2017,
+   "Phone photo": 2017,
+   "Letter scan": 2017,
+   "Receipt": 1835,
+   "Slide": 1807,
+   "Small icon": 421
+  },
+  "LLaVA-NeXT": {
+   "kind": "tiling",
+   "Square photo": 2928,
+   "Phone photo": 2340,
+   "Letter scan": 2448,
+   "Receipt": 2232,
+   "Slide": 1948,
+   "Small icon": 1176
+  },
+  "LLaVA-OneVision": {
+   "kind": "tiling",
+   "Square photo": 7371,
+   "Phone photo": 7309,
+   "Letter scan": 7353,
+   "Receipt": 8667,
+   "Slide": 7269,
+   "Small icon": 1485
+  },
+  "InternVL 1.5-3": {
+   "kind": "tiling",
+   "Square photo": 2560,
+   "Phone photo": 3328,
+   "Letter scan": 3328,
+   "Receipt": 1024,
+   "Slide": 2304,
+   "Small icon": 256
+  },
+  "Pixtral": {
+   "kind": "native",
+   "Square photo": 4160,
+   "Phone photo": 3120,
+   "Letter scan": 3264,
+   "Receipt": 1344,
+   "Slide": 2340,
+   "Small icon": 380
+  },
+  "Qwen2/2.5-VL": {
+   "kind": "native",
+   "Square photo": 1369,
+   "Phone photo": 15552,
+   "Letter scan": 4819,
+   "Receipt": 1491,
+   "Slide": 2691,
+   "Small icon": 121
+  }
+ }
+}

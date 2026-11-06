@@ -1,0 +1,62 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2
+# command: python labs/how-the-open-vlm-families-were-built/scripts/01_tokens_per_image.py
+
+Visual tokens per image. Columns are the post's Figure 6 presets:
+  Square photo 1024x1024, Phone photo 4032x3024, Letter scan 1700x2200, Receipt 600x2000, Slide 1920x1080, Small icon 300x300
+
+rule               kind  Square photo  Phone photo  Letter scan  Receipt  Slide  Small icon
+---------------  ------  ------------  -----------  -----------  -------  -----  ----------
+LLaVA-1.5         fixed           576          576          576      576    576         576
+Qwen-VL           fixed           256          256          256      256    256         256
+Gemma 3           fixed           256          256          256      256    256         256
+MiniCPM-V 2.5    tiling           672          960          960      672    960          96
+Idefics3         tiling          2873         2197         2873     1521   2197        2873
+DeepSeek-VL2     tiling          2017         2017         2017     1835   1807         421
+LLaVA-NeXT       tiling          2928         2340         2448     2232   1948        1176
+LLaVA-OneVision  tiling          7371         7309         7353     8667   7269        1485
+InternVL 1.5-3   tiling          2560         3328         3328     1024   2304         256
+Pixtral          native          4160         3120         3264     1344   2340         380
+Qwen2/2.5-VL     native          1369        15552         4819     1491   2691         121
+
+How each rule spends tokens on the letter scan (1700 x 2200):
+  LLaVA-1.5        LLaVA-1.5: 336 px square, 24 x 24 tokens
+  Qwen-VL          Qwen-VL: 448 px square, 1,024 patches read by 256 learned queries
+  Gemma 3          Gemma 3: 896 px square, 16 x 16 tokens
+  MiniCPM-V 2.5    MiniCPM-V 2.5: about 9 slices + the whole image, 96 each
+  Idefics3         Idefics3: 4 x 4 tiles of 364 px + global view, 169 tokens each
+  DeepSeek-VL2     DeepSeek-VL2: 3 x 3 tiles + thumbnail
+  LLaVA-NeXT       LLaVA-NeXT: 2 x 2 tiles of 336 px + base; 38 x 48 unpadded tokens + 48 newlines
+  LLaVA-OneVision  OneVision: 5 x 6 canvas, tile tokens 71 x 92 after unpadding and interpolation
+  InternVL 1.5-3   InternVL: 3 x 4 tiles + thumbnail, 256 tokens each
+  Pixtral          Pixtral: 50 x 64 patches + 64 row-end tokens
+  Qwen2/2.5-VL     Qwen2-VL: resized to 1708 x 2212, 61 x 79 merged tokens
+
+The post marks three bars as approximations. Exact rule against the post's simplified formula:
+rule               image  exact  post formula  post vs exact
+----------  ------------  -----  ------------  -------------
+LLaVA-NeXT  Square photo   2928          2880            -2%
+LLaVA-NeXT   Phone photo   2340          2880           +23%
+LLaVA-NeXT   Letter scan   2448          2880           +18%
+LLaVA-NeXT       Receipt   2232          2304            +3%
+LLaVA-NeXT         Slide   1948          2880           +48%
+LLaVA-NeXT    Small icon   1176          1728           +47%
+Idefics3    Square photo   2873          1690           -41%
+Idefics3     Phone photo   2197          3549           +62%
+Idefics3     Letter scan   2873          3549           +24%
+Idefics3         Receipt   1521          1859           +22%
+Idefics3           Slide   2197          2704           +23%
+Idefics3      Small icon   2873           169           -94%
+Pixtral     Square photo   4160          4096            -2%
+Pixtral      Phone photo   3120          3072            -2%
+Pixtral      Letter scan   3264          3200            -2%
+Pixtral          Receipt   1344          1280            -5%
+Pixtral            Slide   2340          2304            -2%
+Pixtral       Small icon    380           361            -5%
+
+Fixed rules cost the same for every image; native rules grow with area until the pixel cap:
+   224 px square: Qwen2-VL     64  Pixtral   210  InternVL   256  Gemma 3 256
+   448 px square: Qwen2-VL    256  Pixtral   812  InternVL   256  Gemma 3 256
+   896 px square: Qwen2-VL   1024  Pixtral  3192  InternVL  1280  Gemma 3 256
+  1344 px square: Qwen2-VL   2304  Pixtral  4160  InternVL  2560  Gemma 3 256
+  2688 px square: Qwen2-VL   9216  Pixtral  4160  InternVL  2560  Gemma 3 256
+  4032 px square: Qwen2-VL  16384  Pixtral  4160  InternVL  2560  Gemma 3 256

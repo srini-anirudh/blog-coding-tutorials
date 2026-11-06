@@ -1,0 +1,35 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2
+# command: python labs/how-the-open-vlm-families-were-built/scripts/02_check_processors.py
+
+LLaVA-1.5 | llava-hf/llava-1.5-7b-hf | full processor, ids counted
+  settings: size={'shortest_edge': 336}
+  1024x1024=576, 4032x3024=576, 1700x2200=576, 600x2000=576, 1920x1080=576, 300x300=576, 640x480=576, 500x1500=576, 1234x567=576, 2000x600=576, 224x224=576, 100x800=576
+LLaVA-NeXT | llava-hf/llava-v1.6-mistral-7b-hf | full processor, ids counted
+  settings: size={'shortest_edge': 336}, pinpoints=5
+  1024x1024=2928, 4032x3024=2340, 1700x2200=2448, 600x2000=2232, 1920x1080=1948, 300x300=1176, 640x480=2340, 500x1500=2376, 1234x567=1848, 2000x600=2182, 224x224=1176, 100x800=1368
+LLaVA-OneVision | llava-hf/llava-onevision-qwen2-0.5b-ov-hf | image processor + its counting code
+  settings: size={'height': 384, 'width': 384}, pinpoints=36, num_image_tokens=729
+  1024x1024=7371, 4032x3024=7309, 1700x2200=7353, 600x2000=8667, 1920x1080=7269, 300x300=1485, 640x480=2929, 500x1500=4725, 1234x567=6179, 2000x600=8553, 224x224=1485, 100x800=1701
+Qwen2/2.5-VL | Qwen/Qwen2-VL-2B-Instruct | image processor + its counting code
+  settings: size={'longest_edge': 12845056, 'shortest_edge': 3136}, patch_size=14, merge_size=2
+  1024x1024=1369, 4032x3024=15552, 1700x2200=4819, 600x2000=1491, 1920x1080=2691, 300x300=121, 640x480=391, 500x1500=972, 1234x567=880, 2000x600=1491, 224x224=64, 100x800=116
+Qwen2/2.5-VL | Qwen/Qwen2.5-VL-3B-Instruct | image processor + its counting code
+  settings: size={'longest_edge': 12845056, 'shortest_edge': 3136}, patch_size=14, merge_size=2
+  1024x1024=1369, 4032x3024=15552, 1700x2200=4819, 600x2000=1491, 1920x1080=2691, 300x300=121, 640x480=391, 500x1500=972, 1234x567=880, 2000x600=1491, 224x224=64, 100x800=116
+InternVL 1.5-3 | OpenGVLab/InternVL3-1B-hf | image processor + its counting code
+  settings: size={'height': 448, 'width': 448}, max_patches=12, image_seq_length=256
+  1024x1024=2560, 4032x3024=3328, 1700x2200=3328, 600x2000=1024, 1920x1080=2304, 300x300=256, 640x480=3328, 500x1500=1024, 1234x567=768, 2000x600=1024, 224x224=256, 100x800=2304
+Idefics3 | HuggingFaceM4/Idefics3-8B-Llama3 | full processor, ids counted
+  settings: size={'longest_edge': 1456}, max_image_size={'longest_edge': 364}, image_seq_len=169
+  1024x1024=2873, 4032x3024=2197, 1700x2200=2873, 600x2000=1521, 1920x1080=2197, 300x300=2873, 640x480=2197, 500x1500=1521, 1234x567=1521, 2000x600=1521, 224x224=2873, 100x800=845
+Idefics3 | HuggingFaceTB/SmolVLM-256M-Instruct | full processor, ids counted
+  settings: size={'longest_edge': 2048}, max_image_size={'longest_edge': 512}, image_seq_len=64
+  1024x1024=1088, 4032x3024=832, 1700x2200=1088, 600x2000=576, 1920x1080=832, 300x300=1088, 640x480=832, 500x1500=576, 1234x567=576, 2000x600=576, 224x224=1088, 100x800=320
+Pixtral | mistral-community/pixtral-12b | image processor + its counting code
+  settings: size={'longest_edge': 1024}, patch_size={'height': 16, 'width': 16}
+  1024x1024=4160, 4032x3024=3120, 1700x2200=3264, 600x2000=1344, 1920x1080=2340, 300x300=380, 640x480=1230, 500x1500=1472, 1234x567=1950, 2000x600=1300, 224x224=210, 100x800=400
+Gemma 3 | unsloth/gemma-3-4b-it | full processor, ids counted
+  settings: size={'height': 896, 'width': 896}, image_seq_length=256
+  1024x1024=256, 4032x3024=256, 1700x2200=256, 600x2000=256, 1920x1080=256, 300x300=256, 640x480=256, 500x1500=256, 1234x567=256, 2000x600=256, 224x224=256, 100x800=256
+
+120 of 120 (repo, size) pairs: rule == processor

@@ -1,0 +1,796 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2",
+ "command": "python labs/how-the-open-vlm-families-were-built/scripts/02_check_processors.py",
+ "data": [
+  {
+   "rule": "LLaVA-1.5",
+   "repo": "llava-hf/llava-1.5-7b-hf",
+   "how": "full processor, ids counted",
+   "sizes": [
+    {
+     "width": 1024,
+     "height": 1024,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 4032,
+     "height": 3024,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 1700,
+     "height": 2200,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 600,
+     "height": 2000,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 1920,
+     "height": 1080,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 300,
+     "height": 300,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 640,
+     "height": 480,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 500,
+     "height": 1500,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 1234,
+     "height": 567,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 2000,
+     "height": 600,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 224,
+     "height": 224,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 100,
+     "height": 800,
+     "processor": 576,
+     "rule": 576
+    }
+   ]
+  },
+  {
+   "rule": "LLaVA-NeXT",
+   "repo": "llava-hf/llava-v1.6-mistral-7b-hf",
+   "how": "full processor, ids counted",
+   "sizes": [
+    {
+     "width": 1024,
+     "height": 1024,
+     "processor": 2928,
+     "rule": 2928
+    },
+    {
+     "width": 4032,
+     "height": 3024,
+     "processor": 2340,
+     "rule": 2340
+    },
+    {
+     "width": 1700,
+     "height": 2200,
+     "processor": 2448,
+     "rule": 2448
+    },
+    {
+     "width": 600,
+     "height": 2000,
+     "processor": 2232,
+     "rule": 2232
+    },
+    {
+     "width": 1920,
+     "height": 1080,
+     "processor": 1948,
+     "rule": 1948
+    },
+    {
+     "width": 300,
+     "height": 300,
+     "processor": 1176,
+     "rule": 1176
+    },
+    {
+     "width": 640,
+     "height": 480,
+     "processor": 2340,
+     "rule": 2340
+    },
+    {
+     "width": 500,
+     "height": 1500,
+     "processor": 2376,
+     "rule": 2376
+    },
+    {
+     "width": 1234,
+     "height": 567,
+     "processor": 1848,
+     "rule": 1848
+    },
+    {
+     "width": 2000,
+     "height": 600,
+     "processor": 2182,
+     "rule": 2182
+    },
+    {
+     "width": 224,
+     "height": 224,
+     "processor": 1176,
+     "rule": 1176
+    },
+    {
+     "width": 100,
+     "height": 800,
+     "processor": 1368,
+     "rule": 1368
+    }
+   ]
+  },
+  {
+   "rule": "LLaVA-OneVision",
+   "repo": "llava-hf/llava-onevision-qwen2-0.5b-ov-hf",
+   "how": "image processor + its counting code",
+   "sizes": [
+    {
+     "width": 1024,
+     "height": 1024,
+     "processor": 7371,
+     "rule": 7371
+    },
+    {
+     "width": 4032,
+     "height": 3024,
+     "processor": 7309,
+     "rule": 7309
+    },
+    {
+     "width": 1700,
+     "height": 2200,
+     "processor": 7353,
+     "rule": 7353
+    },
+    {
+     "width": 600,
+     "height": 2000,
+     "processor": 8667,
+     "rule": 8667
+    },
+    {
+     "width": 1920,
+     "height": 1080,
+     "processor": 7269,
+     "rule": 7269
+    },
+    {
+     "width": 300,
+     "height": 300,
+     "processor": 1485,
+     "rule": 1485
+    },
+    {
+     "width": 640,
+     "height": 480,
+     "processor": 2929,
+     "rule": 2929
+    },
+    {
+     "width": 500,
+     "height": 1500,
+     "processor": 4725,
+     "rule": 4725
+    },
+    {
+     "width": 1234,
+     "height": 567,
+     "processor": 6179,
+     "rule": 6179
+    },
+    {
+     "width": 2000,
+     "height": 600,
+     "processor": 8553,
+     "rule": 8553
+    },
+    {
+     "width": 224,
+     "height": 224,
+     "processor": 1485,
+     "rule": 1485
+    },
+    {
+     "width": 100,
+     "height": 800,
+     "processor": 1701,
+     "rule": 1701
+    }
+   ]
+  },
+  {
+   "rule": "Qwen2/2.5-VL",
+   "repo": "Qwen/Qwen2-VL-2B-Instruct",
+   "how": "image processor + its counting code",
+   "sizes": [
+    {
+     "width": 1024,
+     "height": 1024,
+     "processor": 1369,
+     "rule": 1369
+    },
+    {
+     "width": 4032,
+     "height": 3024,
+     "processor": 15552,
+     "rule": 15552
+    },
+    {
+     "width": 1700,
+     "height": 2200,
+     "processor": 4819,
+     "rule": 4819
+    },
+    {
+     "width": 600,
+     "height": 2000,
+     "processor": 1491,
+     "rule": 1491
+    },
+    {
+     "width": 1920,
+     "height": 1080,
+     "processor": 2691,
+     "rule": 2691
+    },
+    {
+     "width": 300,
+     "height": 300,
+     "processor": 121,
+     "rule": 121
+    },
+    {
+     "width": 640,
+     "height": 480,
+     "processor": 391,
+     "rule": 391
+    },
+    {
+     "width": 500,
+     "height": 1500,
+     "processor": 972,
+     "rule": 972
+    },
+    {
+     "width": 1234,
+     "height": 567,
+     "processor": 880,
+     "rule": 880
+    },
+    {
+     "width": 2000,
+     "height": 600,
+     "processor": 1491,
+     "rule": 1491
+    },
+    {
+     "width": 224,
+     "height": 224,
+     "processor": 64,
+     "rule": 64
+    },
+    {
+     "width": 100,
+     "height": 800,
+     "processor": 116,
+     "rule": 116
+    }
+   ]
+  },
+  {
+   "rule": "Qwen2/2.5-VL",
+   "repo": "Qwen/Qwen2.5-VL-3B-Instruct",
+   "how": "image processor + its counting code",
+   "sizes": [
+    {
+     "width": 1024,
+     "height": 1024,
+     "processor": 1369,
+     "rule": 1369
+    },
+    {
+     "width": 4032,
+     "height": 3024,
+     "processor": 15552,
+     "rule": 15552
+    },
+    {
+     "width": 1700,
+     "height": 2200,
+     "processor": 4819,
+     "rule": 4819
+    },
+    {
+     "width": 600,
+     "height": 2000,
+     "processor": 1491,
+     "rule": 1491
+    },
+    {
+     "width": 1920,
+     "height": 1080,
+     "processor": 2691,
+     "rule": 2691
+    },
+    {
+     "width": 300,
+     "height": 300,
+     "processor": 121,
+     "rule": 121
+    },
+    {
+     "width": 640,
+     "height": 480,
+     "processor": 391,
+     "rule": 391
+    },
+    {
+     "width": 500,
+     "height": 1500,
+     "processor": 972,
+     "rule": 972
+    },
+    {
+     "width": 1234,
+     "height": 567,
+     "processor": 880,
+     "rule": 880
+    },
+    {
+     "width": 2000,
+     "height": 600,
+     "processor": 1491,
+     "rule": 1491
+    },
+    {
+     "width": 224,
+     "height": 224,
+     "processor": 64,
+     "rule": 64
+    },
+    {
+     "width": 100,
+     "height": 800,
+     "processor": 116,
+     "rule": 116
+    }
+   ]
+  },
+  {
+   "rule": "InternVL 1.5-3",
+   "repo": "OpenGVLab/InternVL3-1B-hf",
+   "how": "image processor + its counting code",
+   "sizes": [
+    {
+     "width": 1024,
+     "height": 1024,
+     "processor": 2560,
+     "rule": 2560
+    },
+    {
+     "width": 4032,
+     "height": 3024,
+     "processor": 3328,
+     "rule": 3328
+    },
+    {
+     "width": 1700,
+     "height": 2200,
+     "processor": 3328,
+     "rule": 3328
+    },
+    {
+     "width": 600,
+     "height": 2000,
+     "processor": 1024,
+     "rule": 1024
+    },
+    {
+     "width": 1920,
+     "height": 1080,
+     "processor": 2304,
+     "rule": 2304
+    },
+    {
+     "width": 300,
+     "height": 300,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 640,
+     "height": 480,
+     "processor": 3328,
+     "rule": 3328
+    },
+    {
+     "width": 500,
+     "height": 1500,
+     "processor": 1024,
+     "rule": 1024
+    },
+    {
+     "width": 1234,
+     "height": 567,
+     "processor": 768,
+     "rule": 768
+    },
+    {
+     "width": 2000,
+     "height": 600,
+     "processor": 1024,
+     "rule": 1024
+    },
+    {
+     "width": 224,
+     "height": 224,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 100,
+     "height": 800,
+     "processor": 2304,
+     "rule": 2304
+    }
+   ]
+  },
+  {
+   "rule": "Idefics3",
+   "repo": "HuggingFaceM4/Idefics3-8B-Llama3",
+   "how": "full processor, ids counted",
+   "sizes": [
+    {
+     "width": 1024,
+     "height": 1024,
+     "processor": 2873,
+     "rule": 2873
+    },
+    {
+     "width": 4032,
+     "height": 3024,
+     "processor": 2197,
+     "rule": 2197
+    },
+    {
+     "width": 1700,
+     "height": 2200,
+     "processor": 2873,
+     "rule": 2873
+    },
+    {
+     "width": 600,
+     "height": 2000,
+     "processor": 1521,
+     "rule": 1521
+    },
+    {
+     "width": 1920,
+     "height": 1080,
+     "processor": 2197,
+     "rule": 2197
+    },
+    {
+     "width": 300,
+     "height": 300,
+     "processor": 2873,
+     "rule": 2873
+    },
+    {
+     "width": 640,
+     "height": 480,
+     "processor": 2197,
+     "rule": 2197
+    },
+    {
+     "width": 500,
+     "height": 1500,
+     "processor": 1521,
+     "rule": 1521
+    },
+    {
+     "width": 1234,
+     "height": 567,
+     "processor": 1521,
+     "rule": 1521
+    },
+    {
+     "width": 2000,
+     "height": 600,
+     "processor": 1521,
+     "rule": 1521
+    },
+    {
+     "width": 224,
+     "height": 224,
+     "processor": 2873,
+     "rule": 2873
+    },
+    {
+     "width": 100,
+     "height": 800,
+     "processor": 845,
+     "rule": 845
+    }
+   ]
+  },
+  {
+   "rule": "Idefics3",
+   "repo": "HuggingFaceTB/SmolVLM-256M-Instruct",
+   "how": "full processor, ids counted",
+   "sizes": [
+    {
+     "width": 1024,
+     "height": 1024,
+     "processor": 1088,
+     "rule": 1088
+    },
+    {
+     "width": 4032,
+     "height": 3024,
+     "processor": 832,
+     "rule": 832
+    },
+    {
+     "width": 1700,
+     "height": 2200,
+     "processor": 1088,
+     "rule": 1088
+    },
+    {
+     "width": 600,
+     "height": 2000,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 1920,
+     "height": 1080,
+     "processor": 832,
+     "rule": 832
+    },
+    {
+     "width": 300,
+     "height": 300,
+     "processor": 1088,
+     "rule": 1088
+    },
+    {
+     "width": 640,
+     "height": 480,
+     "processor": 832,
+     "rule": 832
+    },
+    {
+     "width": 500,
+     "height": 1500,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 1234,
+     "height": 567,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 2000,
+     "height": 600,
+     "processor": 576,
+     "rule": 576
+    },
+    {
+     "width": 224,
+     "height": 224,
+     "processor": 1088,
+     "rule": 1088
+    },
+    {
+     "width": 100,
+     "height": 800,
+     "processor": 320,
+     "rule": 320
+    }
+   ]
+  },
+  {
+   "rule": "Pixtral",
+   "repo": "mistral-community/pixtral-12b",
+   "how": "image processor + its counting code",
+   "sizes": [
+    {
+     "width": 1024,
+     "height": 1024,
+     "processor": 4160,
+     "rule": 4160
+    },
+    {
+     "width": 4032,
+     "height": 3024,
+     "processor": 3120,
+     "rule": 3120
+    },
+    {
+     "width": 1700,
+     "height": 2200,
+     "processor": 3264,
+     "rule": 3264
+    },
+    {
+     "width": 600,
+     "height": 2000,
+     "processor": 1344,
+     "rule": 1344
+    },
+    {
+     "width": 1920,
+     "height": 1080,
+     "processor": 2340,
+     "rule": 2340
+    },
+    {
+     "width": 300,
+     "height": 300,
+     "processor": 380,
+     "rule": 380
+    },
+    {
+     "width": 640,
+     "height": 480,
+     "processor": 1230,
+     "rule": 1230
+    },
+    {
+     "width": 500,
+     "height": 1500,
+     "processor": 1472,
+     "rule": 1472
+    },
+    {
+     "width": 1234,
+     "height": 567,
+     "processor": 1950,
+     "rule": 1950
+    },
+    {
+     "width": 2000,
+     "height": 600,
+     "processor": 1300,
+     "rule": 1300
+    },
+    {
+     "width": 224,
+     "height": 224,
+     "processor": 210,
+     "rule": 210
+    },
+    {
+     "width": 100,
+     "height": 800,
+     "processor": 400,
+     "rule": 400
+    }
+   ]
+  },
+  {
+   "rule": "Gemma 3",
+   "repo": "unsloth/gemma-3-4b-it",
+   "how": "full processor, ids counted",
+   "sizes": [
+    {
+     "width": 1024,
+     "height": 1024,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 4032,
+     "height": 3024,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 1700,
+     "height": 2200,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 600,
+     "height": 2000,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 1920,
+     "height": 1080,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 300,
+     "height": 300,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 640,
+     "height": 480,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 500,
+     "height": 1500,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 1234,
+     "height": 567,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 2000,
+     "height": 600,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 224,
+     "height": 224,
+     "processor": 256,
+     "rule": 256
+    },
+    {
+     "width": 100,
+     "height": 800,
+     "processor": 256,
+     "rule": 256
+    }
+   ]
+  }
+ ]
+}

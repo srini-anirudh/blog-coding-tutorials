@@ -1,0 +1,19 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2
+# command: python labs/how-the-open-vlm-families-were-built/scripts/06_tokens_per_page.py
+
+DeepEncoder vision tokens per page: Tiny 512 px -> 64, Small 640 px -> 100, Base 1024 px -> 256, Large 1280 px -> 400
+Text: WikiText-2 validation, rendered on a 1024 x 1024 page, 32 px margins, Pillow's default font.
+
+font   words  text tokens  Tiny (64)  Small (100)  Base (256)  Large (400)  smallest mode <= 10x
+-----  -----  -----------  ---------  -----------  ----------  -----------  --------------------
+32 px    295          399       6.2x         4.0x        1.6x         1.0x                  Tiny
+24 px    498          673      10.5x         6.7x        2.6x         1.7x                 Small
+20 px    721          965      15.1x         9.7x        3.8x         2.4x                 Small
+16 px   1089         1459      22.8x        14.6x        5.7x         3.6x                  Base
+14 px   1430         1953      30.5x        19.5x        7.6x         4.9x                  Base
+12 px   1853         2549      39.8x        25.5x       10.0x         6.4x                  Base
+10 px   2756         3827      59.8x        38.3x       14.9x         9.6x                 Large
+
+Reading: a ratio above 10x is where the paper's precision starts to fall; above 20x it is near 60%.
+Dense pages need the larger modes or the tiled Gundam mode, whatever their pixel count, which is the post's
+point: set the token budget by how much text a page holds.

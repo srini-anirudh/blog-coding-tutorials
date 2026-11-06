@@ -1,0 +1,867 @@
+{
+ "source": "Table 1 of https://srini-anirudh.github.io/blogs/how-the-open-vlm-families-were-built/ (the post's VLM_ROWS data), copied unchanged for the fields below.",
+ "benchmarks": [
+  "MMMU",
+  "DocVQA",
+  "ChartQA",
+  "MathVista",
+  "OCRBench"
+ ],
+ "rows": [
+  {
+   "id": "llava1",
+   "fam": "llava",
+   "name": "LLaVA",
+   "rel": "2023-04",
+   "prep": "fixed",
+   "tok": "256 (derived from 16 \u00d7 16 patches)",
+   "maxtok": 256,
+   "llm_b": 13,
+   "rlflag": false,
+   "b": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "bnote": "Reports LLaVA-Bench and ScienceQA (90.92%) only"
+  },
+  {
+   "id": "llava15",
+   "fam": "llava",
+   "name": "LLaVA-1.5",
+   "rel": "2023-10",
+   "prep": "fixed",
+   "tok": "576 (derived from 24 \u00d7 24)",
+   "maxtok": 576,
+   "llm_b": 13,
+   "rlflag": false,
+   "b": [
+    36.4,
+    null,
+    null,
+    27.6,
+    null
+   ],
+   "bnote": "13B; MMMU and MathVista from the LLaVA-NeXT blog"
+  },
+  {
+   "id": "llavanext",
+   "fam": "llava",
+   "name": "LLaVA-NeXT",
+   "rel": "2024-01",
+   "prep": "tiling",
+   "tok": "576 per tile, up to 2,880",
+   "maxtok": 2880,
+   "llm_b": 34.39,
+   "rlflag": false,
+   "b": [
+    46.7,
+    null,
+    68.7,
+    46.0,
+    null
+   ],
+   "bnote": "34B, May 2024 LMMs-Eval table; DocVQA reported on val only (84.0)"
+  },
+  {
+   "id": "llavaov",
+   "fam": "llava",
+   "name": "LLaVA-OneVision",
+   "rel": "2024-08",
+   "prep": "tiling",
+   "tok": "729 per crop, up to 7,290; 196 per video frame",
+   "maxtok": 7290,
+   "llm_b": 72.7,
+   "rlflag": false,
+   "b": [
+    56.8,
+    91.3,
+    83.7,
+    67.5,
+    null
+   ],
+   "bnote": "72B"
+  },
+  {
+   "id": "qwenvl",
+   "fam": "qwen",
+   "name": "Qwen-VL",
+   "rel": "2023-08",
+   "prep": "fixed",
+   "tok": "256",
+   "maxtok": 256,
+   "llm_b": 7.7,
+   "rlflag": false,
+   "b": [
+    null,
+    65.1,
+    65.7,
+    null,
+    null
+   ],
+   "bnote": "7B base model; the paper reports no MMMU, MathVista or OCRBench"
+  },
+  {
+   "id": "qwen2vl",
+   "fam": "qwen",
+   "name": "Qwen2-VL",
+   "rel": "2024-08",
+   "prep": "native",
+   "tok": "Grows with image area (66 for 224 \u00d7 224)",
+   "maxtok": 16384,
+   "llm_b": 72,
+   "rlflag": false,
+   "b": [
+    64.5,
+    96.5,
+    88.3,
+    70.5,
+    877
+   ],
+   "bnote": "72B"
+  },
+  {
+   "id": "qwen25vl",
+   "fam": "qwen",
+   "name": "Qwen2.5-VL",
+   "rel": "2025-01",
+   "prep": "native",
+   "tok": "Grows with image area",
+   "maxtok": 16384,
+   "llm_b": 72,
+   "rlflag": true,
+   "b": [
+    70.2,
+    96.4,
+    89.5,
+    74.8,
+    885
+   ],
+   "bnote": "72B"
+  },
+  {
+   "id": "qwen3vl",
+   "fam": "qwen",
+   "name": "Qwen3-VL",
+   "rel": "2025-09",
+   "prep": "native",
+   "tok": "Grows with image area",
+   "maxtok": 16384,
+   "llm_b": 235,
+   "rlflag": true,
+   "b": [
+    78.7,
+    97.1,
+    90.3,
+    84.9,
+    920
+   ],
+   "bnote": "235B-A22B Instruct; Thinking variant: MMMU 80.6, MathVista 85.8, OCRBench 875"
+  },
+  {
+   "id": "internvl1",
+   "fam": "internvl",
+   "name": "InternVL 1",
+   "rel": "2023-12",
+   "prep": "fixed",
+   "tok": "96 (QLLaMA queries)",
+   "maxtok": 96,
+   "llm_b": 13,
+   "rlflag": false,
+   "b": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "bnote": "Reports 32 other benchmarks"
+  },
+  {
+   "id": "internvl15",
+   "fam": "internvl",
+   "name": "InternVL 1.5",
+   "rel": "2024-04",
+   "prep": "tiling",
+   "tok": "256 per tile; 256 to 3,328 in training",
+   "maxtok": 3328,
+   "llm_b": 20,
+   "rlflag": false,
+   "b": [
+    45.2,
+    90.9,
+    83.8,
+    53.5,
+    724
+   ],
+   "bnote": "26B"
+  },
+  {
+   "id": "internvl2",
+   "fam": "internvl",
+   "name": "InternVL2",
+   "rel": "2024-07",
+   "prep": "tiling",
+   "tok": "256 per tile",
+   "maxtok": 3328,
+   "llm_b": 70,
+   "rlflag": false,
+   "b": [
+    55.2,
+    94.1,
+    88.4,
+    65.5,
+    839
+   ],
+   "bnote": "76B, official blog (MMMU 58.2 with a second toolkit)"
+  },
+  {
+   "id": "internvl25",
+   "fam": "internvl",
+   "name": "InternVL 2.5",
+   "rel": "2024-12",
+   "prep": "tiling",
+   "tok": "256 per tile and per video frame",
+   "maxtok": null,
+   "llm_b": 72,
+   "rlflag": false,
+   "b": [
+    70.1,
+    95.1,
+    88.3,
+    72.3,
+    854
+   ],
+   "bnote": "78B; MMMU with CoT"
+  },
+  {
+   "id": "internvl3",
+   "fam": "internvl",
+   "name": "InternVL3",
+   "rel": "2025-04",
+   "prep": "tiling",
+   "tok": "256 per tile",
+   "maxtok": null,
+   "llm_b": 72,
+   "rlflag": true,
+   "b": [
+    72.2,
+    95.4,
+    89.7,
+    79.0,
+    906
+   ],
+   "bnote": "78B"
+  },
+  {
+   "id": "internvl35",
+   "fam": "internvl",
+   "name": "InternVL3.5",
+   "rel": "2025-08",
+   "prep": "tiling",
+   "tok": "256 per tile (64 where the router compresses)",
+   "maxtok": null,
+   "llm_b": 235.1,
+   "rlflag": true,
+   "b": [
+    77.7,
+    94.9,
+    88.0,
+    82.7,
+    907
+   ],
+   "bnote": "241B-A28B"
+  },
+  {
+   "id": "molmo",
+   "fam": "molmo",
+   "name": "Molmo",
+   "rel": "2024-09",
+   "prep": "tiling",
+   "tok": "144 per crop",
+   "maxtok": null,
+   "llm_b": 72,
+   "rlflag": false,
+   "b": [
+    54.1,
+    93.5,
+    87.3,
+    58.6,
+    null
+   ],
+   "bnote": "72B"
+  },
+  {
+   "id": "idefics1",
+   "fam": "idefics",
+   "name": "IDEFICS",
+   "rel": "2023-08",
+   "prep": "xattn",
+   "tok": "64 (read through cross-attention)",
+   "maxtok": null,
+   "llm_b": 65,
+   "rlflag": false,
+   "b": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "bnote": "Few-shot VQAv2, TextVQA, OKVQA, COCO only"
+  },
+  {
+   "id": "idefics2",
+   "fam": "idefics",
+   "name": "Idefics2",
+   "rel": "2024-04",
+   "prep": "tiling",
+   "tok": "64, or 320 with splitting",
+   "maxtok": 320,
+   "llm_b": 7,
+   "rlflag": false,
+   "b": [
+    43.5,
+    74.0,
+    null,
+    51.6,
+    null
+   ],
+   "bnote": "MMMU val; DocVQA with image splitting (320 tokens)"
+  },
+  {
+   "id": "idefics3",
+   "fam": "idefics",
+   "name": "Idefics3",
+   "rel": "2024-08",
+   "prep": "tiling",
+   "tok": "169 per tile",
+   "maxtok": 4394,
+   "llm_b": 8,
+   "rlflag": false,
+   "b": [
+    46.6,
+    87.7,
+    null,
+    58.4,
+    null
+   ],
+   "bnote": ""
+  },
+  {
+   "id": "smolvlm",
+   "fam": "idefics",
+   "name": "SmolVLM",
+   "rel": "2024-11",
+   "prep": "tiling",
+   "tok": "64 to 81 per tile",
+   "maxtok": null,
+   "llm_b": 1.7,
+   "rlflag": false,
+   "b": [
+    42.0,
+    80.0,
+    68.7,
+    51.5,
+    729
+   ],
+   "bnote": "2.2B; OCRBench converted from 72.9%"
+  },
+  {
+   "id": "pali1",
+   "fam": "pali",
+   "name": "PaliGemma",
+   "rel": "2024-07",
+   "prep": "fixed",
+   "tok": "256 / 1,024 / 4,096",
+   "maxtok": 4096,
+   "llm_b": 2,
+   "rlflag": false,
+   "b": [
+    null,
+    84.8,
+    null,
+    null,
+    null
+   ],
+   "bnote": "DocVQA after per-task fine-tuning at 896 px (not zero-shot)"
+  },
+  {
+   "id": "pali2",
+   "fam": "pali",
+   "name": "PaliGemma 2",
+   "rel": "2024-12",
+   "prep": "fixed",
+   "tok": "256 / 1,024 / 4,096",
+   "maxtok": 4096,
+   "llm_b": 27,
+   "rlflag": false,
+   "b": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "bnote": "Transfer results only (for example DocVQA val 76.6 for 10B at 448)"
+  },
+  {
+   "id": "gemma3",
+   "fam": "pali",
+   "name": "Gemma 3",
+   "rel": "2025-03",
+   "prep": "fixed",
+   "tok": "256 (more with Pan & Scan crops)",
+   "maxtok": null,
+   "llm_b": 25.6,
+   "rlflag": true,
+   "b": [
+    64.9,
+    86.6,
+    78.0,
+    67.6,
+    null
+   ],
+   "bnote": "27B IT, with Pan & Scan; DocVQA and ChartQA splits as in the report"
+  },
+  {
+   "id": "dsvl",
+   "fam": "deepseek",
+   "name": "DeepSeek-VL",
+   "rel": "2024-03",
+   "prep": "fixed",
+   "tok": "576",
+   "maxtok": 576,
+   "llm_b": 6.9,
+   "rlflag": false,
+   "b": [
+    36.6,
+    null,
+    null,
+    36.1,
+    456
+   ],
+   "bnote": "7B"
+  },
+  {
+   "id": "dsvl2",
+   "fam": "deepseek",
+   "name": "DeepSeek-VL2",
+   "rel": "2024-12",
+   "prep": "tiling",
+   "tok": "196 per tile; about 2,100 at most (derived)",
+   "maxtok": 2101,
+   "llm_b": 27,
+   "rlflag": false,
+   "b": [
+    51.1,
+    93.3,
+    86.0,
+    62.8,
+    811
+   ],
+   "bnote": "Base, 4.5B active"
+  },
+  {
+   "id": "dsocr",
+   "fam": "deepseek",
+   "name": "DeepSeek-OCR",
+   "rel": "2025-10",
+   "prep": "fixed",
+   "tok": "64 to 400 (tiled modes up to about 1,850)",
+   "maxtok": 400,
+   "llm_b": 3,
+   "rlflag": false,
+   "b": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "bnote": "OmniDocBench edit distance 0.127 (English, Gundam mode)"
+  },
+  {
+   "id": "minicpm25",
+   "fam": "minicpm",
+   "name": "MiniCPM-Llama3-V 2.5",
+   "rel": "2024-05",
+   "prep": "tiling",
+   "tok": "96 per slice; 96 to 960",
+   "maxtok": 960,
+   "llm_b": 8,
+   "rlflag": true,
+   "b": [
+    45.8,
+    84.8,
+    null,
+    54.3,
+    725
+   ],
+   "bnote": ""
+  },
+  {
+   "id": "minicpm26",
+   "fam": "minicpm",
+   "name": "MiniCPM-V 2.6",
+   "rel": "2024-08",
+   "prep": "tiling",
+   "tok": "640 for a 1.8-megapixel image",
+   "maxtok": 640,
+   "llm_b": 7,
+   "rlflag": true,
+   "b": [
+    49.8,
+    90.8,
+    null,
+    60.6,
+    852
+   ],
+   "bnote": "Model card; MMMU and OCRBench with CoT"
+  },
+  {
+   "id": "minicpm45",
+   "fam": "minicpm",
+   "name": "MiniCPM-V 4.5",
+   "rel": "2025-09",
+   "prep": "tiling",
+   "tok": "64 per 448 px slice; 64 per 6 video frames",
+   "maxtok": null,
+   "llm_b": 8,
+   "rlflag": true,
+   "b": [
+    67.7,
+    94.7,
+    87.4,
+    79.9,
+    890
+   ],
+   "bnote": "OCRBench converted from 89.0"
+  },
+  {
+   "id": "mm1",
+   "fam": "apple",
+   "name": "MM1",
+   "rel": "2024-03",
+   "prep": "tiling",
+   "tok": "144; 720 in SFT",
+   "maxtok": 720,
+   "llm_b": 30,
+   "rlflag": false,
+   "b": [
+    44.7,
+    null,
+    null,
+    39.4,
+    null
+   ],
+   "bnote": "30B Chat"
+  },
+  {
+   "id": "mm15",
+   "fam": "apple",
+   "name": "MM1.5",
+   "rel": "2024-09",
+   "prep": "tiling",
+   "tok": "144 per sub-image",
+   "maxtok": 1440,
+   "llm_b": 30,
+   "rlflag": false,
+   "b": [
+    47.4,
+    91.4,
+    83.6,
+    55.6,
+    658
+   ],
+   "bnote": "30B; OCRBench converted from 65.8%"
+  },
+  {
+   "id": "nvlm",
+   "fam": "nvidia",
+   "name": "NVLM 1.0",
+   "rel": "2024-09",
+   "prep": "tiling",
+   "tok": "256 per tile (up to 1,792)",
+   "maxtok": 1792,
+   "llm_b": 72,
+   "rlflag": false,
+   "b": [
+    59.7,
+    92.6,
+    86.0,
+    65.2,
+    853
+   ],
+   "bnote": "NVLM-D-72B"
+  },
+  {
+   "id": "eagle1",
+   "fam": "nvidia",
+   "name": "Eagle",
+   "rel": "2024-08",
+   "prep": "fixed",
+   "tok": "1,024",
+   "maxtok": 1024,
+   "llm_b": 34,
+   "rlflag": false,
+   "b": [
+    53.2,
+    83.0,
+    77.2,
+    57.9,
+    null
+   ],
+   "bnote": "Yi-34B trained on Cambrian data; DocVQA split not stated"
+  },
+  {
+   "id": "eagle2",
+   "fam": "nvidia",
+   "name": "Eagle 2",
+   "rel": "2025-01",
+   "prep": "tiling",
+   "tok": "256 per tile",
+   "maxtok": 3328,
+   "llm_b": 7,
+   "rlflag": false,
+   "b": [
+    56.1,
+    92.6,
+    86.4,
+    63.8,
+    868
+   ],
+   "bnote": "9B"
+  },
+  {
+   "id": "eagle25",
+   "fam": "nvidia",
+   "name": "Eagle 2.5",
+   "rel": "2025-04",
+   "prep": "tiling",
+   "tok": "256 per tile or frame",
+   "maxtok": 3328,
+   "llm_b": 7,
+   "rlflag": false,
+   "b": [
+    55.8,
+    94.1,
+    87.5,
+    67.8,
+    869
+   ],
+   "bnote": ""
+  },
+  {
+   "id": "llama32",
+   "fam": "meta",
+   "name": "Llama 3.2 Vision",
+   "rel": "2024-09",
+   "prep": "xattn",
+   "tok": "Not in the LLM sequence (read through cross-attention)",
+   "maxtok": null,
+   "llm_b": 70,
+   "rlflag": true,
+   "b": [
+    60.3,
+    90.1,
+    85.5,
+    57.3,
+    null
+   ],
+   "bnote": "90B Instruct; MMMU with CoT"
+  },
+  {
+   "id": "llama4",
+   "fam": "meta",
+   "name": "Llama 4",
+   "rel": "2025-04",
+   "prep": "tiling",
+   "tok": "About 144 per tile (derived from pixel shuffle 0.5)",
+   "maxtok": null,
+   "llm_b": 400,
+   "rlflag": true,
+   "b": [
+    73.4,
+    94.4,
+    90.0,
+    73.7,
+    null
+   ],
+   "bnote": "Maverick; the model card does not name the MMMU and MathVista splits"
+  },
+  {
+   "id": "pixtral",
+   "fam": "other",
+   "name": "Pixtral 12B",
+   "rel": "2024-09",
+   "prep": "native",
+   "tok": "One per 16 \u00d7 16 patch (4,096 at 1024 \u00d7 1024, derived)",
+   "maxtok": 4096,
+   "llm_b": 12,
+   "rlflag": false,
+   "b": [
+    52.0,
+    90.7,
+    81.8,
+    58.3,
+    null
+   ],
+   "bnote": "Paper numbers, CoT prompts"
+  },
+  {
+   "id": "phi35v",
+   "fam": "other",
+   "name": "Phi-3.5-vision",
+   "rel": "2024-08",
+   "prep": "tiling",
+   "tok": "Not reported",
+   "maxtok": null,
+   "llm_b": 3.8,
+   "rlflag": true,
+   "b": [
+    43.0,
+    null,
+    81.8,
+    43.9,
+    null
+   ],
+   "bnote": ""
+  },
+  {
+   "id": "phi4mm",
+   "fam": "other",
+   "name": "Phi-4-multimodal",
+   "rel": "2025-02",
+   "prep": "tiling",
+   "tok": "Not reported",
+   "maxtok": null,
+   "llm_b": 3.8,
+   "rlflag": false,
+   "b": [
+    55.1,
+    93.2,
+    81.4,
+    62.4,
+    844
+   ],
+   "bnote": "OCRBench converted from 84.4"
+  },
+  {
+   "id": "aria",
+   "fam": "other",
+   "name": "Aria",
+   "rel": "2024-10",
+   "prep": "native",
+   "tok": "128 or 256 per image or tile",
+   "maxtok": null,
+   "llm_b": 24.9,
+   "rlflag": false,
+   "b": [
+    54.9,
+    92.6,
+    86.4,
+    66.1,
+    null
+   ],
+   "bnote": ""
+  },
+  {
+   "id": "ovis25",
+   "fam": "other",
+   "name": "Ovis2.5",
+   "rel": "2025-08",
+   "prep": "native",
+   "tok": "Not reported",
+   "maxtok": null,
+   "llm_b": 8,
+   "rlflag": true,
+   "b": [
+    71.2,
+    null,
+    92.9,
+    83.4,
+    879
+   ],
+   "bnote": "9B; DocVQA 96.3 on val; ChartQA and MathVista splits not stated"
+  },
+  {
+   "id": "kimivl",
+   "fam": "other",
+   "name": "Kimi-VL",
+   "rel": "2025-04",
+   "prep": "native",
+   "tok": "Up to ~1,024 (Instruct) or ~4,096 (Thinking-2506), derived",
+   "maxtok": 1024,
+   "llm_b": 16,
+   "rlflag": true,
+   "b": [
+    57.0,
+    null,
+    null,
+    68.7,
+    867
+   ],
+   "bnote": "Instruct; Thinking-2506: MMMU 64.0, MathVista 80.1"
+  },
+  {
+   "id": "glm45v",
+   "fam": "other",
+   "name": "GLM-4.1V-Thinking / GLM-4.5V",
+   "rel": "2025-07",
+   "prep": "native",
+   "tok": "Up to 6,144 per image at evaluation",
+   "maxtok": 6144,
+   "llm_b": 106,
+   "rlflag": true,
+   "b": [
+    75.4,
+    null,
+    null,
+    84.6,
+    865
+   ],
+   "bnote": "GLM-4.5V, thinking; OCRBench converted from 86.5"
+  },
+  {
+   "id": "cambrian",
+   "fam": "study",
+   "name": "Cambrian-1",
+   "rel": "2024-06",
+   "prep": "fixed",
+   "tok": "576",
+   "maxtok": 576,
+   "llm_b": 34,
+   "rlflag": false,
+   "b": [
+    49.7,
+    75.5,
+    75.6,
+    53.2,
+    600
+   ],
+   "bnote": "34B; OCRBench converted from 60.0; DocVQA split not stated"
+  },
+  {
+   "id": "prismatic",
+   "fam": "study",
+   "name": "Prismatic (Prism)",
+   "rel": "2024-02",
+   "prep": "fixed",
+   "tok": "Not reported",
+   "maxtok": null,
+   "llm_b": 13,
+   "rlflag": false,
+   "b": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "bnote": "RefCOCO 77.78 (7B); none of the five benchmarks"
+  }
+ ]
+}

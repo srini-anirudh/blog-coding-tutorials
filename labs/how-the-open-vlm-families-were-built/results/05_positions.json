@@ -1,0 +1,11 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2",
+ "command": "python labs/how-the-open-vlm-families-were-built/scripts/05_positions.py",
+ "data": {
+  "rope_parity": [
+   80,
+   80
+  ],
+  "qwen3_interleave_parity": true
+ }
+}

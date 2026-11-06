@@ -1,0 +1,32 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2
+# command: python labs/how-the-open-vlm-families-were-built/scripts/07_mixing_and_losses.py
+
+Part 1. Sampling shares for the LLaVA-1.5 665K mix
+source    samples  proportional  sqrt (Molmo)  cap 60K (Cambrian-style)  cap 60K + sqrt
+--------  -------  ------------  ------------  ------------------------  --------------
+VQAv2         83K         12.5%         14.0%                     15.5%           14.9%
+GQA           72K         10.8%         13.0%                     15.5%           14.9%
+OCR-VQA       80K         12.0%         13.7%                     15.5%           14.9%
+RefCOCO       48K          7.2%         10.6%                     12.4%           13.3%
+VG            86K         12.9%         14.3%                     15.5%           14.9%
+ShareGPT      40K          6.0%          9.7%                     10.3%           12.2%
+other        256K         38.5%         24.6%                     15.5%           14.9%
+  Square-root sampling and caps both move weight from the largest source to the smallest ones.
+
+Part 2. A 50:50 mixture in samples, seen as tokens (post: 'Mixtures in tokens')
+  short VQA answers  50.0% of samples  ->  0.5% of supervised tokens
+  long captions      50.0% of samples  ->  99.5% of supervised tokens
+
+Part 3. One batch with responses of 1, 10 and 200 tokens. Share of the loss gradient each sample gets
+normalisation        1 token      10 tokens     200 tokens
+-------------  -------------  -------------  -------------
+token            0.5% (0.5%)    4.7% (4.7%)  94.8% (94.8%)
+sample         33.4% (33.3%)  33.2% (33.3%)  33.4% (33.3%)
+sqrt             5.5% (5.5%)  17.2% (17.3%)  77.3% (77.3%)
+  Measured from autograd; in brackets the closed form L, 1 or sqrt(L) normalised. They differ slightly because
+  the gradient size of each token depends on its own logits. Per-token loss lets the long caption take almost
+  all of the gradient; per-sample lets one-word answers weigh as much as captions; sqrt sits between.
+
+Part 4. DeepSeek-VL modality warm-up to a 70% text share (warm-up length is illustrative: 1,000 steps)
+  step:           0    250    500    750   1000   2000
+  text share:  100%    92%    85%    77%    70%    70%

@@ -1,0 +1,44 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2
+# command: python labs/how-the-open-vlm-families-were-built/scripts/04_connectors.py
+
+Part 1. From-scratch connector against the HF module (random weights, toy size): max |difference|
+  pixel shuffle (C7) vs Idefics3Connector.pixel_shuffle    (2, 16, 48)  0.00e+00
+  InternVL pixel shuffle vs InternVLModel.pixel_shuffle    (2, 4, 4, 48)  0.00e+00
+  Qwen2-VL PatchMerger                                     (16, 16)  0.00e+00
+  LLaVA MLP projector                                      (2, 64, 16)  0.00e+00
+  InternVL projector (LN + MLP)                            (2, 16, 16)  0.00e+00
+  Gemma 3 average pool + RMSNorm + matrix                  (2, 4, 16)  2.86e-06
+  Idefics3 and InternVL shuffles hold the same values in a different channel order: True
+
+Part 2. One 448 px tile = 32 x 32 = 1,024 patches of width 1,152 (SigLIP So400m). LLM width 3,584.
+connector                             tokens out  compression  parameters
+------------------------------------  ----------  -----------  ----------
+MLP on every patch (LLaVA)                  1024           1x       17.0M
+2 x 2 merge + MLP (Qwen2-VL)                 256           4x       37.8M
+pixel shuffle x4 + MLP (InternVL)            256           4x       29.4M
+pixel shuffle x16 + linear (SmolVLM)          64          16x       66.1M
+4 x 4 average pool (Gemma 3)                  64          16x        4.1M
+64 learned queries (MiniCPM-V)                64          16x       68.6M
+
+Part 3. Connector parameters predicted from config.json, against the checkpoint headers (03_param_split).
+model                  formula  checkpoint  equal                                                                         formula used
+---------------------  -------  ----------  -----  -----------------------------------------------------------------------------------
+LLaVA-1.5 7B            20.98M      20.98M    yes                                              Linear(1024->4096) + Linear(4096->4096)
+LLaVA-NeXT 7B           20.98M      20.98M    yes                        Linear(1024->4096) + Linear(4096->4096) + image_newline(4096)
+LLaVA-NeXT 34B          58.74M      58.74M    yes                        Linear(1024->7168) + Linear(7168->7168) + image_newline(7168)
+LLaVA-OneVision 0.5B     1.84M       1.84M    yes                            Linear(1152->896) + Linear(896->896) + image_newline(896)
+LLaVA-OneVision 72B     76.57M      76.57M    yes                        Linear(1152->8192) + Linear(8192->8192) + image_newline(8192)
+Qwen2-VL 2B             34.09M      34.09M    yes                                   LN(1280) + Linear(5120->5120) + Linear(5120->1536)
+Qwen2-VL 72B            68.17M      68.17M    yes                                   LN(1280) + Linear(5120->5120) + Linear(5120->8192)
+Qwen2.5-VL 72B          68.17M      68.17M    yes                              RMSNorm(1280) + Linear(5120->5120) + Linear(5120->8192)
+InternVL3 78B          172.01M     172.01M    yes                                 LN(12800) + Linear(12800->8192) + Linear(8192->8192)
+InternVL3.5 8B          33.57M      33.57M    yes                                   LN(4096) + Linear(4096->4096) + Linear(4096->4096)
+InternVL3.5 38B         91.79M      91.79M    yes                                 LN(12800) + Linear(12800->5120) + Linear(5120->5120)
+InternVL3.5 241B-A28B   69.24M      69.24M    yes                                 LN(12800) + Linear(12800->4096) + Linear(4096->4096)
+Idefics3 8B             18.87M      18.87M    yes                                        pixel shuffle x4, Linear(4608->4096, no bias)
+SmolVLM 256M             7.08M       7.08M    yes                                       pixel shuffle x16, Linear(12288->576, no bias)
+SmolVLM 2.2B            21.23M      21.23M    yes                                       pixel shuffle x9, Linear(10368->2048, no bias)
+Gemma 3 4B               2.95M       2.95M    yes                                                     RMSNorm(1152) + matrix 1152x2560
+Gemma 3 27B              6.19M       6.19M    yes                                                     RMSNorm(1152) + matrix 1152x5376
+MiniCPM-V 4.5           88.91M      88.91M    yes  64 queries x 4096 + kv Linear(1152->4096) + attention(4096) + proj 4096x4096 + 3 LN
+Pixtral 12B             31.47M      31.47M    yes                                              Linear(1024->5120) + Linear(5120->5120)

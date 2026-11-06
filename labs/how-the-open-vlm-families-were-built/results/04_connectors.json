@@ -1,0 +1,181 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2",
+ "command": "python labs/how-the-open-vlm-families-were-built/scripts/04_connectors.py",
+ "data": {
+  "parity_max_abs_diff": 2.86102294921875e-06,
+  "shuffle_same_values": true,
+  "tile": [
+   [
+    "MLP on every patch (LLaVA)",
+    1024,
+    "1x",
+    "17.0M"
+   ],
+   [
+    "2 x 2 merge + MLP (Qwen2-VL)",
+    256,
+    "4x",
+    "37.8M"
+   ],
+   [
+    "pixel shuffle x4 + MLP (InternVL)",
+    256,
+    "4x",
+    "29.4M"
+   ],
+   [
+    "pixel shuffle x16 + linear (SmolVLM)",
+    64,
+    "16x",
+    "66.1M"
+   ],
+   [
+    "4 x 4 average pool (Gemma 3)",
+    64,
+    "16x",
+    "4.1M"
+   ],
+   [
+    "64 learned queries (MiniCPM-V)",
+    64,
+    "16x",
+    "68.6M"
+   ]
+  ],
+  "formula_vs_hub": [
+   {
+    "label": "LLaVA-1.5 7B",
+    "repo": "llava-hf/llava-1.5-7b-hf",
+    "formula": 20979712,
+    "hub": 20979712,
+    "how": "Linear(1024->4096) + Linear(4096->4096)"
+   },
+   {
+    "label": "LLaVA-NeXT 7B",
+    "repo": "llava-hf/llava-v1.6-vicuna-7b-hf",
+    "formula": 20983808,
+    "hub": 20983808,
+    "how": "Linear(1024->4096) + Linear(4096->4096) + image_newline(4096)"
+   },
+   {
+    "label": "LLaVA-NeXT 34B",
+    "repo": "llava-hf/llava-v1.6-34b-hf",
+    "formula": 58741760,
+    "hub": 58741760,
+    "how": "Linear(1024->7168) + Linear(7168->7168) + image_newline(7168)"
+   },
+   {
+    "label": "LLaVA-OneVision 0.5B",
+    "repo": "llava-hf/llava-onevision-qwen2-0.5b-ov-hf",
+    "formula": 1837696,
+    "hub": 1837696,
+    "how": "Linear(1152->896) + Linear(896->896) + image_newline(896)"
+   },
+   {
+    "label": "LLaVA-OneVision 72B",
+    "repo": "llava-hf/llava-onevision-qwen2-72b-ov-hf",
+    "formula": 76570624,
+    "hub": 76570624,
+    "how": "Linear(1152->8192) + Linear(8192->8192) + image_newline(8192)"
+   },
+   {
+    "label": "Qwen2-VL 2B",
+    "repo": "Qwen/Qwen2-VL-2B-Instruct",
+    "formula": 34087936,
+    "hub": 34087936,
+    "how": "LN(1280) + Linear(5120->5120) + Linear(5120->1536)"
+   },
+   {
+    "label": "Qwen2-VL 72B",
+    "repo": "Qwen/Qwen2-VL-72B-Instruct",
+    "formula": 68173312,
+    "hub": 68173312,
+    "how": "LN(1280) + Linear(5120->5120) + Linear(5120->8192)"
+   },
+   {
+    "label": "Qwen2.5-VL 72B",
+    "repo": "Qwen/Qwen2.5-VL-72B-Instruct",
+    "formula": 68172032,
+    "hub": 68172032,
+    "how": "RMSNorm(1280) + Linear(5120->5120) + Linear(5120->8192)"
+   },
+   {
+    "label": "InternVL3 78B",
+    "repo": "OpenGVLab/InternVL3-78B-hf",
+    "formula": 172008448,
+    "hub": 172008448,
+    "how": "LN(12800) + Linear(12800->8192) + Linear(8192->8192)"
+   },
+   {
+    "label": "InternVL3.5 8B",
+    "repo": "OpenGVLab/InternVL3_5-8B-HF",
+    "formula": 33570816,
+    "hub": 33570816,
+    "how": "LN(4096) + Linear(4096->4096) + Linear(4096->4096)"
+   },
+   {
+    "label": "InternVL3.5 38B",
+    "repo": "OpenGVLab/InternVL3_5-38B-HF",
+    "formula": 91786240,
+    "hub": 91786240,
+    "how": "LN(12800) + Linear(12800->5120) + Linear(5120->5120)"
+   },
+   {
+    "label": "InternVL3.5 241B-A28B",
+    "repo": "OpenGVLab/InternVL3_5-241B-A28B-HF",
+    "formula": 69239808,
+    "hub": 69239808,
+    "how": "LN(12800) + Linear(12800->4096) + Linear(4096->4096)"
+   },
+   {
+    "label": "Idefics3 8B",
+    "repo": "HuggingFaceM4/Idefics3-8B-Llama3",
+    "formula": 18874368,
+    "hub": 18874368,
+    "how": "pixel shuffle x4, Linear(4608->4096, no bias)"
+   },
+   {
+    "label": "SmolVLM 256M",
+    "repo": "HuggingFaceTB/SmolVLM-256M-Instruct",
+    "formula": 7077888,
+    "hub": 7077888,
+    "how": "pixel shuffle x16, Linear(12288->576, no bias)"
+   },
+   {
+    "label": "SmolVLM 2.2B",
+    "repo": "HuggingFaceTB/SmolVLM-Instruct",
+    "formula": 21233664,
+    "hub": 21233664,
+    "how": "pixel shuffle x9, Linear(10368->2048, no bias)"
+   },
+   {
+    "label": "Gemma 3 4B",
+    "repo": "unsloth/gemma-3-4b-it",
+    "formula": 2950272,
+    "hub": 2950272,
+    "how": "RMSNorm(1152) + matrix 1152x2560"
+   },
+   {
+    "label": "Gemma 3 27B",
+    "repo": "unsloth/gemma-3-27b-it",
+    "formula": 6194304,
+    "hub": 6194304,
+    "how": "RMSNorm(1152) + matrix 1152x5376"
+   },
+   {
+    "label": "MiniCPM-V 4.5",
+    "repo": "openbmb/MiniCPM-V-4_5",
+    "formula": 88907776,
+    "hub": 88907776,
+    "how": "64 queries x 4096 + kv Linear(1152->4096) + attention(4096) + proj 4096x4096 + 3 LN"
+   },
+   {
+    "label": "Pixtral 12B",
+    "repo": "mistral-community/pixtral-12b",
+    "formula": 31467520,
+    "hub": 31467520,
+    "how": "Linear(1024->5120) + Linear(5120->5120)"
+   }
+  ]
+ }
+}

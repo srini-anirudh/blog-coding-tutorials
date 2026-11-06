@@ -1,0 +1,78 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2
+# command: python labs/how-the-open-vlm-families-were-built/scripts/03_param_split.py
+
+Parameters in billions, from safetensors headers. 'adapter' = cross-attention layers inside the LLM.
+Last column: the post's Figure 7 (vision / language, and the vision share it implies).
+
+model                  vision  connector  adapter  language    total  vision share            post Fig. 7
+---------------------  ------  ---------  -------  --------  -------  ------------  ---------------------
+LLaVA-1.5 7B            0.304      0.021    0.000     6.739    7.063          4.3%                       
+LLaVA-NeXT 7B           0.304      0.021    0.000     6.739    7.063          4.3%    0.303 / 6.74 (4.3%)
+LLaVA-NeXT 34B          0.304      0.059    0.000    34.390   34.752          0.9%   0.303 / 34.39 (0.9%)
+LLaVA-OneVision 0.5B    0.398      0.002    0.000     0.494    0.894         44.5%                       
+LLaVA-OneVision 72B     0.398      0.077    0.000    72.707   73.182          0.5%                       
+Qwen2-VL 2B             0.631      0.034    0.000     1.544    2.209         28.6%   0.675 / 1.50 (31.0%)
+Qwen2-VL 72B            0.631      0.068    0.000    72.706   73.406          0.9%   0.675 / 72.00 (0.9%)
+Qwen2.5-VL 72B          0.636      0.068    0.000    72.706   73.411          0.9%                       
+Qwen3-VL 2B             0.306      0.101    0.000     1.721    2.128         14.4%                       
+Qwen3-VL 235B-A22B      0.416      0.160    0.000   235.094  235.670          0.2%                       
+InternVL3 78B           5.536      0.172    0.000    72.700   78.408          7.1%                       
+InternVL3.5 8B          0.304      0.034    0.000     8.191    8.528          3.6%    0.300 / 8.20 (3.5%)
+InternVL3.5 38B         5.536      0.092    0.000    32.762   38.390         14.4%  5.500 / 32.80 (14.4%)
+InternVL3.5 241B-A28B   5.536      0.069    0.000   235.094  240.699          2.3%  5.500 / 235.10 (2.3%)
+Molmo-7B-D              0.291      0.114    0.000     7.616    8.021          3.6%    0.290 / 7.60 (3.6%)
+Molmo-72B               0.291      0.310    0.000    72.707   73.308          0.4%   0.290 / 72.00 (0.4%)
+Idefics2 8B             0.418      0.743    0.000     7.242    8.403          5.0%                       
+Idefics3 8B             0.413      0.019    0.000     8.030    8.462          4.9%                       
+SmolVLM 256M            0.086      0.007    0.000     0.163    0.256         33.7%   0.093 / 0.14 (40.8%)
+SmolVLM 2.2B            0.413      0.021    0.000     1.812    2.246         18.4%   0.400 / 1.70 (19.0%)
+Gemma 3 4B              0.417      0.003    0.000     3.880    4.300          9.7%                       
+Gemma 3 27B             0.417      0.006    0.000    27.009   27.432          1.5%   0.417 / 25.60 (1.6%)
+DeepSeek-VL2-Tiny       0.428      0.008    0.000     2.935    3.371         12.7%                       
+DeepSeek-VL2            0.428      0.018    0.000    27.034   27.480          1.6%                       
+DeepSeek-OCR            0.399      0.003    0.000     2.935    3.336         12.0%   0.380 / 3.00 (11.2%)
+MiniCPM-V 4.5           0.418      0.089    0.000     8.189    8.696          4.8%                       
+Llama 3.2 11B Vision    0.864      0.031    1.745     8.030   10.670          8.1%                       
+Llama 3.2 90B Vision    0.864      0.063   17.113    70.554   88.593          1.0%                       
+Pixtral 12B             0.403      0.031    0.000    12.248   12.683          3.2%   0.400 / 12.00 (3.2%)
+Kimi-VL A3B             0.417      0.031    0.000    15.960   16.408          2.5%   0.400 / 16.00 (2.4%)
+NVLM-D 72B              6.053      0.621    0.000    72.706   79.380          7.6%                       
+Aria                    0.418      0.020    0.000    24.869   25.307          1.7%                       
+GLM-4.1V 9B             0.707      0.185    0.000     9.400   10.293          6.9%                       
+Ovis2.5 9B              0.414      0.571    0.000     8.191    9.175          4.5%                       
+
+Name groups counted as vision and connector (largest three), to audit the rules in vlmfam/split.py:
+  LLaVA-1.5 7B: vision [vision_tower.vision_model.encoder 302M, vision_tower.vision_model.embeddings 1M, vision_tower.vision_model.post_layernorm 0M]  connector [multi_modal_projector.linear_2.weight 16.8M, multi_modal_projector.linear_1.weight 4.2M, multi_modal_projector.linear_1.bias 0.0M]
+  LLaVA-NeXT 7B: vision [vision_tower.vision_model.encoder 302M, vision_tower.vision_model.embeddings 1M, vision_tower.vision_model.post_layernorm 0M]  connector [multi_modal_projector.linear_2.weight 16.8M, multi_modal_projector.linear_1.weight 4.2M, image_newline 0.0M]
+  LLaVA-NeXT 34B: vision [vision_tower.vision_model.encoder 302M, vision_tower.vision_model.embeddings 1M, vision_tower.vision_model.post_layernorm 0M]  connector [multi_modal_projector.linear_2.weight 51.4M, multi_modal_projector.linear_1.weight 7.3M, image_newline 0.0M]
+  LLaVA-OneVision 0.5B: vision [vision_tower.vision_model.encoder 396M, vision_tower.vision_model.embeddings 2M, vision_tower.vision_model.post_layernorm 0M]  connector [multi_modal_projector.linear_1.weight 1.0M, multi_modal_projector.linear_2.weight 0.8M, image_newline 0.0M]
+  LLaVA-OneVision 72B: vision [vision_tower.vision_model.encoder 396M, vision_tower.vision_model.embeddings 2M, vision_tower.vision_model.post_layernorm 0M]  connector [multi_modal_projector.linear_2.weight 67.1M, multi_modal_projector.linear_1.weight 9.4M, image_newline 0.0M]
+  Qwen2-VL 2B: vision [visual.blocks.0 20M, visual.blocks.1 20M, visual.blocks.10 20M]  connector [visual.merger.mlp 34.1M, visual.merger.ln_q 0.0M]
+  Qwen2-VL 72B: vision [visual.blocks.0 20M, visual.blocks.1 20M, visual.blocks.10 20M]  connector [visual.merger.mlp 68.2M, visual.merger.ln_q 0.0M]
+  Qwen2.5-VL 72B: vision [visual.blocks.0 20M, visual.blocks.1 20M, visual.blocks.10 20M]  connector [visual.merger.mlp 68.2M, visual.merger.ln_q 0.0M]
+  Qwen3-VL 2B: vision [model.visual.blocks 302M, model.visual.pos_embed 2M, model.visual.patch_embed 2M]  connector [model.visual.deepstack_merger_list 75.5M, model.visual.merger 25.2M]
+  Qwen3-VL 235B-A22B: vision [model.visual.blocks 411M, model.visual.pos_embed 3M, model.visual.patch_embed 2M]  connector [model.visual.deepstack_merger_list 120.4M, model.visual.merger 40.1M]
+  InternVL3 78B: vision [vision_tower.encoder.layer 5531M, vision_tower.embeddings.position_embeddings 3M, vision_tower.embeddings.patch_embeddings 2M]  connector [multi_modal_projector.linear_1.weight 104.9M, multi_modal_projector.linear_2.weight 67.1M, multi_modal_projector.layer_norm.bias 0.0M]
+  InternVL3.5 8B: vision [vision_tower.encoder.layer 302M, vision_tower.embeddings.position_embeddings 1M, vision_tower.embeddings.patch_embeddings 1M]  connector [multi_modal_projector.linear_1.weight 16.8M, multi_modal_projector.linear_2.weight 16.8M, multi_modal_projector.layer_norm.bias 0.0M]
+  InternVL3.5 38B: vision [vision_tower.encoder.layer 5531M, vision_tower.embeddings.position_embeddings 3M, vision_tower.embeddings.patch_embeddings 2M]  connector [multi_modal_projector.linear_1.weight 65.5M, multi_modal_projector.linear_2.weight 26.2M, multi_modal_projector.layer_norm.bias 0.0M]
+  InternVL3.5 241B-A28B: vision [vision_tower.encoder.layer 5531M, vision_tower.embeddings.position_embeddings 3M, vision_tower.embeddings.patch_embeddings 2M]  connector [multi_modal_projector.linear_1.weight 52.4M, multi_modal_projector.linear_2.weight 16.8M, multi_modal_projector.layer_norm.bias 0.0M]
+  Molmo-7B-D: vision [model.vision_backbone.image_vit 291M, model.vision_backbone.pad_embed 0M]  connector [model.vision_backbone.image_projector 106.7M, model.vision_backbone.image_pooling_2d 7.3M]
+  Molmo-72B: vision [model.vision_backbone.image_vit 291M, model.vision_backbone.pad_embed 0M]  connector [model.vision_backbone.image_projector 302.8M, model.vision_backbone.image_pooling_2d 7.3M]
+  Idefics2 8B: vision [model.vision_model.encoder 411M, model.vision_model.embeddings 6M, model.vision_model.post_layernorm 0M]  connector [model.connector.perceiver_resampler 651.5M, model.connector.modality_projection 91.8M]
+  Idefics3 8B: vision [model.vision_model.encoder 411M, model.vision_model.embeddings 1M, model.vision_model.post_layernorm 0M]  connector [model.connector.modality_projection 18.9M]
+  SmolVLM 256M: vision [model.vision_model.encoder 85M, model.vision_model.embeddings 1M, model.vision_model.post_layernorm 0M]  connector [model.connector.modality_projection 7.1M]
+  SmolVLM 2.2B: vision [model.vision_model.encoder 411M, model.vision_model.embeddings 2M, model.vision_model.post_layernorm 0M]  connector [model.connector.modality_projection 21.2M]
+  Gemma 3 4B: vision [vision_tower.vision_model.encoder 411M, vision_tower.vision_model.embeddings 5M, vision_tower.vision_model.post_layernorm 0M]  connector [multi_modal_projector.mm_input_projection_weight 2.9M, multi_modal_projector.mm_soft_emb_norm.weight 0.0M]
+  Gemma 3 27B: vision [vision_tower.vision_model.encoder 411M, vision_tower.vision_model.embeddings 5M, vision_tower.vision_model.post_layernorm 0M]  connector [multi_modal_projector.mm_input_projection_weight 6.2M, multi_modal_projector.mm_soft_emb_norm.weight 0.0M]
+  DeepSeek-VL2-Tiny: vision [vision.blocks.0 15M, vision.blocks.1 15M, vision.blocks.10 15M]  connector [projector.layers.0 5.9M, projector.layers.2 1.6M, image_newline 0.0M]
+  DeepSeek-VL2: vision [vision.blocks.0 15M, vision.blocks.1 15M, vision.blocks.10 15M]  connector [projector.layers.0 11.8M, projector.layers.2 6.6M, image_newline 0.0M]
+  DeepSeek-OCR: vision [model.vision_model.transformer 302M, model.sam_model.blocks 85M, model.sam_model.net_3 5M]  connector [model.projector.layers 2.6M, model.image_newline 0.0M, model.view_seperator 0.0M]
+  MiniCPM-V 4.5: vision [vpm.encoder.layers 411M, vpm.embeddings.position_embedding 6M, vpm.embeddings.patch_embedding 1M]  connector [resampler.attn.in_proj_weight 50.3M, resampler.attn.out_proj 16.8M, resampler.proj 16.8M]
+  Llama 3.2 11B Vision: vision [vision_model.transformer.layers 630M, vision_model.global_transformer.layers 157M, vision_model.gated_positional_embedding.tile_embedding 74M]  connector [multi_modal_projector.weight 31.5M, multi_modal_projector.bias 0.0M]
+  Llama 3.2 90B Vision: vision [vision_model.transformer.layers 630M, vision_model.global_transformer.layers 157M, vision_model.gated_positional_embedding.tile_embedding 74M]  connector [multi_modal_projector.weight 62.9M, multi_modal_projector.bias 0.0M]
+  Pixtral 12B: vision [vision_tower.transformer.layers 403M, vision_tower.patch_conv.weight 1M, vision_tower.ln_pre.weight 0M]  connector [multi_modal_projector.linear_2.weight 26.2M, multi_modal_projector.linear_1.weight 5.2M, multi_modal_projector.linear_1.bias 0.0M]
+  Kimi-VL A3B: vision [vision_tower.encoder.blocks 411M, vision_tower.patch_embed.pos_emb 5M, vision_tower.patch_embed.proj 1M]  connector [multi_modal_projector.linear_1.weight 21.2M, multi_modal_projector.linear_2.weight 9.4M, multi_modal_projector.linear_1.bias 0.0M]
+  NVLM-D 72B: vision [vision_model.encoder.layers 6048M, vision_model.embeddings.position_embedding 3M, vision_model.embeddings.patch_embedding 2M]  connector [mlp1.1.weight 378.5M, mlp1.3.weight 242.2M, mlp1.0.bias 0.0M]
+  Aria: vision [vision_tower.encoder.layers 411M, vision_tower.embeddings.position_embedding 6M, vision_tower.embeddings.patch_embedding 1M]  connector [multi_modal_projector.feed_forward.linear_out 6.6M, multi_modal_projector.cross_attn.multihead_attn 5.3M, multi_modal_projector.feed_forward.linear_in 2.9M]
+  GLM-4.1V 9B: vision [model.visual.blocks 680M, model.visual.downsample 25M, model.visual.patch_embed 2M]  connector [model.visual.merger 185.1M]
+  Ovis2.5 9B: vision [visual_tokenizer.vit.vision_model 414M]  connector [visual_tokenizer.head.0 302.0M, vte.weight 268.4M, visual_tokenizer.head.1 0.1M]

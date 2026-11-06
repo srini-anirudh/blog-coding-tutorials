@@ -1,0 +1,91 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, transformers 5.22.2",
+ "command": "python labs/how-the-open-vlm-families-were-built/scripts/06_tokens_per_page.py",
+ "data": {
+  "modes": {
+   "Tiny": 64,
+   "Small": 100,
+   "Base": 256,
+   "Large": 400
+  },
+  "pages": [
+   {
+    "font_px": 32,
+    "words": 295,
+    "text_tokens": 399,
+    "ratios": {
+     "Tiny": 6.234375,
+     "Small": 3.99,
+     "Base": 1.55859375,
+     "Large": 0.9975
+    }
+   },
+   {
+    "font_px": 24,
+    "words": 498,
+    "text_tokens": 673,
+    "ratios": {
+     "Tiny": 10.515625,
+     "Small": 6.73,
+     "Base": 2.62890625,
+     "Large": 1.6825
+    }
+   },
+   {
+    "font_px": 20,
+    "words": 721,
+    "text_tokens": 965,
+    "ratios": {
+     "Tiny": 15.078125,
+     "Small": 9.65,
+     "Base": 3.76953125,
+     "Large": 2.4125
+    }
+   },
+   {
+    "font_px": 16,
+    "words": 1089,
+    "text_tokens": 1459,
+    "ratios": {
+     "Tiny": 22.796875,
+     "Small": 14.59,
+     "Base": 5.69921875,
+     "Large": 3.6475
+    }
+   },
+   {
+    "font_px": 14,
+    "words": 1430,
+    "text_tokens": 1953,
+    "ratios": {
+     "Tiny": 30.515625,
+     "Small": 19.53,
+     "Base": 7.62890625,
+     "Large": 4.8825
+    }
+   },
+   {
+    "font_px": 12,
+    "words": 1853,
+    "text_tokens": 2549,
+    "ratios": {
+     "Tiny": 39.828125,
+     "Small": 25.49,
+     "Base": 9.95703125,
+     "Large": 6.3725
+    }
+   },
+   {
+    "font_px": 10,
+    "words": 2756,
+    "text_tokens": 3827,
+    "ratios": {
+     "Tiny": 59.796875,
+     "Small": 38.27,
+     "Base": 14.94921875,
+     "Large": 9.5675
+    }
+   }
+  ]
+ }
+}
