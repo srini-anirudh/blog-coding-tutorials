@@ -1,0 +1,52 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/teaching-a-language-model-to-follow-instructions/scripts/05_likelihood_displacement.py
+8 pairs, 1000 unrelated completions, features in R^64, uniform reference, beta = 0.1, 400 full-batch Adam steps at lr 0.05.
+At the start the chosen set holds 0.0079 of the mass, the unrelated completions 0.9843.
+dlogp = mean change in log-prob versus the reference, over the 8 chosen (or rejected) responses.
+
+1. Plain DPO, trajectory, for two similarities.
+
+similarity 0.0
+step   loss  d_logp_chosen  d_logp_rejected  mass_chosen  mass_elsewhere
+   0  0.693          0.000            0.000        0.008           0.984
+  50  0.409          1.497           -5.450        0.080           0.920
+ 100  0.255         -0.156          -12.630        0.077           0.923
+ 150  0.172         -2.303          -19.152        0.046           0.954
+ 200  0.124         -4.212          -24.609        0.027           0.973
+ 250  0.094         -5.852          -29.208        0.017           0.983
+ 300  0.073         -7.274          -33.158        0.011           0.989
+ 350  0.059         -8.524          -36.610        0.007           0.993
+ 400  0.049         -9.637          -39.674        0.005           0.995
+
+similarity 0.9
+step   loss  d_logp_chosen  d_logp_rejected  mass_chosen  mass_elsewhere
+   0  0.693          0.000            0.000        0.008           0.984
+  50  0.584         -1.439           -3.775        0.011           0.987
+ 100  0.495         -6.430          -10.936        0.001           0.999
+ 150  0.423        -12.016          -18.526        0.000           1.000
+ 200  0.363        -17.393          -25.761        0.000           1.000
+ 250  0.313        -22.451          -32.548        0.000           1.000
+ 300  0.273        -27.189          -38.898        0.000           1.000
+ 350  0.239        -31.624          -44.840        0.000           1.000
+ 400  0.210        -35.780          -50.407        0.000           1.000
+
+2. End of training, plain DPO and two patches, across similarity.
+   DPOP: DPO-Positive, lambda = 5.  NLL: an extra -0.1 * log pi(y_w) term (RPO-style).
+similarity   method   loss  dlogp_chosen  dlogp_rejected  mass_chosen  mass_elsewhere     KL
+     0.000      DPO  0.049        -9.637         -39.674        0.005           0.995  6.581
+     0.000     DPOP  0.065         1.606         -25.729        0.408           0.592  4.493
+     0.000  DPO+NLL  0.320         4.735         -18.272        0.899           0.101  4.362
+     0.500      DPO  0.082       -18.372         -43.182        0.000           1.000  6.762
+     0.500     DPOP  0.154         0.804         -17.521        0.127           0.873  4.079
+     0.500  DPO+NLL  0.427         4.668         -10.869        0.843           0.157  4.173
+     0.900      DPO  0.210       -35.780         -50.407        0.000           1.000  6.899
+     0.900     DPOP  0.440         0.169          -5.946        0.009           0.990  3.512
+     0.900  DPO+NLL  0.706         4.581          -0.597        0.771           0.205  3.909
+     0.990      DPO  0.458       -47.202         -52.705        0.000           1.000  6.918
+     0.990     DPOP  0.640         0.310          -0.795        0.011           0.985  2.499
+     0.990  DPO+NLL  0.911         4.301           3.377        0.589           0.154  3.626
+
+Plain DPO: the loss falls and the chosen log-prob falls with it, more steeply as similarity grows.
+Nearly all mass ends on completions outside the data. DPOP keeps the chosen at or just above the
+reference. The NLL term raises the chosen by over 4 nats; at similarity 0.99 it raises the rejected
+too, because the two share almost all their features.
