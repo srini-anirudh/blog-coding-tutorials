@@ -1,0 +1,49 @@
+{
+ "hardware": "AMD EPYC 7R13, 1 threads, CPU only, torch 2.15.0+cu132, float32",
+ "command": "python labs/searching-with-pixels/scripts/05_modality_gap.py",
+ "scratch_random init": {
+  "cone_image": 0.9767884612083435,
+  "cone_text": 0.41047829389572144,
+  "gap": 1.1001025438308716,
+  "matched_cos": 0.08789081126451492,
+  "unmatched_cos": 0.08913569152355194
+ },
+ "scratch_trained (bi64)": {
+  "cone_image": 0.023055538535118103,
+  "cone_text": 0.0456211194396019,
+  "gap": 0.17953498661518097,
+  "matched_cos": 0.4843578040599823,
+  "unmatched_cos": 0.01922297663986683
+ },
+ "scratch_offset": {
+  "max_deviation": 4.046596586704254e-07,
+  "top1_unchanged_pct": 100.0
+ },
+ "clip": {
+  "model": "openai/clip-vit-base-patch32",
+  "n": 48,
+  "stats": {
+   "cone_image": 0.8129637241363525,
+   "cone_text": 0.7333563566207886,
+   "gap": 1.0259145498275757,
+   "matched_cos": 0.33058401942253113,
+   "unmatched_cos": 0.24995571374893188
+  },
+  "pools": {
+   "raw CLIP vectors": {
+    "image_pool_top1": 75.0,
+    "mixed_pool_top1": 0.0,
+    "wrong_modality_rate": 100.0,
+    "gap": 1.0259145498275757,
+    "matched_cos": 0.33058401942253113
+   },
+   "each modality's mean removed": {
+    "image_pool_top1": 85.41666865348816,
+    "mixed_pool_top1": 58.33333134651184,
+    "wrong_modality_rate": 41.66666567325592,
+    "gap": 0.3664909601211548,
+    "matched_cos": 0.3415798842906952
+   }
+  }
+ }
+}

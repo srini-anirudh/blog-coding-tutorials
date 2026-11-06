@@ -1,0 +1,20 @@
+# hardware: AMD EPYC 7R13, 1 threads, CPU only, torch 2.15.0+cu132, float32
+# command: python labs/searching-with-pixels/scripts/03_cascade.py
+
+Stage one alone (bi64 over all 2000 pages): P@1 11.0  nDCG@5 12.0
+
+   k stage-1 R@k | late rerank P@1  nDCG@5 | cross rerank P@1  nDCG@5 cross passes cross ms/query
+   1        11.0              11.0     4.1               11.0     4.1            1           0.71
+   2        21.4              21.4     8.3               20.2     8.1            2           0.83
+   5        42.4              42.4    18.8               36.8    17.8            5           1.27
+  10        66.0              66.0    34.0               49.4    30.8           10           1.41
+  20        85.6              85.6    53.7               56.0    45.5           20           2.73
+  50        96.8              96.8    85.0               57.0    62.4           50           5.47
+ 100        99.8              99.8    98.9               57.6    66.6          100          12.99
+(nDCG@5 after reranking counts only pages inside the top k, so k < 5 caps it.)
+
+The post's Figure 8 cost model, as arithmetic (not a measurement): 1,000 visual tokens per page,
+a 30-token query, corpus vectors computed at indexing time.
+  corpus    40,000  k=50  n=5:  stage 1  30 tokens, rerank  51,500, read  5,030;  reading every page instead: 40,000,000
+  corpus    40,000  k=10  n=3:  stage 1  30 tokens, rerank  10,300, read  3,030;  reading every page instead: 40,000,000
+  corpus 1,000,000  k=50  n=5:  stage 1  30 tokens, rerank  51,500, read  5,030;  reading every page instead: 1,000,000,000

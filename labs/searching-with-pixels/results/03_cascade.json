@@ -1,0 +1,116 @@
+{
+ "hardware": "AMD EPYC 7R13, 1 threads, CPU only, torch 2.15.0+cu132, float32",
+ "command": "python labs/searching-with-pixels/scripts/03_cascade.py",
+ "first_stage": {
+  "R@1": 11.0,
+  "R@5": 42.4,
+  "R@10": 66.0,
+  "R@50": 96.8,
+  "P@1": 11.0,
+  "MRR": 26.7,
+  "nDCG@5": 12.04,
+  "nDCG@10": 16.52,
+  "beats_twin": 50.4
+ },
+ "cascade": [
+  {
+   "k": 1,
+   "stage1_recall": 11.0,
+   "late_P@1": 11.0,
+   "late_nDCG@5": 4.06,
+   "cross_P@1": 11.0,
+   "cross_nDCG@5": 4.06,
+   "cross_passes": 1,
+   "cross_ms_per_query": 0.71
+  },
+  {
+   "k": 2,
+   "stage1_recall": 21.4,
+   "late_P@1": 21.4,
+   "late_nDCG@5": 8.27,
+   "cross_P@1": 20.2,
+   "cross_nDCG@5": 8.12,
+   "cross_passes": 2,
+   "cross_ms_per_query": 0.83
+  },
+  {
+   "k": 5,
+   "stage1_recall": 42.4,
+   "late_P@1": 42.4,
+   "late_nDCG@5": 18.78,
+   "cross_P@1": 36.8,
+   "cross_nDCG@5": 17.78,
+   "cross_passes": 5,
+   "cross_ms_per_query": 1.27
+  },
+  {
+   "k": 10,
+   "stage1_recall": 66.0,
+   "late_P@1": 66.0,
+   "late_nDCG@5": 34.04,
+   "cross_P@1": 49.4,
+   "cross_nDCG@5": 30.78,
+   "cross_passes": 10,
+   "cross_ms_per_query": 1.41
+  },
+  {
+   "k": 20,
+   "stage1_recall": 85.6,
+   "late_P@1": 85.6,
+   "late_nDCG@5": 53.74,
+   "cross_P@1": 56.0,
+   "cross_nDCG@5": 45.49,
+   "cross_passes": 20,
+   "cross_ms_per_query": 2.73
+  },
+  {
+   "k": 50,
+   "stage1_recall": 96.8,
+   "late_P@1": 96.8,
+   "late_nDCG@5": 85.05,
+   "cross_P@1": 57.0,
+   "cross_nDCG@5": 62.35,
+   "cross_passes": 50,
+   "cross_ms_per_query": 5.47
+  },
+  {
+   "k": 100,
+   "stage1_recall": 99.8,
+   "late_P@1": 99.8,
+   "late_nDCG@5": 98.87,
+   "cross_P@1": 57.6,
+   "cross_nDCG@5": 66.63,
+   "cross_passes": 100,
+   "cross_ms_per_query": 12.99
+  }
+ ],
+ "token_cost_model": [
+  {
+   "corpus": 40000,
+   "k": 50,
+   "n": 5,
+   "stage1_tokens": 30,
+   "rerank_tokens": 51500,
+   "read_tokens": 5030,
+   "read_everything_tokens": 40000000
+  },
+  {
+   "corpus": 40000,
+   "k": 10,
+   "n": 3,
+   "stage1_tokens": 30,
+   "rerank_tokens": 10300,
+   "read_tokens": 3030,
+   "read_everything_tokens": 40000000
+  },
+  {
+   "corpus": 1000000,
+   "k": 50,
+   "n": 5,
+   "stage1_tokens": 30,
+   "rerank_tokens": 51500,
+   "read_tokens": 5030,
+   "read_everything_tokens": 1000000000
+  }
+ ]
+}

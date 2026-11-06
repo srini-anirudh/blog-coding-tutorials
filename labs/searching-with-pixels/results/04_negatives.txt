@@ -1,0 +1,40 @@
+# hardware: AMD EPYC 7R13, 1 threads, CPU only, torch 2.15.0+cu132, float32
+# command: python labs/searching-with-pixels/scripts/04_negatives.py
+
+Part A. Closed-form InfoNCE gradient against autograd: max difference 3.81e-06
+  Trained late16 (tau = 0.0655) over 2000 pages: of the push-away weight on negatives,
+  the single hardest negative gets 18.5% and the top 10 get 68.9% on average;
+  84.9% of negatives get a weight below 1e-6 (they contribute almost no gradient).
+  The source page's twin is the hardest negative for 1.6% of queries (median rank 90).
+
+Part B. Pool of 4096 pages. A query has 9.4 relevant pages on average (two glyphs often co-occur by chance); 1064 queries (26%) also have an exact clone of their page. 1000 steps, batch 64.
+== random
+  step   250  loss 0.394  in-batch acc 0.812  tau 0.0702  6 s
+  step   500  loss 0.271  in-batch acc 0.844  tau 0.0677  11 s
+  step   750  loss 0.053  in-batch acc 0.906  tau 0.0665  17 s
+  step  1000  loss 0.102  in-batch acc 0.891  tau 0.0662  23 s
+  held-out: P@1 62.2  nDCG@5 69.0  beats twin 95.2
+== twins
+  step   250  loss 0.675  in-batch acc 0.719  tau 0.0708  6 s
+  step   500  loss 0.225  in-batch acc 0.766  tau 0.0682  11 s
+  step   750  loss 0.144  in-batch acc 0.719  tau 0.0667  17 s
+  step  1000  loss 0.068  in-batch acc 0.859  tau 0.0664  23 s
+  held-out: P@1 57.4  nDCG@5 65.4  beats twin 96.2
+== mined
+  step   250  loss 0.700  in-batch acc 0.844  tau 0.0711  29 s
+  step   500  loss 0.548  in-batch acc 0.812  tau 0.0693  50 s
+  step   750  loss 0.061  in-batch acc 0.875  tau 0.0678  78 s
+  step  1000  loss 0.075  in-batch acc 0.938  tau 0.0676  101 s
+  held-out: P@1 100.0  nDCG@5 100.0  beats twin 100.0  mined negatives that were really relevant: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]%
+== mined-unfiltered
+  step   250  loss 0.755  in-batch acc 0.844  tau 0.0711  28 s
+  step   500  loss 0.576  in-batch acc 0.781  tau 0.0695  50 s
+  step   750  loss 0.370  in-batch acc 0.875  tau 0.0683  77 s
+  step  1000  loss 0.410  in-batch acc 0.922  tau 0.0680  99 s
+  held-out: P@1 71.8  nDCG@5 74.7  beats twin 97.4  mined negatives that were really relevant: [0.12, 5.79, 34.99, 47.24, 54.91, 61.3, 61.43, 68.36, 72.95, 78.15]%
+
+variant               P@1  nDCG@5   R@10 beats twin
+random               62.2    69.0   99.4       95.2
+twins                57.4    65.4  100.0       96.2
+mined               100.0   100.0  100.0      100.0
+mined-unfiltered     71.8    74.7   99.6       97.4

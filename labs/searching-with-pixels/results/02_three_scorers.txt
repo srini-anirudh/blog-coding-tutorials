@@ -1,0 +1,70 @@
+# hardware: AMD EPYC 7R13, 1 threads, CPU only, torch 2.15.0+cu132, float32
+# command: python labs/searching-with-pixels/scripts/02_three_scorers.py
+
+Held-out corpus: 2000 pages (1000 page/twin pairs), 500 binding queries,
+on average 4.91 relevant pages per query. Training: 1500 steps of 64 fresh pages.
+
+== bi16
+  step   250  loss 3.024  in-batch acc 0.141  tau 0.0730  18 s
+  step   500  loss 2.662  in-batch acc 0.234  tau 0.0745  34 s
+  step   750  loss 2.257  in-batch acc 0.234  tau 0.0737  50 s
+  step  1000  loss 2.414  in-batch acc 0.203  tau 0.0722  66 s
+  step  1250  loss 2.332  in-batch acc 0.234  tau 0.0708  82 s
+  step  1500  loss 2.063  in-batch acc 0.219  tau 0.0704  97 s
+  {'R@1': 8.2, 'R@5': 31.6, 'R@10': 50.4, 'R@50': 91.6, 'P@1': 8.2, 'MRR': 20.66, 'nDCG@5': 8.27, 'nDCG@10': 11.17, 'beats_twin': 53.8}
+
+== bi64
+  step   250  loss 2.599  in-batch acc 0.141  tau 0.0736  16 s
+  step   500  loss 2.180  in-batch acc 0.281  tau 0.0728  32 s
+  step   750  loss 1.853  in-batch acc 0.250  tau 0.0686  48 s
+  step  1000  loss 1.890  in-batch acc 0.266  tau 0.0635  63 s
+  step  1250  loss 1.778  in-batch acc 0.250  tau 0.0604  79 s
+  step  1500  loss 1.500  in-batch acc 0.375  tau 0.0598  95 s
+  {'R@1': 11.0, 'R@5': 42.4, 'R@10': 66.0, 'R@50': 96.8, 'P@1': 11.0, 'MRR': 26.7, 'nDCG@5': 12.04, 'nDCG@10': 16.52, 'beats_twin': 50.4}
+
+== bi256
+  step   250  loss 2.691  in-batch acc 0.109  tau 0.0733  16 s
+  step   500  loss 2.280  in-batch acc 0.219  tau 0.0725  32 s
+  step   750  loss 1.878  in-batch acc 0.250  tau 0.0685  47 s
+  step  1000  loss 1.773  in-batch acc 0.312  tau 0.0623  64 s
+  step  1250  loss 1.675  in-batch acc 0.266  tau 0.0591  80 s
+  step  1500  loss 1.433  in-batch acc 0.438  tau 0.0585  97 s
+  {'R@1': 11.8, 'R@5': 44.6, 'R@10': 66.8, 'R@50': 97.2, 'P@1': 11.8, 'MRR': 27.78, 'nDCG@5': 12.58, 'nDCG@10': 16.92, 'beats_twin': 50.4}
+
+== late16
+  step   250  loss 0.750  in-batch acc 0.719  tau 0.0708  16 s
+  step   500  loss 0.195  in-batch acc 0.969  tau 0.0681  32 s
+  step   750  loss 0.015  in-batch acc 1.000  tau 0.0660  49 s
+  step  1000  loss 0.007  in-batch acc 1.000  tau 0.0657  65 s
+  step  1250  loss 0.009  in-batch acc 0.969  tau 0.0655  82 s
+  step  1500  loss 0.004  in-batch acc 1.000  tau 0.0655  98 s
+  {'R@1': 100.0, 'R@5': 100.0, 'R@10': 100.0, 'R@50': 100.0, 'P@1': 100.0, 'MRR': 100.0, 'nDCG@5': 100.0, 'nDCG@10': 100.0, 'beats_twin': 100.0}
+
+== cross
+  step   250  loss 0.656  group acc 0.625  88 s
+  step   500  loss 0.111  group acc 0.953  167 s
+  step   750  loss 0.168  group acc 0.891  248 s
+  step  1000  loss 0.035  group acc 0.969  319 s
+  step  1250  loss 0.114  group acc 0.922  390 s
+  step  1500  loss 0.061  group acc 0.969  462 s
+  {'R@1': 57.0, 'R@5': 97.0, 'R@10': 100.0, 'R@50': 100.0, 'P@1': 57.0, 'MRR': 71.28, 'nDCG@5': 67.92, 'nDCG@10': 80.12, 'beats_twin': 98.0}
+
+Summary (held-out corpus; percent):
+model    stored floats/page  passes/query  ms/query    P@1  nDCG@5   R@10 beats twin
+bi16                     16             1     0.041    8.2     8.3   50.4       53.8
+bi64                     64             1     0.045   11.0    12.0   66.0       50.4
+bi256                   256             1     0.073   11.8    12.6   66.8       50.4
+late16                  256             1     0.918  100.0   100.0  100.0      100.0
+cross                     0          2000   271.394   57.0    67.9  100.0       98.0
+(cross is scored on the first 100 queries only: it needs one forward pass per page.)
+
+MaxSim map for query "yellow shape3 white shape2" on its page:
+  page layout (colour + shape id per cell, . = blank):
+    cya12      .   whi2   blu8
+        .      .  mag15      .
+        .      .   yel3      .
+        .      .  mag11      .
+  token 0 'yellow': best patch = cell 10 (yel3), similarity 0.870
+  token 1 'shape3': best patch = cell 10 (yel3), similarity 0.772
+  token 2 'white': best patch = cell 2 (whi2), similarity 0.921
+  token 3 'shape2': best patch = cell 2 (whi2), similarity 0.855

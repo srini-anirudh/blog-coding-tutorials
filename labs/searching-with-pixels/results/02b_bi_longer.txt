@@ -1,0 +1,12 @@
+# hardware: AMD EPYC 7R13, 1 threads, CPU only, torch 2.15.0+cu132, float32
+# command: python labs/searching-with-pixels/scripts/02b_bi_longer.py
+
+  step   750  loss 1.860  in-batch acc 0.344  tau 0.0716  52 s
+  step  1500  loss 1.900  in-batch acc 0.344  tau 0.0634  101 s
+  step  2250  loss 1.692  in-batch acc 0.281  tau 0.0589  140 s
+  step  3000  loss 1.472  in-batch acc 0.328  tau 0.0533  182 s
+  step  3750  loss 1.614  in-batch acc 0.344  tau 0.0497  225 s
+  step  4500  loss 1.391  in-batch acc 0.391  tau 0.0464  265 s
+  step  5250  loss 1.421  in-batch acc 0.281  tau 0.0441  300 s
+  step  6000  loss 1.336  in-batch acc 0.406  tau 0.0436  339 s
+bi256 after 6000 steps: {'R@1': 13.0, 'R@5': 53.8, 'R@10': 73.0, 'R@50': 98.4, 'P@1': 13.0, 'MRR': 31.75, 'nDCG@5': 16.21, 'nDCG@10': 20.8, 'beats_twin': 51.8}

@@ -1,0 +1,34 @@
+# hardware: AMD EPYC 7R13, 1 threads, CPU only, torch 2.15.0+cu132, float32
+# command: python labs/searching-with-pixels/scripts/06_index_cost.py
+
+Storage arithmetic (inputs from the post):
+  ColPali: 1,030 vectors x 128 dims x 2 bytes = 263,680 bytes = 257.5 KiB per page
+  one 2,048-d fp16 vector = 4,096 bytes; ratio 64.4x
+    1,000,000 pages: ColPali 263.7 GB, single vector 4.1 GB
+  100,000,000 pages: ColPali 26,368.0 GB, single vector 409.6 GB
+  pool factor 3: 344 vectors per page, 86.0 KiB (66.6% of vectors removed)
+  binary (1 bit per dim): 16.1 KiB per page (16x smaller than fp16)
+
+Our late16 index: 2000 pages x 16 vectors x 16 dims. Baseline nDCG@5 100.0, P@1 100.0. (bi64, one 64-d vector per page: nDCG@5 12.0.)
+
+variant                            vectors/page bytes/page  nDCG@5 retained    P@1
+fp32, all patches                            16       1024   100.0   100.0%  100.0
+fp16                                         16        512   100.0   100.0%  100.0
+int8 (per-vector scale)                      16        256   100.0   100.0%  100.0
+binary (sign only)                           16         32    69.8    69.8%   71.4
+binary, rescore top 20 in fp32               16         32    95.0    95.0%   98.2
+binary, rescore top 50 in fp32               16         32    98.6    98.6%   99.4
+merge, pool factor 2                          8        512   100.0   100.0%  100.0
+prune by norm, keep 8                         8        512    68.8    68.8%   82.6
+prune at random, keep 8                       8        512    39.0    39.0%   70.4
+merge, pool factor 3                          6        384    90.0    90.0%   96.8
+prune by norm, keep 6                         6        384    56.1    56.1%   71.6
+prune at random, keep 6                       6        384    24.3    24.3%   47.2
+merge, pool factor 4                          4        256    50.0    50.0%   67.0
+prune by norm, keep 4                         4        256    34.9    34.9%   46.4
+prune at random, keep 4                       4        256    16.8    16.8%   28.2
+merge, pool factor 8                          2        128    15.0    15.0%   23.6
+prune by norm, keep 2                         2        128    11.6    11.6%   18.0
+prune at random, keep 2                       2        128    10.2    10.2%   15.6
+
+Binary rows store 1 bit per dimension; the rescoring rows also need the fp32 vectors of the short list.

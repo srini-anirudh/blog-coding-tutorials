@@ -1,0 +1,19 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only, torch 2.15.0+cu132, float32
+# command: python labs/searching-with-pixels/scripts/01_metrics.py
+
+One relevant page, binary relevance. Where it sits changes each metric differently.
+rank   R@1   R@5  R@10    MRR  nDCG@5  1/log2(1+r)
+   1     1     1     1  1.000   1.000        1.000
+   2     0     1     1  0.500   0.631        0.631
+   3     0     1     1  0.333   0.500        0.500
+   4     0     1     1  0.250   0.431        0.431
+   5     0     1     1  0.200   0.387        0.387
+   6     0     0     1  0.167   0.000        0.000
+  10     0     0     1  0.100   0.000        0.000
+
+Graded relevance: three relevant pages with labels 3, 2, 1. Three rankings of the same pages.
+  ideal  A B C x x:  nDCG@5 = 1.000   MRR = 1.000   R@1 = 1
+  swap   C B A x x:  nDCG@5 = 0.681   MRR = 1.000   R@1 = 1
+  late   x x A B C:  nDCG@5 = 0.551   MRR = 0.333   R@1 = 0
+
+MRR and R@1 see only the first relevant page. nDCG also rewards putting the most relevant one first.

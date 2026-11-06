@@ -1,0 +1,75 @@
+{
+ "hardware": "AMD EPYC 7R13, 1 threads, CPU only, torch 2.15.0+cu132, float32",
+ "command": "python labs/searching-with-pixels/scripts/02b_bi_longer.py",
+ "steps": 6000,
+ "dim": 256,
+ "metrics": {
+  "R@1": 13.0,
+  "R@5": 53.8,
+  "R@10": 73.0,
+  "R@50": 98.4,
+  "P@1": 13.0,
+  "MRR": 31.75,
+  "nDCG@5": 16.21,
+  "nDCG@10": 20.8,
+  "beats_twin": 51.8
+ },
+ "history": [
+  {
+   "step": 750,
+   "loss": 1.8597,
+   "batch_acc": 0.344,
+   "tau": 0.0716,
+   "time_s": 52.1
+  },
+  {
+   "step": 1500,
+   "loss": 1.8997,
+   "batch_acc": 0.344,
+   "tau": 0.0634,
+   "time_s": 100.8
+  },
+  {
+   "step": 2250,
+   "loss": 1.6921,
+   "batch_acc": 0.281,
+   "tau": 0.0589,
+   "time_s": 140.5
+  },
+  {
+   "step": 3000,
+   "loss": 1.4722,
+   "batch_acc": 0.328,
+   "tau": 0.0533,
+   "time_s": 181.6
+  },
+  {
+   "step": 3750,
+   "loss": 1.6141,
+   "batch_acc": 0.344,
+   "tau": 0.0497,
+   "time_s": 225.4
+  },
+  {
+   "step": 4500,
+   "loss": 1.3911,
+   "batch_acc": 0.391,
+   "tau": 0.0464,
+   "time_s": 265.3
+  },
+  {
+   "step": 5250,
+   "loss": 1.4205,
+   "batch_acc": 0.281,
+   "tau": 0.0441,
+   "time_s": 300.0
+  },
+  {
+   "step": 6000,
+   "loss": 1.3361,
+   "batch_acc": 0.406,
+   "tau": 0.0436,
+   "time_s": 339.1
+  }
+ ]
+}

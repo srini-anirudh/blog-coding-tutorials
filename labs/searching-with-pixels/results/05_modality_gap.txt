@@ -1,0 +1,14 @@
+# hardware: AMD EPYC 7R13, 1 threads, CPU only, torch 2.15.0+cu132, float32
+# command: python labs/searching-with-pixels/scripts/05_modality_gap.py
+
+Part A. Our bi-encoder's two towers. Pairs = (query, the page it was written from).
+model                  cone image cone text    gap matched cos unmatched cos
+random init                 0.977     0.410  1.100       0.088         0.089
+trained (bi64)              0.023     0.046  0.180       0.484         0.019
+Subtract the page-side mean g from every page vector: each query's 2000 dot-product scores all move by the same <q, g> (largest deviation 4.0e-07, float rounding); top-1 unchanged for 100.0% of queries.
+
+Part B. openai/clip-vit-base-patch32 on 48 drawn pictures (not Flickr30K or COCO).
+  cone image 0.813, cone text 0.733, gap 1.026, matched-pair cosine 0.331, unmatched 0.250
+  mean cosine between a query and the text candidates: 0.686
+  raw CLIP vectors: gap 1.026; image-only pool top-1 75.0%; mixed pool top-1 0.0%; text candidate ranked first for 100.0% of queries
+  each modality's mean removed: gap 0.366; image-only pool top-1 85.4%; mixed pool top-1 58.3%; text candidate ranked first for 41.7% of queries
