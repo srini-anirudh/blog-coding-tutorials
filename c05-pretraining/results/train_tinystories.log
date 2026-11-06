@@ -1,0 +1,17 @@
+W1106 23:41:56.627000 5069 torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+measured torch.bfloat16 matmul peak on mps: 9.63 TFLOP/s
+time 0 event start params 5401856 flops_per_token 37129728 tokens_per_step 8192 device mps world_size 1
+time 1.4900 step 1 loss 8.3876 lr 5e-05 grad_norm 2.8294 param_norm 74.0943 tok_s 7194.5785 step_ms 1138.6352 mem_mb 61.8335 epoch 0 mfu 0.0277
+time 10.6600 step 10 loss 7.3487 lr 0.0005 grad_norm 1.7335 param_norm 74.1452 tok_s 8324.2990 step_ms 984.1069 mem_mb 61.8335 epoch 0 mfu 0.0321
+time 21.9000 step 20 loss 6.1248 lr 0.001 grad_norm 0.9167 param_norm 74.6800 tok_s 7399.4488 step_ms 1107.1095 mem_mb 61.8335 epoch 0 mfu 0.0285
+time 33.9900 step 30 loss 5.8437 lr 0.0015 grad_norm 0.5615 param_norm 75.8513 tok_s 6943.0543 step_ms 1179.8842 mem_mb 61.8335 epoch 0 mfu 0.0268
+time 49.2500 step 40 loss 5.6297 lr 0.002 grad_norm 0.4823 param_norm 77.1071 tok_s 5577.6185 step_ms 1468.7272 mem_mb 61.8335 epoch 0 mfu 0.0215
+time 65.9800 step 50 loss 5.2987 lr 0.002 grad_norm 0.7555 param_norm 78.2636 tok_s 5017.7416 step_ms 1632.6070 mem_mb 61.8335 epoch 0 mfu 0.0193
+time 70.6600 step 50 val_loss 5.3243 val_ppl 205.2742 tokens_seen 409600
+time 88.3600 step 60 loss 5.1736 lr 0.002 grad_norm 0.6138 param_norm 79.2364 tok_s 4702.2495 step_ms 1742.1449 mem_mb 61.8335 epoch 0 mfu 0.0181
+time 106.7700 step 70 loss 4.9180 lr 0.00199 grad_norm 0.5185 param_norm 80.1831 tok_s 4560.8493 step_ms 1796.1567 mem_mb 61.8335 epoch 0 mfu 0.0176
+time 129.7600 step 80 loss 4.6579 lr 0.00199 grad_norm 0.9427 param_norm 81.1676 tok_s 3649.2845 step_ms 2244.8236 mem_mb 61.8335 epoch 0 mfu 0.0141
+time 156.1400 step 90 loss 4.5613 lr 0.00198 grad_norm 0.5705 param_norm 82.2109 tok_s 3136.4681 step_ms 2611.8550 mem_mb 61.8335 epoch 0 mfu 0.0121
+time 175.2500 step 100 loss 4.3576 lr 0.00197 grad_norm 0.7814 param_norm 83.3150 tok_s 4420.2207 step_ms 1853.3011 mem_mb 61.8335 epoch 0 mfu 0.0170
+time 182.5900 step 100 val_loss 4.4240 val_ppl 83.4301 tokens_seen 819200
+time 199.2900 step 110 loss 4.2621 lr 0.00196 grad_norm 0.9520 param_norm 84.4158 tok_s 4958.6081 step_ms 1652.0765 mem_mb 61.8335 epoch 0 mfu 0.0191

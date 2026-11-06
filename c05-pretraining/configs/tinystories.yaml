@@ -1,0 +1,27 @@
+# ~10 minute pretraining run on a laptop GPU (Apple MPS). About 6M parameters.
+data_dir: data_cache/tinystories
+out_dir: runs/tinystories
+seq_len: 256
+micro_batch_size: 16
+grad_accum_steps: 2          # 16 x 2 x 256 = 8,192 tokens per optimiser step
+model_type: llama
+model:
+  vocab_size: 4096
+  hidden_size: 256
+  num_layers: 6
+  num_heads: 8
+  num_kv_heads: 4
+  intermediate_size: 688
+  max_seq_len: 256
+lr: 2.0e-3
+min_lr: 2.0e-4
+weight_decay: 0.1
+grad_clip: 1.0
+max_steps: 800
+warmup_steps: 40
+precision: bf16
+log_every: 10
+eval_every: 50
+eval_batches: 20
+ckpt_every: 200
+max_minutes: 0

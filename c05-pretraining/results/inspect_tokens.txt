@@ -1,0 +1,24 @@
+bpe-4096: vocab 4,096, eos 0, 12 tokens
+  ids    [429, 438, 259, 398, 401, 283, 259, 391, 498, 402, 544, 14]
+  pieces Once _upon _a _time _there _was _a _little _boy _named _Ben .
+gpt2: vocab 50,257, eos 50256, 12 tokens
+  ids    [7454, 2402, 257, 640, 612, 373, 257, 1310, 2933, 3706, 3932, 13]
+  pieces Once _upon _a _time _there _was _a _little _boy _named _Ben .
+
+blind concatenation versus an explicit boundary
+  joined          The _dog _was _happy . Once _upon _a _time
+  separate + EOS  The _dog _was _happy . <|endoftext|> Once _upon _a _time
+  joined, no stop They _played _in _the _su nd ay _was _hot
+  separate + EOS  They _played _in _the _sun <|endoftext|> day _was _hot
+  2 of 1999 real neighbouring document pairs tokenize differently when joined
+embedding bpe-4096    4096 x 256 =  1.05M params, 19% of a 4.4M-block model
+embedding gpt2       50257 x 256 = 12.87M params, 75% of a 4.4M-block model
+
+train: 33,284,335 tokens, 5 shards, 130,015 windows of L=256
+window 0: x (256,) torch.int64  y (256,) torch.int64
+x[:8] [429, 438, 259, 398, 401, 283, 259, 391]
+y[:8] [438, 259, 398, 401, 283, 259, 391, 498]   (x shifted by one)
+first EOS at position 176: x[174:179] [1118, 1, 0, 429, 438]
+  document ids [0, 0, 0, 1, 1]
+  positions    [174, 175, 176, 0, 1]
+documents touching window 0: 2

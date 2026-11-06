@@ -1,0 +1,5 @@
+W1106 23:53:23.362000 9447 .venv/lib/python3.12/site-packages/torch/distributed/run.py:982] 
+world size 2, backend gloo, local batch (4, 32), global batch (8, 32)
+max |DDP - single process big batch|  3.73e-09
+max |all-reduce by hand - DDP|        0.00e+00
+weights identical on every rank:      True

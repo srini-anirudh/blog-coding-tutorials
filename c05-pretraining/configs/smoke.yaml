@@ -1,0 +1,25 @@
+# Tiny, fast config for tests and CPU experiments.
+data_dir: data_cache/tinystories
+out_dir: runs/smoke
+seq_len: 64
+micro_batch_size: 8
+grad_accum_steps: 2
+model_type: llama
+model:
+  vocab_size: 4096
+  hidden_size: 64
+  num_layers: 2
+  num_heads: 4
+  num_kv_heads: 2
+  intermediate_size: 172
+  max_seq_len: 64
+lr: 3.0e-3
+min_lr: 3.0e-4
+max_steps: 40
+warmup_steps: 10
+precision: fp32
+device: cpu
+log_every: 5
+eval_every: 20
+eval_batches: 2
+ckpt_every: 20

@@ -1,0 +1,14 @@
+163,746 documents, 33,284,335 tokens, length p10 138 median 180 p90 279 max 1876
+    L strategy                 utilisation  tokens cut  multi-doc windows  split docs
+  128 pad to L                       99.6%       37.3%                  -           -
+  128 pad to batch max (B=32)        99.6%       37.3%                  -           -
+  128 greedy packing                100.0%        0.0%              62.7%       99.6%
+  128 best-fit packing              100.0%        0.0%                  -       95.1%
+  256 pad to L                       73.0%        8.1%                  -           -
+  256 pad to batch max (B=32)        73.0%        8.1%                  -           -
+  256 greedy packing                100.0%        0.0%              91.9%       72.7%
+  256 best-fit packing               78.6%        0.0%                  -       12.7%
+  512 pad to L                       39.3%        1.1%                  -           -
+  512 pad to batch max (B=32)        44.3%        1.1%                  -           -
+  512 greedy packing                100.0%        0.0%              98.9%       39.1%
+  512 best-fit packing               95.1%        0.0%                  -        1.9%

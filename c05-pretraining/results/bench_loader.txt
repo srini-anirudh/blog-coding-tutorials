@@ -1,0 +1,5 @@
+130,015 windows, batch 32, Apple M5 CPU
+ workers  first batch ms  batches/s      tokens/s
+       0            19.9        284     2,329,904
+       2          8060.3        544     4,452,827
+       4          9632.7       1151     9,426,767

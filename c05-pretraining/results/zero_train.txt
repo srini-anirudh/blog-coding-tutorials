@@ -1,0 +1,4 @@
+W1106 23:53:39.483000 9558 .venv/lib/python3.12/site-packages/torch/distributed/run.py:982] 
+rank 1: optimizer state DDP+AdamW 9.54 MiB, ZeRO-1 4.78 MiB, final-loss gap 0.00e+00, max weight gap 0.00e+00
+rank 0: optimizer state DDP+AdamW 9.54 MiB, ZeRO-1 4.76 MiB, final-loss gap 0.00e+00, max weight gap 0.00e+00
+GPU only, not run here: deepspeed --num_gpus 4 your_script.py --deepspeed_config deepspeed_zero3.json

@@ -1,0 +1,6 @@
+packed data, every micro-batch has the same number of targets
+  token-weighted accumulation  max |diff| 3.73e-09
+  mean of means                max |diff| 3.73e-09
+unequal targets per micro-batch (112 of 512 ignored)
+  token-weighted accumulation  max |diff| 3.73e-09
+  mean of means                max |diff| 8.25e-03

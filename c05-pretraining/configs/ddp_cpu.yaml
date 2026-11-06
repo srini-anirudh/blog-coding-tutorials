@@ -1,0 +1,25 @@
+# Two-process DDP on CPU with gloo:
+#   torchrun --nproc_per_node 2 c05-pretraining/scripts/train.py --config c05-pretraining/configs/ddp_cpu.yaml
+data_dir: data_cache/tinystories
+out_dir: runs/ddp_cpu
+seq_len: 128
+micro_batch_size: 8
+grad_accum_steps: 2          # 8 x 2 x 2 ranks x 128 = 4,096 tokens per optimiser step
+model:
+  vocab_size: 4096
+  hidden_size: 128
+  num_layers: 4
+  num_heads: 4
+  num_kv_heads: 2
+  intermediate_size: 344
+  max_seq_len: 128
+lr: 3.0e-3
+min_lr: 3.0e-4
+max_steps: 200
+warmup_steps: 20
+precision: fp32
+device: cpu
+log_every: 25
+eval_every: 100
+eval_batches: 5
+ckpt_every: 50
