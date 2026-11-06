@@ -7,7 +7,7 @@ verified formula to full-size configurations; those numbers are computed, not me
 
 from __future__ import annotations
 
-import _common  # noqa: F401  (sets sys.path)
+import _common  # also sets sys.path
 import torch
 
 from attnzoo.config import AttentionConfig
@@ -52,8 +52,7 @@ def measure(kind: str, s: int, dtype: torch.dtype, device: str) -> tuple[int, in
 
 
 def main() -> None:
-    torch.set_num_threads(2)
-    print("Part 1: measured. L = 2, B = 1, D = 1024, Hq = 16, dh = 64; GQA Hkv = 4; MLA r = 128, dr = 16.")
+    print(f"Part 1: measured on {_common.hardware_note('cpu')}. L = 2, B = 1, D = 1024, Hq = 16, dh = 64; GQA Hkv = 4; MLA r = 128, dr = 16.")
     print(f"{'layer':6}{'S':>7}{'dtype':>10}{'device':>8}{'formula':>14}{'tensors':>14}{'equal':>7}{'MPS alloc delta':>18}")
     for device in ["cpu", "mps"] if torch.backends.mps.is_available() else ["cpu"]:
         for dtype, name in [(torch.float32, "fp32"), (torch.bfloat16, "bf16")]:

@@ -1,0 +1,15 @@
+
+AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132. Sliding window W = 256, H = 4, d = 32. ms per call.
+      N   full causal  mask + naive   mask + sdpa   chunked   scores (mask)  scores (chunked)
+   1024           3.8          15.8           3.6       2.3       1,048,576           523,264
+   2048           6.5         104.2          13.3       4.3       4,194,304         1,046,528
+   4096          18.0         361.9          57.9       7.9      16,777,216         2,093,056
+   8192          63.0        1593.2         253.9      16.8      67,108,864         4,186,112
+  16384         258.6        5984.2         958.7      31.5     268,435,456         8,372,224
+
+AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132. Block-sparse masks on the dense path, N = 4096, 64 blocks. ms per call.
+layout                        density  naive ms   sdpa ms
+full causal                     0.508     391.4      47.4
+wide band                       0.232     379.0      50.5
+narrow band                     0.076     349.2      46.1
+near-diagonal                   0.031     403.6      45.6

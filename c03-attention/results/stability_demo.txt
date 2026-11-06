@@ -1,3 +1,4 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
 Logits as activations grow. Uniform attention over 256 keys has entropy 5.55.
 activation scale x1              max |s|       std     max p   entropy
   plain                      5.3      1.00     0.043      5.05

@@ -1,3 +1,4 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
 --- attention on raw q, k, v (B=1, Nq=2, Nk=3, d=4) ---
 q          (1, 2, 4)            torch.float32
 k          (1, 3, 4)            torch.float32
@@ -21,7 +22,7 @@ o_proj     (2, 6, 32)           torch.float32
 --- three Linear layers against one fused Linear ---
 separate params: 4096
 fused params:    4096
-max |separate - fused|: 1.4901161193847656e-07
+max |separate - fused|: 0.0
 
 --- cross-attention: the output length follows the queries ---
 text -> text       query (2, 6, 32), context (2, 9, 48) -> (2, 6, 32)

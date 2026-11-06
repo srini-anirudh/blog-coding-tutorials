@@ -1,3 +1,4 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
 Step 1, compress: this is all we store
   c_kv     (1, 1, 16, 32)
   k_pe     (1, 1, 16, 8)
@@ -10,8 +11,8 @@ Step 3, RoPE lives only in the small shared key
   full query and key width: 32 + 8 = 40
 
 Decoding, three ways:
-  explicit K, V  max |cached - full| = 1.8e-07, cached tensors (1, 1, 16, 32) (1, 1, 16, 8)
-  absorbed       max |cached - full| = 2.7e-07, cached tensors (1, 1, 16, 32) (1, 1, 16, 8)
+  explicit K, V  max |cached - full| = 1.3e-07, cached tensors (1, 1, 16, 32) (1, 1, 16, 8)
+  absorbed       max |cached - full| = 1.9e-07, cached tensors (1, 1, 16, 32) (1, 1, 16, 8)
 
 Step 4, cache bytes per token for one layer (fp32):
   MHA           2048 bytes     1.0x smaller than MHA

@@ -9,6 +9,7 @@ import torch
 
 from attnzoo.attention_tiled import tiled_attention
 from attnzoo.core import scaled_dot_product_attention
+from attnzoo.device import hardware_note
 from attnzoo.masks import causal_mask
 
 
@@ -17,7 +18,7 @@ def rounded(x: torch.Tensor, n: int = 3) -> list:
 
 
 torch.manual_seed(11)
-data: dict = {}
+data: dict = {"hardware": hardware_note()}
 
 # One head, six tokens: raw scores, masked scores and weights, for the tensor walk.
 d = 8

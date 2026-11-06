@@ -2,9 +2,9 @@
 
     architecture (attention_type)        execution backend (backend)
     mha | mqa | gqa  -> GroupedQueryAttention     naive | sdpa | sdpa_math
-    mla              -> MultiHeadLatentAttention  sdpa_flash | tiled | window_chunked | flash
-    linear           -> LinearAttention           (linear attention has its own
-    cross            -> CrossAttention             recurrence and ignores backend)
+    mla              -> MultiHeadLatentAttention  sdpa_flash | sdpa_efficient | tiled
+    linear           -> LinearAttention           window_chunked | flash  (linear attention has
+    cross            -> CrossAttention            its own recurrence and ignores backend)
 """
 
 from __future__ import annotations

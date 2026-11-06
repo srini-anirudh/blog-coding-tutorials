@@ -1,3 +1,4 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
 tiles traced: 9, skipped: 3
-max |tiled - naive| = 2.4e-07
-wrote figure_data.json, 7105 bytes
+max |tiled - naive| = 1.8e-07
+wrote figure_data.json, 7166 bytes

@@ -25,7 +25,7 @@ class AttentionConfig:
     positional_encoding: str = "rope"
     rope_theta: float = 10_000.0
     max_seq_len: int = 4096
-    backend: str = "sdpa"  # naive | sdpa | sdpa_math | sdpa_flash | tiled | window_chunked | flash
+    backend: str = "sdpa"  # naive | sdpa | sdpa_math | sdpa_flash | sdpa_efficient | tiled | window_chunked | flash
     qkv_bias: bool = False
     qk_norm: bool = False
     softcap: float | None = None  # logit soft-cap c: s -> c * tanh(s / c)

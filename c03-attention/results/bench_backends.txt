@@ -1,0 +1,10 @@
+
+AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132: causal attention, H = 4, d = 32, fp32. ms per call / peak extra MB
+backend                       512             1024             2048             4096             8192            16384
+naive                    5.6 / 31         9.9 / 69      133.4 / 206      449.7 / 814    1852.9 / 3133   7201.7 / 12528
+sdpa_math                7.4 / 14        27.8 / 39       61.4 / 191      282.3 / 676    1113.7 / 2570   4154.4 / 10257
+sdpa                      1.2 / 0          2.4 / 8        10.8 / 10        29.2 / 10        110.1 / 6       300.0 / 12
+sdpa_flash                0.8 / 0          2.8 / 8          9.9 / 9         24.7 / 9        74.3 / 11       282.4 / 12
+tiled                    10.3 / 2         37.4 / 3        143.6 / 6        512.2 / 6       1919.2 / 4       7771.5 / 9
+
+sdpa_efficient and flash: not yet measured. They need a CUDA GPU. On one, run this script with --flash.

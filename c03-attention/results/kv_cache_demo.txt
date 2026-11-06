@@ -1,19 +1,20 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
 RoPE tables: (64, 8) | first pair of dims at positions 0..3:
 tensor([ 1.000,  0.540, -0.416, -0.990]) tensor([0.000, 0.841, 0.909, 0.141])
 rotation speeds: tensor([1.000, 0.100, 0.010, 0.001])
 
 step        Nq  past  Nk   k in cache        bytes  max |cached - full|
-prefill      8     0   8   (1, 2, 8, 8)           1,024    0.0e+00
-decode       1     8   9   (1, 2, 9, 8)           1,152    5.2e-08
-decode       1     9  10   (1, 2, 10, 8)          1,280    7.5e-08
-decode       1    10  11   (1, 2, 11, 8)          1,408    5.2e-08
-decode       1    11  12   (1, 2, 12, 8)          1,536    8.9e-08
+prefill      8     0   8   (1, 2, 8, 8)           1,024    6.0e-08
+decode       1     8   9   (1, 2, 9, 8)           1,152    6.0e-08
+decode       1     9  10   (1, 2, 10, 8)          1,280    4.5e-08
+decode       1    10  11   (1, 2, 11, 8)          1,408    7.5e-08
+decode       1    11  12   (1, 2, 12, 8)          1,536    1.0e-07
 
 formula 2 L B S Hkv dh b = 2*1*1*12*2*8*4 = 1,536 bytes; measured 1,536 bytes
 
 Preallocated: the buffer never moves.
 buffer: (1, 1, 2, 32, 8) | same address: True | filled: 12
-max |static - full| = 8.9e-08
+max |static - full| = 1.0e-07
 reserved: 4096 bytes, whatever the sequence length
 
 Positions continue from the cache length. What the decode step used:

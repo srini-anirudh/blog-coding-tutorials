@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import platform
+import re
 import resource
 import statistics
 import subprocess
@@ -16,11 +17,23 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from attnzoo.device import synchronize  # noqa: E402
+from attnzoo.device import be_polite, hardware_note, synchronize  # noqa: E402, F401  (hardware_note is re-exported)
+
+be_polite()  # the parent and every child use the same thread count, so the label is true for both
+
+
+def dtype_for(device: str) -> torch.dtype:
+    """CUDA runs in bf16, the only kind of float the FlashAttention kernels accept besides fp16."""
+    return torch.bfloat16 if device == "cuda" else torch.float32
 
 
 def timed(fn: Callable[[], object], device: torch.device, repeats: int = 3) -> float:
-    """Median wall-clock milliseconds, with the device queue drained around each call."""
+    """Median wall-clock milliseconds, with the device queue drained around each call.
+
+    One extra call runs first and is not counted: the first call pays for thread start-up
+    and first-touch page faults, which would otherwise land only on the long runs (repeats = 1).
+    """
+    fn()
     times = []
     for _ in range(repeats):
         synchronize(device)
@@ -31,16 +44,28 @@ def timed(fn: Callable[[], object], device: torch.device, repeats: int = 3) -> f
     return statistics.median(times)
 
 
+def proc_status_bytes(field: str) -> int:
+    """Read one memory field (VmRSS, VmHWM) from /proc/self/status. Linux only."""
+    return int(re.search(rf"{field}:\s+(\d+) kB", Path("/proc/self/status").read_text()).group(1)) * 1024
+
+
+def reset_peak_rss() -> None:
+    """Linux: restart the high-water mark. Importing torch peaks high enough to hide small blocks."""
+    Path("/proc/self/clear_refs").write_text("5")
+
+
 def peak_rss_bytes() -> int:
-    """High-water mark of this process. macOS reports bytes, Linux reports kilobytes."""
-    rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    return rss if platform.system() == "Darwin" else rss * 1024
+    """High-water mark of this process. macOS reports bytes through getrusage."""
+    if platform.system() == "Darwin":
+        return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return proc_status_bytes("VmHWM")
 
 
 class PeakMemory:
     """Extra memory a block needs at its peak.
 
     CPU: growth of the process high-water mark (each measurement runs in a fresh child).
+    On Linux the mark is reset first, so this is peak minus current memory at entry.
     MPS: growth of the Metal driver allocation, which keeps freed blocks cached until
     empty_cache(), so it behaves like a high-water mark.
     CUDA: torch.cuda.max_memory_allocated.
@@ -56,6 +81,9 @@ class PeakMemory:
         elif self.device.type == "cuda":
             torch.cuda.reset_peak_memory_stats()
             self.base = torch.cuda.memory_allocated()
+        elif platform.system() == "Linux":
+            reset_peak_rss()
+            self.base = proc_status_bytes("VmRSS")
         else:
             self.base = peak_rss_bytes()
         return self
@@ -81,12 +109,3 @@ def run_child(script: str, args: dict, timeout: float = 240.0) -> dict | None:
         if line.startswith("{"):
             return json.loads(line)
     return {"error": (out.stderr.strip().splitlines() or ["no output"])[-1][:100]}
-
-
-def hardware_note(device: str, threads: int = 2) -> str:
-    chip = "Apple M5"
-    if device == "cpu":
-        return f"{chip} CPU, {threads} threads, torch {torch.__version__}"
-    if device == "mps":
-        return f"{chip} GPU through MPS, torch {torch.__version__}"
-    return f"{torch.cuda.get_device_name(0)}, torch {torch.__version__}"

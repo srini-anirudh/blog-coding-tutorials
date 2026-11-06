@@ -1,3 +1,4 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
 1. Missing 1/sqrt(d): softmax collapses as d grows
       d   right max p   wrong max p
       8         0.112         0.417
@@ -18,7 +19,7 @@
   causal_mask(1, 5): [[1, 1, 1, 1, 1]] against what is_causal builds: [[1, 0, 0, 0, 0]]
 
 5. Forgetting the position offset while decoding: RoPE restarts at 0
-  max error with position 8: 4.5e-08
+  max error with position 8: 5.8e-08
   max error with position 0: 0.084
 
 6. Shape mistakes that fail loudly, which is the good kind

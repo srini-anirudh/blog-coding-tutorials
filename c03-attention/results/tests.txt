@@ -1,0 +1,8 @@
+# AMD EPYC 7R13, tests capped at 2 threads, torch 2.15.0+cu132
+# pytest c03-attention -m "not slow and not gpu and not network" -rs
+........................................................................ [ 40%]
+.....s.................................................................. [ 81%]
+................................                                         [100%]
+=========================== short test summary info ============================
+SKIPPED [1] c03-attention/tests/test_library.py:22: flash kernels need equal q, k, v widths; MLA uses dn + dr for q, k and dv for v
+175 passed, 1 skipped, 8 deselected in 16.43s

@@ -36,6 +36,8 @@ def sdpa_attention(
     nq, nk = q.size(-2), k.size(-2)
     if attn_mask is None and window_size is None and causal and nq == nk:
         is_causal = True  # lets the kernel skip future tiles instead of reading a mask
+    elif attn_mask is None and window_size is None and causal and nq == 1:
+        pass  # the newest token sees every key: no mask, so kernels that take none (CUDA FA2) can decode
     else:
         # SDPA's is_causal is aligned top-left, which is wrong when nq < nk (decoding
         # with a cache). Build the bottom-right mask ourselves and merge it in.

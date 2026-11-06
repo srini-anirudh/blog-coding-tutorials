@@ -24,6 +24,7 @@ BACKENDS: dict[str, Callable[..., torch.Tensor]] = {
     "sdpa": sdpa_attention,  # torch picks the best fused kernel
     "sdpa_math": partial(sdpa_attention, kernel=SDPBackend.MATH),  # torch's unfused C++ path
     "sdpa_flash": partial(sdpa_attention, kernel=SDPBackend.FLASH_ATTENTION),  # CPU flash kernel or CUDA FA2
+    "sdpa_efficient": partial(sdpa_attention, kernel=SDPBackend.EFFICIENT_ATTENTION),  # memory-efficient, CUDA only
     "tiled": tiled_attention,  # online softmax in Python, for learning
     "window_chunked": chunked_window_attention,  # sliding window, truly O(N W)
     "flash": flash_attention,  # flash-attn package on CUDA (GPU-only)

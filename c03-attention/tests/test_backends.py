@@ -89,6 +89,12 @@ def test_dropout_rescales_in_expectation():
     assert abs(outs.mean().item() - 1.0) < 0.02
 
 
+def test_flash_refuses_cpu():
+    q = torch.randn(1, 1, 4, 8)
+    with pytest.raises(RuntimeError):
+        attend(q, q, q, backend="flash")
+
+
 def test_uneven_heads_rejected():
     q, k, v = qkv(hq=6, hkv=4)
     with pytest.raises(ValueError):

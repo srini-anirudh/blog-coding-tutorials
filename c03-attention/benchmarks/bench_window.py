@@ -22,7 +22,6 @@ def qkv(n: int, device: str) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
 
 @torch.inference_mode()
 def main() -> None:
-    torch.set_num_threads(2)
     for device_name in ["cpu", "mps"] if torch.backends.mps.is_available() else ["cpu"]:
         device = torch.device(device_name)
         print(f"\n{_common.hardware_note(device_name)}. Sliding window W = {W}, H = {H}, d = {D}. ms per call.")
@@ -30,9 +29,7 @@ def main() -> None:
         for n in [1024, 2048, 4096, 8192] + ([16384] if device_name == "cpu" else []):
             q, k, v = qkv(n, device_name)
             full = _common.timed(lambda: attend(q, k, v, backend="sdpa", causal=True), device)
-            naive = float("nan")
-            if n <= 8192:
-                naive = _common.timed(lambda: attend(q, k, v, backend="naive", causal=True, window_size=W), device)
+            naive = _common.timed(lambda: attend(q, k, v, backend="naive", causal=True, window_size=W), device)
             mask = _common.timed(lambda: attend(q, k, v, backend="sdpa", causal=True, window_size=W), device)
             chunked = _common.timed(lambda: attend(q, k, v, backend="window_chunked", causal=True, window_size=W), device)
             print(f"{n:>7}{full:>14.1f}{naive:>14.1f}{mask:>14.1f}{chunked:>10.1f}{n * n:>16,}{n * (2 * W - 1):>18,}", flush=True)

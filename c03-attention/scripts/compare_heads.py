@@ -6,6 +6,7 @@ import _setup  # noqa: F401
 import torch
 
 from attnzoo.config import AttentionConfig
+from attnzoo.device import hardware_note
 from attnzoo.gqa import GroupedQueryAttention
 from attnzoo.heads import repeat_kv, split_heads
 from attnzoo.mha import FusedQKVAttention, MultiHeadAttention, MultiQueryAttention
@@ -37,7 +38,7 @@ for label, src, hkv in [("GQA(Hkv=32) vs MHA", mha, 32), ("GQA(Hkv=1)  vs MQA", 
     gqa.load_state_dict(src.state_dict())
     print(f"{label}: max |diff| = {(gqa(x) - src(x)).abs().max().item():.2e}")
 
-print("\nThree Linear layers against one fused Linear (Apple M5 CPU, 2 threads, projections only):")
+print(f"\nThree Linear layers against one fused Linear ({hardware_note()}, projections only):")
 big = torch.randn(8, 1024, 512)
 fused = FusedQKVAttention.from_separate(mha)
 for label, fn in [("separate", lambda: (mha.q_proj(big), mha.k_proj(big), mha.v_proj(big))), ("fused", lambda: fused.qkv_proj(big).chunk(3, -1))]:

@@ -25,6 +25,26 @@ def test_flash_matches_naive(hkv, causal):
     torch.testing.assert_close(out, ref, atol=2e-2, rtol=2e-2)
 
 
+@pytest.mark.parametrize("backend", ["sdpa_flash", "sdpa_efficient"])
+def test_pinned_cuda_kernels_match_naive(backend):
+    needs_cuda()
+    q, k, v = (torch.randn(2, 8, 512, 64, device="cuda", dtype=torch.bfloat16) for _ in range(3))
+    ref = attend(q.float(), k.float(), v.float(), backend="naive", causal=True)
+    out = attend(q, k, v, backend=backend, causal=True).float()
+    torch.testing.assert_close(out, ref, atol=2e-2, rtol=2e-2)
+
+
+def test_flash_decodes_one_token_with_a_cache():
+    """Works on both flash routes: one newest query needs no mask."""
+    needs_cuda()
+    q = torch.randn(1, 8, 1, 64, device="cuda", dtype=torch.bfloat16)
+    k = torch.randn(1, 2, 300, 64, device="cuda", dtype=torch.bfloat16)
+    v = torch.randn_like(k)
+    ref = attend(q.float(), k.float(), v.float(), backend="naive", causal=True)
+    out = attend(q, k, v, backend="flash", causal=True).float()
+    torch.testing.assert_close(out, ref, atol=2e-2, rtol=2e-2)
+
+
 def test_flash_window_and_decode():
     needs_cuda()
     pytest.importorskip("flash_attn")
@@ -35,8 +55,3 @@ def test_flash_window_and_decode():
     out = attend(q, k, v, backend="flash", causal=True, window_size=128).float()
     torch.testing.assert_close(out, ref, atol=2e-2, rtol=2e-2)
 
-
-def test_flash_refuses_cpu():
-    q = torch.randn(1, 1, 4, 8)
-    with pytest.raises(RuntimeError):
-        attend(q, q, q, backend="flash")

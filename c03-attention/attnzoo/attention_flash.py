@@ -4,8 +4,10 @@ Two routes, tried in order:
 1. The `flash-attn` package (Tri Dao's kernels). Supports causal, sliding
    windows, soft-capping and GQA natively. Needs fp16/bf16 on an Ampere+ GPU.
 2. PyTorch's built-in FlashAttention-2 kernel via SDPA, pinned with sdpa_kernel.
-   No window or soft-cap, so those raise.
+   No window, soft-cap or dense mask, so those raise. A causal prefill and a
+   one-token decode step both work; several queries over a longer cache do not.
 Neither runs on CPU or Apple MPS; the tests for this file are marked `gpu`.
+PyTorch's separate CPU flash kernel is a different program. It is the `sdpa_flash` backend.
 """
 
 from __future__ import annotations

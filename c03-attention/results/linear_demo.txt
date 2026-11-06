@@ -1,3 +1,4 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
 max |phi(Q)[phi(K)^T V] - [phi(Q)phi(K)^T]V| = 2.4e-07
 sizes: phi(K)^T V (1, 2, 8, 8) against phi(Q) phi(K)^T (1, 2, 10, 10)
 

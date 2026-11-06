@@ -1,3 +1,4 @@
+# AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
  image tokens Nv          Q-Former         Perceiver
              196      (1, 32, 256)      (1, 32, 256)
              576      (1, 32, 256)      (1, 32, 256)
