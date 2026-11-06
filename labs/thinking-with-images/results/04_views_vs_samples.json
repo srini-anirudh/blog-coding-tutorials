@@ -1,0 +1,57 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2",
+ "command": "python labs/thinking-with-images/scripts/04_views_vs_samples.py --n 50 --k 16",
+ "samples": {
+  "1": {
+   "pass": 0.12,
+   "vote": 0.12
+  },
+  "2": {
+   "pass": 0.16,
+   "vote": 0.14
+  },
+  "4": {
+   "pass": 0.26,
+   "vote": 0.14
+  },
+  "8": {
+   "pass": 0.44,
+   "vote": 0.12
+  },
+  "16": {
+   "pass": 0.64,
+   "vote": 0.12
+  }
+ },
+ "views": {
+  "1": {
+   "pass": 0.08,
+   "vote": 0.08,
+   "wvote": 0.08
+  },
+  "2": {
+   "pass": 0.1,
+   "vote": 0.08,
+   "wvote": 0.1
+  },
+  "4": {
+   "pass": 0.24,
+   "vote": 0.04,
+   "wvote": 0.2
+  },
+  "8": {
+   "pass": 0.3,
+   "vote": 0.04,
+   "wvote": 0.24
+  },
+  "16": {
+   "pass": 0.38,
+   "vote": 0.04,
+   "wvote": 0.2
+  }
+ },
+ "distinct_samples": 9.64,
+ "distinct_views": 3.36,
+ "no_image_answer": "22:00",
+ "sampled_prior_share": 0.04375
+}

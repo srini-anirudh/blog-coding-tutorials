@@ -1,0 +1,19 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2
+# command: python labs/thinking-with-images/scripts/04_views_vs_samples.py --n 50 --k 16
+
+n=50 scenes; samples: temperature 1.0 on full @448 (192 visual tokens, shared);
+views: one greedy answer per random crop @448 (192 visual tokens each), crop width 25-50% of the photo
+wvote: the vote where each view counts for the model's own P(Yes) that the view shows opening hours
+
+  k chance pass samples pass samples vote views pass views vote views wvote view tokens
+  1        0.10         0.12         0.12       0.08       0.08        0.08         192
+  2        0.19         0.16         0.14       0.10       0.08        0.10         384
+  4        0.34         0.26         0.14       0.24       0.04        0.20         768
+  8        0.57         0.44         0.12       0.30       0.04        0.24        1536
+ 16        0.81         0.64         0.12       0.38       0.04        0.20        3072
+
+chance pass: pass@k of a reader guessing uniformly among the 10 closing times. pass@k alone mostly
+measures how many different guesses are made, so read vote@k for whether the answer is converging.
+
+distinct answers per scene over k=16: samples 9.6, views 3.4
+share of sampled answers equal to the no-image answer (22:00): 0.04

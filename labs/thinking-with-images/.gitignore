@@ -1,0 +1,8 @@
+# No checkpoints, datasets or model weights in git.
+*.pt
+*.safetensors
+*.bin
+hf_cache/
+runs/
+__pycache__/
+results/*_stub.*

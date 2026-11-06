@@ -1,0 +1,77 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2",
+ "command": "python labs/thinking-with-images/scripts/03_probes.py --n 100",
+ "blind_answer": "22:00",
+ "blind: no image": {
+  "acc": 0.0,
+  "said_prior": 1.0,
+  "said_bus_time": 0.0,
+  "no_time": 0.0,
+  "n": 100
+ },
+ "oracle swap: facts as text, no image": {
+  "acc": 0.72,
+  "said_prior": 0.0,
+  "said_bus_time": 0.04,
+  "no_time": 0.0,
+  "n": 100
+ },
+ "oracle swap, no bus sign": {
+  "acc": 0.92,
+  "said_prior": 0.0,
+  "said_bus_time": 0.0,
+  "no_time": 0.0,
+  "n": 100
+ },
+ "crop probe: plaque cell @448": {
+  "acc": 1.0,
+  "said_prior": 0.0,
+  "said_bus_time": 0.0,
+  "no_time": 0.0,
+  "n": 100
+ },
+ "direct: full @448": {
+  "acc": 0.12,
+  "said_prior": 0.0,
+  "said_bus_time": 0.17,
+  "no_time": 0.0,
+  "n": 100
+ },
+ "caption, then reason: full @448": {
+  "acc": 0.13,
+  "said_prior": 0.09,
+  "said_bus_time": 0.03,
+  "no_time": 0.0,
+  "n": 100
+ },
+ "direct: full @1344": {
+  "acc": 0.55,
+  "said_prior": 0.0,
+  "said_bus_time": 0.34,
+  "no_time": 0.0,
+  "n": 100
+ },
+ "caption, then reason: full @1344": {
+  "acc": 0.85,
+  "said_prior": 0.0,
+  "said_bus_time": 0.13,
+  "no_time": 0.0,
+  "n": 100
+ },
+ "breakdown": {
+  "448": {
+   "correct": 12,
+   "1 never extracted": 57,
+   "2 extracted, not used": 4,
+   "3 reasoning": 27,
+   "unclear": 0
+  },
+  "1344": {
+   "correct": 55,
+   "1 never extracted": 4,
+   "2 extracted, not used": 25,
+   "3 reasoning": 16,
+   "unclear": 0
+  }
+ }
+}

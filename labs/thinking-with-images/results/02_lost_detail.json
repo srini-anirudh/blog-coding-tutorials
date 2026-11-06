@@ -1,0 +1,165 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2",
+ "command": "python labs/thinking-with-images/scripts/02_lost_detail.py --n 100",
+ "direct": {
+  "full @448": {
+   "acc": 0.13,
+   "said_prior": 0.01,
+   "said_bus_time": 0.16,
+   "no_time": 0.0,
+   "n": 100,
+   "text_px": 3.5555555555555554,
+   "tokens": 192
+  },
+  "full @672": {
+   "acc": 0.45,
+   "said_prior": 0.0,
+   "said_bus_time": 0.22,
+   "no_time": 0.0,
+   "n": 100,
+   "text_px": 5.333333333333333,
+   "tokens": 432
+  },
+  "full @896": {
+   "acc": 0.52,
+   "said_prior": 0.0,
+   "said_bus_time": 0.26,
+   "no_time": 0.0,
+   "n": 100,
+   "text_px": 7.111111111111111,
+   "tokens": 768
+  },
+  "full @1120": {
+   "acc": 0.56,
+   "said_prior": 0.0,
+   "said_bus_time": 0.21,
+   "no_time": 0.0,
+   "n": 100,
+   "text_px": 8.88888888888889,
+   "tokens": 1200
+  },
+  "full @1344": {
+   "acc": 0.55,
+   "said_prior": 0.0,
+   "said_bus_time": 0.28,
+   "no_time": 0.0,
+   "n": 100,
+   "text_px": 10.666666666666666,
+   "tokens": 1728
+  },
+  "full @1512": {
+   "acc": 0.6,
+   "said_prior": 0.0,
+   "said_bus_time": 0.21,
+   "no_time": 0.0,
+   "n": 100,
+   "text_px": 12.0,
+   "tokens": 2160
+  },
+  "full @2016": {
+   "acc": 0.53,
+   "said_prior": 0.0,
+   "said_bus_time": 0.25,
+   "no_time": 0.0,
+   "n": 100,
+   "text_px": 16.0,
+   "tokens": 3888
+  },
+  "top-right crop @448": {
+   "acc": 0.98,
+   "said_prior": 0.0,
+   "said_bus_time": 0.01,
+   "no_time": 0.0,
+   "n": 100,
+   "text_px": 14.222222222222221,
+   "tokens": 192
+  }
+ },
+ "cot": {
+  "full @448": {
+   "acc": 0.075,
+   "said_prior": 0.425,
+   "said_bus_time": 0.1,
+   "no_time": 0.025,
+   "n": 40,
+   "mean_generated_tokens": 114.075,
+   "example": "The bakery closes at 17:00. Here is the text on the signs in the image:\n\n1. The sign on the pink building reads \"Bakery.\"\n2. The sign on the green building reads \"Bakery.\"\n3. The sign on the purple building reads \"Bakery.\"\n4. The sign on the yellow building reads \"Bakery.\"\n\nTo determine the closing time, we need to look at the time displayed on the clock on the right side of the image. The clock reads \"17:00,\" which is 5:00 PM in 24-hour format. Therefore, the bakery closes at 17:00."
+  },
+  "full @2016": {
+   "acc": 0.45,
+   "said_prior": 0.025,
+   "said_bus_time": 0.475,
+   "no_time": 0.0,
+   "n": 40,
+   "mean_generated_tokens": 103.625,
+   "example": "The bakery closes at 17:00. Here is the reasoning step by step:\n\n1. The sign on the building reads \"Bakery.\"\n2. The sign on the building reads \"OPEN 9:00-17:00.\"\n3. The sign on the building reads \"BUS 12 - 17:30.\"\n\nThe bakery closes at 17:00."
+  },
+  "top-right crop @448": {
+   "acc": 0.575,
+   "said_prior": 0.05,
+   "said_bus_time": 0.025,
+   "no_time": 0.0,
+   "n": 40,
+   "mean_generated_tokens": 97.725,
+   "example": "The bakery closes at 5:00 PM. Here is the reasoning step by step:\n\n1. The image shows a building with a sign that says \"OPEN 9:00-17:00.\"\n2. The sign indicates that the bakery is open from 9:00 AM to 5:00 PM.\n3. To find the closing time, we need to subtract the opening time from the closing time.\n4. The opening time is 9:00 AM.\n5. The closing time is 5:00 PM.\n6. To convert the closing time to 24-hour format, we add 12 to the closing time (5:00 PM becomes 17:00).\n7. Therefore, the bakery closes at 17:00.\n\nAnswer: 17:00"
+  }
+ },
+ "no_distractor": {
+  "full @448": {
+   "acc": 0.15,
+   "said_prior": 0.02,
+   "said_bus_time": 0.06,
+   "no_time": 0.0,
+   "n": 100
+  },
+  "full @672": {
+   "acc": 0.61,
+   "said_prior": 0.0,
+   "said_bus_time": 0.03,
+   "no_time": 0.0,
+   "n": 100
+  },
+  "full @896": {
+   "acc": 0.84,
+   "said_prior": 0.0,
+   "said_bus_time": 0.04,
+   "no_time": 0.0,
+   "n": 100
+  },
+  "full @1120": {
+   "acc": 0.87,
+   "said_prior": 0.0,
+   "said_bus_time": 0.02,
+   "no_time": 0.0,
+   "n": 100
+  },
+  "full @1344": {
+   "acc": 0.89,
+   "said_prior": 0.0,
+   "said_bus_time": 0.01,
+   "no_time": 0.0,
+   "n": 100
+  },
+  "full @1512": {
+   "acc": 0.9,
+   "said_prior": 0.0,
+   "said_bus_time": 0.02,
+   "no_time": 0.0,
+   "n": 100
+  },
+  "full @2016": {
+   "acc": 0.91,
+   "said_prior": 0.0,
+   "said_bus_time": 0.02,
+   "no_time": 0.0,
+   "n": 100
+  },
+  "top-right crop @448": {
+   "acc": 0.98,
+   "said_prior": 0.0,
+   "said_bus_time": 0.01,
+   "no_time": 0.0,
+   "n": 100
+  }
+ }
+}

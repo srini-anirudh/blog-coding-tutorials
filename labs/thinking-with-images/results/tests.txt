@@ -1,0 +1,6 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0 (offline); network tests on the same CPU class, fp32
+# command: python -m pytest labs/thinking-with-images -m "not slow and not gpu and not network" -o addopts="--import-mode=importlib" -q
+........................                                                 [100%]
+24 passed, 3 deselected in 8.83s
+# command: python -m pytest labs/thinking-with-images/tests/test_real_model.py -o addopts="--import-mode=importlib" -q
+3 passed in 35.69s

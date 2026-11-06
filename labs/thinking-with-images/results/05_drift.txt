@@ -1,0 +1,33 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2
+# command: python labs/thinking-with-images/scripts/05_drift.py --n 12 --gen-tokens 1024
+
+n=12 scenes; image at 896 x 672 = 768 visual tokens; prompt 820 tokens; 896 generated tokens each
+crop of the plaque cell (192 tokens) re-injected after generated token 256
+
+    tokens  share on image  vs first bin  with re-injection  image / context
+    0-127            0.101          1.00              0.101            0.870
+  128-255            0.090          0.89              0.090            0.760
+  256-383            0.052          0.52              0.085            0.674
+  384-511            0.026          0.26              0.037            0.606
+  512-639            0.020          0.20              0.028            0.550
+  640-767            0.018          0.18              0.023            0.504
+  768-895            0.017          0.16              0.022            0.465
+
+share on image: attention mass on image tokens, mean over heads, layers and scenes.
+image / context: N_v / context length, the share the image would get if attention were spread evenly.
+The measured share is well below image / context. This script does not separate out attention-sink tokens.
+Before the re-injection point the two passes see identical inputs, so their columns agree.
+
+First trace (scene 4000), first 600 characters:
+The image depicts a street scene with several buildings and a bakery. Here is a detailed description:
+
+1. **Buildings**:
+   - There are several multi-story buildings in the background. The buildings vary in color and style.
+   - The building on the left is green with color.
+   - The middle building has a mix of brown and beige colors.
+   - The building on the right is brown with a darker shade.
+
+2. **Bakery**:
+   - The bakery is located in the center of the image.
+   - It has a brown facade with a sign that reads "BAKERY" in white letters.
+   - The entrance to the bakery is a large, dark-color

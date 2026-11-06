@@ -1,0 +1,82 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2",
+ "command": "python labs/thinking-with-images/scripts/06_search.py --n 60",
+ "one look @448": {
+  "acc": 0.15,
+  "said_prior": 0.0,
+  "said_bus_time": 0.23333333333333334,
+  "no_time": 0.0,
+  "n": 60,
+  "calls": 1,
+  "tokens": 192
+ },
+ "one look @2016": {
+  "acc": 0.7333333333333333,
+  "said_prior": 0.0,
+  "said_bus_time": 0.18333333333333332,
+  "no_time": 0.0,
+  "n": 60,
+  "calls": 1,
+  "tokens": 3888
+ },
+ "attention-guided crop (896 -> 448)": {
+  "acc": 0.85,
+  "said_prior": 0.0,
+  "said_bus_time": 0.08333333333333333,
+  "no_time": 0.0,
+  "n": 60,
+  "calls": 2,
+  "tokens": 960
+ },
+ "attention_hit": {
+  "all": 0.85,
+  "when_896_answer_wrong": 0.6111111111111112,
+  "n_wrong": 18,
+  "acc_896": 0.7
+ },
+ "best-first search": {
+  "acc": 0.8833333333333333,
+  "said_prior": 0.0,
+  "said_bus_time": 0.05,
+  "no_time": 0.0,
+  "n": 60,
+  "calls": 9.866666666666667,
+  "tokens": 1894.4,
+  "rejected_reads": 0,
+  "first_read_was_bus": 3
+ },
+ "best-first search + verify": {
+  "acc": 0.9333333333333333,
+  "said_prior": 0.0,
+  "said_bus_time": 0.0,
+  "no_time": 0.0,
+  "n": 60,
+  "calls": 11.266666666666667,
+  "tokens": 2163.2,
+  "rejected_reads": 4,
+  "first_read_was_bus": 3
+ },
+ "read all 16 cells + verifier": {
+  "acc": 0.9333333333333333,
+  "said_prior": 0.0,
+  "said_bus_time": 0.0,
+  "no_time": 0.0,
+  "n": 60,
+  "calls": 32,
+  "tokens": 6144
+ },
+ "verifier_generic": {
+  "p_yes_plaque": 0.904818011323611,
+  "p_yes_bus": 0.5921532680590947,
+  "plaque_above_bus": 0.9833333333333333,
+  "bus_above_half": 0.85,
+  "plaque_below_half": 0.0
+ },
+ "verifier_OPEN-hours": {
+  "p_yes_plaque": 0.9143689543008804,
+  "p_yes_bus": 0.21449337216715017,
+  "plaque_above_bus": 1.0,
+  "bus_above_half": 0.0,
+  "plaque_below_half": 0.0
+ }
+}

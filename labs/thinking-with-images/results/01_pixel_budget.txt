@@ -1,0 +1,28 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0
+# command: python labs/thinking-with-images/scripts/01_pixel_budget.py
+
+Full photo 4032 x 3024, 14 px patches, no merging: grid (288, 216), 62,208 visual tokens
+Resized to 448 x 336: grid (32, 24), 768 tokens; text height 32 px -> 3.56 px
+Width needed for 12 px text: 1512 px; grid (108, 81), 8,748 tokens, 11.4x the 448 px budget
+Top-right crop 1008 x 756 resized to 448 x 336: 768 tokens, text height 14.22 px
+Qwen2-VL merges 2 x 2 patches: the same 448 x 336 image is 192 language-model tokens
+
+Context arithmetic from the drift and compute-axes sections:
+  768 visual + 5,000 reasoning tokens: image share 13.3%
+  attention scores for T=500 after N_v=768: T*N_v + T(T+1)/2 = 509,250
+  attention scores for T=5,000 after N_v=768: T*N_v + T(T+1)/2 = 16,342,500
+  attention scores for T=50,000 after N_v=768: T*N_v + T(T+1)/2 = 1,288,425,000
+  a 768-token crop added at step 1000 of a 5,000-step trace is attended 4,000 more times
+
+Rendered scene 0: the plaque region as each encoder width receives it (results/01_plaque_strip.png)
+ encoder width  text px  patches  Qwen2-VL tokens  detail kept
+           448      3.6      768              192         0.19
+           672      5.3    1,728              432         0.30
+           896      7.1    3,072              768         0.45
+          1344     10.7    6,912            1,728         0.60
+          1512     12.0    8,748            2,187         0.66
+          2016     16.0   15,552            3,888         0.73
+          4032     32.0   62,208           15,552         1.00
+     crop @448     14.2      768              192         0.69
+detail kept: correlation of horizontal intensity gradients between the original plaque and the view
+scaled back up (1 = every letter edge kept, 0 = none). Widths here are not snapped to multiples of 28.

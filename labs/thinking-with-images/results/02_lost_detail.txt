@@ -1,0 +1,44 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2
+# command: python labs/thinking-with-images/scripts/02_lost_detail.py --n 100
+
+Direct answer, max 24 new tokens, greedy, n=100. With no image the model answers '22:00': that is the 'prior' column.
+condition              text px tokens   acc  prior   bus  none
+full @448                  3.6    192  0.13   0.01  0.16  0.00
+full @672                  5.3    432  0.45   0.00  0.22  0.00
+full @896                  7.1    768  0.52   0.00  0.26  0.00
+full @1120                 8.9   1200  0.56   0.00  0.21  0.00
+full @1344                10.7   1728  0.55   0.00  0.28  0.00
+full @1512                12.0   2160  0.60   0.00  0.21  0.00
+full @2016                16.0   3888  0.53   0.00  0.25  0.00
+top-right crop @448       14.2    192  0.98   0.00  0.01  0.00
+
+Same photos with the bus sign removed, direct answer, n=100: the resolution curve alone
+condition              text px tokens   acc  prior   bus  none
+full @448                  3.6    192  0.15   0.02  0.06  0.00
+full @672                  5.3    432  0.61   0.00  0.03  0.00
+full @896                  7.1    768  0.84   0.00  0.04  0.00
+full @1120                 8.9   1200  0.87   0.00  0.02  0.00
+full @1344                10.7   1728  0.89   0.00  0.01  0.00
+full @1512                12.0   2160  0.90   0.00  0.02  0.00
+full @2016                16.0   3888  0.91   0.00  0.02  0.00
+top-right crop @448       14.2    192  0.98   0.00  0.01  0.00
+
+Chain of thought, up to 256 new tokens, greedy, n=40
+condition              text px tokens   acc  prior   bus  none gen tok
+full @448                  3.6    192  0.07   0.42  0.10  0.03     114
+full @2016                16.0   3888  0.45   0.03  0.47  0.00     104
+top-right crop @448       14.2    192  0.57   0.05  0.03  0.00      98
+
+acc: exact closing time. prior: gave the same answer as with no image. bus: answered the bus-sign time.
+The crop also removes the bus sign, which the post notes cropping can do; the second table separates that.
+none: no time in the answer. Chance over the 10 closing times is 0.10. gen tok: mean generated tokens.
+
+Example chain of thought at 448 px:
+The bakery closes at 17:00. Here is the text on the signs in the image:
+
+1. The sign on the pink building reads "Bakery."
+2. The sign on the green building reads "Bakery."
+3. The sign on the purple building reads "Bakery."
+4. The sign on the yellow building reads "Bakery."
+
+To determine the closing time, we need to look at the time displayed on the clock on the right side of the image. The clock reads "17:00," which is 5:00 PM in 24-hour format. Therefore, the bakery closes at 17:00.
