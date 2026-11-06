@@ -1,0 +1,22 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, CPU only
+# command: python labs/how-attention-moves-information/scripts/08_flash_io.py
+
+Part 1. Slow-memory traffic per head, d = 64, in elements (float64 data, so the outputs can be compared)
+n     textbook  4n^2 + 4nd  tiled B=64  formula  tiled B=128  textbook / B=128  max |out diff|
+----  --------  ----------  ----------  -------  -----------  ----------------  --------------
+256     327680      327680      164096   164096        98560               3.3        6.11e-16
+512    1179648     1179648      590336   590336       328192               3.6        7.77e-16
+1024   4456448     4456448     2229248  2229248      1180672               3.8        6.66e-16
+2048  17301504    17301504     8652800  8652800      4458496               3.9        8.05e-16
+Counted traffic equals the formula in every row. Doubling B halves the K and V re-reads.
+
+Part 2. One (n, n) intermediate at n = 8192 in fp16: 128 MiB per head (computed)
+  saved for backward, d = 128, textbook (P, n^2): 67,108,864 numbers
+  saved for backward, d = 128, tiled (O and log-sum-exp, n d + n): 1,056,768 numbers
+
+Part 3. Same function, different summation order (n = 512, d = 64)
+  max |diff|, textbook fp32 vs fp64: 5.30e-07
+  max |diff|, tiled B=16 vs textbook, fp32: 1.64e-07
+  max |diff|, tiled B=64 vs textbook, fp32: 1.64e-07
+  max |diff|, tiled B=256 vs textbook, fp32: 2.09e-07
+  Tiled and textbook differ at fp32 rounding level, as the textbook kernel differs from fp64.

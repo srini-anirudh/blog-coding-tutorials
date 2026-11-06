@@ -1,0 +1,34 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, CPU only
+# command: python labs/how-attention-moves-information/scripts/02_scaling.py
+
+q, k with independent N(0, 1) entries, 128 keys, 2000 queries. ln(128) = 4.852 is the uniform entropy.
+
+Unscaled: logits q . k
+d_k   logit std  entropy  mean max weight  rows > 0.99    |J|  |dL/dq|
+----  ---------  -------  ---------------  -----------  -----  -------
+16        4.040    1.620            0.533        0.017  0.293    3.898
+32        5.629    1.045            0.666        0.062  0.268    7.052
+64        7.994    0.641            0.780        0.165  0.216   11.338
+128      11.267    0.435            0.841        0.297  0.174   17.423
+256      15.935    0.296            0.887        0.442  0.134   24.322
+512      22.589    0.205            0.919        0.575  0.101   38.251
+2048     45.149    0.098            0.961        0.756  0.054   86.907
+8192     90.759    0.052            0.978        0.862  0.031  142.397
+
+Scaled: logits q . k / sqrt(d_k)
+d_k   logit std  entropy  mean max weight  rows > 0.99    |J|  |dL/dq|
+----  ---------  -------  ---------------  -----------  -----  -------
+16        1.010    4.356            0.070        0.000  0.137    0.533
+32        0.995    4.371            0.068        0.000  0.136    0.734
+64        0.999    4.364            0.069        0.000  0.136    1.060
+128       0.996    4.372            0.068        0.000  0.135    1.537
+256       0.996    4.368            0.068        0.000  0.136    2.105
+512       0.998    4.365            0.069        0.000  0.136    2.978
+2048      0.998    4.369            0.068        0.000  0.136    6.153
+8192      1.003    4.366            0.068        0.000  0.136   12.010
+
+|J| is the Frobenius norm of the softmax Jacobian diag(a) - a a^T, averaged over queries.
+|dL/dq| is the gradient reaching the queries for a random upstream gradient on the output.
+It includes a factor |k| ~ sqrt(d_k), so it can grow even while |J| shrinks.
+
+Only differences matter: max |softmax(s) - softmax(s + 123)| = 1.2e-15

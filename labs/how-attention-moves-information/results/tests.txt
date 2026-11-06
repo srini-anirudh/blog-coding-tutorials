@@ -1,0 +1,4 @@
+# hardware: AMD EPYC 7R13, 2 threads (conftest cap), torch 2.15.0+cu132, CPU only
+# command: python -m pytest labs/how-attention-moves-information -m "not slow and not gpu and not network"
+...........................                                              [100%]
+27 passed, 1 deselected in 14.16s

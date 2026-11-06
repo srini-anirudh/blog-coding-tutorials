@@ -1,0 +1,20 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, CPU only
+# command: python labs/how-attention-moves-information/scripts/07_mla_rope.py
+
+Part 1. Fold W_UK into the query (4 heads, dh = 32, latent d_c = 16, 24 tokens)
+  no RoPE: max |explicit - absorbed|: 1.07e-14
+  RoPE on key: max |true - naive absorbed|: 3.10e+01
+  RoPE on key: score scale (std of true scores): 5.72e+00
+  Without RoPE, absorption is exact. With RoPE on the full key, the naive absorbed scores are wrong
+  by more than the scores' own spread.
+
+Part 2. Could some other fixed matrix stand in for R_delta W_UK?
+  best single matrix over offsets 0..127, mean relative error: 0.674
+  The rotation depends on the key's position, so no fixed matrix fits. Absorbing it exactly would
+  need one matrix per position, which is the same as building the keys.
+
+Part 3. Decoupled RoPE (C3's module): content key from the latent, a small shared RoPE key beside it
+  decoupled RoPE: max |explicit - absorbed|: 3.33e-16
+  decoupled RoPE, absorbed and cached: max |cached - full|: 3.33e-16
+  cached numbers per token (c_kv + k_pe): 24
+  With RoPE moved out of the absorbed path, the absorbed and cached forms match the explicit one.

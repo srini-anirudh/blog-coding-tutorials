@@ -1,0 +1,25 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, CPU only
+# command: python labs/how-attention-moves-information/scripts/06_linear_recall.py
+
+Recall accuracy, d = 64, mean of 3 seeds. Chance is 1 / n. Softmax uses beta = 32 on unit keys.
+n pairs  softmax  linear (phi = id)     elu+1  elu+1 on 32k  softmax cache floats  linear state floats
+-------  -------  -----------------  --------  ------------  --------------------  -------------------
+16         1.000              1.000     0.062         0.854                  2048                 4160
+32         1.000              1.000     0.031         0.469                  4096                 4160
+64         1.000              1.000     0.016         0.224                  8192                 4160
+128        1.000              0.982     0.008         0.044                 16384                 4160
+256        1.000              0.743     0.004         0.021                 32768                 4160
+512        1.000              0.333     0.002         0.008                 65536                 4160
+1024       1.000              0.090  9.77e-04         0.001                131072                 4160
+4096       1.000              0.006  2.44e-04      2.44e-04                524288                 4160
+The softmax cache grows with n and recall stays exact. The linear state stays at d^2 + d floats and
+recall falls once n passes a few times d. The positive elu+1 map, on these untrained unit keys,
+returns close to the mean value: every phi(k) . phi(k') is large. Learned projections would do better;
+this shows the fixed-state limit, not a trained linear-attention model.
+
+Largest n with linear (phi = id) recall >= 0.9, mean of 3 seeds
+d    largest n  n / d  state floats
+---  ---------  -----  ------------
+32          48  1.500          1056
+64         192  3.000          4160
+128        688  5.375         16512

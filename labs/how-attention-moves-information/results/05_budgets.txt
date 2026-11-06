@@ -1,0 +1,37 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, CPU only
+# command: python labs/how-attention-moves-information/scripts/05_budgets.py
+
+KV cache for a Llama-2-7B shape (L = 32, H = 32, dh = 128), fp16, S = 8192
+layer        Hkv  GiB, 1 sequence  GiB, 64 sequences  decode FLOPs per cache byte
+-----------  ---  ---------------  -----------------  ---------------------------
+MHA           32            4.000              256.0                            1
+GQA Hkv = 8    8            1.000               64.0                            4
+GQA Hkv = 4    4            0.500               32.0                            8
+MQA            1            0.125                8.0                           32
+Weights in fp16: 12.6 GiB. At 64 sequences the MHA cache is 20x the weights.
+Decode intensity is Hq / Hkv FLOPs per byte in fp16: grouping is the only lever on it here.
+
+Tensor parallelism: copies of each KV head when Hkv heads are split over TP ranks
+Hkv  TP = 4  TP = 8  TP = 16
+---  ------  ------  -------
+1     4.000   8.000   16.000
+4     1.000   2.000    4.000
+8     1.000   1.000    2.000
+32    1.000   1.000    1.000
+
+DeepSeek-V2 attention shape (H = 128, dh = 128, d_c = 512, d_r = 64), numbers per token per layer
+layer        cached numbers  fraction of MHA
+-----------  --------------  ---------------
+MHA                   32768            1.000
+GQA Hkv = 8            2048            0.062
+MLA                     576            0.018
+MLA against MHA of the same shape: 98.2% smaller. The paper's 93.3% is against its own
+dense 67B model, a different baseline. That figure is quoted, not reproduced.
+
+ViT patch tokens with 14-pixel patches
+image side  tokens  score entries per head per layer (millions)
+----------  ------  -------------------------------------------
+224            256                                          0.1
+336            576                                          0.3
+448           1024                                          1.0
+1024          5329                                         28.4

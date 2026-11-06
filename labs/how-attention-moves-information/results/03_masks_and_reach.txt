@@ -1,0 +1,44 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, CPU only
+# command: python labs/how-attention-moves-information/scripts/03_masks_and_reach.py
+
+Part 1. Packed documents: change document 0, measure the change in documents 1 and 2 (one layer)
+  causal only                max change in later documents = 1.85e+00
+  causal AND same document   max change in later documents = 0.00e+00
+  padding AND causal: max |padded batch - each sequence alone| = 3.58e-07
+
+Part 2. Stacked causal sliding windows, n = 64. Window w counts the query itself.
+w  layers  reach (mask powers)  reach (autograd)  L (w - 1)  post: L w
+-  ------  -------------------  ----------------  ---------  ---------
+2       1                    1                 1          1          2
+2       2                    2                 2          2          4
+2       4                    4                 4          4          8
+2       6                    6                 6          6         12
+4       1                    3                 3          3          4
+4       2                    6                 6          6          8
+4       4                   12                12         12         16
+4       6                   18                18         18         24
+8       1                    7                 7          7          8
+8       2                   14                14         14         16
+8       4                   28                28         28         32
+8       6                   42                42         42         48
+The mask graph and the gradients of real stacked layers agree. Each layer adds w - 1 positions.
+Mistral 7B: w = 4096, 32 layers. L w = 131,072. Counted exactly, L (w - 1) = 131,040. Not run at that size.
+
+Part 3. Layers until every output can depend on every input (bidirectional, n = 256)
+                              pattern  density  layers to full reach
+-------------------------------------  -------  --------------------
+                                dense    1.000                     1
+                               causal    0.502                     1
+                          band w = 16    0.117                    17
+strided, block 16 + every 16th column    0.121                     2
+        band w = 16 + 2 global tokens    0.132                     2
+band w = 16 + 3 random keys per query    0.128                     4
+         block-diagonal, blocks of 16    0.062                 never
+
+Part 4. A 16 x 16 patch grid (256 tokens)
+                                    pattern  density  layers to full reach
+-------------------------------------------  -------  --------------------
+                                       full    1.000                     1
+                    4 x 4 windows, no shift    0.062    never in 32 layers
+4 x 4 windows, shift by 2 every other layer    0.062                     4
+                  axial: rows, then columns    0.062                     2
