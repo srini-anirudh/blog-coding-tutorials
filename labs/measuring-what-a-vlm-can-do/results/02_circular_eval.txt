@@ -1,0 +1,14 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/measuring-what-a-vlm-can-do/scripts/02_circular_eval.py
+
+1500 simulated questions, 4 options, gold letter uniform. Exact chance under CircularEval: (1/4)^4 = 0.0039
+model                                   single pass  CircularEval
+uniform guesser                               0.224         0.003
+always 'A' (position bias)                    0.249         0.000
+knows 40%, guesses the rest                   0.539         0.383
+knows 40%, picks 'A' otherwise                0.551         0.398
+knows 70%, guesses the rest                   0.787         0.707
+knows 70%, picks 'A' otherwise                0.775         0.697
+
+A model that knows k of the answers keeps about k under CircularEval, plus (1/4)^4 of the rest
+when it guesses. A pure position bias scores about 1/4 on one pass and exactly 0 under CircularEval.

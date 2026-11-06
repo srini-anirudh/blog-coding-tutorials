@@ -1,0 +1,8 @@
+# Model weights, datasets and caches never go in git.
+*.safetensors
+*.parquet
+*.pt
+*.bin
+hf_cache/
+__pycache__/
+runs/

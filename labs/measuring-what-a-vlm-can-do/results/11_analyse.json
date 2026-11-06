@@ -1,0 +1,186 @@
+{
+ "hardware": "scored on AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132; replies generated on the hardware named per model",
+ "command": "python labs/measuring-what-a-vlm-can-do/scripts/11_analyse.py",
+ "mmstar_smolvlm-256m": {
+  "n": 1500,
+  "headline": 0.2593333423137665,
+  "ci95": [
+   0.23800000548362732,
+   0.2826666533946991
+  ],
+  "accuracy": {
+   "fmt": {
+    "strict": 0.05066666752099991,
+    "permissive": 0.23733332753181458,
+    "content": 0.2593333423137665
+   },
+   "bare": {
+    "strict": 0.00800000037997961,
+    "permissive": 0.18066667020320892,
+    "content": 0.21199999749660492
+   },
+   "fmt_notile": {
+    "strict": 0.019999999552965164,
+    "permissive": 0.21799999475479126,
+    "content": 0.2293333262205124
+   },
+   "blind": {
+    "strict": 0.0,
+    "permissive": 0.17733334004878998,
+    "content": 0.19466666877269745
+   },
+   "llm": {
+    "strict": 0.006666666828095913,
+    "permissive": 0.2213333398103714,
+    "content": 0.24266666173934937
+   }
+  },
+  "MG": 0.06466667354106903,
+  "ML": 0.0,
+  "circular": 0.009339559823274612,
+  "single_pass": 0.2588392198085785,
+  "picks": {
+   "D": 768,
+   "A": 238,
+   "C": 286,
+   "B": 135,
+   "None": 73
+  },
+  "image_tokens": {
+   "fmt": 877.2266666666667,
+   "bare": 877.2266666666667,
+   "blind": 0.0,
+   "fmt_notile": 64.0,
+   "rot1": 877.2266666666667,
+   "rot2": 877.2266666666667,
+   "rot3": 877.2266666666667,
+   "llm": 0
+  },
+  "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+  "gpu_seconds": 641.6
+ },
+ "mmstar_smolvlm-500m": {
+  "n": 1500,
+  "headline": 0.35733333230018616,
+  "ci95": [
+   0.3333333432674408,
+   0.38199999928474426
+  ],
+  "accuracy": {
+   "fmt": {
+    "strict": 0.04533333331346512,
+    "permissive": 0.35600000619888306,
+    "content": 0.35733333230018616
+   },
+   "bare": {
+    "strict": 0.06666667014360428,
+    "permissive": 0.2746666669845581,
+    "content": 0.30933332443237305
+   },
+   "fmt_notile": {
+    "strict": 0.0020000000949949026,
+    "permissive": 0.34333333373069763,
+    "content": 0.34333333373069763
+   },
+   "blind": {
+    "strict": 0.0,
+    "permissive": 0.27799999713897705,
+    "content": 0.27799999713897705
+   },
+   "llm": {
+    "strict": 0.03466666489839554,
+    "permissive": 0.2606666684150696,
+    "content": 0.2619999945163727
+   }
+  },
+  "MG": 0.0793333351612091,
+  "ML": 0.01600000262260437,
+  "circular": 0.07338225841522217,
+  "single_pass": 0.35757172107696533,
+  "picks": {
+   "D": 265,
+   "C": 244,
+   "B": 518,
+   "A": 465,
+   "None": 8
+  },
+  "image_tokens": {
+   "fmt": 877.2266666666667,
+   "bare": 877.2266666666667,
+   "blind": 0.0,
+   "fmt_notile": 64.0,
+   "rot1": 877.2266666666667,
+   "rot2": 877.2266666666667,
+   "rot3": 877.2266666666667,
+   "llm": 0
+  },
+  "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+  "gpu_seconds": 569.2
+ },
+ "pope_smolvlm-256m": {
+  "random": {
+   "accuracy": 0.855,
+   "precision": 0.9708222811671088,
+   "recall": 0.732,
+   "f1": 0.8346636259977195,
+   "yes_ratio": 0.377,
+   "n": 3000,
+   "unparsed": 0
+  },
+  "popular": {
+   "accuracy": 0.8363333333333334,
+   "precision": 0.9243061396131202,
+   "recall": 0.7326666666666667,
+   "f1": 0.8174042394942358,
+   "yes_ratio": 0.3963333333333333,
+   "n": 3000,
+   "unparsed": 0
+  },
+  "adversarial": {
+   "accuracy": 0.809,
+   "precision": 0.8693227091633466,
+   "recall": 0.7273333333333334,
+   "f1": 0.7920145190562614,
+   "yes_ratio": 0.41833333333333333,
+   "n": 3000,
+   "unparsed": 0
+  }
+ },
+ "pope_smolvlm-500m": {
+  "random": {
+   "accuracy": 0.8863333333333333,
+   "precision": 0.9647153167602245,
+   "recall": 0.802,
+   "f1": 0.8758645795413178,
+   "yes_ratio": 0.4156666666666667,
+   "n": 3000,
+   "unparsed": 0
+  },
+  "popular": {
+   "accuracy": 0.8573333333333333,
+   "precision": 0.9005979073243647,
+   "recall": 0.8033333333333333,
+   "f1": 0.8491895701198027,
+   "yes_ratio": 0.446,
+   "n": 3000,
+   "unparsed": 0
+  },
+  "adversarial": {
+   "accuracy": 0.8323333333333334,
+   "precision": 0.8522968197879859,
+   "recall": 0.804,
+   "f1": 0.8274442538593482,
+   "yes_ratio": 0.4716666666666667,
+   "n": 3000,
+   "unparsed": 0
+  }
+ },
+ "paired": {
+  "a": "mmstar_smolvlm-500m",
+  "b": "mmstar_smolvlm-256m",
+  "diff": 0.09799999743700027,
+  "lo": 0.06731666624546051,
+  "hi": 0.13001669943332672,
+  "p_le_0": 0.0
+ }
+}

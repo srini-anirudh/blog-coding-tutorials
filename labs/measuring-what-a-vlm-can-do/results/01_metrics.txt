@@ -1,0 +1,57 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/measuring-what-a-vlm-can-do/scripts/01_metrics.py
+
+== VQA accuracy (Figure 2): ten humans, four 'red', three 'pink', two 'maroon', one 'orange'
+  red     official (10 leave-one-out subsets) 1.00   naive min(n/3,1) 1.00
+  pink    official (10 leave-one-out subsets) 0.90   naive min(n/3,1) 1.00
+  maroon  official (10 leave-one-out subsets) 0.60   naive min(n/3,1) 0.67
+  orange  official (10 leave-one-out subsets) 0.30   naive min(n/3,1) 0.33
+  blue    official (10 leave-one-out subsets) 0.00   naive min(n/3,1) 0.00
+  normalisation: {'Two.': '2', 'Red.': 'red', 'the bus': 'bus', 'there are 2 people': 'there are 2 people', '1,250': '1250'}
+  'Two people.' vs ten '2': 0.0   'Two.' vs ten '2': 1.0
+
+== ANLS (Figure 3), tau = 0.5, gold 'SPRINGFIELD'
+  'SPRINGFIELD'   edits  0  NL 0.000  ANLS 1.000
+  'SPRlNGFIELD'   edits  1  NL 0.091  ANLS 0.909
+  'Springfeld'    edits  1  NL 0.091  ANLS 0.909
+  'SPRING'        edits  5  NL 0.455  ANLS 0.545
+  'SHELBYVILLE'   edits  8  NL 0.727  ANLS 0.000
+  ''              edits 11  NL 1.000  ANLS 0.000
+  numbers: '7,250' vs gold '1,250' -> ANLS 0.80 (one character, a different value)
+
+== Relaxed accuracy (ChartQA, 5% relative tolerance)
+  pred 4.19  gold 4.2   -> 1
+  pred 4.5   gold 4.2   -> 0
+  pred 2020  gold 2019  -> 1
+  pred 104   gold 100   -> 1
+  pred 106   gold 100   -> 0
+  pred Red   gold red   -> 1
+  pred 2     gold two   -> 1
+  (the year 2020 against 2019 is off by 0.05% and counts as correct)
+
+== IoU and Acc@0.5 (Figure 4): the same 18-pixel shift on a large and a small box
+  300 px dog: IoU 0.887 -> Acc@0.5 pass
+  30 px icon: IoU 0.250 -> Acc@0.5 fail
+  Acc@0.5 over the two: 0.50
+  boundary: IoU 0.49 -> 0, IoU 0.51 -> 1
+  click accuracy (ScreenSpot): point (115, 115) in the icon -> 1; point (133, 115) -> 0
+
+== gIoU versus cIoU (Table 1): one large mask with IoU 0.9, one small mask with IoU 0.2
+  large: intersection 9000, union 10000, IoU 0.90
+  small: intersection 20, union 100, IoU 0.20
+  gIoU 0.55 (mean of per-image IoU)   cIoU 0.893 (pooled pixels: the large object decides it)
+
+== POPE: a model that says 'yes' too often, on a balanced set of 10 questions
+  calibrated accuracy 0.80  precision 0.80  recall 0.80  f1 0.80  yes_ratio 0.50
+  yes-biased accuracy 0.70  precision 0.62  recall 1.00  f1 0.77  yes_ratio 0.80
+  answer rule: {'Yes.': 'yes', 'No, there is not.': 'no', 'There is a dog.': None, 'yes there is': 'yes'}
+
+== CHAIR on three captions
+   {'chair_i': 0.3333333333333333, 'chair_s': 0.6666666666666666}  (2 of 6 mentions absent; 2 of 3 captions hallucinate)
+
+== Elo: P(i beats j) for a rating gap
+  gap   0: 0.500
+  gap 100: 0.640
+  gap 200: 0.760
+  gap 400: 0.909
+  a 400-point gap wins 0.9091 = 10/11 = 0.9091

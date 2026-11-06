@@ -1,0 +1,19 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/measuring-what-a-vlm-can-do/scripts/04_arena.py
+
+true ratings: m0 1200 m1 1100 m2 1000 m3 950 m4 750
+check: P(m0 beats m4) = 0.930 for a 450-point gap
+
+  votes     m0     m1     m2     m3     m4   max |error|
+    200   1183   1110    995    941    771     21.2
+   1000   1207   1092   1001    955    745      7.7
+   5000   1210   1098    994    959    739     11.3
+  50000   1198   1098   1002    953    750      2.6
+
+Style effect: voters add a bonus to the long-answer model m3 (natural log-odds units)
+  bonus     m0     m1     m2     m3     m4   m3 rank
+    0.0   1202   1099   1000    948    750   4
+    0.5   1182   1083    984   1018    733   3
+    1.0   1166   1070    963   1089    712   2
+
+The fit cannot tell a better model from a more persuasive one: both raise the win rate.

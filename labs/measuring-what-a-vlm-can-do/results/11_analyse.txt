@@ -1,0 +1,72 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/measuring-what-a-vlm-can-do/scripts/11_analyse.py
+
+
+### MMStar, HuggingFaceTB/SmolVLM-256M-Instruct (n = 1500, skipped 0; replies from: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2)
+mean image tokens per prompt: tiling on 877, tiling off 64
+
+accuracy (%) by prompt and extractor
+condition                              strict permissive    content
+image, format hint                        5.1       23.7       25.9
+image, no hint                            0.8       18.1       21.2
+image, hint, tiling off                   2.0       21.8       22.9
+no image (S_wv)                           0.0       17.7       19.5
+base LLM SmolLM2-135M-Instruct (S_t)        0.7       22.1       24.3
+
+headline (image, hint, content extractor):  25.9%  bootstrap 95% CI [ 23.8,  28.3]  formula SE 1.1 pt
+blind test: S_v  25.9  S_wv  19.5  S_t  24.3  ->  MG 6.5 pt, ML 0.0 pt
+  image versus no image, paired bootstrap: +6.5 pt [+3.9, +9.2]
+
+per category (content extractor): image / no image
+  coarse perception         26.4 /  19.6
+  fine-grained perception   26.0 /  22.4
+  instance reasoning        26.8 /  21.6
+  logical reasoning         27.6 /  16.8
+  math                      27.2 /  18.8
+  science & technology      21.6 /  17.6
+
+CircularEval (1499 four-option items): single pass  25.9%, mean over the 4 rotations  25.9%, CircularEval   0.9%
+letter picked (fmt, content extractor): A: 238, B: 135, C: 286, D: 768, unparsed: 73
+gold letters in MMStar:                 A: 429, B: 447, C: 309, D: 315  (one constant letter scores: A 28.6%, B 29.8%, C 20.6%, D 21.0%)
+
+### MMStar, HuggingFaceTB/SmolVLM-500M-Instruct (n = 1500, skipped 0; replies from: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2)
+mean image tokens per prompt: tiling on 877, tiling off 64
+
+accuracy (%) by prompt and extractor
+condition                              strict permissive    content
+image, format hint                        4.5       35.6       35.7
+image, no hint                            6.7       27.5       30.9
+image, hint, tiling off                   0.2       34.3       34.3
+no image (S_wv)                           0.0       27.8       27.8
+base LLM SmolLM2-360M-Instruct (S_t)        3.5       26.1       26.2
+
+headline (image, hint, content extractor):  35.7%  bootstrap 95% CI [ 33.3,  38.2]  formula SE 1.2 pt
+blind test: S_v  35.7  S_wv  27.8  S_t  26.2  ->  MG 7.9 pt, ML 1.6 pt
+  image versus no image, paired bootstrap: +7.9 pt [+5.2, +10.7]
+
+per category (content extractor): image / no image
+  coarse perception         50.8 /  28.4
+  fine-grained perception   28.4 /  34.4
+  instance reasoning        37.2 /  26.8
+  logical reasoning         33.6 /  28.4
+  math                      34.4 /  25.2
+  science & technology      30.0 /  23.6
+
+CircularEval (1499 four-option items): single pass  35.8%, mean over the 4 rotations  34.1%, CircularEval   7.3%
+letter picked (fmt, content extractor): A: 465, B: 518, C: 244, D: 265, unparsed: 8
+gold letters in MMStar:                 A: 429, B: 447, C: 309, D: 315  (one constant letter scores: A 28.6%, B 29.8%, C 20.6%, D 21.0%)
+
+### POPE, HuggingFaceTB/SmolVLM-256M-Instruct (replies from: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2)
+setting          n    acc   prec recall     F1 yes-ratio unparsed
+random        3000   85.5   97.1   73.2   83.5     0.377        0
+popular       3000   83.6   92.4   73.3   81.7     0.396        0
+adversarial   3000   80.9   86.9   72.7   79.2     0.418        0
+
+### POPE, HuggingFaceTB/SmolVLM-500M-Instruct (replies from: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2)
+setting          n    acc   prec recall     F1 yes-ratio unparsed
+random        3000   88.6   96.5   80.2   87.6     0.416        0
+popular       3000   85.7   90.1   80.3   84.9     0.446        0
+adversarial   3000   83.2   85.2   80.4   82.7     0.472        0
+
+### Two models on the same 1,500 items: mmstar_smolvlm-500m minus mmstar_smolvlm-256m
+difference +9.8 pt, paired bootstrap 95% CI [+6.7, +13.0], share of resamples with difference <= 0: 0.000

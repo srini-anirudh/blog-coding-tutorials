@@ -1,0 +1,21 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/measuring-what-a-vlm-can-do/scripts/03_noise_floor.py
+
+accuracy p = 0.6; 20000 simulated benchmarks per size; items independent and binary
+benchmark                        n  SE formula  SE simulated  95% half-width
+MathVista testmini            1000        1.5pt          1.6pt            3.0pt
+MM-Vet                         218        3.3pt          3.3pt            6.5pt
+LLaVA-Bench (In-the-Wild)       60        6.3pt          6.3pt           12.4pt
+MMStar                        1500        1.3pt          1.3pt            2.5pt
+POPE, one setting             3000        0.9pt          0.9pt            1.8pt
+
+Two models with true accuracy 0.60 and 0.62, scored on independent draws of n items:
+    n  P(worse model scores >= better)
+   60                            0.444
+  218                            0.346
+ 1000                            0.183
+ 1500                            0.137
+ 5000                            0.020
+
+Scores of two models on the same items are correlated, which narrows the interval for their
+difference. 11_analyse.py measures that with a paired bootstrap on real MMStar replies.
