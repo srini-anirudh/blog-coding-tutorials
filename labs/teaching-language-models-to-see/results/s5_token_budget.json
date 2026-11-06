@@ -1,0 +1,221 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/teaching-language-models-to-see/scripts/s5_token_budget.py",
+ "resolution": {
+  "336 px, P = 14, no merge (LLaVA-1.5)": {
+   "tokens": 576,
+   "post": 576
+  },
+  "448 px, P = 14, 2 x 2 merge": {
+   "tokens": 256,
+   "post": 256
+  },
+  "224 px, P = 14 (PaliGemma stage 1)": {
+   "tokens": 256,
+   "post": 256
+  },
+  "448 px, P = 14 (PaliGemma stage 2)": {
+   "tokens": 1024,
+   "post": 1024
+  },
+  "896 px, P = 14 (PaliGemma stage 2)": {
+   "tokens": 4096,
+   "post": 4096
+  },
+  "Figure 8: page squashed to 224 px": {
+   "tokens": 256,
+   "post": 256
+  },
+  "Figure 8: page squashed to 336 px": {
+   "tokens": 576,
+   "post": 576
+  },
+  "Figure 8: InternVL tiling, max 6 tiles -> 2 x 3 + thumbnail": {
+   "tokens": 1792,
+   "post": 1792
+  },
+  "same page, max 12 tiles -> 3 x 4 + thumbnail": {
+   "tokens": 3328,
+   "post": null
+  },
+  "Figure 8: native (Qwen2-VL rounding) 36 x 46": {
+   "tokens": 1656,
+   "post": 1656
+  },
+  "Figure 7 rule (round the grid up) 36 x 47": {
+   "tokens": 1692,
+   "post": null
+  }
+ },
+ "qwen2vl": {
+  "1000x1300": {
+   "processor": 1656,
+   "ours": 1656
+  },
+  "640x480": {
+   "processor": 391,
+   "ours": 391
+  },
+  "1920x1080": {
+   "processor": 2691,
+   "ours": 2691
+  },
+  "224x224": {
+   "processor": 64,
+   "ours": 64
+  },
+  "4032x3024": {
+   "processor": 15552,
+   "ours": 15552
+  }
+ },
+ "loss_share": {
+  "Caption pair": {
+   "segments": [
+    [
+     "image",
+     576,
+     false
+    ],
+    [
+     "text",
+     15,
+     true
+    ]
+   ],
+   "scored": 15,
+   "total": 591,
+   "share": 0.025380710659898477
+  },
+  "Interleaved page": {
+   "segments": [
+    [
+     "text",
+     43,
+     true
+    ],
+    [
+     "image",
+     256,
+     false
+    ],
+    [
+     "text",
+     70,
+     true
+    ],
+    [
+     "image",
+     256,
+     false
+    ],
+    [
+     "text",
+     25,
+     true
+    ]
+   ],
+   "scored": 138,
+   "total": 650,
+   "share": 0.2123076923076923
+  },
+  "OCR page": {
+   "segments": [
+    [
+     "image",
+     1656,
+     false
+    ],
+    [
+     "text",
+     545,
+     true
+    ]
+   ],
+   "scored": 545,
+   "total": 2201,
+   "share": 0.24761472058155384
+  },
+  "Grounded caption": {
+   "segments": [
+    [
+     "image",
+     576,
+     false
+    ],
+    [
+     "text",
+     5,
+     true
+    ],
+    [
+     "box",
+     24,
+     true
+    ]
+   ],
+   "scored": 29,
+   "total": 605,
+   "share": 0.047933884297520664
+  },
+  "Video clip, 4 frames": {
+   "segments": [
+    [
+     "image",
+     784,
+     false
+    ],
+    [
+     "text",
+     21,
+     true
+    ]
+   ],
+   "scored": 21,
+   "total": 805,
+   "share": 0.02608695652173913
+  },
+  "Instruction example": {
+   "segments": [
+    [
+     "image",
+     576,
+     false
+    ],
+    [
+     "prompt",
+     20,
+     false
+    ],
+    [
+     "text",
+     24,
+     true
+    ]
+   ],
+   "scored": 24,
+   "total": 620,
+   "share": 0.03870967741935484
+  },
+  "Text-only, packed": {
+   "segments": [
+    [
+     "text",
+     2048,
+     true
+    ]
+   ],
+   "scored": 2048,
+   "total": 2048,
+   "share": 1.0
+  }
+ },
+ "cost": {
+  "image_text_ratio": 28.8,
+  "image_flop_share": 0.9664429530201343,
+  "adam_bytes_7b": [
+   14000000000.0,
+   112000000000.0
+  ]
+ }
+}

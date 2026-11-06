@@ -1,0 +1,23 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/teaching-language-models-to-see/scripts/s7_alignment_stage.py
+joint stage: 60 steps x 8 pictures; connector lr 0.001, LM lr 0.0001, warmup 5, grad clip 1.0; perplexity on 64 WikiText-2 test passages (128 tokens)
+no alignment   step   0  WikiText-2 perplexity   38.37  captions all-correct 0.00
+no alignment   step   0  loss 5.043  language-model gradient norm 34.53
+no alignment   step   1  loss 3.619  language-model gradient norm 24.04
+no alignment   step   2  loss 2.814  language-model gradient norm 22.75
+no alignment   step   5  WikiText-2 perplexity   38.78  captions all-correct 0.00
+no alignment   step  15  WikiText-2 perplexity   40.31  captions all-correct 0.00
+no alignment   step  30  WikiText-2 perplexity   42.94  captions all-correct 0.06
+no alignment   step  60  WikiText-2 perplexity   44.20  captions all-correct 0.47
+aligned first  step   0  WikiText-2 perplexity   38.37  captions all-correct 1.00
+aligned first  step   0  loss 0.018  language-model gradient norm 1.43
+aligned first  step   1  loss 0.631  language-model gradient norm 17.03
+aligned first  step   2  loss 0.049  language-model gradient norm 21.69
+aligned first  step   5  WikiText-2 perplexity   38.43  captions all-correct 0.56
+aligned first  step  15  WikiText-2 perplexity   38.74  captions all-correct 0.84
+aligned first  step  30  WikiText-2 perplexity   39.14  captions all-correct 0.84
+aligned first  step  60  WikiText-2 perplexity   39.28  captions all-correct 1.00
+
+after 60 joint steps: perplexity 38.37 -> 44.20 (no alignment) and 39.28 (aligned first); captions 0.47 and 1.00
+The aligned run also had s2's 150 connector-only steps before this stage; the comparison is about
+what the language model goes through, not about equal compute.

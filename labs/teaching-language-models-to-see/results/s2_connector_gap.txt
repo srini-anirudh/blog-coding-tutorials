@@ -1,0 +1,13 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/teaching-language-models-to-see/scripts/s2_connector_gap.py
+connector: 2-layer MLP, 2,102,400 trainable parameters; vision and language model frozen. 150 steps x 8 pictures, lr 0.001
+text embeddings (reference): norm 3.202, nearest other row cos 0.780, cos to text centroid 0.667
+tracked token: picture 0 ('Two blue squares.'), token 10 of 49 (the cell with most shape pixels)
+step    0  norm  10.767 (   3.4x text)  nearest-row cos 0.147  cos to text centroid +0.021  captions all-correct 0.00  nearest words [' notice', ' Earth', ' ter', ' van', 'orne']  e.g. 'The image is a photograph of a woman wearing a white dress'
+step   10  norm  33.657 (  10.5x text)  nearest-row cos 0.160  cos to text centroid +0.041  captions all-correct 0.16  nearest words ['Visual', 'ectoral', 'Six', ' sight', ' Pict']  e.g. 'Two green squares, two green squares, two green squares,'
+step   25  norm  69.705 (  21.8x text)  nearest-row cos 0.165  cos to text centroid +0.063  captions all-correct 0.38  nearest words [' tru', ' Motor', 'Tri', ' Rama', ' bronze']  e.g. 'Two red squares.'
+step   50  norm  90.257 (  28.2x text)  nearest-row cos 0.156  cos to text centroid +0.049  captions all-correct 0.66  nearest words ['Tri', ' Flickr', ' tru', 'tri', ' Renewable']  e.g. 'Three orange squares.'
+step  100  norm  99.046 (  30.9x text)  nearest-row cos 0.160  cos to text centroid +0.050  captions all-correct 0.94  nearest words ['Tri', ' Flickr', 'riage', 'tri', ' bronze']  e.g. 'Three orange squares.'
+step  150  norm  98.119 (  30.6x text)  nearest-row cos 0.156  cos to text centroid +0.041  captions all-correct 1.00  nearest words ['Tri', ' Flickr', 'riage', 'tri', "('"]  e.g. 'Three orange squares.'
+training time 1018 s (connector forward and backward through the frozen language model)
+Reading: 'nearest-row cos' near the text reference means image tokens sit where words sit; a norm ratio far from 1 means the scale differs.

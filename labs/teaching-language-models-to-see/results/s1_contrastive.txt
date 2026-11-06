@@ -1,0 +1,24 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/teaching-language-models-to-see/scripts/s1_contrastive.py
+## 1. Does the loss split into blocks?  B = 96, d = 32, blocks of 32 (a 3 x 3 grid of blocks)
+sigmoid  full 1.3506460526   blockwise 1.3506460526   |diff| 6.7e-16
+softmax  full 0.0042294122   per-block softmax 0.0014078733   |diff| 2.8e-03
+The softmax needs every caption in a row to normalise; a block that sees 32 of 96 captions gets an easier task.
+
+## 2. The modality gap (cone effect).  Toy paired data, held-out 1,000 pairs, 4-layer ReLU towers
+model                                 gap  cone img  cone txt  cos pair  cos all  top-1
+random init, seed 0                 1.295     0.915     0.897     0.068    0.067  0.003
+random init, seed 1                 1.138     0.947     0.935     0.293    0.294  0.002
+random unit vectors (reference)     0.043     0.000    -0.000    -0.009   -0.000    nan
+clip trained, B=256, 3000 steps     0.332     0.045     0.056     0.811   -0.004  0.923
+siglip trained, B=256, 3000 steps   1.054     0.278     0.280     0.344   -0.276  0.953
+gap = distance between the two centroids on the unit sphere. cone = mean cosine between different vectors
+of one modality. cos pair = matched image-caption cosine; cos all = mean over every image-caption pair.
+
+## 3. Toy batch-size sweep at a fixed number of examples seen. Top-1 retrieval among 1,000 held-out pairs
+128,000 training examples per run, 3 seeds, AdamW lr 1e-3, mean (min-max)
+B = 8     softmax 0.587 (0.563-0.608)   sigmoid 0.438 (0.413-0.468)
+B = 32    softmax 0.770 (0.724-0.816)   sigmoid 0.810 (0.773-0.868)
+B = 128   softmax 0.886 (0.871-0.903)   sigmoid 0.916 (0.907-0.925)
+B = 512   softmax 0.929 (0.920-0.943)   sigmoid 0.870 (0.800-0.911)
+sweep time 1187 s. This is a 16-dimensional toy, not a test of the paper's claim at scale.

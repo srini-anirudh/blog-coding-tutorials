@@ -1,0 +1,122 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/teaching-language-models-to-see/scripts/s2_connector_gap.py",
+ "reference": {
+  "norm": 3.202099084854126,
+  "nearest_cos": 0.780108630657196,
+  "cos_to_text_centroid": 0.6665181517601013
+ },
+ "tracked_token": 10,
+ "rows": [
+  {
+   "step": 0,
+   "norm": 10.766681671142578,
+   "nearest_cos": 0.14692261815071106,
+   "cos_to_text_centroid": 0.02109220065176487,
+   "norm_ratio": 3.3623824203531987,
+   "nearest_words": [
+    " notice",
+    " Earth",
+    " ter",
+    " van",
+    "orne"
+   ],
+   "caption_all_correct": 0.0,
+   "sample": "The image is a photograph of a woman wearing a white dress",
+   "train_seconds": 0.0
+  },
+  {
+   "step": 10,
+   "norm": 33.65657043457031,
+   "nearest_cos": 0.1600545346736908,
+   "cos_to_text_centroid": 0.040644776076078415,
+   "norm_ratio": 10.51078356499501,
+   "nearest_words": [
+    "Visual",
+    "ectoral",
+    "Six",
+    " sight",
+    " Pict"
+   ],
+   "caption_all_correct": 0.15625,
+   "sample": "Two green squares, two green squares, two green squares,",
+   "train_seconds": 32.914130210876465
+  },
+  {
+   "step": 25,
+   "norm": 69.70491027832031,
+   "nearest_cos": 0.16532853245735168,
+   "cos_to_text_centroid": 0.0629698857665062,
+   "norm_ratio": 21.768505105923595,
+   "nearest_words": [
+    " tru",
+    " Motor",
+    "Tri",
+    " Rama",
+    " bronze"
+   ],
+   "caption_all_correct": 0.375,
+   "sample": "Two red squares.",
+   "train_seconds": 108.65594601631165
+  },
+  {
+   "step": 50,
+   "norm": 90.25736236572266,
+   "nearest_cos": 0.15578798949718475,
+   "cos_to_text_centroid": 0.04850778728723526,
+   "norm_ratio": 28.186936123444287,
+   "nearest_words": [
+    "Tri",
+    " Flickr",
+    " tru",
+    "tri",
+    " Renewable"
+   ],
+   "caption_all_correct": 0.65625,
+   "sample": "Three orange squares.",
+   "train_seconds": 294.8316261768341
+  },
+  {
+   "step": 100,
+   "norm": 99.04608154296875,
+   "nearest_cos": 0.160455122590065,
+   "cos_to_text_centroid": 0.05015721544623375,
+   "norm_ratio": 30.931610458731594,
+   "nearest_words": [
+    "Tri",
+    " Flickr",
+    "riage",
+    "tri",
+    " bronze"
+   ],
+   "caption_all_correct": 0.9375,
+   "sample": "Three orange squares.",
+   "train_seconds": 867.4183020591736
+  },
+  {
+   "step": 150,
+   "norm": 98.11868286132812,
+   "nearest_cos": 0.15628327429294586,
+   "cos_to_text_centroid": 0.04124283790588379,
+   "norm_ratio": 30.641988352399157,
+   "nearest_words": [
+    "Tri",
+    " Flickr",
+    "riage",
+    "tri",
+    "('"
+   ],
+   "caption_all_correct": 1.0,
+   "sample": "Three orange squares.",
+   "train_seconds": 1017.7686479091644
+  }
+ ],
+ "args": {
+  "steps": 150,
+  "batch_size": 8,
+  "lr": 0.001,
+  "checkpoints": "0,10,25,50,100,150",
+  "eval_n": 32,
+  "device": null
+ }
+}

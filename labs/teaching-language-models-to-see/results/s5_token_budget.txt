@@ -1,0 +1,41 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/teaching-language-models-to-see/scripts/s5_token_budget.py
+## 1. Visual tokens: the post's numbers, recomputed
+336 px, P = 14, no merge (LLaVA-1.5)                          576  matches the post
+448 px, P = 14, 2 x 2 merge                                   256  matches the post
+224 px, P = 14 (PaliGemma stage 1)                            256  matches the post
+448 px, P = 14 (PaliGemma stage 2)                          1,024  matches the post
+896 px, P = 14 (PaliGemma stage 2)                          4,096  matches the post
+Figure 8: page squashed to 224 px                             256  matches the post
+Figure 8: page squashed to 336 px                             576  matches the post
+Figure 8: InternVL tiling, max 6 tiles -> 2 x 3 + thumbnail  1,792  matches the post
+same page, max 12 tiles -> 3 x 4 + thumbnail                3,328
+Figure 8: native (Qwen2-VL rounding) 36 x 46                1,656  matches the post
+Figure 7 rule (round the grid up) 36 x 47                   1,692
+PaliGemma 896 px tokens / 224 px tokens: 16x (post: sixteen times)
+
+## 1b. Native resolution against Qwen2-VL's real image processor
+ 1000 x 1300  processor grid 92 x 72 patches -> 1,656 tokens; ours 1,656  same
+  640 x 480   processor grid 34 x 46 patches ->   391 tokens; ours   391  same
+ 1920 x 1080  processor grid 78 x 138 patches -> 2,691 tokens; ours 2,691  same
+  224 x 224   processor grid 16 x 16 patches ->    64 tokens; ours    64  same
+ 4032 x 3024  processor grid 216 x 288 patches -> 15,552 tokens; ours 15,552  same
+
+## 2. Figure 5 with real tokens: what share of each sequence carries the loss
+Caption pair              15 of   591 tokens =   2.5%   (post 2%)   image 576 + text 15
+Interleaved page         138 of   650 tokens =  21.2%   (post 26%)   text 43 + image 256 + text 70 + image 256 + text 25
+OCR page                 545 of 2,201 tokens =  24.8%   (post 19%)   image 1656 + text 545
+Grounded caption          29 of   605 tokens =   4.8%   (post 3%)   image 576 + text 5 + box 24
+Video clip, 4 frames      21 of   805 tokens =   2.6%   (post 2%)   image 784 + text 21
+Instruction example       24 of   620 tokens =   3.9%   (post 5%)   image 576 + prompt 20 + text 24
+Text-only, packed      2,048 of 2,048 tokens = 100.0%   (post 100%)   text 2048
+largest / smallest share among the multimodal rows: 9.8x
+The instruction row includes the chat template's role markers in the masked prompt.
+
+## 3. Cost arithmetic
+576 image tokens next to a 20-token caption: 28.8 to 1 (post: near 29 to 1)
+7B language model, 576 + 20 tokens: 2.50e+13 training FLOPs per sample, 96.6% on image tokens
+2,000-token samples in an 8,192 context: 4 fit, 2% left empty
+5,000-token samples in an 8,192 context: 1 fit, 39% left empty
+7B language model: frozen 14 GB, trained 112 GB before activations (post: 14 and 112)
+PaliGemma image tokens: 1B examples at 224 px = 2.56e+11; 10M at 896 px = 4.10e+10 (16% of stage 1)

@@ -1,0 +1,14 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/teaching-language-models-to-see/scripts/s4_freeze_cost.py --device cuda --batch-size 8 --repeats 10
+parameters: vision 86,088,960, connector 775,296, LM 134,515,008; 576 image + 100 text tokens; batch 8; float32; median of 10
+
+pattern                                   trained params  held MB  rule MB  step s step / full rule / full
+align: connector only (LLaVA stage 1)            775,296      853      853   0.148        0.61        0.62
+adapt language side (LLaVA stage 2)          135,290,304     2393     2393   0.192        0.79        0.87
+adapt vision side (Qwen-VL stage 1)           86,864,256     1839     1839   0.199        0.82        0.76
+joint: train everything                      221,379,264     3378     3378   0.242        1.00        1.00
+
+forward only (no gradients at all): 0.078 s = 0.32 of a full training step (rule: 0.33)
+connector only: 0.35% of the parameters are trained, but the step costs 61% of full training (rule 62%)
+held MB counts float32 weights + gradients + AdamW moments after one step; the rule here is 16 bytes per trained
+parameter and 4 per frozen one (float32). Activations are not counted in either column.

@@ -1,0 +1,22 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/teaching-language-models-to-see/scripts/s6_learning_signal.py
+VLM's encoder weights equal SigLIP's: True
+SigLIP check: the best of 18 colour-shape names is one of the scene's two objects in 75% of scenes (chance 11%)
+
+Share of the per-patch gradient norm, mean over 32 scenes x 2 (mention left, mention right)
+objective                     mentioned  unmentioned  background  max/mean
+contrastive (SigLIP)              0.099        0.100       0.800      18.6
+next-token (VLM caption)          0.025        0.025       0.950      17.8
+patch loss (own pixels)           0.067        0.067       0.865       1.2
+area share (reference)            0.070        0.070       0.860       nan
+mentioned / unmentioned: the patches covered by the shape the caption names, and by the other shape.
+max/mean: the strongest patch's gradient over the average patch's; 1 would be perfectly even.
+
+Swap which shape the caption names, and compare the two gradient maps of each scene
+objective                    map cosine  mentioned > unmentioned  change on the shapes  shapes area
+contrastive (SigLIP)              0.985                     0.50                 0.243        0.140
+next-token (VLM caption)          0.694                     0.55                 0.062        0.140
+patch loss (own pixels)           1.000                     0.50             no change        0.140
+map cosine: 1 means the gradient map does not depend on which shape the caption names.
+mentioned > unmentioned: fraction of scene-captions where the named shape's patches get more gradient per patch.
+change on the shapes: share of |map(name left) - map(name right)| that falls on the two shapes' patches.

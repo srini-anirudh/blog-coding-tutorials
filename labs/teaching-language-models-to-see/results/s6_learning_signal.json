@@ -1,0 +1,50 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/teaching-language-models-to-see/scripts/s6_learning_signal.py",
+ "siglip_sanity_hit_rate": 0.75,
+ "summary": {
+  "contrastive (SigLIP)": {
+   "obj0": 0.09925071260659024,
+   "obj1": 0.10039466508897021,
+   "background": 0.8003546204417944,
+   "max_over_mean": 18.571729317307472
+  },
+  "next-token (VLM caption)": {
+   "obj0": 0.025347983559186105,
+   "obj1": 0.024890379987482447,
+   "background": 0.949761644937098,
+   "max_over_mean": 17.755937933921814
+  },
+  "patch loss (own pixels)": {
+   "obj0": 0.06746594331343658,
+   "obj1": 0.06746594331343658,
+   "background": 0.8650681283324957,
+   "max_over_mean": 1.2399331592023373
+  },
+  "area share (reference)": {
+   "obj0": 0.06983418401796371,
+   "obj1": 0.06983418401796371,
+   "background": 0.8603316319640726,
+   "max_over_mean": NaN
+  }
+ },
+ "swap": {
+  "contrastive (SigLIP)": {
+   "map_cosine": 0.9853603839874268,
+   "mentioned_wins": 0.5,
+   "change_on_shapes": 0.24305287888273597
+  },
+  "next-token (VLM caption)": {
+   "map_cosine": 0.6941356658935547,
+   "mentioned_wins": 0.546875,
+   "change_on_shapes": 0.0620686599140754
+  },
+  "patch loss (own pixels)": {
+   "map_cosine": 1.0,
+   "mentioned_wins": 0.5,
+   "change_on_shapes": null
+  }
+ },
+ "area_both_shapes": 0.13966836803592741,
+ "n": 32
+}

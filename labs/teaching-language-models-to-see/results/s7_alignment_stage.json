@@ -1,0 +1,81 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/teaching-language-models-to-see/scripts/s7_alignment_stage.py",
+ "args": {
+  "steps": 60,
+  "batch_size": 8,
+  "lr": 0.001,
+  "lm_lr": 0.0001,
+  "warmup": 5,
+  "checkpoints": "5,15,30,60",
+  "eval_n": 32,
+  "passages": 64,
+  "device": null,
+  "connector": "runs/s2_connector/projector.safetensors",
+  "name": "s7_alignment_stage"
+ },
+ "no alignment": [
+  {
+   "step": 0,
+   "ppl": 38.36633088175263,
+   "all_correct": 0.0,
+   "train_seconds": 0.0
+  },
+  {
+   "step": 5,
+   "ppl": 38.780626637185044,
+   "all_correct": 0.0,
+   "train_seconds": 21.06678032875061
+  },
+  {
+   "step": 15,
+   "ppl": 40.30906337266451,
+   "all_correct": 0.0,
+   "train_seconds": 65.06987190246582
+  },
+  {
+   "step": 30,
+   "ppl": 42.94301480163451,
+   "all_correct": 0.0625,
+   "train_seconds": 129.34673643112183
+  },
+  {
+   "step": 60,
+   "ppl": 44.19557340152019,
+   "all_correct": 0.46875,
+   "train_seconds": 234.6133222579956
+  }
+ ],
+ "aligned first": [
+  {
+   "step": 0,
+   "ppl": 38.36633088175263,
+   "all_correct": 1.0,
+   "train_seconds": 0.0
+  },
+  {
+   "step": 5,
+   "ppl": 38.43034486428205,
+   "all_correct": 0.5625,
+   "train_seconds": 17.374942779541016
+  },
+  {
+   "step": 15,
+   "ppl": 38.73828528798348,
+   "all_correct": 0.84375,
+   "train_seconds": 57.94083333015442
+  },
+  {
+   "step": 30,
+   "ppl": 39.138596274881955,
+   "all_correct": 0.84375,
+   "train_seconds": 113.97073578834534
+  },
+  {
+   "step": 60,
+   "ppl": 39.280242244027065,
+   "all_correct": 1.0,
+   "train_seconds": 208.38097405433655
+  }
+ ]
+}

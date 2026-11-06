@@ -1,0 +1,14 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/teaching-language-models-to-see/scripts/s4_freeze_cost.py --batch-size 2 --repeats 5
+parameters: vision 86,088,960, connector 775,296, LM 134,515,008; 576 image + 100 text tokens; batch 2; float32; median of 5
+
+pattern                                   trained params  held MB  rule MB  step s step / full rule / full
+align: connector only (LLaVA stage 1)            775,296      853      853   2.921        0.57        0.62
+adapt language side (LLaVA stage 2)          135,290,304     2393     2393   4.031        0.78        0.87
+adapt vision side (Qwen-VL stage 1)           86,864,256     1839     1839   3.851        0.75        0.76
+joint: train everything                      221,379,264     3378     3378   5.150        1.00        1.00
+
+forward only (no gradients at all): 1.537 s = 0.30 of a full training step (rule: 0.33)
+connector only: 0.35% of the parameters are trained, but the step costs 57% of full training (rule 62%)
+held MB counts float32 weights + gradients + AdamW moments after one step; the rule here is 16 bytes per trained
+parameter and 4 per frozen one (float32). Activations are not counted in either column.

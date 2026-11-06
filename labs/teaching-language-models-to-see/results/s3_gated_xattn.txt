@@ -1,0 +1,19 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132
+# command: python labs/teaching-language-models-to-see/scripts/s3_gated_xattn.py
+## 1. Step 0: how much does adding the image change the caption predictions?  16 held-out pictures
+model                              reply NLL  KL to LM same top-1
+language model, no image               6.091    0.0000       1.00
+LLaVA-style, random MLP prefix         4.892    0.6352       0.52
+Flamingo-style, gates at 0             6.091    0.0000       1.00
+Flamingo-style at init: max |logit difference| to the plain language model = 0.0e+00
+5 gated blocks (before layers 0, 6, 12, 18, 24), 22,152,970 trainable parameters
+
+## 2. Train only the gated blocks: 150 steps x 8 pictures, AdamW lr 0.001
+step 0 gradients: |gates| 1.150e+00, |all other new weights| 0.000e+00
+step   10 loss 4.270  tanh(gate) attn [-0.004, -0.004, -0.005, 0.005, -0.005]  ffw [0.004, -0.003, -0.003, 0.003, 0.005]  |added|/|residual| [0.495, 0.013, 0.001, 0.001, 0.0]  captions all-correct 0.00  e.g. 'The image.\n\nThe Image.\n\nThe Image'
+step   25 loss 0.937  tanh(gate) attn [-0.001, -0.008, -0.006, 0.01, -0.012]  ffw [0.007, -0.007, -0.006, 0.007, 0.014]  |added|/|residual| [0.194, 0.106, 0.003, 0.008, 0.015]  captions all-correct 0.03  e.g. 'Two yellow circles.'
+step   50 loss 0.376  tanh(gate) attn [-0.002, -0.008, -0.007, 0.01, -0.011]  ffw [0.001, -0.008, -0.007, 0.008, 0.015]  |added|/|residual| [0.383, 0.124, 0.004, 0.01, 0.016]  captions all-correct 0.16  e.g. 'Three purple squares.'
+step  100 loss 0.304  tanh(gate) attn [-0.002, -0.008, -0.008, 0.01, -0.013]  ffw [0.002, -0.01, -0.008, 0.01, 0.02]  |added|/|residual| [0.286, 0.126, 0.004, 0.01, 0.015]  captions all-correct 0.62  e.g. 'Three red squares.'
+step  150 loss 0.049  tanh(gate) attn [-0.004, -0.009, -0.008, 0.01, -0.014]  ffw [0.002, -0.011, -0.009, 0.013, 0.026]  |added|/|residual| [0.42, 0.135, 0.005, 0.01, 0.017]  captions all-correct 1.00  e.g. 'Three orange squares.'
+training time 412 s
+Compare: s2 trains a 2.1M-parameter MLP prefix connector with the same data, steps and batch size.

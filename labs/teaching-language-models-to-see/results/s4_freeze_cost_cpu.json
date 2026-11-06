@@ -1,0 +1,98 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/teaching-language-models-to-see/scripts/s4_freeze_cost.py --batch-size 2 --repeats 5",
+ "params": {
+  "vision": 86088960,
+  "projector": 775296,
+  "lm": 134515008
+ },
+ "tokens": {
+  "vision": 576,
+  "projector": 576,
+  "lm": 676
+ },
+ "batch_size": 2,
+ "forward_seconds": 1.5365658970549703,
+ "patterns": {
+  "align: connector only (LLaVA stage 1)": {
+   "seconds": 2.921398095902987,
+   "all_seconds": [
+    2.921398095902987,
+    3.0107395079685375,
+    2.977086986065842,
+    2.8171704208943993,
+    2.816266482928768
+   ],
+   "bytes": 894820608,
+   "trained": [
+    false,
+    true,
+    false
+   ],
+   "trained_params": 775296,
+   "pred_flops": 929378691072.0,
+   "pred_bytes_fp32": 894820608,
+   "pred_bytes_mixed": 453612672
+  },
+  "adapt language side (LLaVA stage 2)": {
+   "seconds": 4.030518008978106,
+   "all_seconds": [
+    4.313910578028299,
+    3.892897874931805,
+    4.030518008978106,
+    4.078060553059913,
+    3.8616922199726105
+   ],
+   "bytes": 2509000704,
+   "trained": [
+    false,
+    true,
+    true
+   ],
+   "trained_params": 135290304,
+   "pred_flops": 1293107272704.0,
+   "pred_bytes_fp32": 2509000704,
+   "pred_bytes_mixed": 2336822784
+  },
+  "adapt vision side (Qwen-VL stage 1)": {
+   "seconds": 3.8505430090008304,
+   "all_seconds": [
+    3.8550753840245306,
+    3.8505430090008304,
+    3.757933669956401,
+    3.814829425071366,
+    3.8688103060703725
+   ],
+   "bytes": 1927888128,
+   "trained": [
+    true,
+    true,
+    false
+   ],
+   "trained_params": 86864256,
+   "pred_flops": 1129513936896.0,
+   "pred_bytes_fp32": 1927888128,
+   "pred_bytes_mixed": 1658858112
+  },
+  "joint: train everything": {
+   "seconds": 5.149794758064672,
+   "all_seconds": [
+    4.965167384012602,
+    4.9176432229578495,
+    5.149794758064672,
+    5.241709589026868,
+    5.245187859982252
+   ],
+   "bytes": 3542068224,
+   "trained": [
+    true,
+    true,
+    true
+   ],
+   "trained_params": 221379264,
+   "pred_flops": 1493242518528.0,
+   "pred_bytes_fp32": 3542068224,
+   "pred_bytes_mixed": 3542068224
+  }
+ }
+}
