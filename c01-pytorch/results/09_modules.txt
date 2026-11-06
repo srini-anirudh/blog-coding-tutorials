@@ -1,0 +1,45 @@
+MLP(
+  (norm): Standardize()
+  (blocks): ModuleList(
+    (0): Sequential(
+      (0): Linear(in_features=2, out_features=16, bias=True)
+      (1): ReLU()
+      (2): Dropout()
+    )
+    (1): Sequential(
+      (0): Linear(in_features=16, out_features=16, bias=True)
+      (1): ReLU()
+      (2): Dropout()
+    )
+  )
+  (head): Linear(in_features=16, out_features=3, bias=True)
+)
+
+== submodules ==
+['norm', 'blocks', 'head']
+
+== parameters ==
+blocks.0.0.weight  [2, 16]    32
+blocks.0.0.bias    [16]       16
+blocks.1.0.weight  [16, 16]  256
+blocks.1.0.bias    [16]       16
+head.weight        [16, 3]    48
+head.bias          [3]         3
+count_parameters: 371
+
+== buffers: saved and moved, but never optimized ==
+norm.mean          [0.0, 0.0]
+norm.std           [1.0, 1.0]
+norm.mean returned by .parameters(): False
+
+== state_dict: parameters and buffers together ==
+['norm.mean', 'norm.std', 'blocks.0.0.weight', 'blocks.0.0.bias', 'blocks.1.0.weight', 'blocks.1.0.bias', 'head.weight', 'head.bias']
+
+== train() and eval() set one flag on every submodule ==
+new model: model.training = True  head.training = True
+after eval(): model.training = False  head.training = False
+after train(): model.training = True  head.training = True
+
+== the flag only matters to layers that read it: Dropout(0.5) ==
+train mode: [2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0, 2.0]
+eval mode:  [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]

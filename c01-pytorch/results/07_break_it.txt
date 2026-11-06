@@ -9,12 +9,12 @@ step 18: loss      2.964  largest grad norm     0.766 (head.bias)
 step 21: loss      4.922  largest grad norm     0.785 (head.bias)
 step 24: NaNDetector: non-finite output first appears in blocks.1.0 (Linear)
 weight norm of blocks.0.0: 2.97e+17
-fix: lr 10, clip 1.0  -> final train_loss 9.1133  val_acc 0.333
-fix: lr 0.1           -> final train_loss 0.0116  val_acc 0.998
+try: lr 10, clip 1.0  -> final train_loss 9.7995  val_acc 0.333
+try: lr 0.1           -> final train_loss 0.0113  val_acc 0.998
 
 == forgetting optimizer.zero_grad() ==
 zero_grad called : loss 0.0136  head.weight.grad norm after 30 epochs 0.0106
-zero_grad skipped: loss 348.9784  head.weight.grad norm after 30 epochs 8.43
+zero_grad skipped: loss 351.6787  head.weight.grad norm after 30 epochs 8.43
 
 == evaluating without model.eval() (dropout 0.3) ==
 train mode: two forward passes disagree on 14.1% of points
@@ -25,6 +25,6 @@ accuracy in eval mode  0.969
 RuntimeError: mm: mat1 and mat2 shapes cannot be multiplied (8x3 and 2x16)
 
 == model and batch on different devices ==
-RuntimeError: Expected all tensors to be on the same device, but found at least two devices, mps:0 and cpu!
-check_same_device: x is on cpu but the model is on mps:0; call .to(device)
+RuntimeError: Tensor on device meta is not on the expected device cpu!
+check_same_device: x is on cpu but the model is on meta; call .to(device)
 

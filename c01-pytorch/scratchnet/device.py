@@ -1,5 +1,8 @@
 """Device selection and synchronisation.
 
+`x.cuda()` is shorthand for `x.to("cuda")`. Both return a copy on the GPU and
+leave `x` where it was. We use `.to(device)` so the same code runs on any device.
+
 GPU work is queued, not executed, when Python returns. Any timing code must
 call `synchronize(device)` before reading the clock.
 """

@@ -1,7 +1,7 @@
 optimizer         lr train_loss  val_loss  val_acc  time_s
-manual-sgd       0.1     0.0018    0.0403    0.997    1.47
-sgd              0.1     0.0018    0.0403    0.997    3.64
-manual-adamw    0.01     0.0015    0.0286    0.998    2.65
-adamw           0.01     0.0015    0.0286    0.998    2.53
+manual-sgd       0.1     0.0018    0.0420    0.997    1.85
+sgd              0.1     0.0018    0.0420    0.997    5.03
+manual-adamw    0.01     0.0015    0.0286    0.998    1.51
+adamw           0.01     0.0015    0.0286    0.998    1.58
 max |train_loss(manual-sgd) - train_loss(sgd)| over 60 epochs: 0.00e+00
 max |train_loss(manual-adamw) - train_loss(adamw)| over 60 epochs: 0.00e+00

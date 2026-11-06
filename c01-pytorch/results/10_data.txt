@@ -1,0 +1,30 @@
+== a Dataset answers two questions ==
+len(ds): 30
+ds[0]: {'x': ([2], torch.float32), 'y': ([], torch.int64)}
+
+== batching: a list of examples -> one dict of stacked tensors ==
+collate_dicts of 3: {'x': [3, 2], 'y': [3]}
+
+== shuffle: only the index order changes ==
+indices, no shuffle: [0, 1, 2, 3]
+indices, epoch 1   : [14, 13, 23, 27]
+indices, epoch 2   : [0, 3, 2, 20]
+
+== ours against torch.utils.data.DataLoader ==
+num_workers=0: 8 batches, same batches as torch: True
+num_workers=2: 8 batches, same batches as torch: True
+
+== ragged sequences need their own collate ==
+lengths: [6, 9, 7, 2]
+default collate -> stack expects each tensor to be equal size, but got [6] at entry 0 and [9] at entry 1
+pad_collate: {'input_ids': [4, 9], 'attention_mask': [4, 9], 'lengths': [4], 'label': [4]}
+input_ids:
+ tensor([[10,  5, 14,  2,  4,  8,  0,  0,  0],
+        [17, 16,  2, 12, 19,  7, 11, 19, 10],
+        [11, 15,  2, 11, 16, 15, 10,  0,  0],
+        [18, 15,  0,  0,  0,  0,  0,  0,  0]])
+attention_mask:
+ tensor([[1, 1, 1, 1, 1, 1, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 0, 0],
+        [1, 1, 0, 0, 0, 0, 0, 0, 0]])

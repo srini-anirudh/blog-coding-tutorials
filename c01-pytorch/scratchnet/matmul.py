@@ -1,12 +1,14 @@
 """Matrix multiplication, from three loops to one kernel call.
 
-The loop versions are the definition. They are hundreds of thousands of times slower
-than `torch.mm`, which is why nobody ships them.
+The loop versions are the definition. Per flop they are about a million times
+slower than `torch.mm` (results/matmul.txt), which is why nobody ships them.
 """
 
 from __future__ import annotations
 
 import torch
+
+from .broadcasting import broadcast_shape
 
 
 def mm_loops(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
@@ -33,6 +35,20 @@ def mm_rows(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
 def bmm_loop(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     """[B, M, K] @ [B, K, N] -> [B, M, N]: an independent matmul per batch element."""
     return torch.stack([a[i] @ b[i] for i in range(a.shape[0])])
+
+
+def matmul_manual(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
+    """[..., M, K] @ [..., K, N] -> [..., M, N], for inputs of rank 2 or more.
+
+    This is what torch.matmul adds on top of torch.bmm: the leading dims broadcast.
+    The last two dims never do. They follow the matmul rule instead.
+    """
+    batch = broadcast_shape(tuple(a.shape[:-2]), tuple(b.shape[:-2]))
+    m, k = a.shape[-2:]
+    k2, n = b.shape[-2:]
+    a_flat = a.expand(*batch, m, k).reshape(-1, m, k)  # [prod(batch), M, K]
+    b_flat = b.expand(*batch, k2, n).reshape(-1, k2, n)  # [prod(batch), K, N]
+    return bmm_loop(a_flat, b_flat).reshape(*batch, m, n)
 
 
 def mm_flops(m: int, k: int, n: int) -> int:

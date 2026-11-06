@@ -13,7 +13,6 @@ import torch
 from scratchnet.tensors import describe, shares_storage, storage_indices
 
 torch.manual_seed(0)
-torch.set_num_threads(2)
 
 
 def show(name: str, t: torch.Tensor, base: torch.Tensor) -> None:

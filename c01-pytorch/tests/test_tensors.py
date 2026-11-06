@@ -2,7 +2,7 @@ import pytest
 import torch
 
 from scratchnet.broadcasting import broadcast_shape, expand_to
-from scratchnet.matmul import bmm_loop, mm_loops, mm_rows
+from scratchnet.matmul import bmm_loop, matmul_manual, mm_loops, mm_rows
 from scratchnet.tensors import (
     contiguous_strides,
     describe,
@@ -88,3 +88,9 @@ def test_matmul_variants_agree():
     ba, bb = torch.randn(4, 5, 7), torch.randn(4, 7, 3)
     torch.testing.assert_close(bmm_loop(ba, bb), torch.bmm(ba, bb))
     torch.testing.assert_close(torch.matmul(ba, bb), torch.bmm(ba, bb))
+
+
+@pytest.mark.parametrize("a,b", [((5, 7), (7, 3)), ((4, 5, 7), (4, 7, 3)), ((4, 5, 7), (7, 3)), ((2, 1, 5, 7), (3, 7, 3))])
+def test_matmul_manual_matches_torch(a, b):
+    x, y = torch.randn(a), torch.randn(b)
+    torch.testing.assert_close(matmul_manual(x, y), torch.matmul(x, y))

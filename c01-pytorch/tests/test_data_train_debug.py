@@ -2,7 +2,7 @@ import pytest
 import torch
 from torch.utils.data import DataLoader
 
-from scratchnet.data import SpiralDataset, VarLenDataset, collate_dicts, pad_collate
+from scratchnet.data import SimpleDataLoader, SpiralDataset, VarLenDataset, collate_dicts, pad_collate
 from scratchnet.debug import ActivationStats, GradNormMonitor, NaNDetector, check_same_device
 from scratchnet.layers import MLP, Linear, ReLU
 from scratchnet.losses import cross_entropy
@@ -25,6 +25,43 @@ def test_pad_collate_shapes_and_mask():
     assert (batch["input_ids"][batch["attention_mask"] == 0] == 0).all()
     with pytest.raises(RuntimeError):
         next(iter(DataLoader(ds, batch_size=4)))  # default collate cannot stack ragged tensors
+
+
+def test_simple_loader_matches_torch_without_shuffle():
+    ds = SpiralDataset(11)  # 33 examples: the last batch is short
+    ref = list(DataLoader(ds, batch_size=8, collate_fn=collate_dicts))
+    ours = list(SimpleDataLoader(ds, batch_size=8))
+    assert len(ours) == len(ref) == len(SimpleDataLoader(ds, batch_size=8)) == 5
+    for a, b in zip(ours, ref):
+        torch.testing.assert_close(a["x"], b["x"])
+        assert torch.equal(a["y"], b["y"])
+    assert len(list(SimpleDataLoader(ds, batch_size=8, drop_last=True))) == 4
+
+
+def test_simple_loader_shuffle_visits_each_example_once():
+    gen = torch.Generator().manual_seed(0)
+    loader = SimpleDataLoader(list(range(20)), batch_size=6, shuffle=True, generator=gen,
+                              collate_fn=lambda b: {"i": torch.tensor(b)})
+    first = torch.cat([b["i"] for b in loader])
+    second = torch.cat([b["i"] for b in loader])
+    assert sorted(first.tolist()) == list(range(20)) == sorted(second.tolist())
+    assert first.tolist() != second.tolist()  # the generator moves on, so each epoch differs
+
+
+def test_simple_loader_workers_keep_order():
+    ds = SpiralDataset(20)
+    serial = list(SimpleDataLoader(ds, batch_size=7))
+    parallel = list(SimpleDataLoader(ds, batch_size=7, num_workers=2, prefetch_factor=2))
+    assert len(parallel) == len(serial)
+    for a, b in zip(parallel, serial):  # workers finish in any order; batches must not come out that way
+        assert torch.equal(a["x"], b["x"]) and torch.equal(a["y"], b["y"])
+
+
+def test_simple_loader_reports_worker_errors_and_survives_break():
+    with pytest.raises(RuntimeError, match="worker failed on batch"):
+        list(SimpleDataLoader(VarLenDataset(n=16), batch_size=4, num_workers=1))  # collate_dicts cannot stack these
+    for _batch in SimpleDataLoader(SpiralDataset(20), batch_size=4, num_workers=2):
+        break  # the finally block must stop the workers
 
 
 def test_training_learns_spirals():
@@ -66,6 +103,5 @@ def test_activation_stats_and_nan_detector():
 def test_device_check_names_the_tensor():
     model = MLP(2, 4, 3)
     check_same_device(model, x=torch.randn(2, 2))
-    if torch.backends.mps.is_available():
-        with pytest.raises(RuntimeError, match="x is on mps"):
-            check_same_device(model, x=torch.randn(2, 2, device="mps"))
+    with pytest.raises(RuntimeError, match="x is on meta"):  # meta needs no accelerator
+        check_same_device(model, x=torch.empty(2, 2, device="meta"))

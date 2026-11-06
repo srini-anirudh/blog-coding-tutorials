@@ -1,0 +1,26 @@
+== y = x W + b with bare parameters ==
+x [256, 3] @ W [3, 2] + b [2] -> y [256, 2]
+
+== vanilla SGD on a known target ==
+without no_grad -> a leaf Variable that requires grad is being used in an in-place operation.
+step   0: loss 15.499691
+step  50: loss 0.000610
+step 100: loss 0.000000
+step 150: loss 0.000000
+step 200: loss 0.000000
+recovered W:
+ tensor([[ 1.0000, -2.0000],
+        [ 0.5000,  0.0000],
+        [-1.0000,  3.0000]])
+true W:
+ tensor([[ 1.0000, -2.0000],
+        [ 0.5000,  0.0000],
+        [-1.0000,  3.0000]])
+recovered b: tensor([ 0.5000, -0.5000])  true b: tensor([ 0.5000, -0.5000])
+largest error: W 1.19e-06  b 3.58e-07
+
+== the same layer as a Module, checked against nn.Linear ==
+Linear(in_features=3, out_features=2, bias=True)
+ours weight [3, 2]  nn.Linear weight [2, 3] (transposed)
+outputs equal before copying the weights: False
+outputs equal after copying the transposed weight: True

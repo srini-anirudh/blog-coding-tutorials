@@ -12,9 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import torch
 from torch.utils.data import DataLoader
 
-from scratchnet.data import SlowDataset, SpiralDataset, collate_dicts
-
-torch.set_num_threads(2)
+from scratchnet.data import SimpleDataLoader, SlowDataset, SpiralDataset, collate_dicts
 
 
 def epoch_times(loader: DataLoader, epochs: int = 2) -> list[float]:
@@ -35,15 +33,22 @@ def main() -> None:
         ("num_workers=0", dict(num_workers=0)),
         ("num_workers=2", dict(num_workers=2)),
         ("num_workers=2 persistent", dict(num_workers=2, persistent_workers=True)),
+        ("num_workers=4", dict(num_workers=4)),
         ("num_workers=4 persistent", dict(num_workers=4, persistent_workers=True)),
         ("num_workers=4 persistent prefetch=4", dict(num_workers=4, persistent_workers=True, prefetch_factor=4)),
     ]
+    if torch.cuda.is_available():  # pinning needs an accelerator's allocator
+        configs.append(("num_workers=4 persistent pin_memory", dict(num_workers=4, persistent_workers=True, pin_memory=True)))
     for name, kwargs in configs:
         loader = DataLoader(ds, batch_size=32, shuffle=True, collate_fn=collate_dicts, **kwargs)
         t1, t2 = epoch_times(loader)
         print(f"{name:<34} {t1:>10.2f} {t2:>10.2f} {len(ds) / t2:>12.0f}")
         del loader
+    for workers in (0, 4):
+        loader = SimpleDataLoader(ds, batch_size=32, shuffle=True, collate_fn=collate_dicts, num_workers=workers)
+        t1, t2 = epoch_times(loader)
+        print(f"{f'SimpleDataLoader num_workers={workers}':<34} {t1:>10.2f} {t2:>10.2f} {len(ds) / t2:>12.0f}")
 
 
-if __name__ == "__main__":  # required: workers on macOS start by re-importing this file
+if __name__ == "__main__":  # required: spawned workers (macOS, Windows) start by re-importing this file
     main()

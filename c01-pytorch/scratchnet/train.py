@@ -123,7 +123,7 @@ def fit(
         ckpt = torch.load(resume_from, map_location=device, weights_only=False)
         model.load_state_dict(ckpt["model"])
         optimizer.load_state_dict(ckpt["optimizer"])
-        torch.set_rng_state(ckpt["rng"])
+        torch.set_rng_state(ckpt["rng"].cpu())  # map_location moved it, but this state must live on the CPU
         start = ckpt["epoch"] + 1
 
     history = []

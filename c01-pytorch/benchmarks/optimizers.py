@@ -16,8 +16,6 @@ from torch import nn
 from scratchnet.device import pick_device, synchronize
 from scratchnet.optim import AdamW
 
-torch.set_num_threads(2)
-
 
 def make_params(device: torch.device, layers: int = 24, width: int = 512) -> list[nn.Parameter]:
     """layers x (W [width, width] + b [width]): many mid-sized tensors, like a real model."""
@@ -50,6 +48,7 @@ def main() -> None:
     if pick_device().type != "cpu":
         devices.append(pick_device())
     n_params = sum(p.numel() for p in make_params(torch.device("cpu")))
+    print(f"torch {torch.__version__}, {torch.get_num_threads()} CPU threads")
     print(f"{n_params / 1e6:.2f} M parameters in {len(make_params(torch.device('cpu')))} tensors")
     impls = {
         "scratchnet.AdamW": lambda ps: AdamW(ps, lr=1e-3),

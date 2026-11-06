@@ -13,9 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import torch
 
 from scratchnet.device import pick_device, synchronize
-from scratchnet.matmul import mm_flops, mm_loops, mm_rows
-
-torch.set_num_threads(2)
+from scratchnet.matmul import matmul_manual, mm_flops, mm_loops, mm_rows
 
 
 def bench(fn, device, reps: int = 5) -> float:
@@ -32,10 +30,11 @@ def bench(fn, device, reps: int = 5) -> float:
 
 def main() -> None:
     accel = pick_device()
+    print(f"torch {torch.__version__}, {torch.get_num_threads()} CPU threads")
     print(f"{'impl':<22} {'n':>5} {'ms':>10} {'GFLOP/s':>9}")
     cases = [("mm_loops (python)", 32, "cpu", mm_loops), ("mm_rows (broadcast)", 256, "cpu", mm_rows)]
     for n in (256, 1024, 2048):
-        cases.append(("torch.mm cpu x2 thr", n, "cpu", torch.mm))
+        cases.append((f"torch.mm cpu x{torch.get_num_threads()} thr", n, "cpu", torch.mm))
     if accel.type != "cpu":
         for n in (256, 1024, 2048, 4096):
             cases.append((f"torch.mm {accel.type}", n, accel.type, torch.mm))
@@ -62,6 +61,7 @@ def main() -> None:
     a, b = torch.randn(8, 128, 64), torch.randn(8, 64, 32)
     print("  torch.bmm   ", tuple(torch.bmm(a, b).shape))
     print("  torch.matmul", tuple(torch.matmul(a, b[0]).shape), "<- [K, N] broadcast over the batch")
+    print("  matmul_manual", tuple(matmul_manual(a, b[0]).shape), "<- the same broadcast, written out")
 
 
 if __name__ == "__main__":

@@ -16,7 +16,6 @@ import torch
 
 from scratchnet.device import pick_device, synchronize
 
-torch.set_num_threads(2)
 SIZES_MB = [0.0625, 1, 4, 16, 64, 256]
 
 

@@ -22,8 +22,6 @@ import yaml
 from scratchnet.data import SpiralDataset
 from scratchnet.train import TrainConfig, fit
 
-torch.set_num_threads(2)
-
 LRS = {"manual-sgd": 0.1, "sgd": 0.1, "manual-adamw": 1e-2, "adamw": 1e-2}
 
 

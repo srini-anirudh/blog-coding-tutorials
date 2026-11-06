@@ -7,10 +7,14 @@ possibly in worker processes, and calls `collate_fn` to stack them into a batch.
 
 from __future__ import annotations
 
+import itertools
 import math
 import time
+import traceback
+from collections.abc import Callable, Iterator
 
 import torch
+import torch.multiprocessing as mp
 from torch.utils.data import Dataset
 
 
@@ -48,6 +52,110 @@ def collate_dicts(batch: list[dict[str, torch.Tensor]]) -> dict[str, torch.Tenso
     written out so the step is visible.
     """
     return {key: torch.stack([example[key] for example in batch]) for key in batch[0]}
+
+
+def _worker_loop(dataset: Dataset, collate_fn: Callable, tasks: mp.Queue, results: mp.Queue) -> None:
+    """One worker process: take (batch_id, indices), build that batch, send it back."""
+    torch.set_num_threads(1)  # N workers with M threads each would oversubscribe the cores
+    while (task := tasks.get()) is not None:
+        batch_id, indices = task
+        try:
+            results.put((batch_id, collate_fn([dataset[i] for i in indices]), None))
+        except Exception:
+            results.put((batch_id, None, traceback.format_exc()))
+
+
+class SimpleDataLoader:
+    """The core of torch.utils.data.DataLoader in one class.
+
+    shuffle picks the index order once per epoch. batch_size cuts that order
+    into lists of indices. collate_fn turns each list of examples into one batch.
+
+    With num_workers > 0, separate processes build the batches. Workers finish
+    in any order, so finished batches wait in `ready` until their turn comes.
+    At most num_workers * prefetch_factor batches are in flight: that bound is
+    the prefetch, and it is also what stops workers from filling all of memory.
+
+    Workers start fresh every epoch. torch's version also watches for workers
+    that die and seeds each one, so random augmentation differs between workers.
+    """
+
+    def __init__(
+        self,
+        dataset: Dataset,
+        batch_size: int = 1,
+        shuffle: bool = False,
+        collate_fn: Callable = collate_dicts,
+        num_workers: int = 0,
+        prefetch_factor: int = 2,
+        pin_memory: bool = False,
+        drop_last: bool = False,
+        generator: torch.Generator | None = None,
+    ) -> None:
+        self.dataset, self.batch_size, self.shuffle = dataset, batch_size, shuffle
+        self.collate_fn, self.num_workers, self.prefetch_factor = collate_fn, num_workers, prefetch_factor
+        self.pin_memory, self.drop_last, self.generator = pin_memory, drop_last, generator
+
+    def __len__(self) -> int:
+        n = len(self.dataset)
+        return n // self.batch_size if self.drop_last else math.ceil(n / self.batch_size)
+
+    def _index_batches(self) -> Iterator[list[int]]:
+        n = len(self.dataset)
+        order = torch.randperm(n, generator=self.generator) if self.shuffle else torch.arange(n)
+        for start in range(0, len(self) * self.batch_size, self.batch_size):
+            yield order[start : start + self.batch_size].tolist()
+
+    def _finish(self, batch: dict[str, torch.Tensor]) -> dict[str, torch.Tensor]:
+        # Pinned pages cannot be swapped out, so the GPU can copy from them without a staging buffer.
+        return {k: v.pin_memory() for k, v in batch.items()} if self.pin_memory else batch
+
+    def __iter__(self) -> Iterator[dict[str, torch.Tensor]]:
+        if self.num_workers == 0:
+            for indices in self._index_batches():
+                yield self._finish(self.collate_fn([self.dataset[i] for i in indices]))
+        else:
+            yield from self._iter_workers()
+
+    def _iter_workers(self) -> Iterator[dict[str, torch.Tensor]]:
+        results: mp.Queue = mp.Queue()
+        queues = [mp.Queue() for _ in range(self.num_workers)]
+        workers = [mp.Process(target=_worker_loop, args=(self.dataset, self.collate_fn, q, results), daemon=True)
+                   for q in queues]
+        for w in workers:
+            w.start()
+
+        todo = enumerate(self._index_batches())
+        turn = itertools.cycle(queues)  # hand out work round robin
+
+        def send_next() -> int:
+            task = next(todo, None)
+            if task is None:
+                return 0
+            next(turn).put(task)
+            return 1
+
+        in_flight = sum(send_next() for _ in range(self.num_workers * self.prefetch_factor))
+        ready: dict[int, dict[str, torch.Tensor]] = {}
+        next_id = 0
+        try:
+            while in_flight:
+                while next_id not in ready:
+                    batch_id, batch, error = results.get()
+                    if error is not None:
+                        raise RuntimeError(f"worker failed on batch {batch_id}:\n{error}")
+                    ready[batch_id] = batch
+                yield self._finish(ready.pop(next_id))
+                next_id += 1
+                in_flight += send_next() - 1
+        finally:
+            # Also runs when the caller breaks out of the loop early.
+            for q in queues:
+                q.put(None)
+            for w in workers:
+                w.join(timeout=5)
+                if w.is_alive():
+                    w.terminate()
 
 
 class VarLenDataset(Dataset):

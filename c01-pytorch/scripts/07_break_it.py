@@ -13,11 +13,10 @@ from torch.utils.data import DataLoader
 
 from scratchnet.data import SpiralDataset, collate_dicts
 from scratchnet.debug import GradNormMonitor, NaNDetector, check_same_device
+from scratchnet.device import pick_device
 from scratchnet.layers import MLP
 from scratchnet.losses import cross_entropy
 from scratchnet.train import TrainConfig, evaluate, fit
-
-torch.set_num_threads(2)
 
 
 def batches(ds: SpiralDataset, batch_size: int = 64, seed: int = 0):
@@ -53,7 +52,7 @@ def break_lr() -> None:
     print("weight norm of blocks.0.0:", f"{model.blocks[0][0].weight.norm().item():.3g}")
     for name, kwargs in [("lr 10, clip 1.0", dict(lr=10.0, max_grad_norm=1.0)), ("lr 0.1", dict(lr=0.1))]:
         _, hist = fit(TrainConfig(optimizer="sgd", epochs=30, **kwargs))
-        print(f"fix: {name:<16} -> final train_loss {hist[-1]['train_loss']:.4f}  val_acc {hist[-1]['val_acc']:.3f}")
+        print(f"try: {name:<16} -> final train_loss {hist[-1]['train_loss']:.4f}  val_acc {hist[-1]['val_acc']:.3f}")
 
 
 def break_zero_grad() -> None:
@@ -98,10 +97,8 @@ def break_shape() -> None:
 
 def break_device() -> None:
     print("== model and batch on different devices ==")
-    if not torch.backends.mps.is_available() and not torch.cuda.is_available():
-        print("needs an accelerator; skipped")
-        return
-    device = "cuda" if torch.cuda.is_available() else "mps"
+    # The meta device holds shapes but no data, so a CPU-only machine still hits the real check.
+    device = pick_device().type if pick_device().type != "cpu" else "meta"
     model = MLP(2, 16, 3).to(device)
     x = torch.randn(8, 2)
     try:

@@ -1,9 +1,9 @@
 epoch   0  train_loss 1.0761  val_loss 1.0259  val_acc 0.358  max_grad_norm 0.662
 epoch  10  train_loss 0.3613  val_loss 0.2465  val_acc 0.920  max_grad_norm 2.114
-epoch  20  train_loss 0.1823  val_loss 0.1795  val_acc 0.943  max_grad_norm 1.402
-epoch  30  train_loss 0.0082  val_loss 0.0344  val_acc 0.999  max_grad_norm 0.231
-epoch  40  train_loss 0.0037  val_loss 0.0386  val_acc 0.998  max_grad_norm 0.105
-epoch  50  train_loss 0.0026  val_loss 0.0408  val_acc 0.997  max_grad_norm 0.164
-epoch  59  train_loss 0.0018  val_loss 0.0403  val_acc 0.997  max_grad_norm 0.076
-60 epochs in 3.15 s on cpu
+epoch  20  train_loss 0.1824  val_loss 0.1795  val_acc 0.943  max_grad_norm 1.407
+epoch  30  train_loss 0.0080  val_loss 0.0378  val_acc 0.998  max_grad_norm 0.207
+epoch  40  train_loss 0.0035  val_loss 0.0420  val_acc 0.998  max_grad_norm 0.099
+epoch  50  train_loss 0.0026  val_loss 0.0435  val_acc 0.996  max_grad_norm 0.159
+epoch  59  train_loss 0.0018  val_loss 0.0420  val_acc 0.997  max_grad_norm 0.069
+60 epochs in 4.70 s on cpu
 wrote c01-pytorch/results/run_sgd.json

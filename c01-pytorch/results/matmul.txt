@@ -1,17 +1,12 @@
+torch 2.15.0+cu132, 8 CPU threads
 impl                       n         ms   GFLOP/s
-mm_loops (python)         32     93.214    0.0007
-mm_rows (broadcast)      256     13.007       2.6
-torch.mm cpu x2 thr      256      0.192     175.0
-torch.mm cpu x2 thr     1024      3.152     681.3
-torch.mm cpu x2 thr     2048     34.960     491.4
-torch.mm mps             256      0.400      83.9
-torch.mm mps            1024      1.106    1942.1
-torch.mm mps            2048      6.047    2841.3
-torch.mm mps            4096    217.726     631.2
-
-timing a 4096 x 4096 matmul on mps with and without synchronize():
-  without sync: 0.285 ms   with sync: 53.572 ms
+mm_loops (python)         32    164.411    0.0004
+mm_rows (broadcast)      256     10.695       3.1
+torch.mm cpu x8 thr      256      0.180     186.2
+torch.mm cpu x8 thr     1024      7.963     269.7
+torch.mm cpu x8 thr     2048     27.051     635.1
 
 batched shapes: [B, M, K] @ [B, K, N] -> [B, M, N]
   torch.bmm    (8, 128, 32)
   torch.matmul (8, 128, 32) <- [K, N] broadcast over the batch
+  matmul_manual (8, 128, 32) <- the same broadcast, written out
