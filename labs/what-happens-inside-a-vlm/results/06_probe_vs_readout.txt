@@ -1,0 +1,28 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, transformers 5.22.2
+# command: python labs/what-happens-inside-a-vlm/scripts/06_probe_vs_readout.py
+
+Task: overlap. 'Do the two circles overlap?' Labels: ['yes', 'no']. 120 images, probe train/test 72/48.
+Chance 50%, majority class on the test split 56.2%. The VLM answer is scored on all images.
+readout                                test accuracy %  shuffled-label control %
+-------------------------------------  ---------------  ------------------------
+VLM answer (forced choice)                        47.5                          
+probe: encoder (mean of 1024 patches)            100.0                      41.7
+probe: connector (mean of 64 tokens)             100.0                      39.6
+probe: LM layer 0, last position                 100.0                      31.2
+probe: LM layer 7, last position                 100.0                      39.6
+probe: LM layer 15, last position                100.0                      39.6
+probe: LM layer 22, last position                100.0                      41.7
+probe: LM layer 29, last position                 97.9                      43.8
+
+Task: count. 'How many circles are in the image?' Labels: ['1', '2', '3', '4']. 120 images, probe train/test 72/48.
+Chance 25%, majority class on the test split 27.1%. The VLM answer is scored on all images.
+readout                                test accuracy %  shuffled-label control %
+-------------------------------------  ---------------  ------------------------
+VLM answer (forced choice)                        90.0                          
+probe: encoder (mean of 1024 patches)            100.0                      37.5
+probe: connector (mean of 64 tokens)             100.0                      37.5
+probe: LM layer 0, last position                  95.8                      29.2
+probe: LM layer 7, last position                  97.9                      29.2
+probe: LM layer 15, last position                 87.5                      25.0
+probe: LM layer 22, last position                 95.8                      31.2
+probe: LM layer 29, last position                 95.8                      33.3

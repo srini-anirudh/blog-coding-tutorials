@@ -1,0 +1,87 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, transformers 5.22.2
+# command: python labs/what-happens-inside-a-vlm/scripts/02_logit_lens.py
+48 scenes, one large shape each; 459 object tokens (>=60% covered), 2190 background tokens.
+Columns 2-5: % of image tokens whose top-5 logit-lens words include the word (any of ' red', 'red',
+' Red', 'Red'). Last two columns: mean probability at the last position of the lowercase and the
+capitalised answer word.
+layer  obj: own colour  obj: other colour  obj: shape word  bg: obj colour  last P(' red')  last P(' Red')
+-----  ---------------  -----------------  ---------------  --------------  --------------  --------------
+emb                0.0                0.0              0.0             0.0           0.000           0.000
+0                  0.0                0.0              0.0             0.0           0.000           0.000
+1                  0.0                0.0              0.0             0.0           0.000           0.000
+2                  0.0                0.0              0.0             0.0           0.000           0.000
+3                  0.0                0.0              0.0             0.0           0.000           0.000
+4                  0.0                0.0              0.0             0.0           0.000           0.000
+5                  0.0                0.0              0.0             0.0           0.000           0.000
+6                  0.0                0.0              0.0             0.0           0.000           0.000
+7                  0.0                0.0              0.0             0.0           0.000           0.000
+8                  0.0                0.0              0.0             0.0           0.000           0.000
+9                  0.0                0.0              0.0             0.0           0.000           0.000
+10                 0.0                0.0              0.0             0.0           0.000           0.000
+11                 0.0                0.0              0.0             0.0           0.000           0.000
+12                 0.0                0.0              0.0             0.0           0.000           0.000
+13                 0.0                0.0              0.0             0.0           0.000           0.000
+14                 0.0                0.0              0.0             0.0           0.000           0.000
+15                 0.0                0.0              0.0             0.0           0.000           0.000
+16                 0.0                0.0              0.0             0.0           0.000           0.000
+17                 0.0                0.0              0.0             0.0           0.000           0.000
+18                 0.0                0.0              0.0             0.0           0.000           0.000
+19                 0.0                0.0              0.0             0.0           0.001           0.001
+20                 0.0                0.0              0.0             0.0           0.000           0.001
+21                 0.0                0.0              0.0             0.0           0.001           0.001
+22                 0.0                0.0              0.0             0.0           0.036           0.006
+23                 0.0                0.0              0.0             0.0           0.824           0.170
+24                 0.0                0.0              0.0             0.0           0.810           0.132
+25                 0.9                0.4              0.0             0.2           0.824           0.093
+26                 6.5                6.8              0.0             1.8           0.852           0.061
+27                 8.9                8.7              0.0             2.3           0.704           0.170
+28                10.0                9.6              0.0             2.9           0.501           0.368
+29                 7.2                7.4              0.2             2.8           0.095           0.895
+Peak own-colour decoding at object tokens: layer 28 of 29, 10.0%.
+
+Example: a red triangle. Top-1 lens word per image token; [brackets] = object token.
+layer emb:
+  as         that       _          _          _          _          的          _         
+  _          _          _          _          _          _          _          _         
+  的          and        igmatic    [_]        ogn        _          的          and       
+  _          that       _          [and]      [_]        _          _          _         
+  _          edient     _          _          _          _          _          and       
+  _          _          _          _          ogn        _          _          _         
+  so         _          _          _          _          _          _          的         
+  的          and        _          _          _          _          _          _         
+layer 7:
+  as         ,          ,          and        and        and        ,          ,         
+  and        and        and        and        _          and        ,          _         
+  ,          ,          ,          [and]      _          and        ,          and       
+  and        ,          and        [and]      [and]      and        is         and       
+  ,          .          and        and        _          and        ,          and       
+  .          and        _          and        _          and        .          _         
+  "          and        and        and        ,          and        and        _         
+  and        and        ,          and        ,          and        and        _         
+layer 15:
+  as         /          (          _          .          _          ,          _         
+  _          _          _          _          _          _          _          _         
+  .          .          _          [.]        _          _          _          .         
+  .          .          _          [and]      [_]        _          _          _         
+  .          .          _          and        _          .          .          .         
+  .          _          _          _          -          _          .          _         
+  .          _          .          .          _          _          .          ogn       
+  aucoma     .          .          and        .          and        _          juven     
+layer 23:
+  _          and        /          and        of         _          _          _         
+  _          _          of         _          _          _          _          _         
+  (          _          _          [_]        _          _          of         _         
+  _          _          _          [_]        [_]        _          of         _         
+  _          -          _          and        _          _          _          _         
+  _          _          _          _          _          _          _          _         
+  _          _          _          _          _          _          to         _         
+  _          .          .          _          _          _          of         ilantro   
+layer 29:
+  background and        as         figure     of         _          _          logo      
+  _          _          of         _          _          _          _          _         
+  in         _          _          [_]        _          _          _          _         
+  _          _          _          [_]        [_]        _          _          _         
+  _          _          on         _          angle      as         of         _         
+  the        _          agon       _          agon       _          of         of        
+  _          _          _          _          _          _          to         _         
+  _          company    _          object     of         _          of         _         

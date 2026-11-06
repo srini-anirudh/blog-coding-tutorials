@@ -1,0 +1,14 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, transformers 5.22.2
+# command: python labs/what-happens-inside-a-vlm/scripts/07_connector.py
+150 scenes (100 to fit the ridge map, 50 held out); 3200 held-out tokens.
+Projection: 12288 -> 576 dims (a linear map, so its rank is at most 576).
+Held-out R^2 of reconstructing the connector input from its output: 0.695.
+token type                       tokens  median rel. error  mean rel. error
+-------------------------------  ------  -----------------  ---------------
+object interior (>=90% covered)     183              0.271            0.270
+object edge                         796              0.380            0.384
+background                         2221              0.303            0.308
+
+k-NN (k=10, cosine) over 2000 held-out tokens: 62.6% of neighbours kept, so 37.4% of neighbour relations changed.
+Colour questions on held-out scenes: 100 prompts, 88.0% with P(correct) > 0.5.
+Spearman correlation between an object's mean reconstruction error and P(correct colour): +0.250.

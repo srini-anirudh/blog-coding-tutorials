@@ -1,0 +1,76 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, transformers 5.22.2",
+ "command": "python labs/what-happens-inside-a-vlm/scripts/06_probe_vs_readout.py",
+ "tasks": {
+  "overlap": {
+   "vlm_acc": 0.475,
+   "majority_acc": 0.5625,
+   "chance": 0.5,
+   "probes": {
+    "encoder (mean of 1024 patches)": {
+     "acc": 1.0,
+     "control_acc": 0.4166666567325592
+    },
+    "connector (mean of 64 tokens)": {
+     "acc": 1.0,
+     "control_acc": 0.3958333432674408
+    },
+    "LM layer 0, last position": {
+     "acc": 1.0,
+     "control_acc": 0.3125
+    },
+    "LM layer 7, last position": {
+     "acc": 1.0,
+     "control_acc": 0.3958333432674408
+    },
+    "LM layer 15, last position": {
+     "acc": 1.0,
+     "control_acc": 0.3958333432674408
+    },
+    "LM layer 22, last position": {
+     "acc": 1.0,
+     "control_acc": 0.4166666567325592
+    },
+    "LM layer 29, last position": {
+     "acc": 0.9791666865348816,
+     "control_acc": 0.4375
+    }
+   }
+  },
+  "count": {
+   "vlm_acc": 0.9,
+   "majority_acc": 0.2708333432674408,
+   "chance": 0.25,
+   "probes": {
+    "encoder (mean of 1024 patches)": {
+     "acc": 1.0,
+     "control_acc": 0.375
+    },
+    "connector (mean of 64 tokens)": {
+     "acc": 1.0,
+     "control_acc": 0.375
+    },
+    "LM layer 0, last position": {
+     "acc": 0.9583333134651184,
+     "control_acc": 0.2916666567325592
+    },
+    "LM layer 7, last position": {
+     "acc": 0.9791666865348816,
+     "control_acc": 0.2916666567325592
+    },
+    "LM layer 15, last position": {
+     "acc": 0.875,
+     "control_acc": 0.25
+    },
+    "LM layer 22, last position": {
+     "acc": 0.9583333134651184,
+     "control_acc": 0.3125
+    },
+    "LM layer 29, last position": {
+     "acc": 0.9583333134651184,
+     "control_acc": 0.3333333432674408
+    }
+   }
+  }
+ }
+}

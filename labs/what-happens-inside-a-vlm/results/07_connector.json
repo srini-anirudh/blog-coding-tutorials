@@ -1,0 +1,22 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, transformers 5.22.2",
+ "command": "python labs/what-happens-inside-a-vlm/scripts/07_connector.py",
+ "r2": 0.695324182510376,
+ "rel_error": {
+  "object interior (>=90% covered)": {
+   "median": 0.2711178660392761,
+   "mean": 0.26984164118766785
+  },
+  "object edge": {
+   "median": 0.3797492980957031,
+   "mean": 0.38368868827819824
+  },
+  "background": {
+   "median": 0.30287012457847595,
+   "mean": 0.30823007225990295
+  }
+ },
+ "knn_kept": 0.6260500550270081,
+ "spearman_loss_vs_p": 0.24950495049504948,
+ "n_prompts": 100
+}

@@ -1,0 +1,55 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, transformers 5.22.2
+# command: python labs/what-happens-inside-a-vlm/scripts/03_attention_sinks_ablation.py
+30 scenes x 2 colour questions = 60 prompts.
+
+1. Share of the last position's attention (mean over heads and prompts), by layer.
+layer  prefix (BOS..<global-img>)  64 image tokens  question text   self
+-----  --------------------------  ---------------  -------------  -----
+0                           0.062            0.285          0.547  0.067
+1                           0.088            0.065          0.663  0.140
+2                           0.370            0.015          0.468  0.082
+3                           0.402            0.016          0.524  0.047
+4                           0.512            0.031          0.378  0.076
+5                           0.697            0.024          0.196  0.080
+6                           0.750            0.014          0.155  0.077
+7                           0.760            0.012          0.194  0.030
+8                           0.811            0.061          0.110  0.016
+9                           0.492            0.073          0.380  0.048
+10                          0.344            0.032          0.446  0.172
+11                          0.088            0.029          0.607  0.262
+12                          0.513            0.032          0.368  0.079
+13                          0.516            0.073          0.328  0.073
+14                          0.557            0.073          0.261  0.106
+15                          0.440            0.093          0.408  0.044
+16                          0.518            0.021          0.369  0.076
+17                          0.491            0.073          0.401  0.029
+18                          0.647            0.056          0.274  0.018
+19                          0.498            0.049          0.328  0.115
+20                          0.749            0.103          0.123  0.019
+21                          0.235            0.255          0.469  0.038
+22                          0.444            0.121          0.374  0.056
+23                          0.453            0.430          0.095  0.021
+24                          0.593            0.191          0.159  0.056
+25                          0.525            0.053          0.259  0.161
+26                          0.861            0.010          0.076  0.051
+27                          0.484            0.056          0.329  0.129
+28                          0.662            0.059          0.222  0.052
+29                          0.381            0.204          0.220  0.192
+Image tokens are 74% of the sequence (64 of 86).
+
+2. Visual sinks: the 3 image tokens that receive the most attention from the last position (layers 2+).
+Shared between the two questions about the same image: 0.53 of the top 3.
+On the asked-about object (with border): 0.43 of top-3 tokens.
+Their residual norm at layer 15 / median image-token norm: mean 1.29.
+
+3. Ablation and pruning. 'broken' = % of prompts answered correctly with no ablation that become wrong.
+tokens removed                             accuracy %  mean P(correct)  broken %
+-----------------------------------------  ----------  ---------------  --------
+none                                             91.7            0.827       0.0
+object + border                                  11.7            0.119      87.3
+random, same count                               90.0            0.794       7.3
+top-attended non-object, same count              96.7            0.843       1.8
+3 highest-norm tokens                            83.3            0.775      10.9
+FastV: lowest-attention 50% after layer 2        56.7            0.479      41.8
+random 50% after layer 2                         70.0            0.636      25.5
+Mean row (0 = top, 7 = bottom) of dropped tokens: FastV 2.85, random 3.53.

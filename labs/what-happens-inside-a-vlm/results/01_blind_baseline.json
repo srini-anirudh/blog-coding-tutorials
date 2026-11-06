@@ -1,0 +1,44 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, transformers 5.22.2",
+ "command": "python labs/what-happens-inside-a-vlm/scripts/01_blind_baseline.py",
+ "results": {
+  "colour": {
+   "image": 86.66666666666667,
+   "blank": 21.666666666666668,
+   "none": 38.333333333333336,
+   "lm": 28.333333333333332,
+   "n": 60,
+   "MG": 48.333333333333336,
+   "ML": 10.000000000000004,
+   "mean_tv_image_vs_blank": 0.646858045955499
+  },
+  "shape": {
+   "image": 95.0,
+   "blank": 35.0,
+   "none": 35.0,
+   "lm": 35.0,
+   "n": 60,
+   "MG": 60.0,
+   "ML": 0.0,
+   "mean_tv_image_vs_blank": 0.634651963536938
+  },
+  "absent animal": {
+   "image": 100.0,
+   "blank": 100.0,
+   "none": 0.0,
+   "lm": 0.0,
+   "n": 60,
+   "MG": 100.0,
+   "ML": 0.0,
+   "mean_tv_image_vs_blank": 0.029794631525874138
+  },
+  "all": {
+   "image": 93.88888888888889,
+   "blank": 52.22222222222222,
+   "none": 24.444444444444443,
+   "lm": 21.11111111111111,
+   "MG": 69.44444444444444,
+   "ML": 3.333333333333332
+  }
+ }
+}

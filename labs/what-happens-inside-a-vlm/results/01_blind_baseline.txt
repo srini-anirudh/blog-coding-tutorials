@@ -1,0 +1,12 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0+cu132, transformers 5.22.2
+# command: python labs/what-happens-inside-a-vlm/scripts/01_blind_baseline.py
+Forced-choice accuracy (%) over 60 synthetic scenes. S_v = with the image, S_wv = the VLM with the
+image removed from the prompt (MMStar's setting), 'blank' = a plain grey image in its place,
+S_t = the base LM (SmolLM2-135M-Instruct) on the text alone. TV = mean total-variation distance between
+the answer distributions with the real and the blank image (0 = the image changed nothing).
+question type    n  chance    S_v  blank  S_wv   S_t      MG    ML    TV
+-------------  ---  ------  -----  -----  ----  ----  ------  ----  ----
+colour          60      25   86.7   21.7  38.3  28.3   +48.3  10.0  0.65
+shape           60      33   95.0   35.0  35.0  35.0   +60.0   0.0  0.63
+absent animal   60      50  100.0  100.0   0.0   0.0  +100.0   0.0  0.03
+all            180           93.9   52.2  24.4  21.1   +69.4   3.3      
