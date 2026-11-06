@@ -1,6 +1,6 @@
 # Handoff: Coding Tutorials series
 
-Last updated 2026-11-07. This is for the next Claude Code session, which will run on the author's cluster. It holds
+Last updated 2026-11-07. The move to the cluster is done and the author has said start. Tutorial work runs on the cluster now. It holds
 everything needed to continue without the previous session. Read all of it before starting.
 
 ## Where things stand
@@ -11,8 +11,7 @@ with the reader. Real code excerpts appear inline. The full code lives in this r
 
 **Nothing in this series is published yet.** The blog has no links to it, and the "Code" filter is not on the index.
 
-All 12 agents were stopped on purpose so the work can move to the cluster. **Do not start agents until the author says
-to.** The author asked to start them on the cluster, not on the laptop.
+Each tutorial now has a code writer and a blog writer. See `docs/handoff/INSTRUCTIONS.md`. Runs that need a GPU are queued until the author assigns GPUs.
 
 ## The two repos
 

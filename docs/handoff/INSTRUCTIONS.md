@@ -7,8 +7,9 @@ This file and BRIEF.md (same folder) are the full instructions. If they disagree
 - SITE=<path to your clone of srini-anirudh.github.io> (the blog)
 - SCRATCH=$CODE/.series (git-ignored; survives restarts)
 - PY=$CODE/.venv/bin/python (torch, transformers, datasets, peft, trl, accelerate, pytest)
-- Tool Python (Pillow, websocket-client): $SCRATCH/venv/bin/python. CDP helper: $SCRATCH/cdp.py
+- Tool Python (Pillow, websocket-client): $SCRATCH/venv/bin/python. CDP helper: $SCRATCH/cdp.py. Headless Chrome: $SCRATCH/chrome.sh <cdp_port> <user_data_dir>
 - Listing checker: `python3 $SCRATCH/code-series/check_listings.py $SITE/blogs/<slug>/index.html $CODE`
+- Machine settings are in $SCRATCH/env.sh, which is not in git. Source it at the start of every shell command.
 - Template and shared components, all finished: $SITE/docs/code-tutorial-template.html, $SITE/assets/css/code-tutorial.css,
   $SITE/assets/js/code-tutorial.js. Writing rules: $SITE/docs/blog-writing-guide.md
 - Your tutorial's spec: its section of $CODE/docs/series-plan.md, plus that file's "Common Requirements" section.
@@ -17,6 +18,15 @@ This file and BRIEF.md (same folder) are the full instructions. If they disagree
 A proper coding blog series, a different type of post from the theory posts. The code lives in the separate repo. The
 post explains the code from scratch and builds it step by step together with the reader, with portions of the real code
 inline and links into the repo.
+
+## Two writers per tutorial
+Each tutorial has a code writer and a blog writer working at the same time.
+- The code writer owns `$CODE/<folder>/` and does stages 1 to 4 below. When the code is final it writes
+  `$SCRATCH/code-series/<folder>/code/SUMMARY.md` (module map, commands, real numbers, what is GPU-only or unverified), then runs
+  `touch $SCRATCH/code-series/status/<folder>.code-frozen`. After that it changes nothing in the folder.
+- The blog writer owns `$SITE/blogs/<slug>/` and does stages 5 and 6. It reads the code but never edits it. It asks for code changes or new
+  outputs by appending to `$SCRATCH/code-series/<folder>/REQUESTS.md`. The code writer checks that file between stages and answers in it.
+- Line numbers settle only after the freeze, so the blog writer runs the listing checker as its last step after `<folder>.code-frozen` exists.
 
 ## Boundaries
 - You own only `$CODE/<your-folder>/`, `$SITE/blogs/<your-slug>/` and `$SCRATCH/code-series/<your-folder>/`.
@@ -57,12 +67,23 @@ Simple language. Short sentences and short paragraphs. Professional tone. Plain 
 never a dark panel.
 
 ## Numbers
-Quote only outputs you actually ran, labelled with the hardware (Apple M5 CPU or MPS). Never invent GPU numbers. GPU-only code
-is marked as such, and the post gives the command to measure it. Report weak results honestly.
+Quote only outputs you actually ran, labelled with the hardware that ran them. Existing Apple M5 numbers keep that label unless a new run replaces
+them. Never invent GPU numbers. Code that needs a GPU is written properly, marked as GPU-only, and the post gives the command to measure it. Until a GPU
+run is captured, say plainly that it has not been measured. Report weak results honestly.
 
 ## Shared machine
-10 cores and 16 GB, shared by 12 writers. Use `torch.set_num_threads(2)` and tiny models. Keep each run under about 10 minutes.
-Do not run more than one training job at a time. Use your own ports only.
+A large Linux server that also runs other people's production jobs. Be a good neighbour.
+- Do not use its GPUs, Slurm, or any existing container, service or model server. `$SCRATCH/env.sh` hides the GPUs.
+- Use at most 8 threads per process and one training job at a time. Keep each run under about 30 minutes.
+- Code that needs a GPU goes in `$SCRATCH/code-series/gpu-queue/<folder>.sh`, one command per line with a comment saying what it measures and where its
+  result is saved. The coordinator runs that queue once GPUs are assigned.
+- The Docker sandbox in C10 may be tested with small throwaway containers only: `--rm`, a name starting `ct-c10-`, `--network none`, memory and CPU limits.
+  Never touch other containers.
+- Use your own ports only.
+
+## Public repos
+Both repos are public. Never put hostnames, node names, cluster names, usernames, absolute paths, internal project details or private data in any committed
+file or post. Describe hardware only by model, for example "NVIDIA H100" or "8 CPU threads".
 
 ## Verify before reporting
 Headless Chrome through CDP at 1440 and 390 widths: zero console errors, no horizontal overflow, every figure steps through all
