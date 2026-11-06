@@ -1,0 +1,20 @@
+[project]
+name = "backward-pass-code"
+version = "0.1.0"
+description = "Code for The Backward Pass coding tutorials: from tensors to foundation models and agents."
+requires-python = ">=3.10"
+dependencies = [
+  "torch>=2.4", "numpy", "matplotlib", "pillow", "einops", "tqdm", "pyyaml", "rich",
+  "transformers>=4.45", "datasets>=3.0", "accelerate", "peft", "trl", "safetensors", "tokenizers", "sentencepiece",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib -q"
+markers = [
+  "slow: long-running test (deselect with -m 'not slow')",
+  "gpu: needs a CUDA GPU",
+  "network: downloads models or datasets from the Hugging Face Hub",
+]

@@ -1,0 +1,23 @@
+name: tests
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tutorial: [c01-pytorch, c02-hf-stack, c03-attention, c04-llm, c05-pretraining, c06-post-training,
+                   c07-vlm, c08-vlm-training, c09-vlm-post-training, c10-agent-harness, c11-agent-memory, c12-agent-rl]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev]"
+      - name: Test ${{ matrix.tutorial }}
+        run: pytest ${{ matrix.tutorial }} -m "not slow and not gpu"
