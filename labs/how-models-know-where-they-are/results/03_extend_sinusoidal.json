@@ -1,0 +1,28 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0, CPU only",
+ "command": "python labs/how-models-know-where-they-are/scripts/03_extend.py --pe sinusoidal --name 03_extend_sinusoidal",
+ "runs": [
+  {
+   "seed": 0,
+   "model": "sinusoidal",
+   "final_loss": 4.566331443786621,
+   "train_minutes": 27.34,
+   "accuracy": {
+    "64": 0.045099431818181816,
+    "128": 0.016867897727272728,
+    "256": 0.014026988636363636
+   }
+  },
+  {
+   "seed": 1,
+   "model": "sinusoidal",
+   "final_loss": 4.616579694747925,
+   "train_minutes": 7.09,
+   "accuracy": {
+    "64": 0.047407670454545456,
+    "128": 0.017223011363636364,
+    "256": 0.012251420454545454
+   }
+  }
+ ]
+}

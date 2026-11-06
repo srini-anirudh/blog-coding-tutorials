@@ -1,0 +1,29 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0, CPU only",
+ "command": "python labs/how-models-know-where-they-are/scripts/01_symmetry.py",
+ "equivariance_gap": {
+  "no mask, no position": 5.960464477539063e-08,
+  "causal mask, no position": 0.7486519813537598,
+  "no mask, RoPE": 0.08541987836360931
+ },
+ "position_probe": {
+  "NoPE, causal": {
+   "accuracy": 0.234619140625,
+   "mean_abs_error": 1.847412109375,
+   "accuracy_pos_0_7": 0.595703125,
+   "mean_abs_error_pos_48_63": 2.986328125
+  },
+  "NoPE, bidirectional": {
+   "accuracy": 0.013427734375,
+   "mean_abs_error": 21.765869140625,
+   "accuracy_pos_0_7": 0.0234375,
+   "mean_abs_error_pos_48_63": 26.9150390625
+  },
+  "learned table, causal": {
+   "accuracy": 1.0,
+   "mean_abs_error": 0.0,
+   "accuracy_pos_0_7": 1.0,
+   "mean_abs_error_pos_48_63": 0.0
+  }
+ }
+}

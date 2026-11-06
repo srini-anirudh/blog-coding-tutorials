@@ -1,0 +1,65 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+command: python labs/how-models-know-where-they-are/scripts/02_sinusoidal_rope.py
+
+Sinusoidal, d=64, positions 0..999
+  k  max |PE(p+k) - R_k PE(p)|  spread of PE(p).PE(p+k) over p
+---  -------------------------  ------------------------------
+  1                  1.069e-13                       1.705e-13
+  7                  9.145e-14                        2.38e-13
+100                  1.137e-13                       2.203e-13
+PE(0) . PE(k) as k grows (the maximum is d/2 = 32 at k = 0):
+  k   0      1     2      3      4      8     16     32     64   128    256   512
+---  --  -----  ----  -----  -----  -----  -----  -----  -----  ----  -----  ----
+dot  32  30.92  28.3  25.59  23.93  22.41  19.37  19.55  13.91  9.08  11.32  5.93
+
+RoPE, head_dim=64, base 10000, float32
+                                             check  max abs difference
+--------------------------------------------------  ------------------
+score(m+s, n+s) - score(m, n), s in {1, 100, 5000}            0.001899
+                 | |R q| - |q| | at position 12345           9.537e-07
+                    interleaved(x[P]) - half(x)[P]                   0
+
+Convention mismatch: q, k laid out for half-split, rotated with the interleaved kernel.
+Relative error = mean |wrong - right| / mean |right| over 256 random (q, k) pairs.
+distance  relative error
+--------  --------------
+       0               0
+       1          0.3272
+       2          0.5548
+       4          0.8077
+       8          0.9172
+      16           1.117
+      32           1.038
+      64           1.239
+     256           1.465
+    1024           1.272
+
+Decay envelope (RoFormer), head_dim=128, base 10000, relative to distance 0
+distance  envelope / envelope(0)  q = k = ones: score / 128  random q, k: mean |score| / at 0
+--------  ----------------------  -------------------------  --------------------------------
+       0                       1                          1                                 1
+       1                  0.9704                     0.9702                              1.01
+       4                  0.6955                     0.7592                             1.013
+      16                  0.4854                     0.6203                             1.069
+      64                  0.3105                     0.4769                             1.068
+     256                  0.2013                     0.3207                              1.02
+    1024                  0.1238                     0.2044                             1.006
+    4096                  0.1502                   -0.05285                             1.037
+   16384                  0.1572                    -0.1423                             1.011
+
+Planes (of 64 per 128-dim head) that never finish one turn inside the context
+     base  4k  32k  128k  1M  slowest wavelength
+---------  --  ---  ----  --  ------------------
+   10,000  18    4     0   0            5.44e+04
+  500,000  32   22    15   5            2.56e+06
+1,000,000  33   24    17   8            5.06e+06
+
+RoPE table precision: wrapped |angle error| in radians, head_dim=128, base 500000
+position  table dtype  fastest plane  median plane  worst plane
+--------  -----------  -------------  ------------  -----------
+   1,000      float32              0     1.752e-08    4.636e-05
+   1,000     bfloat16              0      0.002778        1.383
+  32,768      float32              0     6.205e-07    0.0005912
+  32,768     bfloat16              0       0.03396        2.548
+ 500,000      float32              0     1.951e-05      0.02318
+ 500,000     bfloat16          1.027        0.4182        3.138

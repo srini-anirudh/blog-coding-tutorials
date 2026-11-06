@@ -1,0 +1,24 @@
+hardware: AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0, CPU only
+command: python labs/how-models-know-where-they-are/scripts/06_fourier.py
+
+1. Coordinate MLP, 3 x 256 ReLU, Adam lr 1e-3, 2000 full-batch steps, 256 Fourier features
+             input  train PSNR (dB)  held-out PSNR (dB)
+------------------  ---------------  ------------------
+        raw (x, y)            19.69               19.41
+  Fourier, sigma 1            40.25               24.42
+ Fourier, sigma 10              120               24.49
+Fourier, sigma 100              120               11.93
+
+2. Empirical kernel vs exp(-2 pi^2 sigma^2 |delta|^2), sigma 1, 4096 features
+|delta|  kernel at a  kernel at a + 0.37  expected
+-------  -----------  ------------------  --------
+      0            1                   1         1
+   0.05        0.952               0.952    0.9518
+    0.1       0.8218              0.8218    0.8209
+    0.2       0.4609              0.4609     0.454
+    0.3       0.1794              0.1794    0.1692
+    0.5       0.0077              0.0077    0.0072
+
+3. SAM-style: one B (128 features, sigma 1) for a 64x64 grid and for a click
+   argmax cell centre [0.7734375, 0.4140625], nearest cell centre [0.7734375, 0.4140625], distance between them 0.00 cells
+   clicks x = 0.4140 and x = 0.4210: same grid cell True; cosine of their encodings 0.9991

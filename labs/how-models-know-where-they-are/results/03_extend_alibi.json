@@ -1,0 +1,28 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0, CPU only",
+ "command": "python labs/how-models-know-where-they-are/scripts/03_extend.py --pe alibi --name 03_extend_alibi",
+ "runs": [
+  {
+   "seed": 0,
+   "model": "alibi",
+   "final_loss": 0.4157211208343506,
+   "train_minutes": 18.37,
+   "accuracy": {
+    "64": 0.9170809659090909,
+    "128": 0.8668323863636364,
+    "256": 0.8025568181818182
+   }
+  },
+  {
+   "seed": 1,
+   "model": "alibi",
+   "final_loss": 0.35572461009025574,
+   "train_minutes": 9.13,
+   "accuracy": {
+    "64": 0.9295099431818182,
+    "128": 0.8870738636363636,
+    "256": 0.841796875
+   }
+  }
+ ]
+}

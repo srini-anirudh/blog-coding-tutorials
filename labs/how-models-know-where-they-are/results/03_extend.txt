@@ -1,0 +1,66 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+command: python labs/how-models-know-where-they-are/scripts/03_extend.py --merge 03_extend_rope,03_extend_alibi,03_extend_none,03_extend_sinusoidal,03_extend_learned
+
+Part A. Rotation speeds under each extension method
+
+head_dim 32, base 10000, trained to 64, run at 256 (s = 4)
+method  fastest plane, rad/token  slowest plane speed / original  planes with unseen angles by 256  logit scale
+------  ------------------------  ------------------------------  --------------------------------  -----------
+  none                         1                               1                                11            1
+    pi                      0.25                            0.25                                 0            1
+   ntk                         1                            0.25                                10            1
+  yarn                         1                            0.25                                 0        1.296
+
+head_dim 128, base 10000, trained to 4096, run at 16384 (s = 4)
+method  fastest plane, rad/token  slowest plane speed / original  planes with unseen angles by 16384  logit scale
+------  ------------------------  ------------------------------  ----------------------------------  -----------
+  none                         1                               1                                  18            1
+    pi                      0.25                            0.25                                   0            1
+   ntk                         1                            0.25                                  17            1
+  yarn                         1                            0.25                                   0        1.296
+
+head_dim 128, base 500000, trained to 8192, run at 131072 (s = 16)
+method  fastest plane, rad/token  slowest plane speed / original  planes with unseen angles by 131072  logit scale
+------  ------------------------  ------------------------------  -----------------------------------  -----------
+  none                         1                               1                                   29            1
+    pi                    0.0625                          0.0625                                    0            1
+   ntk                         1                          0.0625                                   28            1
+  yarn                         1                          0.0625                                    0        1.631
+
+Part B. Induction copy, vocab 128, copied segment of 12 tokens, d=128, 4 heads, 2 layers
+Trained at length 64 for 2000 steps, batch 64, lr 3e-3. Accuracy on copied tokens.
+  from results/03_extend_rope.txt: python labs/how-models-know-where-they-are/scripts/03_extend.py --pe rope --name 03_extend_rope
+  from results/03_extend_alibi.txt: python labs/how-models-know-where-they-are/scripts/03_extend.py --pe alibi --name 03_extend_alibi
+  from results/03_extend_none.txt: python labs/how-models-know-where-they-are/scripts/03_extend.py --pe none --name 03_extend_none
+  from results/03_extend_sinusoidal.txt: python labs/how-models-know-where-they-are/scripts/03_extend.py --pe sinusoidal --name 03_extend_sinusoidal
+  from results/03_extend_learned.txt: python labs/how-models-know-where-they-are/scripts/03_extend.py --pe learned --name 03_extend_learned
+seed        model  train loss  acc @ 64  acc @ 128  acc @ 256
+----  -----------  ----------  --------  ---------  ---------
+   0        alibi       0.416     0.917      0.867      0.803
+   0      learned       0.401     0.898        n/a        n/a
+   0         none       4.099     0.053      0.032      0.021
+   0         rope        0.05     0.986      0.729      0.196
+   0   rope + ntk        0.05     0.986      0.882      0.463
+   0    rope + pi        0.05     0.986      0.068      0.026
+   0  rope + yarn        0.05     0.986      0.931      0.806
+   0   sinusoidal       4.566     0.045      0.017      0.014
+   1        alibi       0.356      0.93      0.887      0.842
+   1      learned       0.239     0.914        n/a        n/a
+   1         none       4.087     0.055      0.034      0.025
+   1         rope       0.054     0.987      0.828      0.397
+   1   rope + ntk       0.054     0.987      0.926      0.612
+   1    rope + pi       0.054     0.987      0.045      0.027
+   1  rope + yarn       0.054     0.987      0.945      0.853
+   1   sinusoidal       4.617     0.047      0.017      0.012
+
+Mean over seeds
+      model  acc @ 64  acc @ 128  acc @ 256
+-----------  --------  ---------  ---------
+      alibi     0.923      0.877      0.822
+    learned     0.906        n/a        n/a
+       none     0.054      0.033      0.023
+       rope     0.987      0.778      0.297
+ rope + ntk     0.987      0.904      0.537
+  rope + pi     0.987      0.056      0.027
+rope + yarn     0.987      0.938      0.829
+ sinusoidal     0.046      0.017      0.013

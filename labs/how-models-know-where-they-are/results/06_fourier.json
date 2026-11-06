@@ -1,0 +1,38 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0, CPU only",
+ "command": "python labs/how-models-know-where-they-are/scripts/06_fourier.py",
+ "fit": [
+  [
+   "raw (x, y)",
+   19.69,
+   19.41
+  ],
+  [
+   "Fourier, sigma 1",
+   40.25,
+   24.42
+  ],
+  [
+   "Fourier, sigma 10",
+   120.0,
+   24.49
+  ],
+  [
+   "Fourier, sigma 100",
+   120.0,
+   11.93
+  ]
+ ],
+ "sam": {
+  "argmax": [
+   0.7734375,
+   0.4140625
+  ],
+  "nearest": [
+   0.7734375,
+   0.4140625
+  ],
+  "same_cell": true,
+  "cosine": 0.9990777969360352
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only",
+ "command": "python labs/how-models-know-where-they-are/scripts/04_vision_2d.py",
+ "pairs": [
+  [
+   "right neighbour",
+   1,
+   "(0, 1)",
+   -9.156112670898438,
+   -12.130746841430664
+  ],
+  [
+   "row wrap: end of row 5 -> start of row 6",
+   1,
+   "(1, -23)",
+   -9.156124114990234,
+   -9.214569091796875
+  ],
+  [
+   "vertical neighbour",
+   24,
+   "(1, 0)",
+   -7.728453636169434,
+   -11.256261825561523
+  ],
+  [
+   "same offsets as the wrap, elsewhere",
+   1,
+   "(1, -23)",
+   -9.156115531921387,
+   -9.214570045471191
+  ]
+ ],
+ "resize": {
+  "round_trip_rel_error": 0.007921593263745308,
+  "antialias_rel_difference": 0.046412765979766846
+ }
+}

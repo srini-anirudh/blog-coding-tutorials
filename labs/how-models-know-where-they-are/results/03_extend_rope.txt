@@ -1,0 +1,58 @@
+hardware: AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0, CPU only
+command: python labs/how-models-know-where-they-are/scripts/03_extend.py --pe rope --name 03_extend_rope
+
+Part A. Rotation speeds under each extension method
+
+head_dim 32, base 10000, trained to 64, run at 256 (s = 4)
+method  fastest plane, rad/token  slowest plane speed / original  planes with unseen angles by 256  logit scale
+------  ------------------------  ------------------------------  --------------------------------  -----------
+  none                         1                               1                                11            1
+    pi                      0.25                            0.25                                 0            1
+   ntk                         1                            0.25                                10            1
+  yarn                         1                            0.25                                 0        1.296
+
+head_dim 128, base 10000, trained to 4096, run at 16384 (s = 4)
+method  fastest plane, rad/token  slowest plane speed / original  planes with unseen angles by 16384  logit scale
+------  ------------------------  ------------------------------  ----------------------------------  -----------
+  none                         1                               1                                  18            1
+    pi                      0.25                            0.25                                   0            1
+   ntk                         1                            0.25                                  17            1
+  yarn                         1                            0.25                                   0        1.296
+
+head_dim 128, base 500000, trained to 8192, run at 131072 (s = 16)
+method  fastest plane, rad/token  slowest plane speed / original  planes with unseen angles by 131072  logit scale
+------  ------------------------  ------------------------------  -----------------------------------  -----------
+  none                         1                               1                                   29            1
+    pi                    0.0625                          0.0625                                    0            1
+   ntk                         1                          0.0625                                   28            1
+  yarn                         1                          0.0625                                    0        1.631
+
+Part B. Induction copy, vocab 128, copied segment of 12 tokens, d=128, 4 heads, 2 layers
+Trained at length 64 for 2000 steps, batch 64, lr 3e-3. Accuracy on copied tokens.
+  seed 0 rope          30.7 min  64: 0.986  128: 0.729  256: 0.196
+  seed 0 rope + pi     30.7 min  64: 0.986  128: 0.068  256: 0.026
+  seed 0 rope + ntk    30.7 min  64: 0.986  128: 0.882  256: 0.463
+  seed 0 rope + yarn   30.7 min  64: 0.986  128: 0.931  256: 0.806
+  seed 1 rope           7.3 min  64: 0.987  128: 0.828  256: 0.397
+  seed 1 rope + pi      7.3 min  64: 0.987  128: 0.045  256: 0.027
+  seed 1 rope + ntk     7.3 min  64: 0.987  128: 0.926  256: 0.612
+  seed 1 rope + yarn    7.3 min  64: 0.987  128: 0.945  256: 0.853
+
+seed        model  train loss  acc @ 64  acc @ 128  acc @ 256
+----  -----------  ----------  --------  ---------  ---------
+   0         rope        0.05     0.986      0.729      0.196
+   0    rope + pi        0.05     0.986      0.068      0.026
+   0   rope + ntk        0.05     0.986      0.882      0.463
+   0  rope + yarn        0.05     0.986      0.931      0.806
+   1         rope       0.054     0.987      0.828      0.397
+   1    rope + pi       0.054     0.987      0.045      0.027
+   1   rope + ntk       0.054     0.987      0.926      0.612
+   1  rope + yarn       0.054     0.987      0.945      0.853
+
+Mean over seeds
+      model  acc @ 64  acc @ 128  acc @ 256
+-----------  --------  ---------  ---------
+       rope     0.987      0.778      0.297
+  rope + pi     0.987      0.056      0.027
+ rope + ntk     0.987      0.904      0.537
+rope + yarn     0.987      0.938      0.829

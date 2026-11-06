@@ -1,0 +1,9 @@
+# Nothing large belongs here: no checkpoints, datasets or logs.
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+data/
+checkpoints/
+*.log
+__pycache__/

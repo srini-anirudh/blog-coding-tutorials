@@ -1,0 +1,16 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+command: python labs/how-models-know-where-they-are/scripts/04_vision_2d.py
+
+1-2. A 24x24 patch grid. One random query vector and one key vector at every patch.
+                                    pair  1D id gap  (dy, dx)  1D RoPE score  2D RoPE score
+----------------------------------------  ---------  --------  -------------  -------------
+                         right neighbour          1    (0, 1)         -9.156         -12.13
+row wrap: end of row 5 -> start of row 6          1  (1, -23)         -9.156         -9.215
+                      vertical neighbour         24    (1, 0)         -7.728         -11.26
+     same offsets as the wrap, elsewhere          1  (1, -23)         -9.156         -9.215
+2D RoPE score for offset (2, -3) at three different places: -6.16133, -6.16133, -6.16133
+
+3. Resizing a position table. A smooth 24x24 table (2D sin-cos from C3) plus a cls row.
+   24 -> 32 -> 24 round trip: shape (1025, 64), relative error 0.0079, cls row unchanged: True
+   treating the cls row as a grid cell: ValueError: 577 grid rows is not 24x24; did you forget the cls row?
+   24 -> 12 with and without antialias: relative difference 0.046

@@ -1,0 +1,28 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 4 threads, torch 2.15.0, CPU only",
+ "command": "python labs/how-models-know-where-they-are/scripts/03_extend.py --pe none --name 03_extend_none",
+ "runs": [
+  {
+   "seed": 0,
+   "model": "none",
+   "final_loss": 4.099379758834839,
+   "train_minutes": 8.74,
+   "accuracy": {
+    "64": 0.052556818181818184,
+    "128": 0.03160511363636364,
+    "256": 0.020951704545454544
+   }
+  },
+  {
+   "seed": 1,
+   "model": "none",
+   "final_loss": 4.086537284851074,
+   "train_minutes": 14.7,
+   "accuracy": {
+    "64": 0.054509943181818184,
+    "128": 0.03444602272727273,
+    "256": 0.025035511363636364
+   }
+  }
+ ]
+}
