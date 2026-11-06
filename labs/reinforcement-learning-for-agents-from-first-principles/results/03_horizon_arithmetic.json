@@ -1,0 +1,82 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, CPU only; python 3.12.15, torch 2.15.0, numpy 2.5.4",
+ "command": "python labs/reinforcement-learning-for-agents-from-first-principles/scripts/03_horizon_arithmetic.py",
+ "informative": [
+  {
+   "H": 5,
+   "p": 0.6956883693000002,
+   "P_inf": 0.9450586058683121,
+   "G_p": 5.565506954400002,
+   "simulated": 0.94278,
+   "graded_nonzero_var": 0.9454,
+   "G_for_half": 3
+  },
+  {
+   "H": 10,
+   "p": 0.4839823071792934,
+   "P_inf": 0.9919624281100083,
+   "G_p": 3.8718584574343473,
+   "simulated": 0.99174,
+   "graded_nonzero_var": 0.9971,
+   "G_for_half": 3
+  },
+  {
+   "H": 20,
+   "p": 0.23423887366259194,
+   "P_inf": 0.8817558090212693,
+   "G_p": 1.8739109893007355,
+   "simulated": 0.8802,
+   "graded_nonzero_var": 1.0,
+   "G_for_half": 3
+  },
+  {
+   "H": 30,
+   "p": 0.11336747050630029,
+   "P_inf": 0.6181002983783608,
+   "G_p": 0.9069397640504023,
+   "simulated": 0.62182,
+   "graded_nonzero_var": 1.0,
+   "G_for_half": 6
+  },
+  {
+   "H": 50,
+   "p": 0.02655506860137289,
+   "P_inf": 0.1937103125265064,
+   "G_p": 0.21244054881098312,
+   "simulated": 0.19204,
+   "graded_nonzero_var": 1.0,
+   "G_for_half": 26
+  },
+  {
+   "H": 100,
+   "p": 0.0007051716684236204,
+   "P_inf": 0.0056274694886800924,
+   "G_p": 0.005641373347388963,
+   "simulated": 0.00524,
+   "graded_nonzero_var": 1.0,
+   "G_for_half": 983
+  }
+ ],
+ "recovery": [
+  {
+   "r": 0.0,
+   "H50": 9.551337509447352,
+   "simulated_success_at_round_H50": 0.4906
+  },
+  {
+   "r": 0.5,
+   "H50": 18.762350495438692,
+   "simulated_success_at_round_H50": 0.497
+  },
+  {
+   "r": 0.8,
+   "H50": 46.390487528326545,
+   "simulated_success_at_round_H50": 0.5075
+  },
+  {
+   "r": 0.9,
+   "H50": 92.43569443769258,
+   "simulated_success_at_round_H50": 0.5018
+  }
+ ]
+}

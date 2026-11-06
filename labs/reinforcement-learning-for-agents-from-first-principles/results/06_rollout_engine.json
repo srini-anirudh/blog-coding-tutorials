@@ -1,0 +1,163 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, CPU only; python 3.12.15, torch 2.15.0, numpy 2.5.4",
+ "command": "python labs/reinforcement-learning-for-agents-from-first-principles/scripts/06_rollout_engine.py",
+ "sync_utilisation": {
+  "0.25": {
+   "8": 0.716797626896785,
+   "64": 0.5688931507299849,
+   "512": 0.4798882571387521
+  },
+  "0.5": {
+   "8": 0.5299060379159903,
+   "64": 0.3424011539532331,
+   "512": 0.2457819409015272
+  },
+  "1.0": {
+   "8": 0.3251321042461273,
+   "64": 0.14068673216052677,
+   "512": 0.07234651956849775
+  },
+  "1.5": {
+   "8": 0.22521446417368352,
+   "64": 0.06876721994448903,
+   "512": 0.02736139034065188
+  }
+ },
+ "async": [
+  {
+   "sigma": 0.5,
+   "mode": "sync",
+   "throughput": 19.260405423991035
+  },
+  {
+   "sigma": 0.5,
+   "mode": "async",
+   "k": 0,
+   "throughput": 11.149388035341074,
+   "dropped_frac": 0.801890625,
+   "age_mean": 0.0,
+   "age_p95": 0.0,
+   "age_max": 0
+  },
+  {
+   "sigma": 0.5,
+   "mode": "async",
+   "k": 1,
+   "throughput": 46.7930669702997,
+   "dropped_frac": 0.170078125,
+   "age_mean": 0.764256801280241,
+   "age_p95": 1.0,
+   "age_max": 1
+  },
+  {
+   "sigma": 0.5,
+   "mode": "async",
+   "k": 4,
+   "throughput": 56.42638548415472,
+   "dropped_frac": 0.000640625,
+   "age_mean": 0.9965602964399068,
+   "age_p95": 2.0,
+   "age_max": 4
+  },
+  {
+   "sigma": 0.5,
+   "mode": "async",
+   "k": null,
+   "throughput": 56.42594217007941,
+   "dropped_frac": 0.0,
+   "age_mean": 0.9993984375,
+   "age_p95": 2.0,
+   "age_max": 7
+  },
+  {
+   "sigma": 1.0,
+   "mode": "sync",
+   "throughput": 5.573056099038226
+  },
+  {
+   "sigma": 1.0,
+   "mode": "async",
+   "k": 0,
+   "throughput": 14.83793282987121,
+   "dropped_frac": 0.619015625,
+   "age_mean": 0.0,
+   "age_p95": 0.0,
+   "age_max": 0
+  },
+  {
+   "sigma": 1.0,
+   "mode": "async",
+   "k": 1,
+   "throughput": 31.326855525418022,
+   "dropped_frac": 0.1913515625,
+   "age_mean": 0.528959394050644,
+   "age_p95": 1.0,
+   "age_max": 1
+  },
+  {
+   "sigma": 1.0,
+   "mode": "async",
+   "k": 4,
+   "throughput": 38.11608117610029,
+   "dropped_frac": 0.023046875,
+   "age_mean": 0.8603918432626949,
+   "age_p95": 3.0,
+   "age_max": 4
+  },
+  {
+   "sigma": 1.0,
+   "mode": "async",
+   "k": null,
+   "throughput": 38.69768605895443,
+   "dropped_frac": 0.0,
+   "age_mean": 0.998765625,
+   "age_p95": 3.0,
+   "age_max": 41
+  },
+  {
+   "sigma": 1.5,
+   "mode": "sync",
+   "throughput": 1.461610291604647
+  },
+  {
+   "sigma": 1.5,
+   "mode": "async",
+   "k": 0,
+   "throughput": 11.31412983995424,
+   "dropped_frac": 0.46171875,
+   "age_mean": 0.0,
+   "age_p95": 0.0,
+   "age_max": 0
+  },
+  {
+   "sigma": 1.5,
+   "mode": "async",
+   "k": 1,
+   "throughput": 17.602784565914014,
+   "dropped_frac": 0.1598125,
+   "age_mean": 0.3571654392620695,
+   "age_p95": 1.0,
+   "age_max": 1
+  },
+  {
+   "sigma": 1.5,
+   "mode": "async",
+   "k": 4,
+   "throughput": 19.81483864873839,
+   "dropped_frac": 0.0392265625,
+   "age_mean": 0.6207238634238366,
+   "age_p95": 2.0,
+   "age_max": 4
+  },
+  {
+   "sigma": 1.5,
+   "mode": "async",
+   "k": null,
+   "throughput": 20.80886167245892,
+   "dropped_frac": 0.0,
+   "age_mean": 0.996671875,
+   "age_p95": 4.0,
+   "age_max": 256
+  }
+ ]
+}

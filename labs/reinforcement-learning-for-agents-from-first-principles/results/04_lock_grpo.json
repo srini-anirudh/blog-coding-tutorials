@@ -1,0 +1,138 @@
+{
+ "hardware": "AMD EPYC 7R13, 2 threads, CPU only; python 3.12.15, torch 2.15.0, numpy 2.5.4",
+ "command": "python labs/reinforcement-learning-for-agents-from-first-principles/scripts/04_lock_grpo.py",
+ "horizon_sweep": [
+  {
+   "H": 5,
+   "predicted_inf_at_start": 0.9581217138197959,
+   "inf_first": 0.9791666666666666,
+   "inf_mean": 0.15680555555555556,
+   "success": 0.9958248535792033,
+   "env_steps": 189260.0,
+   "backward_rollouts": 38400.0,
+   "iter_to_half": 2,
+   "success_per_seed": [
+    0.996,
+    0.9958,
+    0.9957
+   ]
+  },
+  {
+   "H": 10,
+   "predicted_inf_at_start": 0.5969531140390456,
+   "inf_first": 0.6041666666666666,
+   "inf_mean": 0.27694444444444444,
+   "success": 0.9905916849772135,
+   "env_steps": 368603.3333333333,
+   "backward_rollouts": 38400.0,
+   "iter_to_half": 12,
+   "success_per_seed": [
+    0.9907,
+    0.9897,
+    0.9914
+   ]
+  },
+  {
+   "H": 20,
+   "predicted_inf_at_start": 0.0885964762795517,
+   "inf_first": 0.0625,
+   "inf_mean": 0.4502777777777778,
+   "success": 0.9744188984235128,
+   "env_steps": 631634.0,
+   "backward_rollouts": 38400.0,
+   "iter_to_half": 69,
+   "success_per_seed": [
+    0.9739,
+    0.9741,
+    0.9753
+   ]
+  },
+  {
+   "H": 40,
+   "predicted_inf_at_start": 0.0010628878109458784,
+   "inf_first": 0.0,
+   "inf_mean": 0.0014583333333333334,
+   "success": 0.00022162380628287792,
+   "env_steps": 194669.33333333334,
+   "backward_rollouts": 38400.0,
+   "iter_to_half": "never",
+   "success_per_seed": [
+    0.0002,
+    0.0002,
+    0.0003
+   ]
+  }
+ ],
+ "interventions": [
+  {
+   "variant": "binary, G = 8 (baseline)",
+   "inf_first": 0.0,
+   "inf_mean": 0.0014583333333333334,
+   "success": 0.00022162380628287792,
+   "env_steps": 194669.33333333334,
+   "backward_rollouts": 38400.0,
+   "iter_to_half": "never",
+   "success_per_seed": [
+    0.0002,
+    0.0002,
+    0.0003
+   ]
+  },
+  {
+   "variant": "binary, G = 32",
+   "inf_first": 0.020833333333333332,
+   "inf_mean": 0.008680555555555556,
+   "success": 0.0009650218610962232,
+   "env_steps": 801522.0,
+   "backward_rollouts": 153600.0,
+   "iter_to_half": "never",
+   "success_per_seed": [
+    0.0018,
+    0.0002,
+    0.0009
+   ]
+  },
+  {
+   "variant": "binary, G = 8, drop zero-variance groups",
+   "inf_first": 0.0,
+   "inf_mean": 0.0014583333333333334,
+   "success": 0.00022162380628287792,
+   "env_steps": 194669.33333333334,
+   "backward_rollouts": 56.0,
+   "iter_to_half": "never",
+   "success_per_seed": [
+    0.0002,
+    0.0002,
+    0.0003
+   ]
+  },
+  {
+   "variant": "graded reward, G = 8",
+   "inf_first": 1.0,
+   "inf_mean": 0.809513888888889,
+   "success": 0.937680721282959,
+   "env_steps": 1232009.6666666667,
+   "backward_rollouts": 38400.0,
+   "iter_to_half": 126,
+   "success_per_seed": [
+    0.9375,
+    0.9378,
+    0.9377
+   ]
+  },
+  {
+   "variant": "horizon curriculum h0 5, +5 every 30 iters",
+   "inf_first": 0.9791666666666666,
+   "inf_mean": 0.8239583333333332,
+   "success": 0.9069106380144755,
+   "env_steps": 930956.6666666666,
+   "backward_rollouts": 38400.0,
+   "iter_to_half": 215,
+   "success_per_seed": [
+    0.9065,
+    0.9069,
+    0.9074
+   ]
+  }
+ ]
+}

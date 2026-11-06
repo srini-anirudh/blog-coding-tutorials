@@ -1,0 +1,82 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, CPU only; python 3.12.15, torch 2.15.0, numpy 2.5.4",
+ "command": "python labs/reinforcement-learning-for-agents-from-first-principles/scripts/02_reward_shaping.py",
+ "optimal": [
+  {
+   "reward": "sparse",
+   "reaches_goal": true,
+   "steps": 5,
+   "return": 0.961
+  },
+  {
+   "reward": "milestone",
+   "reaches_goal": true,
+   "steps": 29,
+   "return": 3.009
+  },
+  {
+   "reward": "potential",
+   "reaches_goal": true,
+   "steps": 5,
+   "return": 0.961
+  }
+ ],
+ "cycles": {
+  "home -> home": {
+   "sparse": 0.0,
+   "milestone": 0.0,
+   "potential": 0.0
+  },
+  "search -> search": {
+   "sparse": 0.0,
+   "milestone": 0.0,
+   "potential": 0.0
+  },
+  "results -> results": {
+   "sparse": 0.0,
+   "milestone": 0.0,
+   "potential": 0.0
+  },
+  "product -> product": {
+   "sparse": 0.0,
+   "milestone": 0.0,
+   "potential": 0.0
+  },
+  "cart -> cart": {
+   "sparse": 0.0,
+   "milestone": 0.0,
+   "potential": 0.0
+  },
+  "search -> results -> search": {
+   "sparse": 0.0,
+   "milestone": 0.0,
+   "potential": 0.0
+  },
+  "results -> product -> results": {
+   "sparse": 0.0,
+   "milestone": 0.1,
+   "potential": 0.0
+  },
+  "product -> cart -> product": {
+   "sparse": 0.0,
+   "milestone": 0.2,
+   "potential": 0.0
+  }
+ },
+ "q_learning": {
+  "sparse": {
+   "success": 1.0,
+   "steps": 5.0
+  },
+  "milestone": {
+   "success": 0.0,
+   "steps": 30.0
+  },
+  "potential": {
+   "success": 1.0,
+   "steps": 5.0
+  }
+ },
+ "random_potentials_same_policy_zero_at_timeout_True": 200,
+ "random_potentials_same_policy_zero_at_timeout_False": 17
+}

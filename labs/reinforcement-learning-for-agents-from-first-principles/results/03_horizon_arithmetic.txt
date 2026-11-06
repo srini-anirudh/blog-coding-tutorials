@@ -1,0 +1,43 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only; python 3.12.15, torch 2.15.0, numpy 2.5.4
+# command: python labs/reinforcement-learning-for-agents-from-first-principles/scripts/03_horizon_arithmetic.py
+
+== 1. P_informative(p, G) = 1 - p^G - (1-p)^G against simulation, G = 8 ==
+   p  formula  simulated
+----  -------  ---------
+   0        0          0
+0.01  0.07726     0.0775
+ 0.1   0.5695     0.5691
+ 0.3   0.9423      0.942
+ 0.5   0.9922      0.992
+ 0.7   0.9423      0.942
+ 0.9   0.5695     0.5648
+   1        0          0
+
+== 2. p = q^H and the informative fraction, q = 0.93, G = 8 ==
+  H    p = q^H  P_inf exact     G q^H  P_inf simulated  useful groups  graded reward: var > 0  G for P_inf >= 0.5
+---  ---------  -----------  --------  ---------------  -------------  ----------------------  ------------------
+  5     0.6957       0.9451     5.566           0.9428       1 in 1.1                  0.9454                   3
+ 10      0.484        0.992     3.872           0.9917       1 in 1.0                  0.9971                   3
+ 20     0.2342       0.8818     1.874           0.8802       1 in 1.1                       1                   3
+ 30     0.1134       0.6181    0.9069           0.6218       1 in 1.6                       1                   6
+ 50    0.02656       0.1937    0.2124            0.192       1 in 5.2                       1                  26
+100  0.0007052     0.005627  0.005641          0.00524     1 in 177.7                       1                 983
+The post says a 100-step task gives 'one in forty' useful groups at G = 8, q = 0.93. The formula gives 1 in 178; one in forty would need q of about 0.944.
+
+== 3. the fifty-percent horizon H_50 = ln 0.5 / ln q, and what recovery does to it ==
+    q  H_50 exact  0.69 / (1 - q)
+-----  ----------  --------------
+  0.9       6.579           6.931
+ 0.93       9.551           9.902
+ 0.97       22.76            23.1
+ 0.99       68.97           69.31
+0.999       692.8           693.1
+
+q = 0.93, an error is caught (and the step retried) with probability r:
+catch rate r  H_50 (closed form)   H  simulated success at H
+------------  ------------------  --  ----------------------
+           0               9.551  10                  0.4906
+         0.5               18.76  19                   0.497
+         0.8               46.39  46                  0.5075
+         0.9               92.44  92                  0.5018
+Per-step error is 7% in every row. Only the catch rate changes, and H_50 grows by 10x.

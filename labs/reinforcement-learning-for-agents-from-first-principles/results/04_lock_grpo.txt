@@ -1,0 +1,23 @@
+# hardware: AMD EPYC 7R13, 2 threads, CPU only; python 3.12.15, torch 2.15.0, numpy 2.5.4
+# command: python labs/reinforcement-learning-for-agents-from-first-principles/scripts/04_lock_grpo.py
+
+K = 4 choices, 16 tasks, q0 = 0.8, SGD lr 20.0, 300 iterations, 3 seeds. 'success' is the exact expected binary success of the sampling policy at the target H.
+
+== 1. binary reward, G = 8: horizon sweep ==
+ H  P_inf predicted at start  measured (iter 0)  mean over run  final success  iters to success 0.5  env steps
+--  ------------------------  -----------------  -------------  -------------  --------------------  ---------
+ 5                    0.9581             0.9792         0.1568         0.9958                     2  1.893e+05
+10                     0.597             0.6042         0.2769         0.9906                    12  3.686e+05
+20                    0.0886             0.0625         0.4503         0.9744                    69  6.316e+05
+40                  0.001063                  0       0.001458      0.0002216                 never  1.947e+05
+
+== 2. H = 40: the interventions, same number of optimiser steps ==
+                                   variant  mean informative fraction  final success  iters to 0.5  env steps  rollouts through backward
+------------------------------------------  -------------------------  -------------  ------------  ---------  -------------------------
+                  binary, G = 8 (baseline)                   0.001458      0.0002216         never  1.947e+05                   3.84e+04
+                            binary, G = 32                   0.008681       0.000965         never  8.015e+05                  1.536e+05
+  binary, G = 8, drop zero-variance groups                   0.001458      0.0002216         never  1.947e+05                         56
+                      graded reward, G = 8                     0.8095         0.9377           126  1.232e+06                   3.84e+04
+horizon curriculum h0 5, +5 every 30 iters                      0.824         0.9069           215   9.31e+05                   3.84e+04
+
+wall time 16.2 s

@@ -1,0 +1,32 @@
+# hardware: AMD EPYC 7R13, 2 threads, CPU only; python 3.12.15, torch 2.15.0, numpy 2.5.4
+# command: python labs/reinforcement-learning-for-agents-from-first-principles/scripts/05_step_credit.py
+
+== 1. worked example: corridor of 4 cells, goal at cell 3, gamma 0.9, one group of 4 rollouts ==
+rollout  t  cell  action  return  A_traj  A_step  A_two_level
+-------  -  ----  ------  ------  ------  ------  -----------
+      A  0     0   right   0.729   0.866   1.769        2.635
+      A  1     1  reload    0.81   0.866  -1.155       -0.289
+      A  2     1   right     0.9   0.866   0.577        1.443
+      A  3     2   right       1   0.866       0        0.866
+      B  0     0   right    0.81   0.866   2.019        2.885
+      B  1     1   right     0.9   0.866   0.577        1.443
+      B  2     2   right       1   0.866       0        0.866
+      C  0     0    left       0  -0.866  -0.474        -1.34
+      C  1     0    left       0  -0.866  -0.474        -1.34
+      C  2     0    left       0  -0.866  -0.474        -1.34
+      C  3     0    left       0  -0.866  -0.474        -1.34
+      D  0     0  reload       0  -0.866  -0.474        -1.34
+      D  1     0    left       0  -0.866  -0.474        -1.34
+      D  2     0  reload       0  -0.866  -0.474        -1.34
+      D  3     0    left       0  -0.866  -0.474        -1.34
+the reload inside winning rollout A: trajectory-level advantage +0.866, two-level advantage -0.289
+
+== 2. 7 x 7 grid, budget 30 steps (shortest path 12), 4 groups x G = 8, SGD lr 1.0, 150 iterations, 5 seeds ==
+                               advantage  iters to success 0.9  iters to <= 13 steps  final success  final steps (wins)  final wasted-step frac  steps in shared anchor
+----------------------------------------  --------------------  --------------------  -------------  ------------------  ----------------------  ----------------------
+              trajectory-level, binary R                    66          5 of 5 never           0.99               16.02                  0.1089                       0
+  trajectory-level, R = gamma^(length-1)                    66                    96              1                12.2                0.006434                       0
+two-level: episode + anchor step (lam 1)                    40                    53         0.9994                12.1                0.002855                   0.984
+'final' = mean of the last 10 iterations, then over seeds. Wasted step = reload or wall bump.
+
+wall time 14.9 s

@@ -1,0 +1,32 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only; python 3.12.15, torch 2.15.0, numpy 2.5.4
+# command: python labs/reinforcement-learning-for-agents-from-first-principles/scripts/06_rollout_engine.py
+
+Durations: T = exp(sigma Z), median 1 time unit. Training step time is treated as 0.
+
+== 1. synchronous utilisation E[T] / E[max T], 2000 rounds per cell ==
+sigma   N = 8   N = 64  N = 512
+-----  ------  -------  -------
+ 0.25  0.7168   0.5689   0.4799
+  0.5  0.5299   0.3424   0.2458
+    1  0.3251   0.1407  0.07235
+  1.5  0.2252  0.06877  0.02736
+
+== 2. 64 workers, trainer steps every B = 64 finished trajectories, 2000 trainer steps ==
+sigma            mode  usable traj / time  dropped as stale  age mean  age p95  age max
+-----  --------------  ------------------  ----------------  --------  -------  -------
+  0.5    sync barrier               19.26                 0         0        0        0
+  0.5    async, k = 0               11.15            0.8019         0        0        0
+  0.5    async, k = 1               46.79            0.1701    0.7643        1        1
+  0.5    async, k = 4               56.43         0.0006406    0.9966        2        4
+  0.5  async, k = inf               56.43                 0    0.9994        2        7
+    1    sync barrier               5.573                 0         0        0        0
+    1    async, k = 0               14.84             0.619         0        0        0
+    1    async, k = 1               31.33            0.1914     0.529        1        1
+    1    async, k = 4               38.12           0.02305    0.8604        3        4
+    1  async, k = inf                38.7                 0    0.9988        3       41
+  1.5    sync barrier               1.462                 0         0        0        0
+  1.5    async, k = 0               11.31            0.4617         0        0        0
+  1.5    async, k = 1                17.6            0.1598    0.3572        1        1
+  1.5    async, k = 4               19.81           0.03923    0.6207        2        4
+  1.5  async, k = inf               20.81                 0    0.9967        4      256
+Async with k = inf reaches N / E[T] = N exp(-sigma^2 / 2), the ceiling for N busy workers.

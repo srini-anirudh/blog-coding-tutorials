@@ -1,0 +1,35 @@
+# hardware: AMD EPYC 7R13, 8 threads, CPU only; python 3.12.15, torch 2.15.0, numpy 2.5.4
+# command: python labs/reinforcement-learning-for-agents-from-first-principles/scripts/02_reward_shaping.py
+
+gamma = 0.99, step budget = 30. Pages: home -> search -> results -> product -> cart -> checkout
+
+== 1. optimal policy of each reward (value iteration) ==
+   reward  reaches checkout  steps  optimal return                                                                  path
+---------  ----------------  -----  --------------  --------------------------------------------------------------------
+   sparse              True      5           0.961                             home search results product cart checkout
+milestone              True     29           3.009  home search results product cart product cart product ... (29 steps)
+potential              True      5           0.961                             home search results product cart checkout
+
+== 2. cycle test: undiscounted shaping reward collected once around each cycle ==
+                        cycle  sparse  milestone  potential
+-----------------------------  ------  ---------  ---------
+                 home -> home       0          0          0
+             search -> search       0          0          0
+           results -> results       0          0          0
+           product -> product       0          0          0
+                 cart -> cart       0          0          0
+  search -> results -> search       0          0          0
+results -> product -> results       0        0.1          0
+   product -> cart -> product       0        0.2          0
+discounted (gamma = 0.99) gain around product -> cart -> product: sparse +0.0000, milestone +0.2000, potential -0.0140
+
+== 3. tabular Q-learning, 2000 episodes, explore 0.2, 5 seeds: greedy policy afterwards ==
+   reward  success rate  mean steps
+---------  ------------  ----------
+   sparse             1           5
+milestone             0          30
+potential             1           5
+
+== 4. potential shaping with 200 random potentials Phi in [-5, 5]: optimal first actions unchanged? ==
+Phi = 0 at the goal and at time-out: 200 / 200 random potentials give the sparse reward's optimal action at every page
+Phi = 0 at the goal only: 17 / 200 random potentials give the sparse reward's optimal action at every page

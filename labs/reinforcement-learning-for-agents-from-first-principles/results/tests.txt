@@ -1,0 +1,5 @@
+# hardware: AMD EPYC 7R13, 8 threads (torch capped at 2 by conftest), CPU only; python 3.12.15, torch 2.15.0, numpy 2.5.4
+# command: python -m pytest labs/reinforcement-learning-for-agents-from-first-principles -m "not slow and not gpu and not network"
+
+............................                                             [100%]
+28 passed in 3.89s
