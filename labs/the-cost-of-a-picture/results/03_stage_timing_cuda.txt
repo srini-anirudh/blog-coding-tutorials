@@ -1,0 +1,31 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2
+# command: python labs/the-cost-of-a-picture/scripts/03_stage_timing.py --device cuda --eager --repeats 5
+Qwen2-VL-2B: encoder 665M params, language model 1.31B non-embedding params, device cuda, BF16
+     image patches tokens  model  prep ms   enc ms  pref ms dec ms/tok enc TF/s pref TF/s   KV MB model MB
+   448x448    1024    256    256      6.3     23.0     24.5      21.88    66.70     31.55     8.3      8.3
+   672x672    2304    576    576     19.8     24.1     25.1      22.13   163.25     66.10    17.5     17.5
+ 1344x1008    6912   1728   1728     72.8     59.8     26.8      22.95   284.60    192.26    50.5     50.5
+ 1792x1344   12288   3072   3072     97.6    121.3     27.3      22.28   338.82    359.08    89.0     89.0
+
+Measured latency for one request, split by stage, for answers of 1, 10 and 200 tokens
+     image answer  total ms  prep+enc+prefill  decode
+   448x448      1        76               71%     29%
+   448x448     10       273               20%     80%
+   448x448    200      4430                1%     99%
+   672x672      1        91               76%     24%
+   672x672     10       290               24%     76%
+   672x672    200      4495                2%     98%
+ 1344x1008      1       182               87%     13%
+ 1344x1008     10       389               41%     59%
+ 1344x1008    200      4750                3%     97%
+ 1792x1344      1       268               92%      8%
+ 1792x1344     10       469               52%     48%
+ 1792x1344    200      4702                5%     95%
+
+Same prefill FLOPs, two attention kernels (eager writes the attention matrix out)
+   448x448 sdpa     24.5 ms   eager     28.5 ms   ratio 1.16
+   672x672 sdpa     25.1 ms   eager     29.0 ms   ratio 1.15
+ 1344x1008 sdpa     26.8 ms   eager     35.3 ms   ratio 1.32
+ 1792x1344 sdpa     27.3 ms   eager     88.1 ms   ratio 3.23
+
+Times are medians of the repeats after one warm-up. 'model' columns come from costmodel.py.

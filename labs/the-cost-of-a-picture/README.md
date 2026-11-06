@@ -92,7 +92,9 @@ Tests on AMD EPYC 7R13, 8 threads: 35 passed offline (`not slow and not gpu and 
 | Stage times, 672x672 (`03`) | preprocess 14 ms, encoder 6.6 s, prefill 2.8 s, decode 0.32 s per token | CPU, noisy |
 | Prefix cache with token-id keys only (`05`) | picture B (blue square) reuses 272 of 288 tokens of picture A and answers **"red"** | CPU |
 | Prefix cache with the image hash in the key (`05`) | picture B reuses 0 tokens and answers "Blue"; a follow-up about A reuses 272 of 291 tokens and skips the encoder | CPU |
-| GPU stage timing, eager vs SDPA prefill (`03 --device cuda --eager`) | not yet measured | NVIDIA H100 80GB HBM3, queued |
+| Stage times on the GPU, Qwen2-VL-2B, 448x448 / 672x672 / 1344x1008 / 1792x1344 (`03 --device cuda --eager`) | encoder 23.0 / 24.1 / 59.8 / 121.3 ms; prefill 24.5 / 25.1 / 26.8 / 27.3 ms; decode about 22 ms per token at every size | NVIDIA H100 80GB HBM3, BF16, median of 5 |
+| Image share of request time on the GPU, 1-token / 10-token / 200-token answers | 448x448: 71% / 20% / 1%; 1792x1344: 92% / 52% / 5% | same run |
+| Eager vs SDPA prefill, same FLOPs | ratio 1.16 / 1.15 / 1.32 / 3.23 for the four sizes (1792x1344: 88.1 ms eager vs 27.3 ms SDPA) | same run |
 
 Notes on the numbers.
 
@@ -124,7 +126,7 @@ Notes on the numbers.
 | Fewer tokens by design (pixel shuffle, pooling, resampler, convolution) | `02_connectors.py`, `connectors.py` |
 | Pruning and merging after the fact (FastV score, random, uniform, diversity, ToMe) | `selection.py`, `qwen.py`, `04_pruning.py` |
 | What breaks when tokens go (position bias, random and pooling baselines, reading vs scene) | `04_pruning.py` |
-| Insight: FLOPs vs time, fused attention kernels | `03_stage_timing.py --eager` (GPU, queued); `qwen.attention_received` scores tokens without the attention matrix |
+| Insight: FLOPs vs time, fused attention kernels | `03_stage_timing.py --eager` (GPU, `results/03_stage_timing_cuda.txt`); `qwen.attention_received` scores tokens without the attention matrix |
 | Serving images at scale: embedding cache, image-hash prefix cache | `serving.py`, `05_prefix_cache.py` |
 | Measuring efficiency honestly (include every stage, random and pooling baselines) | `03_stage_timing.py`, `04_pruning.py` |
 
@@ -144,6 +146,6 @@ Notes on the numbers.
   matters less than token count) is not tested.
 - Quantization, distillation, speculative decoding, video, disaggregation and scheduling are not built. The post
   covers them from the literature.
-- GPU stage timing (`03 --device cuda --eager`) is queued and not yet measured (see `scripts/gpu_queue.sh`). Real batched serving, TTFT under load
+- The GPU stage timing is one run of 5 repeats on a shared host (`results/03_stage_timing_cuda.txt`). Real batched serving, TTFT under load
   and concurrency were not measured. The concurrency figures in `01` are estimates from the formula.
 
