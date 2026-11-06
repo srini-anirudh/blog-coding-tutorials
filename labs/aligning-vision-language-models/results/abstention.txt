@@ -1,0 +1,10 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/aligning-vision-language-models/scripts/abstention.py
+
+overconfident: accuracy on answerable 0.676; mean confidence answerable 0.695, unanswerable 0.622; ECE 0.166; coverage at risk <= 5%: 0.000
+  c=1: always answer ER=+0.023 | best tau=0.71 ER=+0.158 cov=0.441 risk=0.321 | tau=c/(1+c)=0.50 ER=+0.119 cov=0.760 risk=0.422
+  c=4: always answer ER=-1.443 | best tau=0.96 ER=+0.031 cov=0.100 risk=0.138 | tau=c/(1+c)=0.80 ER=-0.118 cov=0.325 risk=0.273
+
+trained to abstain: accuracy on answerable 0.657; mean confidence answerable 0.584, unanswerable 0.287; ECE 0.022; coverage at risk <= 5%: 0.039
+  c=1: always answer ER=-0.007 | best tau=0.50 ER=+0.213 cov=0.486 risk=0.280 | tau=c/(1+c)=0.50 ER=+0.213 cov=0.486 risk=0.280
+  c=4: always answer ER=-1.517 | best tau=0.85 ER=+0.072 cov=0.141 risk=0.098 | tau=c/(1+c)=0.80 ER=+0.063 cov=0.182 risk=0.130

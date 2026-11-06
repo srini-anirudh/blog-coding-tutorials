@@ -1,0 +1,33 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/aligning-vision-language-models/scripts/token_credit.py
+Part 1a. Minimal pairs: norm of the net per-token push v_t, by position relative to the edit
+  position  <=-4 (0 = edited word)  mean |v_t| = 0.0000   max = 0.0000   tokens = 196
+  position    -3 (0 = edited word)  mean |v_t| = 0.0000   max = 0.0000   tokens = 40
+  position    -2 (0 = edited word)  mean |v_t| = 0.0000   max = 0.0000   tokens = 40
+  position    -1 (0 = edited word)  mean |v_t| = 0.0000   max = 0.0000   tokens = 60
+  position    +0 (0 = edited word)  mean |v_t| = 23.1106   max = 42.2743   tokens = 60
+  position    +1 (0 = edited word)  mean |v_t| = 19.0045   max = 38.8313   tokens = 60
+  position    +2 (0 = edited word)  mean |v_t| = 0.0005   max = 0.0068   tokens = 60
+  position    +3 (0 = edited word)  mean |v_t| = 0.6425   max = 6.8909   tokens = 60
+  position    +4 (0 = edited word)  mean |v_t| = 0.3334   max = 0.8733   tokens = 46
+  position    +5 (0 = edited word)  mean |v_t| = 0.5363   max = 2.0471   tokens = 46
+  position   +6+ (0 = edited word)  mean |v_t| = 0.3192   max = 2.9540   tokens = 252
+
+Part 1b. Cosine between the whole-pair gradient and the gradient of the edited claim alone
+  minimal          0.997  (sd 0.007, 60 pairs)
+  rewritten        0.689  (sd 0.129, 60 pairs)
+  minimal_dense    1.000  (sd 0.000, 60 pairs)
+  rewritten_dense  0.971  (sd 0.023, 60 pairs)
+
+Part 2. Image-contrast token weight |log p(y_t|I) - log p(y_t|noised I)|, noise sd 3.0, by token type
+  count        0.736   (1225 tokens; e.g. 'one')
+  colour       1.111   (1225 tokens; e.g. 'blue')
+  object       1.378   (1225 tokens; e.g. 'car')
+  separator ;  0.000   (1225 tokens; e.g. ';')
+  style        0.239   (357 tokens; e.g. 'lovely')
+  <eos>        2.302   (400 tokens; e.g. '<eos>')
+
+Part 3. DPO on 500 colour-error pairs: minimal-edit winners versus rewritten winners
+  minimal    colour_err=0.320  chair_i=0.210  recall=0.625  policy_pref_acc=0.818  implicit_reward_acc=0.778   (3 seeds)
+  rewritten  colour_err=0.339  chair_i=0.196  recall=0.627  policy_pref_acc=0.821  implicit_reward_acc=0.764   (3 seeds)
+  sft        colour_err=0.325  chair_i=0.172  recall=0.688  policy_pref_acc=0.851

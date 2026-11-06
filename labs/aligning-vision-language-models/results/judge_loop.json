@@ -1,0 +1,407 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/aligning-vision-language-models/scripts/judge_loop.py --seeds 0",
+ "args": {
+  "rounds": 6,
+  "seeds": [
+   0
+  ],
+  "scenes": 512,
+  "k": 4,
+  "steps": 30,
+  "details": [
+   0.5,
+   1.0
+  ]
+ },
+ "judges": {
+  "count-blind judge": {
+   "object": 0.9,
+   "colour": 0.9,
+   "count": 0.15
+  },
+  "claim-checking judge": {
+   "object": 0.9,
+   "colour": 0.9,
+   "count": 0.9
+  }
+ },
+ "results": {
+  "count-blind judge, detail 0.5": [
+   [
+    {
+     "chair_i": 0.17209302325581396,
+     "chair_s": 0.3433333333333333,
+     "recall": 0.688017669795693,
+     "colour_err": 0.32504012841091495,
+     "count_err": 0.2174959871589085,
+     "claims_per_response": 2.5083333333333333,
+     "object_per_response": 0.43166666666666664,
+     "colour_per_response": 0.675,
+     "count_per_response": 0.45166666666666666,
+     "style_per_response": 0.0
+    },
+    {
+     "chair_i": 0.15176151761517614,
+     "chair_s": 0.25,
+     "recall": 0.518498067366096,
+     "colour_err": 0.29818956336528224,
+     "count_err": 0.2108626198083067,
+     "claims_per_response": 1.845,
+     "object_per_response": 0.28,
+     "colour_per_response": 0.4666666666666667,
+     "count_per_response": 0.33,
+     "style_per_response": 0.0,
+     "pairs": 506
+    },
+    {
+     "chair_i": 0.15625,
+     "chair_s": 0.23666666666666666,
+     "recall": 0.44726670347874103,
+     "colour_err": 0.3135802469135803,
+     "count_err": 0.1962962962962963,
+     "claims_per_response": 1.6,
+     "object_per_response": 0.25,
+     "colour_per_response": 0.42333333333333334,
+     "count_per_response": 0.265,
+     "style_per_response": 0.0,
+     "pairs": 497
+    },
+    {
+     "chair_i": 0.1402831402831403,
+     "chair_s": 0.175,
+     "recall": 0.36885698509110987,
+     "colour_err": 0.2634730538922156,
+     "count_err": 0.18263473053892215,
+     "claims_per_response": 1.295,
+     "object_per_response": 0.18166666666666667,
+     "colour_per_response": 0.29333333333333333,
+     "count_per_response": 0.20333333333333334,
+     "style_per_response": 0.0,
+     "pairs": 490
+    },
+    {
+     "chair_i": 0.12811387900355872,
+     "chair_s": 0.17,
+     "recall": 0.405853119823302,
+     "colour_err": 0.2761904761904762,
+     "count_err": 0.20272108843537415,
+     "claims_per_response": 1.405,
+     "object_per_response": 0.18,
+     "colour_per_response": 0.3383333333333333,
+     "count_per_response": 0.24833333333333332,
+     "style_per_response": 0.0,
+     "pairs": 474
+    },
+    {
+     "chair_i": 0.14236902050113895,
+     "chair_s": 0.195,
+     "recall": 0.4157923799006074,
+     "colour_err": 0.2695883134130146,
+     "count_err": 0.19256308100929614,
+     "claims_per_response": 1.4633333333333334,
+     "object_per_response": 0.20833333333333334,
+     "colour_per_response": 0.3383333333333333,
+     "count_per_response": 0.24166666666666667,
+     "style_per_response": 0.0,
+     "pairs": 479
+    },
+    {
+     "chair_i": 0.1350253807106599,
+     "chair_s": 0.20666666666666667,
+     "recall": 0.47045831032578683,
+     "colour_err": 0.2887323943661972,
+     "count_err": 0.21713615023474178,
+     "claims_per_response": 1.6416666666666666,
+     "object_per_response": 0.22166666666666668,
+     "colour_per_response": 0.41,
+     "count_per_response": 0.30833333333333335,
+     "style_per_response": 0.0,
+     "pairs": 472
+    }
+   ]
+  ],
+  "claim-checking judge, detail 0.5": [
+   [
+    {
+     "chair_i": 0.17209302325581396,
+     "chair_s": 0.3433333333333333,
+     "recall": 0.688017669795693,
+     "colour_err": 0.32504012841091495,
+     "count_err": 0.2174959871589085,
+     "claims_per_response": 2.5083333333333333,
+     "object_per_response": 0.43166666666666664,
+     "colour_per_response": 0.675,
+     "count_per_response": 0.45166666666666666,
+     "style_per_response": 0.0
+    },
+    {
+     "chair_i": 0.14590747330960854,
+     "chair_s": 0.2,
+     "recall": 0.39757040309221425,
+     "colour_err": 0.2847222222222222,
+     "count_err": 0.19722222222222222,
+     "claims_per_response": 1.405,
+     "object_per_response": 0.205,
+     "colour_per_response": 0.3416666666666667,
+     "count_per_response": 0.23666666666666666,
+     "style_per_response": 0.0,
+     "pairs": 507
+    },
+    {
+     "chair_i": 0.14353312302839116,
+     "chair_s": 0.15166666666666667,
+     "recall": 0.29983434566537825,
+     "colour_err": 0.2541436464088398,
+     "count_err": 0.18047882136279927,
+     "claims_per_response": 1.0566666666666666,
+     "object_per_response": 0.15166666666666667,
+     "colour_per_response": 0.23,
+     "count_per_response": 0.16333333333333333,
+     "style_per_response": 0.0,
+     "pairs": 499
+    },
+    {
+     "chair_i": 0.17304492512479203,
+     "chair_s": 0.17333333333333334,
+     "recall": 0.274434014356709,
+     "colour_err": 0.2575452716297787,
+     "count_err": 0.1750503018108652,
+     "claims_per_response": 1.0016666666666667,
+     "object_per_response": 0.17333333333333334,
+     "colour_per_response": 0.21333333333333335,
+     "count_per_response": 0.145,
+     "style_per_response": 0.0,
+     "pairs": 461
+    },
+    {
+     "chair_i": 0.18592964824120603,
+     "chair_s": 0.185,
+     "recall": 0.26836002208724463,
+     "colour_err": 0.2716049382716049,
+     "count_err": 0.17078189300411523,
+     "claims_per_response": 0.995,
+     "object_per_response": 0.185,
+     "colour_per_response": 0.22,
+     "count_per_response": 0.13833333333333334,
+     "style_per_response": 0.0,
+     "pairs": 384
+    },
+    {
+     "chair_i": 0.1651376146788991,
+     "chair_s": 0.15,
+     "recall": 0.25124240750966315,
+     "colour_err": 0.24395604395604395,
+     "count_err": 0.16923076923076924,
+     "claims_per_response": 0.9083333333333333,
+     "object_per_response": 0.15,
+     "colour_per_response": 0.185,
+     "count_per_response": 0.12833333333333333,
+     "style_per_response": 0.0,
+     "pairs": 377
+    },
+    {
+     "chair_i": 0.13769751693002258,
+     "chair_s": 0.10166666666666667,
+     "recall": 0.2109331860850359,
+     "colour_err": 0.24083769633507854,
+     "count_err": 0.1544502617801047,
+     "claims_per_response": 0.7383333333333333,
+     "object_per_response": 0.10166666666666667,
+     "colour_per_response": 0.15333333333333332,
+     "count_per_response": 0.09833333333333333,
+     "style_per_response": 0.0,
+     "pairs": 370
+    }
+   ]
+  ],
+  "count-blind judge, detail 1.0": [
+   [
+    {
+     "chair_i": 0.17209302325581396,
+     "chair_s": 0.3433333333333333,
+     "recall": 0.688017669795693,
+     "colour_err": 0.32504012841091495,
+     "count_err": 0.2174959871589085,
+     "claims_per_response": 2.5083333333333333,
+     "object_per_response": 0.43166666666666664,
+     "colour_per_response": 0.675,
+     "count_per_response": 0.45166666666666666,
+     "style_per_response": 0.0
+    },
+    {
+     "chair_i": 0.2700696055684455,
+     "chair_s": 0.6333333333333333,
+     "recall": 0.864715626725566,
+     "colour_err": 0.3312142403051494,
+     "count_err": 0.23521932612841703,
+     "claims_per_response": 3.591666666666667,
+     "object_per_response": 0.97,
+     "colour_per_response": 0.8683333333333333,
+     "count_per_response": 0.6166666666666667,
+     "style_per_response": 0.0,
+     "pairs": 466
+    },
+    {
+     "chair_i": 0.3660270078180526,
+     "chair_s": 0.855,
+     "recall": 0.9099944781888459,
+     "colour_err": 0.351457399103139,
+     "count_err": 0.2561659192825112,
+     "claims_per_response": 4.69,
+     "object_per_response": 1.7166666666666666,
+     "colour_per_response": 1.045,
+     "count_per_response": 0.7616666666666667,
+     "style_per_response": 0.0,
+     "pairs": 490
+    },
+    {
+     "chair_i": 0.39251276233692567,
+     "chair_s": 0.92,
+     "recall": 0.9387078961899503,
+     "colour_err": 0.36087768440709617,
+     "count_err": 0.2791783380018674,
+     "claims_per_response": 5.876666666666667,
+     "object_per_response": 2.3066666666666666,
+     "colour_per_response": 1.2883333333333333,
+     "count_per_response": 0.9966666666666667,
+     "style_per_response": 0.0016666666666666668,
+     "pairs": 484
+    },
+    {
+     "chair_i": 0.3819312956451177,
+     "chair_s": 0.8883333333333333,
+     "recall": 0.9122032026504694,
+     "colour_err": 0.3514223194748359,
+     "count_err": 0.2805251641137856,
+     "claims_per_response": 6.161666666666667,
+     "object_per_response": 2.3533333333333335,
+     "colour_per_response": 1.3383333333333334,
+     "count_per_response": 1.0683333333333334,
+     "style_per_response": 0.0,
+     "pairs": 492
+    },
+    {
+     "chair_i": 0.3697478991596639,
+     "chair_s": 0.88,
+     "recall": 0.9133075648812811,
+     "colour_err": 0.3447058823529412,
+     "count_err": 0.29568627450980395,
+     "claims_per_response": 6.743333333333333,
+     "object_per_response": 2.493333333333333,
+     "colour_per_response": 1.465,
+     "count_per_response": 1.2566666666666666,
+     "style_per_response": 0.0,
+     "pairs": 490
+    },
+    {
+     "chair_i": 0.3536260004850837,
+     "chair_s": 0.855,
+     "recall": 0.8923246824958586,
+     "colour_err": 0.33433395872420263,
+     "count_err": 0.2945590994371482,
+     "claims_per_response": 6.871666666666667,
+     "object_per_response": 2.43,
+     "colour_per_response": 1.485,
+     "count_per_response": 1.3083333333333333,
+     "style_per_response": 0.0,
+     "pairs": 500
+    }
+   ]
+  ],
+  "claim-checking judge, detail 1.0": [
+   [
+    {
+     "chair_i": 0.17209302325581396,
+     "chair_s": 0.3433333333333333,
+     "recall": 0.688017669795693,
+     "colour_err": 0.32504012841091495,
+     "count_err": 0.2174959871589085,
+     "claims_per_response": 2.5083333333333333,
+     "object_per_response": 0.43166666666666664,
+     "colour_per_response": 0.675,
+     "count_per_response": 0.45166666666666666,
+     "style_per_response": 0.0
+    },
+    {
+     "chair_i": 0.23711855927963982,
+     "chair_s": 0.5433333333333333,
+     "recall": 0.842076200993926,
+     "colour_err": 0.3416393442622951,
+     "count_err": 0.2537704918032787,
+     "claims_per_response": 3.3316666666666666,
+     "object_per_response": 0.79,
+     "colour_per_response": 0.8683333333333333,
+     "count_per_response": 0.645,
+     "style_per_response": 0.0,
+     "pairs": 489
+    },
+    {
+     "chair_i": 0.3034742570113018,
+     "chair_s": 0.7266666666666667,
+     "recall": 0.9033683048039757,
+     "colour_err": 0.34555288461538464,
+     "count_err": 0.2481971153846154,
+     "claims_per_response": 3.9816666666666665,
+     "object_per_response": 1.2083333333333333,
+     "colour_per_response": 0.9583333333333334,
+     "count_per_response": 0.6883333333333334,
+     "style_per_response": 0.0,
+     "pairs": 479
+    },
+    {
+     "chair_i": 0.356439127375088,
+     "chair_s": 0.835,
+     "recall": 0.9077857537272225,
+     "colour_err": 0.3482777474029524,
+     "count_err": 0.25861126298523784,
+     "claims_per_response": 4.736666666666666,
+     "object_per_response": 1.6883333333333332,
+     "colour_per_response": 1.0616666666666668,
+     "count_per_response": 0.7883333333333333,
+     "style_per_response": 0.0,
+     "pairs": 488
+    },
+    {
+     "chair_i": 0.37091353498319585,
+     "chair_s": 0.875,
+     "recall": 0.9282164549972391,
+     "colour_err": 0.3443419135502671,
+     "count_err": 0.27003399708596404,
+     "claims_per_response": 5.455,
+     "object_per_response": 2.0233333333333334,
+     "colour_per_response": 1.1816666666666666,
+     "count_per_response": 0.9266666666666666,
+     "style_per_response": 0.0,
+     "pairs": 486
+    },
+    {
+     "chair_i": 0.37988826815642457,
+     "chair_s": 0.8583333333333333,
+     "recall": 0.8995030369961348,
+     "colour_err": 0.32882882882882886,
+     "count_err": 0.29009009009009007,
+     "claims_per_response": 5.966666666666667,
+     "object_per_response": 2.2666666666666666,
+     "colour_per_response": 1.2166666666666666,
+     "count_per_response": 1.0733333333333333,
+     "style_per_response": 0.0,
+     "pairs": 501
+    },
+    {
+     "chair_i": 0.3898870636550308,
+     "chair_s": 0.8933333333333333,
+     "recall": 0.9144119271120927,
+     "colour_err": 0.33655868742111905,
+     "count_err": 0.2738746318889356,
+     "claims_per_response": 6.493333333333333,
+     "object_per_response": 2.5316666666666667,
+     "colour_per_response": 1.3333333333333333,
+     "count_per_response": 1.085,
+     "style_per_response": 0.0,
+     "pairs": 500
+    }
+   ]
+  ]
+ }
+}

@@ -1,0 +1,85 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/aligning-vision-language-models/scripts/prior_split_smolvlm.py",
+ "args": {
+  "scenes": 80,
+  "describe": 30
+ },
+ "part_a": {
+  "n": 80,
+  "acc_image": 0.699999988079071,
+  "acc_grey": 0.17499999701976776,
+  "grey_argmax_distribution": {
+   "red": 0.7250000238418579,
+   "green": 0.0,
+   "blue": 0.2750000059604645,
+   "yellow": 0.0
+  },
+  "g_true_mean": 1.3740224838256836,
+  "g_wrong_mean": -4.595395088195801,
+  "kl_image_vs_grey_mean": 1.380729079246521,
+  "vcd": {
+   "1.0": {
+    "0.0": 0.699999988079071,
+    "0.5": 0.675000011920929,
+    "1.0": 0.625,
+    "2.0": 0.5,
+    "4.0": 0.375
+   },
+   "0.3": {
+    "0.0": 0.625,
+    "0.5": 0.574999988079071,
+    "1.0": 0.5625,
+    "2.0": 0.5,
+    "4.0": 0.36250001192092896
+   },
+   "0.15": {
+    "0.0": 0.5249999761581421,
+    "0.5": 0.550000011920929,
+    "1.0": 0.574999988079071,
+    "2.0": 0.6000000238418579,
+    "4.0": 0.5874999761581421
+   },
+   "0.08": {
+    "0.0": 0.44999998807907104,
+    "0.5": 0.44999998807907104,
+    "1.0": 0.44999998807907104,
+    "2.0": 0.4375,
+    "4.0": 0.4375
+   }
+  }
+ },
+ "part_b": {
+  "bins": {
+   "0-15": {
+    "mean_g": 0.48895825840962365,
+    "tokens": 480,
+    "mentions": 13,
+    "hallucinated_share": 0.15384615384615385
+   },
+   "16-31": {
+    "mean_g": 0.2550397687072594,
+    "tokens": 480,
+    "mentions": 26,
+    "hallucinated_share": 0
+   },
+   "32-47": {
+    "mean_g": 0.1444879520741021,
+    "tokens": 480,
+    "mentions": 43,
+    "hallucinated_share": 0.023255813953488372
+   },
+   "48-63": {
+    "mean_g": 0.10778743682328197,
+    "tokens": 479,
+    "mentions": 44,
+    "hallucinated_share": 0.022727272727272728
+   }
+  },
+  "examples": [
+   "The image depicts a simple, yet effective, geometric pattern. The pattern consists of three distinct shapes arranged in a horizontal line. Each shape is a square, and they are arranged in a way that creates a visually pleasing and symmetrical pattern.\n\nHere is a detailed description of the image:\n\n### Description of the",
+   "The image depicts a set of five geometric shapes arranged in a row. Each shape is a different color and has a distinct shape. Here is a detailed description of each shape:\n\n1. **Red Triangle**:\n   - **Shape**: A red triangle.\n   - **Color**: Red.\n   - **Position**: Located",
+   "The image depicts a set of five geometric shapes arranged in a row. Each shape is a different color and has a distinct shape. Here is a detailed description of each shape:\n\n1. **Red Squares**:\n   - **Shape**: Rectangle\n   - **Color**: Red\n   - **Position**: Located at the"
+  ]
+ }
+}

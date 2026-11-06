@@ -1,0 +1,8 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/aligning-vision-language-models/scripts/chair_silence.py
+first k claims  CHAIR_i  CHAIR_s   recall  claims/resp
+             0    0.000    0.000    0.000         0.00
+             1    0.150    0.150    0.282         1.00
+             2    0.178    0.298    0.524         1.93
+             3    0.176    0.343    0.653         2.39
+           all    0.172    0.343    0.688         2.51

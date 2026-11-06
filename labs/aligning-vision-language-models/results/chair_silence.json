@@ -1,0 +1,61 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/aligning-vision-language-models/scripts/chair_silence.py",
+ "results": {
+  "0": {
+   "chair_i": 0.0,
+   "chair_s": 0.0,
+   "recall": 0.0,
+   "colour_err": 0.0,
+   "count_err": 0.0,
+   "claims_per_response": 0.0,
+   "object_per_response": 0.0,
+   "colour_per_response": 0.0,
+   "count_per_response": 0.0
+  },
+  "1": {
+   "chair_i": 0.15,
+   "chair_s": 0.15,
+   "recall": 0.2816123688569851,
+   "colour_err": 0.23921568627450981,
+   "count_err": 0.15294117647058825,
+   "claims_per_response": 1.0,
+   "object_per_response": 0.15,
+   "colour_per_response": 0.20333333333333334,
+   "count_per_response": 0.13
+  },
+  "2": {
+   "chair_i": 0.17835497835497835,
+   "chair_s": 0.29833333333333334,
+   "recall": 0.5240198785201546,
+   "colour_err": 0.303477344573235,
+   "count_err": 0.20021074815595363,
+   "claims_per_response": 1.925,
+   "object_per_response": 0.3433333333333333,
+   "colour_per_response": 0.48,
+   "count_per_response": 0.31666666666666665
+  },
+  "3": {
+   "chair_i": 0.17573221757322174,
+   "chair_s": 0.3433333333333333,
+   "recall": 0.6526780784097184,
+   "colour_err": 0.3197969543147208,
+   "count_err": 0.2140439932318105,
+   "claims_per_response": 2.39,
+   "object_per_response": 0.42,
+   "colour_per_response": 0.63,
+   "count_per_response": 0.4216666666666667
+  },
+  "all": {
+   "chair_i": 0.17209302325581396,
+   "chair_s": 0.3433333333333333,
+   "recall": 0.688017669795693,
+   "colour_err": 0.32504012841091495,
+   "count_err": 0.2174959871589085,
+   "claims_per_response": 2.5083333333333333,
+   "object_per_response": 0.43166666666666664,
+   "colour_per_response": 0.675,
+   "count_per_response": 0.45166666666666666
+  }
+ }
+}

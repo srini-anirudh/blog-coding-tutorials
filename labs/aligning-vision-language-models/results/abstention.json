@@ -1,0 +1,104 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/aligning-vision-language-models/scripts/abstention.py",
+ "args": {
+  "train": 150000,
+  "test": 8000
+ },
+ "results": {
+  "overconfident": {
+   "mean_conf_answerable": 0.6946935653686523,
+   "mean_conf_unanswerable": 0.622456431388855,
+   "acc_answerable": 0.6764219403266907,
+   "ece_all": 0.16569270181749168,
+   "c=1": {
+    "best": {
+     "tau": 0.71,
+     "coverage": 0.44075000286102295,
+     "risk": 0.3207600712776184,
+     "eff_reliability": 0.15800000727176666
+    },
+    "at_c_over_1_plus_c": {
+     "tau": 0.5,
+     "coverage": 0.7595000267028809,
+     "risk": 0.421658992767334,
+     "eff_reliability": 0.11900000274181366
+    },
+    "always_answer": {
+     "tau": -1.0,
+     "coverage": 1.0,
+     "risk": 0.4886249899864197,
+     "eff_reliability": 0.022749999538064003
+    }
+   },
+   "c=4": {
+    "best": {
+     "tau": 0.96,
+     "coverage": 0.1002499982714653,
+     "risk": 0.1384040117263794,
+     "eff_reliability": 0.03087499924004078
+    },
+    "at_c_over_1_plus_c": {
+     "tau": 0.8,
+     "coverage": 0.3251250088214874,
+     "risk": 0.27258747816085815,
+     "eff_reliability": -0.11800000071525574
+    },
+    "always_answer": {
+     "tau": -1.0,
+     "coverage": 1.0,
+     "risk": 0.4886249899864197,
+     "eff_reliability": -1.4431250095367432
+    }
+   },
+   "coverage_at_risk_5pct": 0.0
+  },
+  "trained to abstain": {
+   "mean_conf_answerable": 0.58390873670578,
+   "mean_conf_unanswerable": 0.2871485650539398,
+   "acc_answerable": 0.6569113731384277,
+   "ece_all": 0.021855023013036157,
+   "c=1": {
+    "best": {
+     "tau": 0.5,
+     "coverage": 0.48625001311302185,
+     "risk": 0.28046274185180664,
+     "eff_reliability": 0.2134999930858612
+    },
+    "at_c_over_1_plus_c": {
+     "tau": 0.5,
+     "coverage": 0.48625001311302185,
+     "risk": 0.28046274185180664,
+     "eff_reliability": 0.2134999930858612
+    },
+    "always_answer": {
+     "tau": -1.0,
+     "coverage": 1.0,
+     "risk": 0.5033749938011169,
+     "eff_reliability": -0.006750000175088644
+    }
+   },
+   "c=4": {
+    "best": {
+     "tau": 0.85,
+     "coverage": 0.140625,
+     "risk": 0.09777778387069702,
+     "eff_reliability": 0.07187499850988388
+    },
+    "at_c_over_1_plus_c": {
+     "tau": 0.8,
+     "coverage": 0.18150000274181366,
+     "risk": 0.13016527891159058,
+     "eff_reliability": 0.06337500363588333
+    },
+    "always_answer": {
+     "tau": -1.0,
+     "coverage": 1.0,
+     "risk": 0.5033749938011169,
+     "eff_reliability": -1.5168750286102295
+    }
+   },
+   "coverage_at_risk_5pct": 0.039124999195337296
+  }
+ }
+}

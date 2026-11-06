@@ -1,0 +1,44 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/aligning-vision-language-models/scripts/judge_loop.py --seeds 0
+
+count-blind judge {'object': 0.9, 'colour': 0.9, 'count': 0.15}, detail bonus 0.5, seed 0
+  round 0  chair_i=0.172  colour_err=0.325  count_err=0.217  count_per_response=0.452  claims_per_response=2.508  recall=0.688
+  round 1  chair_i=0.152  colour_err=0.298  count_err=0.211  count_per_response=0.330  claims_per_response=1.845  recall=0.518  pairs=506
+  round 2  chair_i=0.156  colour_err=0.314  count_err=0.196  count_per_response=0.265  claims_per_response=1.600  recall=0.447  pairs=497
+  round 3  chair_i=0.140  colour_err=0.263  count_err=0.183  count_per_response=0.203  claims_per_response=1.295  recall=0.369  pairs=490
+  round 4  chair_i=0.128  colour_err=0.276  count_err=0.203  count_per_response=0.248  claims_per_response=1.405  recall=0.406  pairs=474
+  round 5  chair_i=0.142  colour_err=0.270  count_err=0.193  count_per_response=0.242  claims_per_response=1.463  recall=0.416  pairs=479
+  round 6  chair_i=0.135  colour_err=0.289  count_err=0.217  count_per_response=0.308  claims_per_response=1.642  recall=0.470  pairs=472
+
+claim-checking judge {'object': 0.9, 'colour': 0.9, 'count': 0.9}, detail bonus 0.5, seed 0
+  round 0  chair_i=0.172  colour_err=0.325  count_err=0.217  count_per_response=0.452  claims_per_response=2.508  recall=0.688
+  round 1  chair_i=0.146  colour_err=0.285  count_err=0.197  count_per_response=0.237  claims_per_response=1.405  recall=0.398  pairs=507
+  round 2  chair_i=0.144  colour_err=0.254  count_err=0.180  count_per_response=0.163  claims_per_response=1.057  recall=0.300  pairs=499
+  round 3  chair_i=0.173  colour_err=0.258  count_err=0.175  count_per_response=0.145  claims_per_response=1.002  recall=0.274  pairs=461
+  round 4  chair_i=0.186  colour_err=0.272  count_err=0.171  count_per_response=0.138  claims_per_response=0.995  recall=0.268  pairs=384
+  round 5  chair_i=0.165  colour_err=0.244  count_err=0.169  count_per_response=0.128  claims_per_response=0.908  recall=0.251  pairs=377
+  round 6  chair_i=0.138  colour_err=0.241  count_err=0.154  count_per_response=0.098  claims_per_response=0.738  recall=0.211  pairs=370
+
+count-blind judge {'object': 0.9, 'colour': 0.9, 'count': 0.15}, detail bonus 1.0, seed 0
+  round 0  chair_i=0.172  colour_err=0.325  count_err=0.217  count_per_response=0.452  claims_per_response=2.508  recall=0.688
+  round 1  chair_i=0.270  colour_err=0.331  count_err=0.235  count_per_response=0.617  claims_per_response=3.592  recall=0.865  pairs=466
+  round 2  chair_i=0.366  colour_err=0.351  count_err=0.256  count_per_response=0.762  claims_per_response=4.690  recall=0.910  pairs=490
+  round 3  chair_i=0.393  colour_err=0.361  count_err=0.279  count_per_response=0.997  claims_per_response=5.877  recall=0.939  pairs=484
+  round 4  chair_i=0.382  colour_err=0.351  count_err=0.281  count_per_response=1.068  claims_per_response=6.162  recall=0.912  pairs=492
+  round 5  chair_i=0.370  colour_err=0.345  count_err=0.296  count_per_response=1.257  claims_per_response=6.743  recall=0.913  pairs=490
+  round 6  chair_i=0.354  colour_err=0.334  count_err=0.295  count_per_response=1.308  claims_per_response=6.872  recall=0.892  pairs=500
+
+claim-checking judge {'object': 0.9, 'colour': 0.9, 'count': 0.9}, detail bonus 1.0, seed 0
+  round 0  chair_i=0.172  colour_err=0.325  count_err=0.217  count_per_response=0.452  claims_per_response=2.508  recall=0.688
+  round 1  chair_i=0.237  colour_err=0.342  count_err=0.254  count_per_response=0.645  claims_per_response=3.332  recall=0.842  pairs=489
+  round 2  chair_i=0.303  colour_err=0.346  count_err=0.248  count_per_response=0.688  claims_per_response=3.982  recall=0.903  pairs=479
+  round 3  chair_i=0.356  colour_err=0.348  count_err=0.259  count_per_response=0.788  claims_per_response=4.737  recall=0.908  pairs=488
+  round 4  chair_i=0.371  colour_err=0.344  count_err=0.270  count_per_response=0.927  claims_per_response=5.455  recall=0.928  pairs=486
+  round 5  chair_i=0.380  colour_err=0.329  count_err=0.290  count_per_response=1.073  claims_per_response=5.967  recall=0.900  pairs=501
+  round 6  chair_i=0.390  colour_err=0.337  count_err=0.274  count_per_response=1.085  claims_per_response=6.493  recall=0.914  pairs=500
+
+mean over seeds, round 0 -> last round (chair_i, colour_err, count_err are per claim)
+  count-blind judge, detail 0.5      chair_i 0.172 -> 0.135; colour_err 0.325 -> 0.289; count_err 0.217 -> 0.217; count_per_response 0.452 -> 0.308; claims_per_response 2.508 -> 1.642; recall 0.688 -> 0.470
+  claim-checking judge, detail 0.5   chair_i 0.172 -> 0.138; colour_err 0.325 -> 0.241; count_err 0.217 -> 0.154; count_per_response 0.452 -> 0.098; claims_per_response 2.508 -> 0.738; recall 0.688 -> 0.211
+  count-blind judge, detail 1.0      chair_i 0.172 -> 0.354; colour_err 0.325 -> 0.334; count_err 0.217 -> 0.295; count_per_response 0.452 -> 1.308; claims_per_response 2.508 -> 6.872; recall 0.688 -> 0.892
+  claim-checking judge, detail 1.0   chair_i 0.172 -> 0.390; colour_err 0.325 -> 0.337; count_err 0.217 -> 0.274; count_per_response 0.452 -> 1.085; claims_per_response 2.508 -> 6.493; recall 0.688 -> 0.914

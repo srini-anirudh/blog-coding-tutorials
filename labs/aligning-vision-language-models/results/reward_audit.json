@@ -1,0 +1,86 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/aligning-vision-language-models/scripts/reward_audit.py --seeds 0 1 --steps 1500",
+ "args": {
+  "seeds": [
+   0,
+   1
+  ],
+  "pairs": 30000,
+  "steps": 1500
+ },
+ "results": {
+  "RM-S (style pairs)": [
+   {
+    "seed": 0,
+    "style_pair_acc": 1.0,
+    "style_sensitivity": 8.310355769935995e-05,
+    "style_swap_flip": 0.0,
+    "style_swap_pairs": 508,
+    "style_pair_acc_colour": 1.0,
+    "style_pair_acc_count": 1.0,
+    "style_pair_acc_object": 1.0,
+    "fact_pair_acc": 0.46666666865348816,
+    "fact_sensitivity": 8.886175055522472e-05,
+    "fact_swap_flip": 0.03153153153153153,
+    "fact_swap_pairs": 487,
+    "fact_pair_acc_colour": 0.4558521509170532,
+    "fact_pair_acc_count": 0.4269449710845947,
+    "fact_pair_acc_object": 0.5205761194229126
+   },
+   {
+    "seed": 1,
+    "style_pair_acc": 1.0,
+    "style_sensitivity": 0.00035630742786452174,
+    "style_swap_flip": 0.0,
+    "style_swap_pairs": 508,
+    "style_pair_acc_colour": 1.0,
+    "style_pair_acc_count": 1.0,
+    "style_pair_acc_object": 1.0,
+    "fact_pair_acc": 0.5026666522026062,
+    "fact_sensitivity": 0.0003400264831725508,
+    "fact_swap_flip": 0.03461538461538462,
+    "fact_swap_pairs": 487,
+    "fact_pair_acc_colour": 0.533880889415741,
+    "fact_pair_acc_count": 0.46110057830810547,
+    "fact_pair_acc_object": 0.5164608955383301
+   }
+  ],
+  "RM-G (fact pairs)": [
+   {
+    "seed": 0,
+    "style_pair_acc": 0.7206666469573975,
+    "style_sensitivity": 1.791343331336975,
+    "style_swap_flip": 0.2956521739130435,
+    "style_swap_pairs": 508,
+    "style_pair_acc_colour": 0.6791338324546814,
+    "style_pair_acc_count": 0.6613546013832092,
+    "style_pair_acc_object": 0.8244897723197937,
+    "fact_pair_acc": 0.7746666669845581,
+    "fact_sensitivity": 1.5904849767684937,
+    "fact_swap_flip": 0.3023952095808383,
+    "fact_swap_pairs": 487,
+    "fact_pair_acc_colour": 0.685831606388092,
+    "fact_pair_acc_count": 0.7400379776954651,
+    "fact_pair_acc_object": 0.9012345671653748
+   },
+   {
+    "seed": 1,
+    "style_pair_acc": 0.437333345413208,
+    "style_sensitivity": 0.8282832503318787,
+    "style_swap_flip": 0.3185840707964602,
+    "style_swap_pairs": 508,
+    "style_pair_acc_colour": 0.4448818862438202,
+    "style_pair_acc_count": 0.4243027865886688,
+    "style_pair_acc_object": 0.44285714626312256,
+    "fact_pair_acc": 0.7699999809265137,
+    "fact_sensitivity": 0.8608959913253784,
+    "fact_swap_flip": 0.12576687116564417,
+    "fact_swap_pairs": 487,
+    "fact_pair_acc_colour": 0.6694045066833496,
+    "fact_pair_acc_count": 0.7533206939697266,
+    "fact_pair_acc_object": 0.8888888955116272
+   }
+  ]
+ }
+}

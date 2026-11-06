@@ -1,0 +1,27 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/aligning-vision-language-models/scripts/mdpo.py --seeds 0 1
+sft  chair_i=0.172  recall=0.688  colour_err=0.325  count_err=0.217  policy_pref_acc=0.876  implicit_reward_acc=0.000  image_gain_yw=3.626
+dpo              seed 0 dpo_loss=0.0073 chair_i=0.215  recall=0.472  colour_err=0.322  count_err=0.282  policy_pref_acc=0.779  implicit_reward_acc=0.544  image_gain_yw=3.295  beta_d_text=6.585  beta_d_image=-0.019
+dpo              seed 1 dpo_loss=0.0048 chair_i=0.196  recall=0.361  colour_err=0.301  count_err=0.234  policy_pref_acc=0.762  implicit_reward_acc=0.543  image_gain_yw=4.110  beta_d_text=7.803  beta_d_image=-0.015
+dpo_noimage      seed 0 dpo_loss=0.0034 chair_i=0.189  recall=0.458  colour_err=0.380  count_err=0.244  policy_pref_acc=0.753  implicit_reward_acc=0.541  image_gain_yw=24.665  beta_d_text=7.898  beta_d_image=-2.862
+dpo_noimage      seed 1 dpo_loss=0.0053 chair_i=0.195  recall=0.468  colour_err=0.372  count_err=0.256  policy_pref_acc=0.757  implicit_reward_acc=0.542  image_gain_yw=24.715  beta_d_text=7.666  beta_d_image=-2.348
+dpo_anchor       seed 0 dpo_loss=0.0159 chair_i=0.181  recall=0.715  colour_err=0.327  count_err=0.232  policy_pref_acc=0.849  implicit_reward_acc=0.489  image_gain_yw=3.012  beta_d_text=4.800  beta_d_image=0.173
+dpo_anchor       seed 1 dpo_loss=0.0241 chair_i=0.183  recall=0.719  colour_err=0.323  count_err=0.233  policy_pref_acc=0.845  implicit_reward_acc=0.491  image_gain_yw=3.111  beta_d_text=4.735  beta_d_image=0.159
+mdpo_noanchor    seed 0 dpo_loss=0.0063 chair_i=0.064  recall=0.136  colour_err=0.263  count_err=0.198  policy_pref_acc=0.735  implicit_reward_acc=0.568  image_gain_yw=62.248  beta_d_text=3.966  beta_d_image=3.309
+mdpo_noanchor    seed 1 dpo_loss=0.0129 chair_i=0.070  recall=0.157  colour_err=0.274  count_err=0.182  policy_pref_acc=0.751  implicit_reward_acc=0.566  image_gain_yw=61.439  beta_d_text=3.975  beta_d_image=3.441
+mdpo             seed 0 dpo_loss=0.0194 chair_i=0.155  recall=0.676  colour_err=0.329  count_err=0.219  policy_pref_acc=0.838  implicit_reward_acc=0.629  image_gain_yw=9.263  beta_d_text=4.397  beta_d_image=0.248
+mdpo             seed 1 dpo_loss=0.0302 chair_i=0.160  recall=0.673  colour_err=0.327  count_err=0.212  policy_pref_acc=0.840  implicit_reward_acc=0.625  image_gain_yw=9.599  beta_d_text=4.427  beta_d_image=0.042
+mdpo_crop_large  seed 0 dpo_loss=0.0237 chair_i=0.169  recall=0.671  colour_err=0.324  count_err=0.218  policy_pref_acc=0.820  implicit_reward_acc=0.607  image_gain_yw=32.737  beta_d_text=2.864  beta_d_image=1.529
+mdpo_crop_large  seed 1 dpo_loss=0.0314 chair_i=0.160  recall=0.661  colour_err=0.326  count_err=0.227  policy_pref_acc=0.819  implicit_reward_acc=0.593  image_gain_yw=32.535  beta_d_text=3.001  beta_d_image=1.361
+mdpo_unrelated   seed 0 dpo_loss=0.0218 chair_i=0.183  recall=0.730  colour_err=0.327  count_err=0.228  policy_pref_acc=0.843  implicit_reward_acc=0.725  image_gain_yw=6.115  beta_d_text=4.046  beta_d_image=0.247
+mdpo_unrelated   seed 1 dpo_loss=0.0348 chair_i=0.189  recall=0.727  colour_err=0.320  count_err=0.229  policy_pref_acc=0.848  implicit_reward_acc=0.727  image_gain_yw=5.754  beta_d_text=3.974  beta_d_image=0.169
+
+mean over seeds (sd)
+variant              final_dpo_loss            chair_i             recall         colour_err          count_err    policy_pref_acc implicit_reward_acc      image_gain_yw        beta_d_text       beta_d_image
+dpo                    0.006 (0.002)       0.205 (0.014)       0.416 (0.078)       0.312 (0.015)       0.258 (0.034)       0.770 (0.012)       0.544 (0.000)       3.702 (0.577)       7.194 (0.861)      -0.017 (0.003)
+dpo_noimage            0.004 (0.001)       0.192 (0.004)       0.463 (0.007)       0.376 (0.006)       0.250 (0.009)       0.755 (0.002)       0.541 (0.001)      24.690 (0.035)       7.782 (0.164)      -2.605 (0.364)
+dpo_anchor             0.020 (0.006)       0.182 (0.001)       0.717 (0.003)       0.325 (0.003)       0.232 (0.000)       0.847 (0.003)       0.490 (0.002)       3.061 (0.071)       4.767 (0.046)       0.166 (0.010)
+mdpo_noanchor          0.010 (0.005)       0.067 (0.004)       0.147 (0.015)       0.269 (0.008)       0.190 (0.012)       0.743 (0.011)       0.567 (0.001)      61.844 (0.572)       3.970 (0.006)       3.375 (0.093)
+mdpo                   0.025 (0.008)       0.158 (0.004)       0.674 (0.003)       0.328 (0.001)       0.216 (0.004)       0.839 (0.001)       0.627 (0.003)       9.431 (0.237)       4.412 (0.021)       0.145 (0.145)
+mdpo_crop_large        0.028 (0.005)       0.165 (0.007)       0.666 (0.007)       0.325 (0.001)       0.222 (0.006)       0.819 (0.001)       0.600 (0.010)      32.636 (0.143)       2.933 (0.097)       1.445 (0.119)
+mdpo_unrelated         0.028 (0.009)       0.186 (0.004)       0.729 (0.002)       0.323 (0.005)       0.228 (0.001)       0.846 (0.003)       0.726 (0.001)       5.935 (0.255)       4.010 (0.051)       0.208 (0.056)

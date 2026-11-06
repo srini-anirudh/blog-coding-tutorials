@@ -1,0 +1,20 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/aligning-vision-language-models/scripts/prior_split_smolvlm.py
+Part A. 80 colour questions, candidates ['Red.', 'Green.', 'Blue.', 'Yellow.']
+  accuracy with image 0.700; with grey image (the prior) 0.175
+  grey-image argmax distribution: {'red': 0.7250000238418579, 'green': 0.0, 'blue': 0.2750000059604645, 'yellow': 0.0}
+  visual information gain g(y; I | x): true colour +1.37 nats, wrong colours -4.60 nats; mean KL(P(.|x,I) || P(.|x)) = 1.38
+
+  Weak evidence and contrastive decoding: accuracy over the four colours
+  blend w  alpha=0     alpha=0.5   alpha=1     alpha=2     alpha=4   
+  1        0.700       0.675       0.625       0.500       0.375     
+  0.3      0.625       0.575       0.562       0.500       0.363     
+  0.15     0.525       0.550       0.575       0.600       0.587     
+  0.08     0.450       0.450       0.450       0.438       0.438     
+
+Part B. 30 greedy descriptions, up to 64 tokens. Example: 'The image depicts a simple, yet effective, geometric pattern. The pattern consists of three distinct shapes arranged in a horizontal line. Each shape is a square, and they are arranged in a way that creates a visually pleasing and symmetrical pattern.\n\nHere is a detailed description of the image:\n\n### Description of the'
+  token positions   mean g_t (nats)   tokens   colour/shape mentions   share not in the scene
+    0-15            +0.489           480      13                      0.154
+   16-31            +0.255           480      26                      0.000
+   32-47            +0.144           480      43                      0.023
+   48-63            +0.108           479      44                      0.023

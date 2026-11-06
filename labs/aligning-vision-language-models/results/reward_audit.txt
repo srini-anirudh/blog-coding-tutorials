@@ -1,0 +1,11 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/aligning-vision-language-models/scripts/reward_audit.py --seeds 0 1 --steps 1500
+RM-S (style pairs)   seed 0 style_pair_acc=1.000 style_sensitivity=0.000 style_swap_flip=0.000 style_swap_pairs=508.000 style_pair_acc_colour=1.000 style_pair_acc_count=1.000 style_pair_acc_object=1.000 fact_pair_acc=0.467 fact_sensitivity=0.000 fact_swap_flip=0.032 fact_swap_pairs=487.000 fact_pair_acc_colour=0.456 fact_pair_acc_count=0.427 fact_pair_acc_object=0.521
+RM-S (style pairs)   seed 1 style_pair_acc=1.000 style_sensitivity=0.000 style_swap_flip=0.000 style_swap_pairs=508.000 style_pair_acc_colour=1.000 style_pair_acc_count=1.000 style_pair_acc_object=1.000 fact_pair_acc=0.503 fact_sensitivity=0.000 fact_swap_flip=0.035 fact_swap_pairs=487.000 fact_pair_acc_colour=0.534 fact_pair_acc_count=0.461 fact_pair_acc_object=0.516
+RM-G (fact pairs)    seed 0 style_pair_acc=0.721 style_sensitivity=1.791 style_swap_flip=0.296 style_swap_pairs=508.000 style_pair_acc_colour=0.679 style_pair_acc_count=0.661 style_pair_acc_object=0.824 fact_pair_acc=0.775 fact_sensitivity=1.590 fact_swap_flip=0.302 fact_swap_pairs=487.000 fact_pair_acc_colour=0.686 fact_pair_acc_count=0.740 fact_pair_acc_object=0.901
+RM-G (fact pairs)    seed 1 style_pair_acc=0.437 style_sensitivity=0.828 style_swap_flip=0.319 style_swap_pairs=508.000 style_pair_acc_colour=0.445 style_pair_acc_count=0.424 style_pair_acc_object=0.443 fact_pair_acc=0.770 fact_sensitivity=0.861 fact_swap_flip=0.126 fact_swap_pairs=487.000 fact_pair_acc_colour=0.669 fact_pair_acc_count=0.753 fact_pair_acc_object=0.889
+
+mean over seeds
+reward model          style_pair_acc        pair_acc pair_acc_object pair_acc_colour  pair_acc_count     sensitivity       swap_flip
+RM-S (style pairs)             1.000           0.485           0.519           0.495           0.444           0.000           0.033
+RM-G (fact pairs)              0.579           0.772           0.895           0.678           0.747           1.226           0.214
