@@ -1,0 +1,17 @@
+component               tiny    smollm2-135m       llama3-8b
+embeddings            65,536          28.31M         525.34M
+attention              0.98M          26.54M          1.342B
+mlp                    3.24M          79.63M          5.637B
+norms                  3,328          35,136           0.27M
+lm_head                    0               0         525.34M
+total                  4.30M         134.52M          8.030B
+
+verify: formula == sum(p.numel()) of the built module
+  tiny           formula=     4,295,936  module=     4,295,936  equal=True
+  smollm2-135m   formula=   134,515,008  module=   134,515,008  equal=True
+  llama3-8b      formula= 8,030,261,248  module= 8,030,261,248  equal=True
+
+KV cache per sequence of 4096 tokens, bf16 (2 bytes per value)
+  MHA (32 kv heads)    cache= 2.00 GiB  attention params=2.147B
+  GQA (8 kv heads)     cache= 0.50 GiB  attention params=1.342B
+  MQA (1 kv head)      cache= 0.06 GiB  attention params=1.107B

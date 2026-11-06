@@ -1,0 +1,18 @@
+text 'The cat sat' -> ids [84, 104, 101, 32, 99, 97, 116, 32, 115, 97, 116]
+
+embeddings x                       (1, 11, 256)         rms=0.020
+rope cos / sin                     (1, 11, 32)          rms=0.922
+block0 input_layernorm(x)          (1, 11, 256)         rms=0.988
+q (B, H, T, d)                     (1, 8, 11, 32)       rms=0.310
+k (B, H_kv, T, d)                  (1, 2, 11, 32)       rms=0.317
+v (B, H_kv, T, d)                  (1, 2, 11, 32)       rms=0.324
+q after RoPE                       (1, 8, 11, 32)       rms=0.310
+attention output (after o_proj)    (1, 11, 256)         rms=0.014
+residual after attention           (1, 11, 256)         rms=0.025
+mlp gate_proj (B, T, F)            (1, 11, 704)         rms=0.315
+residual after mlp = block0 out    (1, 11, 256)         rms=0.026
+logits (B, T, V)                   (1, 11, 256)         rms=0.346
+cache layer0 keys                  (1, 2, 11, 32)       rms=0.317
+
+loss 5.7075  (ln V = 5.5452)
+cache holds 33792 bytes for 11 tokens

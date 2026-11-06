@@ -1,0 +1,4 @@
+device=mps  params=4,295,936  train bytes=1,003,854  val bytes=111,540
+step     0  val 5.578  (uniform guess = ln 256 = 5.545)
+sample before training: 'ROMEO:�\x1dj2�\x1d;Brr�!^BBBB�E����u||<�kuu\x00�\x0eD\x1c\x1c�""Bv\x1a\x1a�u���2\x1d���%�^�|�'
+step   200  train 1.603  val 1.766   173.3s  9,455 tok/s
