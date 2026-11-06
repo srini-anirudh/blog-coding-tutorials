@@ -1,0 +1,87 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/the-serving-playbook/scripts/09_speculative.py",
+ "rows": [
+  {
+   "draft_noise": 0.3,
+   "alpha": 0.8460594415664673,
+   "gamma": 2,
+   "tokens/pass": 2.5636,
+   "formula": 2.5618760202302298,
+   "TV(first token, p)": 0.010157488286495209,
+   "TV(q, p)": 0.1539405882358551
+  },
+  {
+   "draft_noise": 0.3,
+   "alpha": 0.8460594415664673,
+   "gamma": 4,
+   "tokens/pass": 3.6681,
+   "formula": 3.6798927693284065,
+   "TV(first token, p)": 0.010520809330046177,
+   "TV(q, p)": 0.1539405882358551
+  },
+  {
+   "draft_noise": 0.3,
+   "alpha": 0.8460594415664673,
+   "gamma": 8,
+   "tokens/pass": 5.02515,
+   "formula": 5.053052068139678,
+   "TV(first token, p)": 0.010624063201248646,
+   "TV(q, p)": 0.1539405882358551
+  },
+  {
+   "draft_noise": 1.0,
+   "alpha": 0.7198512554168701,
+   "gamma": 2,
+   "tokens/pass": 2.24545,
+   "formula": 2.238037085342114,
+   "TV(first token, p)": 0.008397134952247143,
+   "TV(q, p)": 0.28014880418777466
+  },
+  {
+   "draft_noise": 1.0,
+   "alpha": 0.7198512554168701,
+   "gamma": 4,
+   "tokens/pass": 2.88375,
+   "formula": 2.8795703598883478,
+   "TV(first token, p)": 0.008630748838186264,
+   "TV(q, p)": 0.28014880418777466
+  },
+  {
+   "draft_noise": 1.0,
+   "alpha": 0.7198512554168701,
+   "gamma": 8,
+   "tokens/pass": 3.39455,
+   "formula": 3.3842661165563523,
+   "TV(first token, p)": 0.010772761888802052,
+   "TV(q, p)": 0.28014880418777466
+  },
+  {
+   "draft_noise": 3.0,
+   "alpha": 0.08097570389509201,
+   "gamma": 2,
+   "tokens/pass": 1.0882,
+   "formula": 1.0875327685163976,
+   "TV(first token, p)": 0.009420216083526611,
+   "TV(q, p)": 0.9190242290496826
+  },
+  {
+   "draft_noise": 3.0,
+   "alpha": 0.08097570389509201,
+   "gamma": 4,
+   "tokens/pass": 1.0877,
+   "formula": 1.0881067265360413,
+   "TV(first token, p)": 0.006402176804840565,
+   "TV(q, p)": 0.9190242290496826
+  },
+  {
+   "draft_noise": 3.0,
+   "alpha": 0.08097570389509201,
+   "gamma": 8,
+   "tokens/pass": 1.0865,
+   "formula": 1.0881105146932466,
+   "TV(first token, p)": 0.006324101239442825,
+   "TV(q, p)": 0.9190242290496826
+  }
+ ]
+}

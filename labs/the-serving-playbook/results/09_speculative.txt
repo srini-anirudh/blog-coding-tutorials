@@ -1,0 +1,14 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/the-serving-playbook/scripts/09_speculative.py
+20000 speculative steps per row; TV = total variation distance
+draft_noise  alpha  gamma  tokens/pass  formula  TV(first token, p)  TV(q, p)
+        0.3  0.846      2        2.564    2.562              0.0102     0.154
+        0.3  0.846      4        3.668    3.680              0.0105     0.154
+        0.3  0.846      8        5.025    5.053              0.0106     0.154
+        1.0  0.720      2        2.245    2.238              0.0084     0.280
+        1.0  0.720      4        2.884    2.880              0.0086     0.280
+        1.0  0.720      8        3.395    3.384              0.0108     0.280
+        3.0  0.081      2        1.088    1.088              0.0094     0.919
+        3.0  0.081      4        1.088    1.088              0.0064     0.919
+        3.0  0.081      8        1.087    1.088              0.0063     0.919
+Post's example: alpha = 0.8, gamma = 4 -> 3.3616 tokens per target pass

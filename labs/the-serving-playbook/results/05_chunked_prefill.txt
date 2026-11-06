@@ -1,0 +1,21 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/the-serving-playbook/scripts/05_chunked_prefill.py
+model llama3-8b-random; 32 decoding sequences (128-token prompts, 300 output tokens); a 7680-token prompt arrives 0.5 s in and asks for 16 tokens
+chunk  long_ttft_ms  decode_itl_p50_ms  decode_itl_p99_ms  decode_itl_max_ms  mixed_iters  mixed_iter_ms
+ none         325.4               31.8               88.5              294.3            1          294.2
+  256        5804.7               33.8              209.5              209.8           51          122.8
+  512        2332.3               33.8              162.1              220.1           24          116.0
+ 1024        1008.7               34.1              108.7              188.4           11          131.2
+ 2048         559.3               33.8              132.3              219.9            6          143.6
+ITL = gap between consecutive tokens of the 32 decoding sequences, over the whole run.
+mixed_iter_ms = mean duration of iterations that held both prefill tokens and decodes.
+
+Part B: prefill the 7680-token prompt alone, chunk size C (one iteration per chunk)
+   C  iterations  prefill_ms  tok/s
+  64         120     10359.4    741
+ 128          60      5276.9   1455
+ 256          30      2621.0   2930
+ 512          15      1336.2   5748
+1024           8       718.5  10689
+2048           4       525.1  14625
+7680           1       243.0  31606

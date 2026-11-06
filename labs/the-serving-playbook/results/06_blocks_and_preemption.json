@@ -1,0 +1,48 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "python labs/the-serving-playbook/scripts/06_blocks_and_preemption.py",
+ "num_gpu_blocks": {
+  "total_gib": 79.1788330078125,
+  "weights_gib": 14.96534013748169,
+  "activation_peak_gib": 1.0061039924621582,
+  "bytes_per_block": 2097152,
+  "blocks_at_0.85": 26281,
+  "blocks_at_0.9": 28308,
+  "blocks_at_0.95": 30335
+ },
+ "recompute_vs_swap": {
+  "tokens": 8000,
+  "kv_mib": 1000.0,
+  "recompute_ms": 252.76933202985674,
+  "swap_out_ms": 560.9528069617227,
+  "swap_in_ms": 76.16026897449046,
+  "swap_round_trip_ms": 637.1130759362131,
+  "pcie_gb_s_out": 1.86927667886962,
+  "pcie_gb_s_in": 13.768018602339966,
+  "best_out_ms": 548.0332169681787,
+  "best_in_ms": 76.10400696285069
+ },
+ "preemption": [
+  {
+   "kv_blocks": 4000,
+   "preemptions": 0,
+   "wall_s": 24.459593083010986,
+   "out_tok/s": 390.64427472575824,
+   "prefill_tokens": 6854
+  },
+  {
+   "kv_blocks": 600,
+   "preemptions": 5,
+   "wall_s": 18.51619736198336,
+   "out_tok/s": 516.034681052704,
+   "prefill_tokens": 7559
+  },
+  {
+   "kv_blocks": 300,
+   "preemptions": 25,
+   "wall_s": 36.377552398946136,
+   "out_tok/s": 262.66198163119986,
+   "prefill_tokens": 11241
+  }
+ ]
+}

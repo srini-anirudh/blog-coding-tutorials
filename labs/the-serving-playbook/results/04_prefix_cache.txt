@@ -1,0 +1,21 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/the-serving-playbook/scripts/04_prefix_cache.py
+Part A (bfloat16): HuggingFaceTB/SmolLM2-360M, 64 requests = shared 2048-token system prompt + own 64-token question, 32 output tokens
+   dtype  prefix_cache  prompt_tokens  cached_tokens  prefill_tokens_computed  wall_s  ttft_p50_ms  ttft_p99_ms
+bfloat16           off         135168              0                   135168    6.71       3980.7       5508.3
+bfloat16            on         135168         131072                     4096    4.30       2261.2       3331.2
+requests whose 32 greedy tokens are identical with and without the cache: 0.84
+
+Part A (float32): HuggingFaceTB/SmolLM2-360M, 64 requests = shared 2048-token system prompt + own 64-token question, 32 output tokens
+  dtype  prefix_cache  prompt_tokens  cached_tokens  prefill_tokens_computed  wall_s  ttft_p50_ms  ttft_p99_ms
+float32           off         135168              0                   135168    7.03       3461.9       6115.0
+float32            on         135168         131072                     4096    4.32       2330.5       3410.6
+requests whose 32 greedy tokens are identical with and without the cache: 1.00
+
+Part B: 8 requests over prefixes A-D (64 tokens each) plus 16 own tokens; pool of 10 blocks of 16
+  arrival order ABCDABCD: 640 prefill tokens computed
+  grouped order AABBCCDD: 384 prefill tokens computed (0.60 of arrival order)
+
+Part C: cat image, then dog image, same question. Tokens the dog request is told are cached:
+  hash of token ids only: 80 (wrong: that is the cat's KV)
+  image hash in the key:  0

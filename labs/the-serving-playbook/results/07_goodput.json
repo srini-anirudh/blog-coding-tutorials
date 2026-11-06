@@ -1,0 +1,184 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "python labs/the-serving-playbook/scripts/07_goodput.py",
+ "rows": [
+  {
+   "offered_req/s": 2.0,
+   "admission": "accept all",
+   "throughput_req/s": 2.1079647191161652,
+   "out_tok/s": 230.96266772449448,
+   "goodput_req/s": 2.1079647191161652,
+   "slo_met": 1.0,
+   "shed": 0,
+   "ttft_p99_ms": 319.41857491619885,
+   "tpot_p99_ms": 15.933574138519663
+  },
+  {
+   "offered_req/s": 2.0,
+   "admission": "shed",
+   "throughput_req/s": 2.105965976519234,
+   "out_tok/s": 230.74367216062404,
+   "goodput_req/s": 2.105965976519234,
+   "slo_met": 1.0,
+   "shed": 0,
+   "ttft_p99_ms": 96.53035225346684,
+   "tpot_p99_ms": 7.330530293984339
+  },
+  {
+   "offered_req/s": 4.0,
+   "admission": "accept all",
+   "throughput_req/s": 3.917057531265295,
+   "out_tok/s": 439.9508450532804,
+   "goodput_req/s": 3.917057531265295,
+   "slo_met": 1.0,
+   "shed": 0,
+   "ttft_p99_ms": 255.38936886005104,
+   "tpot_p99_ms": 18.854520002302404
+  },
+  {
+   "offered_req/s": 4.0,
+   "admission": "shed",
+   "throughput_req/s": 3.941103410735097,
+   "out_tok/s": 442.651598082397,
+   "goodput_req/s": 3.941103410735097,
+   "slo_met": 1.0,
+   "shed": 0,
+   "ttft_p99_ms": 148.71404122095555,
+   "tpot_p99_ms": 8.373971659516505
+  },
+  {
+   "offered_req/s": 8.0,
+   "admission": "accept all",
+   "throughput_req/s": 7.715326419603964,
+   "out_tok/s": 777.8334918697396,
+   "goodput_req/s": 5.786494814702973,
+   "slo_met": 0.75,
+   "shed": 0,
+   "ttft_p99_ms": 656.3472204143181,
+   "tpot_p99_ms": 137.99262919928879
+  },
+  {
+   "offered_req/s": 8.0,
+   "admission": "shed",
+   "throughput_req/s": 7.953641143124852,
+   "out_tok/s": 801.8595879127038,
+   "goodput_req/s": 7.953641143124852,
+   "slo_met": 1.0,
+   "shed": 0,
+   "ttft_p99_ms": 298.25755418278277,
+   "tpot_p99_ms": 27.863542313006388
+  },
+  {
+   "offered_req/s": 12.0,
+   "admission": "accept all",
+   "throughput_req/s": 10.323261757828762,
+   "out_tok/s": 1027.2792478123822,
+   "goodput_req/s": 0.40146017947111856,
+   "slo_met": 0.03888888888888889,
+   "shed": 0,
+   "ttft_p99_ms": 2628.7753670476377,
+   "tpot_p99_ms": 260.59100185687254
+  },
+  {
+   "offered_req/s": 12.0,
+   "admission": "shed",
+   "throughput_req/s": 11.7622699723606,
+   "out_tok/s": 1170.4765541384616,
+   "goodput_req/s": 10.84742675228811,
+   "slo_met": 0.9222222222222223,
+   "shed": 0,
+   "ttft_p99_ms": 521.4331442257389,
+   "tpot_p99_ms": 105.72506880271249
+  },
+  {
+   "offered_req/s": 16.0,
+   "admission": "accept all",
+   "throughput_req/s": 11.363149698019807,
+   "out_tok/s": 1228.261789441791,
+   "goodput_req/s": 0.33142519952557775,
+   "slo_met": 0.029166666666666667,
+   "shed": 0,
+   "ttft_p99_ms": 3911.942168488167,
+   "tpot_p99_ms": 262.4748283071826
+  },
+  {
+   "offered_req/s": 16.0,
+   "admission": "shed",
+   "throughput_req/s": 13.668349896379041,
+   "out_tok/s": 1477.4347208827712,
+   "goodput_req/s": 11.16248574870955,
+   "slo_met": 0.8166666666666667,
+   "shed": 0,
+   "ttft_p99_ms": 771.0520869586617,
+   "tpot_p99_ms": 150.57840062904037
+  },
+  {
+   "offered_req/s": 24.0,
+   "admission": "accept all",
+   "throughput_req/s": 13.691651178809371,
+   "out_tok/s": 1482.1212401061143,
+   "goodput_req/s": 0.41835600824139746,
+   "slo_met": 0.030555555555555555,
+   "shed": 0,
+   "ttft_p99_ms": 9116.266465047374,
+   "tpot_p99_ms": 205.70593808578062
+  },
+  {
+   "offered_req/s": 24.0,
+   "admission": "shed",
+   "throughput_req/s": 18.055473513160322,
+   "out_tok/s": 1962.9774105916636,
+   "goodput_req/s": 11.961039235847533,
+   "slo_met": 0.5833333333333334,
+   "shed": 43,
+   "ttft_p99_ms": 1320.067839580588,
+   "tpot_p99_ms": 161.30983535378405
+  },
+  {
+   "offered_req/s": 32.0,
+   "admission": "accept all",
+   "throughput_req/s": 17.760392159470545,
+   "out_tok/s": 1905.2090680902036,
+   "goodput_req/s": 0.07400163399779393,
+   "slo_met": 0.004166666666666667,
+   "shed": 0,
+   "ttft_p99_ms": 9098.538643796928,
+   "tpot_p99_ms": 158.78677942126876
+  },
+  {
+   "offered_req/s": 32.0,
+   "admission": "shed",
+   "throughput_req/s": 23.963767235736512,
+   "out_tok/s": 2557.630707946283,
+   "goodput_req/s": 20.480047769748385,
+   "slo_met": 0.8083333333333333,
+   "shed": 26,
+   "ttft_p99_ms": 1130.0049975980073,
+   "tpot_p99_ms": 102.81391760729478
+  },
+  {
+   "offered_req/s": 48.0,
+   "admission": "accept all",
+   "throughput_req/s": 21.9965742129928,
+   "out_tok/s": 2321.677306586354,
+   "goodput_req/s": 0.5193635578067745,
+   "slo_met": 0.02361111111111111,
+   "shed": 0,
+   "ttft_p99_ms": 15386.973000597209,
+   "tpot_p99_ms": 132.89811445802852
+  },
+  {
+   "offered_req/s": 48.0,
+   "admission": "shed",
+   "throughput_req/s": 22.790291502767158,
+   "out_tok/s": 2313.5210584434953,
+   "goodput_req/s": 6.51947214137838,
+   "slo_met": 0.1625,
+   "shed": 311,
+   "ttft_p99_ms": 1291.447788127698,
+   "tpot_p99_ms": 130.60810665199315
+  }
+ ],
+ "ttft_slo": 1.0,
+ "tpot_slo": 0.08
+}

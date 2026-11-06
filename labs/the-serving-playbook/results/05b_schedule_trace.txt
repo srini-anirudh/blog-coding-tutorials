@@ -1,0 +1,9 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/the-serving-playbook/scripts/05b_schedule_trace.py
+A 7,680-token prompt joins 32 decoding sequences after iteration 3. Iterations that carry it:
+  no chunking : largest iteration  7712 tokens;   1 iterations carry the long prompt, holding 32 to 32 decodes each
+  chunk 2048  : largest iteration  2048 tokens;   4 iterations carry the long prompt, holding 32 to 32 decodes each
+  chunk 512   : largest iteration   512 tokens;  17 iterations carry the long prompt, holding 31 to 32 decodes each
+  chunk 256   : largest iteration   256 tokens;  36 iterations carry the long prompt, holding 30 to 32 decodes each
+Chunking caps the iteration size, which caps how long the decodes wait for their next token.
+How long an iteration of C tokens takes is measured in 05_chunked_prefill.py.

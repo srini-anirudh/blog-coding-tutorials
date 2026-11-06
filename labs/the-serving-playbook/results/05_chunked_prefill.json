@@ -1,0 +1,95 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "python labs/the-serving-playbook/scripts/05_chunked_prefill.py",
+ "interference": [
+  {
+   "chunk": "none",
+   "long_ttft_ms": 325.3500999417156,
+   "decode_itl_p50_ms": 31.806015060283244,
+   "decode_itl_p99_ms": 88.49617501255125,
+   "decode_itl_max_ms": 294.2504689563066,
+   "mixed_iters": 1,
+   "mixed_iter_ms": 294.1555370343849
+  },
+  {
+   "chunk": 256,
+   "long_ttft_ms": 5804.675477091223,
+   "decode_itl_p50_ms": 33.81904505658895,
+   "decode_itl_p99_ms": 209.47263098787516,
+   "decode_itl_max_ms": 209.78387701325119,
+   "mixed_iters": 51,
+   "mixed_iter_ms": 122.76803983567173
+  },
+  {
+   "chunk": 512,
+   "long_ttft_ms": 2332.3299549520016,
+   "decode_itl_p50_ms": 33.77764602191746,
+   "decode_itl_p99_ms": 162.0529539650306,
+   "decode_itl_max_ms": 220.0952770654112,
+   "mixed_iters": 24,
+   "mixed_iter_ms": 116.0350294521777
+  },
+  {
+   "chunk": 1024,
+   "long_ttft_ms": 1008.6776760872453,
+   "decode_itl_p50_ms": 34.07214896287769,
+   "decode_itl_p99_ms": 108.71920303907245,
+   "decode_itl_max_ms": 188.36224300321192,
+   "mixed_iters": 11,
+   "mixed_iter_ms": 131.1608470595357
+  },
+  {
+   "chunk": 2048,
+   "long_ttft_ms": 559.3133060028777,
+   "decode_itl_p50_ms": 33.80490897689015,
+   "decode_itl_p99_ms": 132.32958898879588,
+   "decode_itl_max_ms": 219.87153496593237,
+   "mixed_iters": 6,
+   "mixed_iter_ms": 143.61849097379795
+  }
+ ],
+ "prefill_alone": [
+  {
+   "C": 64,
+   "iterations": 120,
+   "prefill_ms": 10359.42258744035,
+   "tok/s": 741.3540605352994
+  },
+  {
+   "C": 128,
+   "iterations": 60,
+   "prefill_ms": 5276.9281204091385,
+   "tok/s": 1455.3921949963085
+  },
+  {
+   "C": 256,
+   "iterations": 30,
+   "prefill_ms": 2621.0198308108374,
+   "tok/s": 2930.1571509377395
+  },
+  {
+   "C": 512,
+   "iterations": 15,
+   "prefill_ms": 1336.2269852077588,
+   "tok/s": 5747.526494389649
+  },
+  {
+   "C": 1024,
+   "iterations": 8,
+   "prefill_ms": 718.4903438901529,
+   "tok/s": 10689.078935171
+  },
+  {
+   "C": 2048,
+   "iterations": 4,
+   "prefill_ms": 525.1122179906815,
+   "tok/s": 14625.44526080002
+  },
+  {
+   "C": 7680,
+   "iterations": 1,
+   "prefill_ms": 242.99393105320632,
+   "tok/s": 31605.727627487024
+  }
+ ]
+}

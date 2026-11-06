@@ -1,0 +1,9 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python -m pytest labs/the-serving-playbook -m "not slow and not gpu and not network" -q
+.....................                                                    [100%]
+21 passed, 2 deselected in 4.50s
+# command: python -m pytest labs/the-serving-playbook -m network -q
+.                                                                        [100%]
+1 passed, 22 deselected in 17.99s
+# GPU test (NVIDIA H100 80GB HBM3), command: python -m pytest labs/the-serving-playbook -m gpu -q
+1 passed in 1.68s (CUDA-graph decode equals eager decode equals CPU, random tiny model)

@@ -1,0 +1,54 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "python labs/the-serving-playbook/scripts/04_prefix_cache.py",
+ "part_a": [
+  {
+   "dtype": "bfloat16",
+   "prefix_cache": "off",
+   "prompt_tokens": 135168,
+   "cached_tokens": 0,
+   "prefill_tokens_computed": 135168,
+   "wall_s": 6.713708761031739,
+   "ttft_p50_ms": 3980.668424977921,
+   "ttft_p99_ms": 5508.324938011356
+  },
+  {
+   "dtype": "bfloat16",
+   "prefix_cache": "on",
+   "prompt_tokens": 135168,
+   "cached_tokens": 131072,
+   "prefill_tokens_computed": 4096,
+   "wall_s": 4.295966906007379,
+   "ttft_p50_ms": 2261.16891996935,
+   "ttft_p99_ms": 3331.188427982852
+  },
+  {
+   "dtype": "float32",
+   "prefix_cache": "off",
+   "prompt_tokens": 135168,
+   "cached_tokens": 0,
+   "prefill_tokens_computed": 135168,
+   "wall_s": 7.02637797803618,
+   "ttft_p50_ms": 3461.8999320082366,
+   "ttft_p99_ms": 6115.01548497472
+  },
+  {
+   "dtype": "float32",
+   "prefix_cache": "on",
+   "prompt_tokens": 135168,
+   "cached_tokens": 131072,
+   "prefill_tokens_computed": 4096,
+   "wall_s": 4.3169597330270335,
+   "ttft_p50_ms": 2330.482265097089,
+   "ttft_p99_ms": 3410.5815880466253
+  }
+ ],
+ "part_b": {
+  "arrival_tokens": 640,
+  "grouped_tokens": 384
+ },
+ "part_c": {
+  "token_ids_only": 80,
+  "with_image_hash": 0
+ }
+}

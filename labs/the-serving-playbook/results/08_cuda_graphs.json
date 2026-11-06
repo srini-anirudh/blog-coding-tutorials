@@ -1,0 +1,51 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "python labs/the-serving-playbook/scripts/08_cuda_graphs.py",
+ "rows": [
+  {
+   "B": 1,
+   "eager_ms": 31.155583914369345,
+   "graph_ms": 3.8744769990444183,
+   "speedup": 8.041235997027057,
+   "eager_tok/s": 32.09697506387571,
+   "graph_tok/s": 258.0993512793172,
+   "same_tokens": 1.0
+  },
+  {
+   "B": 4,
+   "eager_ms": 31.236185925081372,
+   "graph_ms": 4.044089000672102,
+   "speedup": 7.723911595390239,
+   "eager_tok/s": 128.05660747422317,
+   "graph_tok/s": 989.0979153364888,
+   "same_tokens": 1.0
+  },
+  {
+   "B": 16,
+   "eager_ms": 31.994121032766998,
+   "graph_ms": 4.461347940377891,
+   "speedup": 7.171402334079549,
+   "eager_tok/s": 500.0918757422181,
+   "graph_tok/s": 3586.3600449519627,
+   "same_tokens": 1.0
+  },
+  {
+   "B": 64,
+   "eager_ms": 31.863878946751356,
+   "graph_ms": 5.93611691147089,
+   "speedup": 5.367798414680467,
+   "eager_tok/s": 2008.5439097654194,
+   "graph_tok/s": 10781.458814654925,
+   "same_tokens": 0.9375
+  },
+  {
+   "B": 128,
+   "eager_ms": 33.70291495230049,
+   "graph_ms": 7.732892059721053,
+   "speedup": 4.358384248999364,
+   "eager_tok/s": 3797.8910780019337,
+   "graph_tok/s": 16552.668653778845,
+   "same_tokens": 0.9375
+  }
+ ]
+}

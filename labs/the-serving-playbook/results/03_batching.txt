@@ -1,0 +1,10 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/the-serving-playbook/scripts/03_batching.py
+model HuggingFaceTB/SmolLM2-360M; 256 requests at t=0; prompts 32-512 tokens; outputs 8-512 tokens (mean 120); greedy; block size 16
+      mode  slots  wall_s  out_tok/s  mean_latency_s  ttft_p50_s  steps  useful_batch
+    static     32   130.9        235           62.80       64.59   3509           8.7
+continuous     32    47.8        643           19.32       14.94   1186          25.7
+    static    128    38.6        796           15.40       21.08    981          31.1
+continuous    128    28.7       1070            9.63        2.04    548          55.7
+useful_batch = mean number of sequences per decode step that still wanted a token.
+Static, 32 slots, first group: sequences still wanting tokens at decode step 0: 32, 8: 27, 16: 25, 32: 19, 64: 11, 128: 9, 256: 5, 406: 1

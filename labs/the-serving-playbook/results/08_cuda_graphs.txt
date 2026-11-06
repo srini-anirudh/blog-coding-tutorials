@@ -1,0 +1,10 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/the-serving-playbook/scripts/08_cuda_graphs.py
+HuggingFaceTB/SmolLM2-360M, decode step at context 256, median wall time per step (scheduling + forward + sampling)
+  B  eager_ms  graph_ms  speedup  eager_tok/s  graph_tok/s  same_tokens
+  1     31.16      3.87     8.04           32          258         1.00
+  4     31.24      4.04     7.72          128          989         1.00
+ 16     31.99      4.46     7.17          500         3586         1.00
+ 64     31.86      5.94     5.37         2009        10781         0.94
+128     33.70      7.73     4.36         3798        16553         0.94
+same_tokens = fraction of sequences whose greedy outputs match between eager and graph (bf16).

@@ -1,0 +1,20 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/the-serving-playbook/scripts/05b_schedule_trace.py",
+ "no chunking": {
+  "largest_iteration_tokens": 7712,
+  "iterations_with_long_prompt": 1
+ },
+ "chunk 2048": {
+  "largest_iteration_tokens": 2048,
+  "iterations_with_long_prompt": 4
+ },
+ "chunk 512": {
+  "largest_iteration_tokens": 512,
+  "iterations_with_long_prompt": 17
+ },
+ "chunk 256": {
+  "largest_iteration_tokens": 256,
+  "iterations_with_long_prompt": 36
+ }
+}

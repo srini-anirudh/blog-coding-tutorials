@@ -1,0 +1,33 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/the-serving-playbook/scripts/01_roofline.py
+Part A: one Llama-3-8B layer's GEMMs, 218 M parameters, 416 MiB of bf16 weights
+   B      us  TFLOP/s  GB/s  FLOP/byte
+   1   184.4      2.4  2367        1.0
+   2   309.1      2.8  1412        2.0
+   4   183.7      9.5  2378        4.0
+   8   184.3     18.9  2374        8.0
+  16   189.1     36.9  2321       15.9
+  32   179.2     77.9  2463       31.6
+  64   183.2    152.4  2438       62.5
+ 128   195.6    285.5  2338      122.1
+ 256   211.9    527.0  2256      233.5
+ 512   329.8    677.1  1577      429.4
+1024   618.5    722.2   977      739.6
+2048  1220.7    731.8   632     1157.6
+4096  2509.2    712.1   441     1613.6
+
+Section 14: speculative decoding with gamma = 4 verifies 5 positions per sequence.
+  B  us_B_rows  us_5B_rows  cost_ratio
+  1      190.3       187.6        0.99
+  4      186.6       187.3        1.00
+ 16      190.9       186.9        0.98
+ 64      183.5       241.4        1.32
+256      220.6       754.6        3.42
+
+Part B: SmolLM2-360M decode step, eager PyTorch, context 256, median of 34 steps
+  B  ms_per_step  tok/s
+  1        29.66     34
+  4        30.23    132
+ 16        30.23    529
+ 64        30.50   2099
+128        30.76   4161

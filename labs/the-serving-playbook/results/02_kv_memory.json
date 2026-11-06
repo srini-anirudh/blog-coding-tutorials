@@ -1,0 +1,44 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "command": "python labs/the-serving-playbook/scripts/02_kv_memory.py",
+ "simulation": [
+  {
+   "policy": "reserve_max",
+   "steps": 23586,
+   "mean_concurrency": 52.59764266938014,
+   "kv_utilization": 0.12473700017650055,
+   "frag_blocked_steps": 0,
+   "preemptions": 0,
+   "speedup_vs_reserve_max": 1.0
+  },
+  {
+   "policy": "contiguous",
+   "steps": 9002,
+   "mean_concurrency": 137.81026438569208,
+   "kv_utilization": 0.3975767407075199,
+   "frag_blocked_steps": 7224,
+   "preemptions": 0,
+   "speedup_vs_reserve_max": 2.6200844256831815
+  },
+  {
+   "policy": "paged",
+   "steps": 3960,
+   "mean_concurrency": 313.3126262626263,
+   "kv_utilization": 0.9927141067906994,
+   "frag_blocked_steps": 0,
+   "preemptions": 14,
+   "speedup_vs_reserve_max": 5.956060606060606
+  }
+ ],
+ "sharing_1tok": {
+  "shared_blocks": 133,
+  "private_blocks": 1008,
+  "prompt_blocks": 125
+ },
+ "sharing_100tok": {
+  "shared_blocks": 181,
+  "private_blocks": 1056,
+  "prompt_blocks": 125
+ },
+ "capacity_tokens": 457763
+}

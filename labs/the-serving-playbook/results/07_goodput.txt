@@ -1,0 +1,22 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/the-serving-playbook/scripts/07_goodput.py
+model HuggingFaceTB/SmolLM2-360M; Poisson arrivals for about 15 s per load level; SLO: TTFT <= 1000 ms and mean TPOT <= 80 ms; max 128 sequences, token budget 2048; CUDA-graph decode iterations
+offered_req/s   admission  throughput_req/s  out_tok/s  goodput_req/s  slo_met  shed  ttft_p99_ms  tpot_p99_ms
+            2  accept all               2.1        231            2.1     1.00     0          319         15.9
+            2        shed               2.1        231            2.1     1.00     0           97          7.3
+            4  accept all               3.9        440            3.9     1.00     0          255         18.9
+            4        shed               3.9        443            3.9     1.00     0          149          8.4
+            8  accept all               7.7        778            5.8     0.75     0          656        138.0
+            8        shed               8.0        802            8.0     1.00     0          298         27.9
+           12  accept all              10.3       1027            0.4     0.04     0         2629        260.6
+           12        shed              11.8       1170           10.8     0.92     0          521        105.7
+           16  accept all              11.4       1228            0.3     0.03     0         3912        262.5
+           16        shed              13.7       1477           11.2     0.82     0          771        150.6
+           24  accept all              13.7       1482            0.4     0.03     0         9116        205.7
+           24        shed              18.1       1963           12.0     0.58    43         1320        161.3
+           32  accept all              17.8       1905            0.1     0.00     0         9099        158.8
+           32        shed              24.0       2558           20.5     0.81    26         1130        102.8
+           48  accept all              22.0       2322            0.5     0.02     0        15387        132.9
+           48        shed              22.8       2314            6.5     0.16   311         1291        130.6
+throughput counts every finished request; goodput only those that met both SLOs; slo_met is out of all
+offered requests (a shed request counts as a miss). Both are per second of wall time of that run.

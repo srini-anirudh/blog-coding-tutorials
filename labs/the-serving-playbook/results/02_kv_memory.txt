@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/the-serving-playbook/scripts/02_kv_memory.py
+llama3-8b: KV per token = 2 x 32 x 8 x 128 x 2 B = 128 KiB; an 8,192-token sequence holds 1.00 GiB
+smollm2-135m: KV per token = 2 x 30 x 3 x 64 x 2 B = 22 KiB; an 8,192-token sequence holds 0.18 GiB
+
+Pool: 60 GB / 128 KiB = 457,763 tokens. Trace: 3000 requests, mean output 414 tokens, max_model_len 8,192, block size 16.
+     policy  steps  mean_concurrency  kv_utilization  frag_blocked_steps  preemptions  speedup_vs_reserve_max
+reserve_max  23586              52.6           0.125                   0            0                    1.00
+ contiguous   9002             137.8           0.398                7224            0                    2.62
+      paged   3960             313.3           0.993                   0           14                    5.96
+kv_utilization = tokens actually written / tokens reserved, averaged over steps.
+frag_blocked_steps = steps where the next request had enough total free memory but no hole big enough.
+steps = decode steps to drain the trace, a proxy for time at a fixed step cost.
+
+Parallel sampling, n = 8 samples of a 2,000-token prompt, after each sample writes 1 token:
+  shared blocks 133 (266 MiB) versus private copies 1008 (2016 MiB); the prompt is 125 blocks
+  after 100 tokens each: shared 181 blocks versus private 1056

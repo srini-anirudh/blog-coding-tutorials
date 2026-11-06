@@ -1,0 +1,22 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python labs/the-serving-playbook/scripts/06_blocks_and_preemption.py
+Part A: NVIDIA H100 80GB HBM3, total 79.2 GiB
+  weights after loading (bf16)            14.965 GiB
+  activation peak, 8192-token profiling pass 1.006 GiB
+  KV per block = 131072 B/token x 16 = 2048 KiB
+  gpu_memory_utilization 0.85: 51.3 GiB for KV = 26,281 blocks = 420,496 tokens = 102 sequences of 4k
+  gpu_memory_utilization 0.9: 55.3 GiB for KV = 28,308 blocks = 452,928 tokens = 110 sequences of 4k
+  gpu_memory_utilization 0.95: 59.2 GiB for KV = 30,335 blocks = 485,360 tokens = 118 sequences of 4k
+
+Part B: one 8000-token sequence, 1000 MiB of KV
+  recompute (prefill again)  252.8 ms
+  swap out + in over PCIe    561.0 + 76.2 = 637.1 ms  (1.9 / 13.8 GB/s)
+  best of 10: out 548.0 ms (1.9 GB/s), in 76.1 ms (13.8 GB/s)
+  recompute / swap = 0.40  (swap loses when this is below 1)
+  the post assumes 50 GB/s each way: swap would be 41.9 ms round trip, recompute / swap = 6.0
+
+Part C: 48 requests (prompts 64-256, outputs 64-512), shrinking the KV pool; preemption is by recompute
+kv_blocks  preemptions  wall_s  out_tok/s  prefill_tokens
+     4000            0   24.46        391            6854
+      600            5   18.52        516            7559
+      300           25   36.38        263           11241
