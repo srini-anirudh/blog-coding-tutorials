@@ -1,0 +1,64 @@
+# hardware: AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 126 on 192 CPUs, numpy simulator, exact byte counts, model times
+# command: python labs/talk-is-not-cheap/scripts/03_allreduce_schedules.py
+
+1. Every algorithm gives the exact sum on every rank. Bytes are the busiest rank's sent bytes, in units of n.
+p            algorithm  rounds  bytes sent / n  lower bound / n
+--  ------------------  ------  --------------  ---------------
+4                naive       6          3.0000           1.5000
+4                 tree       4          2.0000           1.5000
+4                 ring       6          1.5000           1.5000
+4   recursive_doubling       2          2.0000           1.5000
+4         rabenseifner       4          1.5000           1.5000
+8                naive      14          7.0000           1.7500
+8                 tree       6          3.0000           1.7500
+8                 ring      14          1.7500           1.7500
+8   recursive_doubling       3          3.0000           1.7500
+8         rabenseifner       6          1.7500           1.7500
+16               naive      30         15.0000           1.8750
+16                tree       8          4.0000           1.8750
+16                ring      30          1.8750           1.8750
+16  recursive_doubling       4          4.0000           1.8750
+16        rabenseifner       8          1.8750           1.8750
+64               naive     126         63.0000           1.9688
+64                tree      12          6.0000           1.9688
+64                ring     126          1.9688           1.9688
+64  recursive_doubling       6          6.0000           1.9688
+64        rabenseifner      12          1.9688           1.9688
+Ring and Rabenseifner sit exactly on the 2(p-1)/p bound. Naive is (p-1)n at the root, tree and recursive doubling
+are n log2 p. Rabenseifner also needs only 2 log2 p rounds, the latency floor's order; the ring needs 2(p-1).
+
+2. The naive root's load at p = 64, n = 100 MB
+rank 0 moves 12.6 GB, every other rank 0.2 GB
+rounds: naive 126, tree 12
+
+3. The simulator's time equals the closed form (alpha = 12 us, 45 GB/s, p = 16, n = 64 MiB)
+algorithm     simulated ms  closed form ms
+------------  ------------  --------------
+naive               45.099          45.099
+tree                12.026          12.026
+ring                 3.156           3.156
+rabenseifner         2.892           2.892
+
+4. Ring versus binomial tree: where does the ring start to win? (closed forms from the post)
+fabric                    alpha  GB/s     p  ring wins above  ring alpha term ms
+------------------------  -----  ----  ----  ---------------  ------------------
+EFA-like                  12 us  45.0    64          5.9 MiB                1.51
+IB-like                    2 us  45.0    64        998.8 KiB                0.25
+EFA-like                  12 us  45.0  1024         58.0 MiB               24.55
+EFA-like, half bandwidth  12 us  22.5    64          2.9 MiB                1.51
+The post's text says the tree wins below roughly 100 KiB at p = 64, alpha = 12 us, 45 GB/s. Its own formulas,
+which its Figure 14 also uses, put the crossover near 5.9 MiB. Lowering alpha does move it left, as the post says.
+
+5. Rabenseifner against both at p = 64, alpha = 12 us, 45 GB/s
+n        naive ms  tree ms  ring ms  rabenseifner ms       fastest
+-------  --------  -------  -------  ---------------  ------------
+4 KiB       1.523    0.145    1.512            0.144  rabenseifner
+64 KiB      1.696    0.161    1.515            0.147  rabenseifner
+1 MiB       4.448    0.424    1.558            0.190  rabenseifner
+16 MiB     48.488    4.618    2.246            0.878  rabenseifner
+256 MiB   753.131   71.727   13.256           11.888  rabenseifner
+
+6. In-network reduction moves 2n per rank; the ring moves 2(p-1)/p n
+p =    8: ring 1.750 n, in-network 2.000 n; alpha terms 14 vs 2 messages (at 3 us: 0.04 ms vs 0.006 ms)
+p =   64: ring 1.969 n, in-network 2.000 n; alpha terms 126 vs 2 messages (at 3 us: 0.38 ms vs 0.006 ms)
+p =  512: ring 1.996 n, in-network 2.000 n; alpha terms 1022 vs 2 messages (at 3 us: 3.07 ms vs 0.006 ms)

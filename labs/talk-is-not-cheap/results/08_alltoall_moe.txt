@@ -1,0 +1,21 @@
+# hardware: AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 130 on 192 CPUs, numpy simulator and synthetic router, seed 0
+# command: python labs/talk-is-not-cheap/scripts/08_alltoall_moe.py
+
+1. Bytes per rank, as a fraction of n, on 4 nodes x 8 GPUs (P = 32). 'network' counts bytes that leave the node.
+collective               sent / n  busiest NIC / n  share of bytes leaving node
+-----------------------  --------  ---------------  ---------------------------
+AllToAll (pairwise)         0.969            0.750                          77%
+AllReduce, flat ring        1.938            1.938                          12%
+AllReduce, hierarchical     1.938            0.188                          10%
+AllToAll sends half of what AllReduce sends, but 3/4 of it must leave the node, and no reordering helps: every
+pair really exchanges. The hierarchical AllReduce puts 4x fewer bytes on its busiest NIC than AllToAll does.
+
+2. MoE dispatch: 8 ranks x 8 experts, top-2, 4096 tokens per rank. The slowest receiver sets the AllToAll time.
+router skew  busiest / mean rank  with capacity 1.25  tokens dropped
+-----------  -------------------  ------------------  --------------
+0.0                         1.01                1.01            0.0%
+0.25                        1.15                1.15            8.8%
+0.5                         1.38                1.30           24.7%
+1.0                         1.99                1.54           50.9%
+With equal messages the AllToAll cost model holds. As routing skews, the busiest rank receives more than its share
+and everyone waits for it. A capacity factor caps that ratio and pays for it in dropped tokens.

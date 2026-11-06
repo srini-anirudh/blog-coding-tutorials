@@ -1,0 +1,24 @@
+# hardware: 2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, NCCL 2.30.7, 2 processes, 2 GPUs
+# command: python labs/talk-is-not-cheap/scripts/02_pingpong.py --backend nccl
+
+Fit over 15 sizes, weighted by 1/T: alpha = 61.31 us, 1/beta = 287.76 GB/s, n_half = 16.8 MiB
+
+message  measured us  model us  error     GB/s  of peak
+-------  -----------  --------  -----  -------  -------
+4 B             59.7      61.3    -3%    0.000       0%
+16 B            58.3      61.3    -5%    0.000       0%
+64 B            56.6      61.3    -8%    0.001       0%
+256 B           58.3      61.3    -5%    0.004       0%
+1 KiB           57.5      61.3    -6%    0.018       0%
+4 KiB           57.6      61.3    -6%    0.071       0%
+16 KiB          59.3      61.4    -3%    0.276       0%
+64 KiB          72.4      61.5   +18%    0.905       0%
+256 KiB         69.3      62.2   +11%    3.785       1%
+1 MiB           75.6      65.0   +16%   13.879       5%
+4 MiB           90.4      75.9   +19%   46.384      16%
+16 MiB         107.8     119.6   -10%  155.623      54%
+64 MiB       1,164.5     294.5  +295%   57.629      20%
+256 MiB        813.2     994.1   -18%  330.083     115%
+1 GiB        4,500.2   3,792.7   +19%  238.598      83%
+
+Below n_half the time barely moves with size; above it, time grows in proportion to bytes.

@@ -1,0 +1,62 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 606 on 192 CPUs, 2 processes, 1 thread each",
+ "command": "python labs/talk-is-not-cheap/scripts/02_pingpong.py",
+ "data": {
+  "alpha_s": 0.00021936369965241248,
+  "beta_s_per_byte": 4.729627337058354e-10,
+  "rows": [
+   {
+    "bytes": 4,
+    "one_way_s": 0.0001430734002497047
+   },
+   {
+    "bytes": 16,
+    "one_way_s": 0.0005785232991911471
+   },
+   {
+    "bytes": 64,
+    "one_way_s": 0.00020227059721946716
+   },
+   {
+    "bytes": 256,
+    "one_way_s": 0.00020012360182590782
+   },
+   {
+    "bytes": 1024,
+    "one_way_s": 0.00040238620131276547
+   },
+   {
+    "bytes": 4096,
+    "one_way_s": 0.00029455350013449786
+   },
+   {
+    "bytes": 16384,
+    "one_way_s": 0.0006525792530737817
+   },
+   {
+    "bytes": 65536,
+    "one_way_s": 0.0007871615001931786
+   },
+   {
+    "bytes": 262144,
+    "one_way_s": 0.0005633664550259709
+   },
+   {
+    "bytes": 1048576,
+    "one_way_s": 0.00047880446072667837
+   },
+   {
+    "bytes": 4194304,
+    "one_way_s": 0.00242569949477911
+   },
+   {
+    "bytes": 16777216,
+    "one_way_s": 0.009228162525687367
+   },
+   {
+    "bytes": 67108864,
+    "one_way_s": 0.04657434194814414
+   }
+  ]
+ }
+}

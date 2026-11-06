@@ -1,0 +1,43 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 127 on 192 CPUs, numpy simulator, model times",
+ "command": "python labs/talk-is-not-cheap/scripts/05_hierarchical.py",
+ "data": [
+  {
+   "nodes": 4,
+   "g": 4,
+   "flat_s": 0.04035531839999997,
+   "hier_s": 0.011662203093333335,
+   "closed_s": 0.011662203093333334,
+   "flat_net_bytes": 8053063680.0,
+   "hier_net_bytes": 6442450944.0,
+   "flat_busiest_nic": 2013265920.0,
+   "hier_busiest_nic": 402653184.0
+  },
+  {
+   "nodes": 4,
+   "g": 8,
+   "flat_s": 0.04179349568000003,
+   "hier_s": 0.00824819448888889,
+   "closed_s": 0.008248194488888888,
+   "flat_net_bytes": 8321499136.0,
+   "hier_net_bytes": 6442450944.0,
+   "flat_busiest_nic": 2080374784.0,
+   "hier_busiest_nic": 201326592.0
+  },
+  {
+   "nodes": 16,
+   "g": 8,
+   "flat_s": 0.04337612863999986,
+   "hier_s": 0.009326827448888885,
+   "closed_s": 0.009326827448888889,
+   "flat_net_bytes": 34091302912.0,
+   "hier_net_bytes": 32212254720.0,
+   "flat_busiest_nic": 2130706432.0,
+   "hier_busiest_nic": 251658240.0
+  },
+  {
+   "equal_links_flat_s": 0.04179349568000003,
+   "equal_links_hier_s": 0.04165349568
+  }
+ ]
+}

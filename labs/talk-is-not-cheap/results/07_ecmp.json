@@ -1,0 +1,41 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 126 on 192 CPUs, Monte Carlo, numpy, seed 0",
+ "command": "python labs/talk-is-not-cheap/scripts/07_ecmp.py",
+ "data": [
+  {
+   "k": 8,
+   "ecmp_mean_max": 2.59515,
+   "p_collision": 0.998,
+   "ln_over_lnln": 2.84038155519115,
+   "spray_mean_max": 1.0459455
+  },
+  {
+   "k": 16,
+   "ecmp_mean_max": 3.07465,
+   "p_collision": 1.0,
+   "ln_over_lnln": 2.7188068070511737,
+   "spray_mean_max": 1.0555695
+  },
+  {
+   "k": 64,
+   "ecmp_mean_max": 3.9521,
+   "p_collision": 1.0,
+   "ln_over_lnln": 2.9180095803841914,
+   "spray_mean_max": 1.0751575
+  },
+  {
+   "k": 256,
+   "ecmp_mean_max": 4.76285,
+   "p_collision": 1.0,
+   "ln_over_lnln": 3.2372495713945786,
+   "spray_mean_max": 1.090511
+  },
+  {
+   "k": 1024,
+   "ecmp_mean_max": 5.52105,
+   "p_collision": 1.0,
+   "ln_over_lnln": 3.5801722189740026,
+   "spray_mean_max": 1.1041265
+  }
+ ]
+}

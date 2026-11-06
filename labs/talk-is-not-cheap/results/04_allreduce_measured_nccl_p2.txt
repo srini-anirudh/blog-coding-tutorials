@@ -1,0 +1,28 @@
+# hardware: 2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, NCCL 2.30.7, 2 processes on GPUs
+# command: python labs/talk-is-not-cheap/scripts/04_allreduce_measured.py --backend nccl -p 2 --max-log2 28
+
+Ping-pong fit (2 processes): alpha = 63.6 us, 1/beta = 176.44 GB/s
+
+All 50 runs gave the exact sum on every rank.
+Measured median ms (model ms in brackets). 'library' is torch.distributed.all_reduce.
+n              naive         tree         ring  rabenseifner  library       fastest  model says
+-------  -----------  -----------  -----------  ------------  -------  ------------  ----------
+1 KiB    0.30 (0.13)  0.33 (0.13)  0.46 (0.13)   0.44 (0.13)     0.09         naive        ring
+4 KiB    0.31 (0.13)  0.30 (0.13)  0.42 (0.13)   0.42 (0.13)     0.09          tree        ring
+16 KiB   0.34 (0.13)  0.32 (0.13)  0.46 (0.13)   0.43 (0.13)     0.11          tree        ring
+64 KiB   0.36 (0.13)  0.36 (0.13)  0.50 (0.13)   0.51 (0.13)     0.10          tree        ring
+256 KiB  0.39 (0.13)  0.35 (0.13)  0.47 (0.13)   0.47 (0.13)     0.08          tree        ring
+1 MiB    0.40 (0.14)  0.42 (0.14)  0.49 (0.13)   0.50 (0.13)     0.12         naive        ring
+4 MiB    0.38 (0.17)  0.36 (0.17)  0.47 (0.15)   0.49 (0.15)     0.13          tree        ring
+16 MiB   0.35 (0.32)  0.33 (0.32)  0.47 (0.22)   0.44 (0.22)     0.14          tree        ring
+64 MiB   0.66 (0.89)  0.64 (0.89)  0.50 (0.51)   0.50 (0.51)     0.31  rabenseifner        ring
+256 MiB  2.27 (3.17)  2.06 (3.17)  1.32 (1.65)   1.32 (1.65)     0.96          ring        ring
+
+The model picks the measured winner at 1 of 10 sizes.
+
+Per-algorithm refit of T = rounds * alpha' + bytes * beta' to the p-way timings above:
+  naive         alpha' =   165.2 us per round, 1/beta' = 342.06 GB/s
+  tree          alpha' =   162.6 us per round, 1/beta' = 375.70 GB/s
+  ring          alpha' =   223.4 us per round, 1/beta' = 402.04 GB/s
+  rabenseifner  alpha' =   221.6 us per round, 1/beta' = 408.81 GB/s
+Against the 2-process ping-pong: alpha = 63.6 us, 1/beta = 176.44 GB/s.

@@ -1,0 +1,44 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 130 on 192 CPUs, numpy simulator and synthetic router, seed 0",
+ "command": "python labs/talk-is-not-cheap/scripts/08_alltoall_moe.py",
+ "data": {
+  "AllToAll (pairwise)": {
+   "sent_over_n": 0.96875,
+   "busiest_nic_over_n": 0.75
+  },
+  "AllReduce, flat ring": {
+   "sent_over_n": 1.9375,
+   "busiest_nic_over_n": 1.9375
+  },
+  "AllReduce, hierarchical": {
+   "sent_over_n": 1.9375,
+   "busiest_nic_over_n": 0.1875
+  },
+  "moe": [
+   {
+    "skew": 0.0,
+    "max_over_mean": 1.010986328125,
+    "capped_max_over_mean": 1.010986328125,
+    "drop_fraction": 0.0
+   },
+   {
+    "skew": 0.25,
+    "max_over_mean": 1.1510009765625,
+    "capped_max_over_mean": 1.1519775145553102,
+    "drop_fraction": 0.08795166015625
+   },
+   {
+    "skew": 0.5,
+    "max_over_mean": 1.38330078125,
+    "capped_max_over_mean": 1.297555834785781,
+    "drop_fraction": 0.247100830078125
+   },
+   {
+    "skew": 1.0,
+    "max_over_mean": 1.9949951171875,
+    "capped_max_over_mean": 1.539531706105211,
+    "drop_fraction": 0.508636474609375
+   }
+  ]
+ }
+}

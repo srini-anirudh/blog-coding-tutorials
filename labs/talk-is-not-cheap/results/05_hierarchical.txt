@@ -1,0 +1,21 @@
+# hardware: AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 127 on 192 CPUs, numpy simulator, model times
+# command: python labs/talk-is-not-cheap/scripts/05_hierarchical.py
+
+1 GiB AllReduce. NVLink 450 GB/s, alpha 2 us. Network 50 GB/s, alpha 3 us. Ranks numbered node-major.
+nodes x GPUs  flat ring ms  hierarchical ms  closed form ms  speed-up  busiest NIC bytes cut  G(P-1)/P N/(N-1)  total fabric bytes cut
+------------  ------------  ---------------  --------------  --------  ---------------------  ----------------  ----------------------
+4 x 4                 40.4             11.7            11.7      3.5x                  5.00x             5.00x                   1.25x
+4 x 8                 41.8              8.2             8.2      5.1x                 10.33x            10.33x                   1.29x
+16 x 8                43.4              9.3             9.3      4.7x                  8.47x             8.47x                   1.06x
+The busiest NIC's bytes fall by the post's factor, about G, and that NIC sets the time. Total bytes on the fabric
+barely change: a flat ring pushes everything through the N NICs at node boundaries, while the hierarchical
+version spreads nearly the same total over all G x N NICs, one rail each. So 'G times less fabric traffic' is
+true per NIC, not for the fabric as a whole.
+
+Flat ring on 4 x 4: every round waits for the network hop (1.35 ms). An NVLink hop needs
+0.15 ms of it, so the 12 NVLink hops are busy 11% of each round.
+
+Nuance 12: the two factors are separate. Same 4 x 8 machine, but the in-node links made as slow as the network:
+busiest NIC bytes still cut 10.33x; time 41.8 ms flat vs 41.7 ms hierarchical.
+The per-NIC traffic cut holds whatever the link speeds, as the post says, but on its own it buys almost no time:
+the in-node phases now move 2(G-1)/G n over slow links. The speed-up needs both factors at once.

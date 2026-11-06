@@ -1,0 +1,156 @@
+{
+ "hardware": "2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, NCCL 2.30.7, 2 GPUs visible",
+ "command": "python labs/talk-is-not-cheap/scripts/09_gpu_links.py",
+ "data": {
+  "copies_GBps": {
+   "HBM, device to device on GPU 0 (read + write)": 2883.0,
+   "PCIe host to GPU 0, pinned": 14.4,
+   "PCIe GPU 0 to host, pinned": 1.9,
+   "PCIe host to GPU 0, pageable": 12.1,
+   "PCIe GPU 0 to host, pageable": 1.3,
+   "PCIe host to GPU 1, pinned": 14.2,
+   "PCIe GPU 1 to host, pinned": 1.8,
+   "PCIe host to GPU 1, pageable": 6.6,
+   "PCIe GPU 1 to host, pageable": 1.5,
+   "GPU 0 to GPU 1 copy (peer access on)": 383.5
+  },
+  "nccl_proto": {
+   "LL": [
+    {
+     "bytes": 4096,
+     "seconds": 9.288390283472836e-05
+    },
+    {
+     "bytes": 16384,
+     "seconds": 9.231839794665575e-05
+    },
+    {
+     "bytes": 65536,
+     "seconds": 9.212734876200557e-05
+    },
+    {
+     "bytes": 262144,
+     "seconds": 9.30739042814821e-05
+    },
+    {
+     "bytes": 1048576,
+     "seconds": 9.810595074668526e-05
+    },
+    {
+     "bytes": 4194304,
+     "seconds": 6.139125325717032e-05
+    },
+    {
+     "bytes": 16777216,
+     "seconds": 0.0001481296494603157
+    },
+    {
+     "bytes": 67108864,
+     "seconds": 0.0006013786575446526
+    },
+    {
+     "bytes": 268435456,
+     "seconds": 0.0025415813627963266
+    },
+    {
+     "bytes": 1073741824,
+     "seconds": 0.008950943670546016
+    }
+   ],
+   "LL128": [
+    {
+     "bytes": 4096,
+     "seconds": 8.96318000741303e-05
+    },
+    {
+     "bytes": 16384,
+     "seconds": 7.347494829446077e-05
+    },
+    {
+     "bytes": 65536,
+     "seconds": 6.965789943933487e-05
+    },
+    {
+     "bytes": 262144,
+     "seconds": 7.037239847704769e-05
+    },
+    {
+     "bytes": 1048576,
+     "seconds": 7.992359460331499e-05
+    },
+    {
+     "bytes": 4194304,
+     "seconds": 7.388449739664793e-05
+    },
+    {
+     "bytes": 16777216,
+     "seconds": 0.00010309535233924787
+    },
+    {
+     "bytes": 67108864,
+     "seconds": 0.0003060763313745459
+    },
+    {
+     "bytes": 268435456,
+     "seconds": 0.0010007166614135106
+    },
+    {
+     "bytes": 1073741824,
+     "seconds": 0.0035733720287680626
+    }
+   ],
+   "Simple": [
+    {
+     "bytes": 4096,
+     "seconds": 7.166395080275834e-05
+    },
+    {
+     "bytes": 16384,
+     "seconds": 6.316975341178477e-05
+    },
+    {
+     "bytes": 65536,
+     "seconds": 6.335575017146766e-05
+    },
+    {
+     "bytes": 262144,
+     "seconds": 6.712435279041529e-05
+    },
+    {
+     "bytes": 1048576,
+     "seconds": 9.664444951340556e-05
+    },
+    {
+     "bytes": 4194304,
+     "seconds": 8.46967042889446e-05
+    },
+    {
+     "bytes": 16777216,
+     "seconds": 0.00011640534891436498
+    },
+    {
+     "bytes": 67108864,
+     "seconds": 0.000274325682160755
+    },
+    {
+     "bytes": 268435456,
+     "seconds": 0.0009215853254621228
+    },
+    {
+     "bytes": 1073741824,
+     "seconds": 0.0038618010003119707
+    }
+   ]
+  },
+  "overlap": {
+   "compute_s": 0.03164311801083386,
+   "comm_s": 0.0034199290676042438,
+   "sequential_s": 0.034269931027665734,
+   "overlapped_s": 0.03225386992562562,
+   "allreduces_beside_compute": 20,
+   "compute_alone_event_s": 0.0358191032409668,
+   "compute_under_comm_event_s": 0.03606521606445313,
+   "matmul_tflops": 613.9247096049427
+  }
+ }
+}

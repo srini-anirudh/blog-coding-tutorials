@@ -1,0 +1,24 @@
+# hardware: 2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, NCCL 2.30.7, 2 GPUs visible
+# command: python labs/talk-is-not-cheap/scripts/09_gpu_links.py
+# note: first full run. Its GPU 1 copy rows were wrong (a missing cross-device sync, fixed since) and are
+# removed here. The NCCL protocol and overlap sections are kept to show run-to-run spread.
+4. NCCL AllReduce over 2 GPUs, bus bandwidth GB/s (nccl-tests convention, 2(p-1)/p = 1 at p = 2)
+n         LL GB/s (time)  LL128 GB/s (time)  Simple GB/s (time)
+-------  ---------------  -----------------  ------------------
+4 KiB        0.1 (66 us)        0.1 (60 us)         0.1 (59 us)
+16 KiB       0.3 (59 us)        0.2 (68 us)         0.3 (59 us)
+64 KiB       1.1 (62 us)        1.0 (62 us)         1.1 (60 us)
+256 KiB      4.0 (65 us)        4.0 (66 us)         4.4 (60 us)
+1 MiB       16.9 (62 us)       16.6 (63 us)        17.1 (61 us)
+4 MiB       58.9 (71 us)       56.6 (74 us)        70.5 (60 us)
+16 MiB    113.7 (148 us)     161.9 (104 us)       182.3 (92 us)
+64 MiB    114.0 (589 us)     214.9 (312 us)      252.4 (266 us)
+256 MiB  117.7 (2282 us)    261.6 (1026 us)     191.8 (1400 us)
+1 GiB    119.7 (8967 us)    299.4 (3586 us)     321.1 (3344 us)
+
+5. Overlap on 2 GPUs: bf16 8192^3 matmuls x 20 and a 1 GiB AllReduce
+matmul loop alone:           31.3 ms  (621 TFLOP/s)
+AllReduce alone:              3.4 ms
+one after the other:         34.4 ms
+on separate streams:         32.1 ms
+matmul loop by CUDA events, alone 35.4 ms, beside an AllReduce 35.9 ms: +1.3%

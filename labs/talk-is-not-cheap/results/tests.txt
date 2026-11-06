@@ -1,0 +1,3 @@
+# hardware: AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 130.25
+# command: python -m pytest labs/talk-is-not-cheap -m "not slow and not gpu and not network"
+80 passed, 1 deselected in 21.55s

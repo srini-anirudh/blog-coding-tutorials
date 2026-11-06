@@ -1,0 +1,53 @@
+# hardware: AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 126 on 192 CPUs, timeline model, no measurement
+# command: python labs/talk-is-not-cheap/scripts/06_bucketing.py
+
+'tensors' model: 291 tensors, 6.74 B params
+No overlap, p = 64, 45 GB/s: backward 515 ms, then one 14 GB AllReduce: exposed 614 ms
+
+Exposed tail in ms, 'post' model, alpha = 12 us
+bucket    messages  p=8 45GB/s  p=64 45GB/s  p=64 22.5GB/s  p=1024 45GB/s
+--------  --------  ----------  -----------  -------------  -------------
+1 MB            32          51          162            774            908
+2 MB            32          51          162            774            908
+5 MB            32          51          162            774            908
+10 MB           32          51          162            774            908
+25 MB           32          51          162            774            908
+50 MB           32          51          162            774            908
+100 MB          32          51          162            774            908
+200 MB          32          51          162            774            908
+400 MB          32          51          162            774            908
+800 MB          16          64          154            766            531
+1600 MB          8          95          174            786            367
+3200 MB          4         159          232            845            333
+6400 MB          3         271          343            956            421
+14000 MB         1         545          614           1227            646
+best                      1 MB       800 MB         800 MB        3200 MB
+One message per tensor/blob at p = 64: 32 messages, alpha alone 48 ms, exposed 162 ms
+
+Exposed tail in ms, 'tensors' model, alpha = 12 us
+bucket    messages  p=8 45GB/s  p=64 45GB/s  p=64 22.5GB/s  p=1024 45GB/s
+--------  --------  ----------  -----------  -------------  -------------
+1 MB           226          76          445           1034           5661
+2 MB           226          76          445           1034           5661
+5 MB           226          76          445           1034           5661
+10 MB          226          76          445           1034           5661
+25 MB          226          76          445           1034           5661
+50 MB          162          65          348            938           4089
+100 MB          98          54          251            841           2518
+200 MB          55          47          186            776           1462
+400 MB          33          50          160            749            929
+800 MB          17          62          150            740            551
+1600 MB          9          90          168            758            384
+3200 MB          5         149          222            811            346
+6400 MB          3         265          334            924            412
+14000 MB         1         524          591           1181            623
+best                    200 MB       800 MB         800 MB        3200 MB
+One message per tensor/blob at p = 64: 291 messages, alpha alone 440 ms, exposed 543 ms
+
+Notes
+- At 45 GB/s and p >= 64 the ring needs ~0.6 s to move 14 GB, longer than the ~0.5 s backward pass, so
+  communication cannot fully hide in this setting whatever the bucket size. The tail is what is left.
+- In the 'post' model every bucket below one layer (437.5 MB) is the same as one message per layer, so its
+  curve is flat there. Splitting the layer into its real tensors makes small buckets pay alpha visibly.
+- Compare the p = 64 columns at 45 and 22.5 GB/s for the bandwidth claim, and p = 64 against p = 1024 for the
+  rank-count claim (nuance 14).

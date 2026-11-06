@@ -1,0 +1,17 @@
+# hardware: AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 126 on 192 CPUs, Monte Carlo, numpy, seed 0
+# command: python labs/talk-is-not-cheap/scripts/07_ecmp.py
+
+k flows hashed onto k uplinks. A collective runs at the pace of the busiest uplink.
+k     mean busiest  median  P(any collision)  ln k / ln ln k  sprayed (1000 pkts)
+----  ------------  ------  ----------------  --------------  -------------------
+8             2.60       2              100%            2.84                1.046
+16            3.07       3              100%            2.72                1.056
+64            3.95       4              100%            2.92                1.075
+256           4.76       5              100%            3.24                1.091
+1024          5.52       5              100%            3.58                1.104
+
+The post's ln k / ln ln k is the leading term of an asymptotic result. At k = 64 it gives 2.92; the simulated
+busiest uplink carries about 4 flows on average. So the real penalty at this size is worse than the post quotes.
+Collisions are near certain at every k shown: the busiest link almost never carries just one flow.
+Spraying 1000 packets per flow brings the busiest link to within a few percent of an even share.
+Rail-aligned traffic needs no hash at all, so its busiest link carries exactly one flow by construction.

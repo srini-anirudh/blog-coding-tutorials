@@ -1,0 +1,22 @@
+# hardware: AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 606 on 192 CPUs, 2 processes, 1 thread each
+# command: python labs/talk-is-not-cheap/scripts/02_pingpong.py
+
+Fit over 13 sizes, weighted by 1/T: alpha = 219.36 us, 1/beta = 2.11 GB/s, n_half = 452.9 KiB
+
+message  measured us  model us  error   GB/s  of peak
+-------  -----------  --------  -----  -----  -------
+4 B            143.1     219.4   -35%  0.000       0%
+16 B           578.5     219.4  +164%  0.000       0%
+64 B           202.3     219.4    -8%  0.000       0%
+256 B          200.1     219.5    -9%  0.001       0%
+1 KiB          402.4     219.8   +83%  0.003       0%
+4 KiB          294.6     221.3   +33%  0.014       1%
+16 KiB         652.6     227.1  +187%  0.025       1%
+64 KiB         787.2     250.4  +214%  0.083       4%
+256 KiB        563.4     343.3   +64%  0.465      22%
+1 MiB          478.8     715.3   -33%  2.190     104%
+4 MiB        2,425.7   2,203.1   +10%  1.729      82%
+16 MiB       9,228.2   8,154.4   +13%  1.818      86%
+64 MiB      46,574.3  31,959.4   +46%  1.441      68%
+
+Below n_half the time barely moves with size; above it, time grows in proportion to bytes.

@@ -1,0 +1,3 @@
+# hardware: 2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+# command: python -m pytest labs/talk-is-not-cheap -m gpu
+1 passed, 80 deselected in 17.08s

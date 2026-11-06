@@ -1,0 +1,438 @@
+{
+ "hardware": "2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, NCCL 2.30.7, 2 processes on GPUs",
+ "command": "python labs/talk-is-not-cheap/scripts/04_allreduce_measured.py --backend nccl -p 2 --max-log2 28",
+ "data": {
+  "alpha_s": 6.359583205193105e-05,
+  "beta_s_per_byte": 5.667786544111689e-12,
+  "pingpong": [
+   {
+    "bytes": 4,
+    "one_way_s": 0.0001124462520238012
+   },
+   {
+    "bytes": 16,
+    "one_way_s": 8.28526506666094e-05
+   },
+   {
+    "bytes": 64,
+    "one_way_s": 0.00010116705088876188
+   },
+   {
+    "bytes": 256,
+    "one_way_s": 5.2062049508094785e-05
+   },
+   {
+    "bytes": 1024,
+    "one_way_s": 5.593864480033517e-05
+   },
+   {
+    "bytes": 4096,
+    "one_way_s": 5.621910095214844e-05
+   },
+   {
+    "bytes": 16384,
+    "one_way_s": 5.281810299493372e-05
+   },
+   {
+    "bytes": 65536,
+    "one_way_s": 0.00015280154766514898
+   },
+   {
+    "bytes": 262144,
+    "one_way_s": 0.00026191825163550674
+   },
+   {
+    "bytes": 1048576,
+    "one_way_s": 7.31215113773942e-05
+   },
+   {
+    "bytes": 4194304,
+    "one_way_s": 7.666647434234619e-05
+   },
+   {
+    "bytes": 16777216,
+    "one_way_s": 0.000114411988761276
+   },
+   {
+    "bytes": 67108864,
+    "one_way_s": 0.0027581354952417314
+   },
+   {
+    "bytes": 268435456,
+    "one_way_s": 0.0031585285323671997
+   }
+  ],
+  "rows": [
+   {
+    "bytes": 1024,
+    "algo": "naive",
+    "seconds": 0.00030293420422822237,
+    "correct": true
+   },
+   {
+    "bytes": 1024,
+    "algo": "tree",
+    "seconds": 0.0003330287989228964,
+    "correct": true
+   },
+   {
+    "bytes": 1024,
+    "algo": "ring",
+    "seconds": 0.00045574030373245477,
+    "correct": true
+   },
+   {
+    "bytes": 1024,
+    "algo": "rabenseifner",
+    "seconds": 0.00044446210376918315,
+    "correct": true
+   },
+   {
+    "bytes": 1024,
+    "algo": "library",
+    "seconds": 8.804479148238897e-05,
+    "correct": true
+   },
+   {
+    "bytes": 4096,
+    "algo": "naive",
+    "seconds": 0.0003081232076510787,
+    "correct": true
+   },
+   {
+    "bytes": 4096,
+    "algo": "tree",
+    "seconds": 0.0002979791024699807,
+    "correct": true
+   },
+   {
+    "bytes": 4096,
+    "algo": "ring",
+    "seconds": 0.00041934850160032513,
+    "correct": true
+   },
+   {
+    "bytes": 4096,
+    "algo": "rabenseifner",
+    "seconds": 0.0004193156026303768,
+    "correct": true
+   },
+   {
+    "bytes": 4096,
+    "algo": "library",
+    "seconds": 9.474389953538776e-05,
+    "correct": true
+   },
+   {
+    "bytes": 16384,
+    "algo": "naive",
+    "seconds": 0.0003379628993570805,
+    "correct": true
+   },
+   {
+    "bytes": 16384,
+    "algo": "tree",
+    "seconds": 0.0003212826093658805,
+    "correct": true
+   },
+   {
+    "bytes": 16384,
+    "algo": "ring",
+    "seconds": 0.0004565573064610362,
+    "correct": true
+   },
+   {
+    "bytes": 16384,
+    "algo": "rabenseifner",
+    "seconds": 0.00043496780563145876,
+    "correct": true
+   },
+   {
+    "bytes": 16384,
+    "algo": "library",
+    "seconds": 0.00010693020885810256,
+    "correct": true
+   },
+   {
+    "bytes": 65536,
+    "algo": "naive",
+    "seconds": 0.000364670401904732,
+    "correct": true
+   },
+   {
+    "bytes": 65536,
+    "algo": "tree",
+    "seconds": 0.00035948629956692455,
+    "correct": true
+   },
+   {
+    "bytes": 65536,
+    "algo": "ring",
+    "seconds": 0.0004968900931999088,
+    "correct": true
+   },
+   {
+    "bytes": 65536,
+    "algo": "rabenseifner",
+    "seconds": 0.0005071662948466837,
+    "correct": true
+   },
+   {
+    "bytes": 65536,
+    "algo": "library",
+    "seconds": 9.554600110277534e-05,
+    "correct": true
+   },
+   {
+    "bytes": 262144,
+    "algo": "naive",
+    "seconds": 0.0003883358906023204,
+    "correct": true
+   },
+   {
+    "bytes": 262144,
+    "algo": "tree",
+    "seconds": 0.00035332610132172705,
+    "correct": true
+   },
+   {
+    "bytes": 262144,
+    "algo": "ring",
+    "seconds": 0.0004665705026127398,
+    "correct": true
+   },
+   {
+    "bytes": 262144,
+    "algo": "rabenseifner",
+    "seconds": 0.00047178060049191117,
+    "correct": true
+   },
+   {
+    "bytes": 262144,
+    "algo": "library",
+    "seconds": 8.441980462521314e-05,
+    "correct": true
+   },
+   {
+    "bytes": 1048576,
+    "algo": "naive",
+    "seconds": 0.00039911805652081966,
+    "correct": true
+   },
+   {
+    "bytes": 1048576,
+    "algo": "tree",
+    "seconds": 0.00041703798342496157,
+    "correct": true
+   },
+   {
+    "bytes": 1048576,
+    "algo": "ring",
+    "seconds": 0.0004867399111390114,
+    "correct": true
+   },
+   {
+    "bytes": 1048576,
+    "algo": "rabenseifner",
+    "seconds": 0.0005041599506512284,
+    "correct": true
+   },
+   {
+    "bytes": 1048576,
+    "algo": "library",
+    "seconds": 0.00011903303675353527,
+    "correct": true
+   },
+   {
+    "bytes": 4194304,
+    "algo": "naive",
+    "seconds": 0.00037806795444339514,
+    "correct": true
+   },
+   {
+    "bytes": 4194304,
+    "algo": "tree",
+    "seconds": 0.00036119797732681036,
+    "correct": true
+   },
+   {
+    "bytes": 4194304,
+    "algo": "ring",
+    "seconds": 0.00046581903006881475,
+    "correct": true
+   },
+   {
+    "bytes": 4194304,
+    "algo": "rabenseifner",
+    "seconds": 0.000487920013256371,
+    "correct": true
+   },
+   {
+    "bytes": 4194304,
+    "algo": "library",
+    "seconds": 0.00012906198389828205,
+    "correct": true
+   },
+   {
+    "bytes": 16777216,
+    "algo": "naive",
+    "seconds": 0.0003494670381769538,
+    "correct": true
+   },
+   {
+    "bytes": 16777216,
+    "algo": "tree",
+    "seconds": 0.0003309160238131881,
+    "correct": true
+   },
+   {
+    "bytes": 16777216,
+    "algo": "ring",
+    "seconds": 0.0004696089308708906,
+    "correct": true
+   },
+   {
+    "bytes": 16777216,
+    "algo": "rabenseifner",
+    "seconds": 0.0004363390617072582,
+    "correct": true
+   },
+   {
+    "bytes": 16777216,
+    "algo": "library",
+    "seconds": 0.00013643305283039808,
+    "correct": true
+   },
+   {
+    "bytes": 67108864,
+    "algo": "naive",
+    "seconds": 0.0006607630057260394,
+    "correct": true
+   },
+   {
+    "bytes": 67108864,
+    "algo": "tree",
+    "seconds": 0.0006368129979819059,
+    "correct": true
+   },
+   {
+    "bytes": 67108864,
+    "algo": "ring",
+    "seconds": 0.0005010900786146522,
+    "correct": true
+   },
+   {
+    "bytes": 67108864,
+    "algo": "rabenseifner",
+    "seconds": 0.0004960399819537997,
+    "correct": true
+   },
+   {
+    "bytes": 67108864,
+    "algo": "library",
+    "seconds": 0.00031495606526732445,
+    "correct": true
+   },
+   {
+    "bytes": 268435456,
+    "algo": "naive",
+    "seconds": 0.0022668669698759913,
+    "correct": true
+   },
+   {
+    "bytes": 268435456,
+    "algo": "tree",
+    "seconds": 0.0020593919325619936,
+    "correct": true
+   },
+   {
+    "bytes": 268435456,
+    "algo": "ring",
+    "seconds": 0.0013157259672880173,
+    "correct": true
+   },
+   {
+    "bytes": 268435456,
+    "algo": "rabenseifner",
+    "seconds": 0.001317247049883008,
+    "correct": true
+   },
+   {
+    "bytes": 268435456,
+    "algo": "library",
+    "seconds": 0.0009616599418222904,
+    "correct": true
+   }
+  ],
+  "winners": [
+   {
+    "bytes": 1024,
+    "measured": "naive",
+    "model": "ring"
+   },
+   {
+    "bytes": 4096,
+    "measured": "tree",
+    "model": "ring"
+   },
+   {
+    "bytes": 16384,
+    "measured": "tree",
+    "model": "ring"
+   },
+   {
+    "bytes": 65536,
+    "measured": "tree",
+    "model": "ring"
+   },
+   {
+    "bytes": 262144,
+    "measured": "tree",
+    "model": "ring"
+   },
+   {
+    "bytes": 1048576,
+    "measured": "naive",
+    "model": "ring"
+   },
+   {
+    "bytes": 4194304,
+    "measured": "tree",
+    "model": "ring"
+   },
+   {
+    "bytes": 16777216,
+    "measured": "tree",
+    "model": "ring"
+   },
+   {
+    "bytes": 67108864,
+    "measured": "rabenseifner",
+    "model": "ring"
+   },
+   {
+    "bytes": 268435456,
+    "measured": "ring",
+    "model": "ring"
+   }
+  ],
+  "refit": {
+   "naive": {
+    "alpha_s": 0.00016517818040856288,
+    "beta_s_per_byte": 2.9234994197553428e-12
+   },
+   "tree": {
+    "alpha_s": 0.00016258908045318942,
+    "beta_s_per_byte": 2.661673402928605e-12
+   },
+   "ring": {
+    "alpha_s": 0.00022343066147680393,
+    "beta_s_per_byte": 2.4872934262804396e-12
+   },
+   "rabenseifner": {
+    "alpha_s": 0.0002215546682729507,
+    "beta_s_per_byte": 2.4461184721482294e-12
+   }
+  }
+ }
+}

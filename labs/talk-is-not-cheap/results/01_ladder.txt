@@ -1,0 +1,36 @@
+# hardware: AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 126 on 192 CPUs, arithmetic only, no measurement
+# command: python labs/talk-is-not-cheap/scripts/01_ladder.py
+
+The ladder: break-even arithmetic intensity against 989 TFLOP/s dense bf16
+level                              GB/s  FLOP/byte  slower than HBM
+-------------------------------  ------  ---------  ---------------
+Shared memory / L1               29,700         33            0.11x
+L2 cache                          5,500        180            0.61x
+HBM3                              3,350        295            1.00x
+NVLink 4 (per direction)            450      2,198            7.44x
+PCIe Gen5 x16                        63     15,698           53.17x
+Network (400 Gb/s port per GPU)      50     19,780           67.00x
+
+Cliff HBM -> NVLink: 7.4x
+Cliff NVLink -> network: 9.0x
+NVLink quoted bidirectional (900 GB/s) vs network per direction (50 GB/s): 18x, the mixed convention
+
+n_half = alpha / beta for the post's representative paths
+path                    alpha    1/beta  n_half
+----------------------  -----  --------  ------
+NVLink 4 via NVSwitch    2 us  370 GB/s  740 KB
+PCIe Gen5 peer-to-peer   3 us   50 GB/s  150 KB
+InfiniBand NDR           3 us   45 GB/s  135 KB
+EFA v2                  12 us   42 GB/s  504 KB
+
+PCIe Gen5 lane after 128b/130b: 3.938 GB/s; x16: 63.02 GB/s
+PCIe Gen5 x16 before encoding: 64 GB/s
+PCIe Gen4 x16: 31.5 GB/s, so a 400 Gb/s NIC behind it is capped at 63% of its rating
+NVLink to PCIe Gen5 x16 neighbour: 7.1x; PCIe neighbour vs own HBM: 1.9%
+
+Bandwidth-delay product, 400 Gb/s x 10 us RTT: 500 KB
+Propagation over 30 m at 5 ns/m: 150 ns
+Full mesh of 4 GPUs: 6 links, 3 per GPU
+Full mesh of 8 GPUs: 28 links, 7 per GPU
+Full mesh of 16 GPUs: 120 links, 15 per GPU
+Three-level fat tree from 64-port switches: 65,536 hosts

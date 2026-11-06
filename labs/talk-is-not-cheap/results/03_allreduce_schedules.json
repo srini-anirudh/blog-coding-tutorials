@@ -1,0 +1,134 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 126 on 192 CPUs, numpy simulator, exact byte counts, model times",
+ "command": "python labs/talk-is-not-cheap/scripts/03_allreduce_schedules.py",
+ "data": {
+  "table": [
+   {
+    "p": 4,
+    "algo": "naive",
+    "rounds": 6,
+    "max_sent_over_n": 3.0
+   },
+   {
+    "p": 4,
+    "algo": "tree",
+    "rounds": 4,
+    "max_sent_over_n": 2.0
+   },
+   {
+    "p": 4,
+    "algo": "ring",
+    "rounds": 6,
+    "max_sent_over_n": 1.5
+   },
+   {
+    "p": 4,
+    "algo": "recursive_doubling",
+    "rounds": 2,
+    "max_sent_over_n": 2.0
+   },
+   {
+    "p": 4,
+    "algo": "rabenseifner",
+    "rounds": 4,
+    "max_sent_over_n": 1.5
+   },
+   {
+    "p": 8,
+    "algo": "naive",
+    "rounds": 14,
+    "max_sent_over_n": 7.0
+   },
+   {
+    "p": 8,
+    "algo": "tree",
+    "rounds": 6,
+    "max_sent_over_n": 3.0
+   },
+   {
+    "p": 8,
+    "algo": "ring",
+    "rounds": 14,
+    "max_sent_over_n": 1.75
+   },
+   {
+    "p": 8,
+    "algo": "recursive_doubling",
+    "rounds": 3,
+    "max_sent_over_n": 3.0
+   },
+   {
+    "p": 8,
+    "algo": "rabenseifner",
+    "rounds": 6,
+    "max_sent_over_n": 1.75
+   },
+   {
+    "p": 16,
+    "algo": "naive",
+    "rounds": 30,
+    "max_sent_over_n": 15.0
+   },
+   {
+    "p": 16,
+    "algo": "tree",
+    "rounds": 8,
+    "max_sent_over_n": 4.0
+   },
+   {
+    "p": 16,
+    "algo": "ring",
+    "rounds": 30,
+    "max_sent_over_n": 1.875
+   },
+   {
+    "p": 16,
+    "algo": "recursive_doubling",
+    "rounds": 4,
+    "max_sent_over_n": 4.0
+   },
+   {
+    "p": 16,
+    "algo": "rabenseifner",
+    "rounds": 8,
+    "max_sent_over_n": 1.875
+   },
+   {
+    "p": 64,
+    "algo": "naive",
+    "rounds": 126,
+    "max_sent_over_n": 63.0
+   },
+   {
+    "p": 64,
+    "algo": "tree",
+    "rounds": 12,
+    "max_sent_over_n": 6.0
+   },
+   {
+    "p": 64,
+    "algo": "ring",
+    "rounds": 126,
+    "max_sent_over_n": 1.96875
+   },
+   {
+    "p": 64,
+    "algo": "recursive_doubling",
+    "rounds": 6,
+    "max_sent_over_n": 6.0
+   },
+   {
+    "p": 64,
+    "algo": "rabenseifner",
+    "rounds": 12,
+    "max_sent_over_n": 1.96875
+   }
+  ],
+  "crossovers_bytes": {
+   "EFA-like, p=64": 6136822.429906547,
+   "IB-like, p=64": 1022803.7383177584,
+   "EFA-like, p=1024": 60773405.66344812,
+   "EFA-like, half bandwidth, p=64": 3068411.2149532735
+  }
+ }
+}

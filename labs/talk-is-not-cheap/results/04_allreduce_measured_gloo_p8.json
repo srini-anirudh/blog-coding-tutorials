@@ -1,0 +1,360 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, torch 2.15.0+cu132, load average 589 on 192 CPUs, 8 processes, 1 thread each",
+ "command": "python labs/talk-is-not-cheap/scripts/04_allreduce_measured.py",
+ "data": {
+  "alpha_s": 0.0004333891002797495,
+  "beta_s_per_byte": 9.60218472417945e-10,
+  "pingpong": [
+   {
+    "bytes": 4,
+    "one_way_s": 0.0004639245511498302
+   },
+   {
+    "bytes": 16,
+    "one_way_s": 0.0002989535976666957
+   },
+   {
+    "bytes": 64,
+    "one_way_s": 0.0003864358994178474
+   },
+   {
+    "bytes": 256,
+    "one_way_s": 0.00050177329685539
+   },
+   {
+    "bytes": 1024,
+    "one_way_s": 0.0005878350522834808
+   },
+   {
+    "bytes": 4096,
+    "one_way_s": 0.0006988938548602164
+   },
+   {
+    "bytes": 16384,
+    "one_way_s": 0.00046846609911881386
+   },
+   {
+    "bytes": 65536,
+    "one_way_s": 0.0005215612531173974
+   },
+   {
+    "bytes": 262144,
+    "one_way_s": 0.0007212173019070178
+   },
+   {
+    "bytes": 1048576,
+    "one_way_s": 0.002143563993740827
+   },
+   {
+    "bytes": 4194304,
+    "one_way_s": 0.006321165012195706
+   },
+   {
+    "bytes": 16777216,
+    "one_way_s": 0.012794602545909584
+   }
+  ],
+  "rows": [
+   {
+    "bytes": 1024,
+    "algo": "naive",
+    "seconds": 0.01119404649361968,
+    "correct": true
+   },
+   {
+    "bytes": 1024,
+    "algo": "tree",
+    "seconds": 0.011604828806594015,
+    "correct": true
+   },
+   {
+    "bytes": 1024,
+    "algo": "ring",
+    "seconds": 0.04347635370213539,
+    "correct": true
+   },
+   {
+    "bytes": 1024,
+    "algo": "rabenseifner",
+    "seconds": 0.01765492889098823,
+    "correct": true
+   },
+   {
+    "bytes": 1024,
+    "algo": "library",
+    "seconds": 0.032092379301320764,
+    "correct": true
+   },
+   {
+    "bytes": 4096,
+    "algo": "naive",
+    "seconds": 0.011169335804879665,
+    "correct": true
+   },
+   {
+    "bytes": 4096,
+    "algo": "tree",
+    "seconds": 0.007490087102632969,
+    "correct": true
+   },
+   {
+    "bytes": 4096,
+    "algo": "ring",
+    "seconds": 0.041798041900619864,
+    "correct": true
+   },
+   {
+    "bytes": 4096,
+    "algo": "rabenseifner",
+    "seconds": 0.01800563569413498,
+    "correct": true
+   },
+   {
+    "bytes": 4096,
+    "algo": "library",
+    "seconds": 0.032763057400006804,
+    "correct": true
+   },
+   {
+    "bytes": 16384,
+    "algo": "naive",
+    "seconds": 0.010628522699698805,
+    "correct": true
+   },
+   {
+    "bytes": 16384,
+    "algo": "tree",
+    "seconds": 0.009985831601079553,
+    "correct": true
+   },
+   {
+    "bytes": 16384,
+    "algo": "ring",
+    "seconds": 0.03971088210819289,
+    "correct": true
+   },
+   {
+    "bytes": 16384,
+    "algo": "rabenseifner",
+    "seconds": 0.016154100303538144,
+    "correct": true
+   },
+   {
+    "bytes": 16384,
+    "algo": "library",
+    "seconds": 0.03505436790874228,
+    "correct": true
+   },
+   {
+    "bytes": 65536,
+    "algo": "naive",
+    "seconds": 0.013465378398541361,
+    "correct": true
+   },
+   {
+    "bytes": 65536,
+    "algo": "tree",
+    "seconds": 0.010040619608480484,
+    "correct": true
+   },
+   {
+    "bytes": 65536,
+    "algo": "ring",
+    "seconds": 0.047212434001266956,
+    "correct": true
+   },
+   {
+    "bytes": 65536,
+    "algo": "rabenseifner",
+    "seconds": 0.01805946559179574,
+    "correct": true
+   },
+   {
+    "bytes": 65536,
+    "algo": "library",
+    "seconds": 0.03515514089958742,
+    "correct": true
+   },
+   {
+    "bytes": 262144,
+    "algo": "naive",
+    "seconds": 0.019170922902412714,
+    "correct": true
+   },
+   {
+    "bytes": 262144,
+    "algo": "tree",
+    "seconds": 0.010729734494816512,
+    "correct": true
+   },
+   {
+    "bytes": 262144,
+    "algo": "ring",
+    "seconds": 0.05180368480505422,
+    "correct": true
+   },
+   {
+    "bytes": 262144,
+    "algo": "rabenseifner",
+    "seconds": 0.02118597229709849,
+    "correct": true
+   },
+   {
+    "bytes": 262144,
+    "algo": "library",
+    "seconds": 0.0368818469112739,
+    "correct": true
+   },
+   {
+    "bytes": 1048576,
+    "algo": "naive",
+    "seconds": 0.03306310693733394,
+    "correct": true
+   },
+   {
+    "bytes": 1048576,
+    "algo": "tree",
+    "seconds": 0.023951943032443523,
+    "correct": true
+   },
+   {
+    "bytes": 1048576,
+    "algo": "ring",
+    "seconds": 0.0688904490089044,
+    "correct": true
+   },
+   {
+    "bytes": 1048576,
+    "algo": "rabenseifner",
+    "seconds": 0.03307818702887744,
+    "correct": true
+   },
+   {
+    "bytes": 1048576,
+    "algo": "library",
+    "seconds": 0.043956076027825475,
+    "correct": true
+   },
+   {
+    "bytes": 4194304,
+    "algo": "naive",
+    "seconds": 0.07370862900279462,
+    "correct": true
+   },
+   {
+    "bytes": 4194304,
+    "algo": "tree",
+    "seconds": 0.04882026999257505,
+    "correct": true
+   },
+   {
+    "bytes": 4194304,
+    "algo": "ring",
+    "seconds": 0.07277568010613322,
+    "correct": true
+   },
+   {
+    "bytes": 4194304,
+    "algo": "rabenseifner",
+    "seconds": 0.04720353696029633,
+    "correct": true
+   },
+   {
+    "bytes": 4194304,
+    "algo": "library",
+    "seconds": 0.04625314800068736,
+    "correct": true
+   },
+   {
+    "bytes": 16777216,
+    "algo": "naive",
+    "seconds": 0.29315313301049173,
+    "correct": true
+   },
+   {
+    "bytes": 16777216,
+    "algo": "tree",
+    "seconds": 0.18309735297225416,
+    "correct": true
+   },
+   {
+    "bytes": 16777216,
+    "algo": "ring",
+    "seconds": 0.11862537101842463,
+    "correct": true
+   },
+   {
+    "bytes": 16777216,
+    "algo": "rabenseifner",
+    "seconds": 0.13860663108062,
+    "correct": true
+   },
+   {
+    "bytes": 16777216,
+    "algo": "library",
+    "seconds": 0.09236025309655815,
+    "correct": true
+   }
+  ],
+  "winners": [
+   {
+    "bytes": 1024,
+    "measured": "naive",
+    "model": "rabenseifner"
+   },
+   {
+    "bytes": 4096,
+    "measured": "tree",
+    "model": "rabenseifner"
+   },
+   {
+    "bytes": 16384,
+    "measured": "tree",
+    "model": "rabenseifner"
+   },
+   {
+    "bytes": 65536,
+    "measured": "tree",
+    "model": "rabenseifner"
+   },
+   {
+    "bytes": 262144,
+    "measured": "tree",
+    "model": "rabenseifner"
+   },
+   {
+    "bytes": 1048576,
+    "measured": "tree",
+    "model": "rabenseifner"
+   },
+   {
+    "bytes": 4194304,
+    "measured": "rabenseifner",
+    "model": "rabenseifner"
+   },
+   {
+    "bytes": 16777216,
+    "measured": "ring",
+    "model": "rabenseifner"
+   }
+  ],
+  "refit": {
+   "naive": {
+    "alpha_s": 0.0008211709655442854,
+    "beta_s_per_byte": 1.1985657235595235e-09
+   },
+   "tree": {
+    "alpha_s": 0.0015022123038943127,
+    "beta_s_per_byte": 1.719004995926957e-09
+   },
+   "ring": {
+    "alpha_s": 0.003253562375039191,
+    "beta_s_per_byte": 2.772660449792623e-09
+   },
+   "rabenseifner": {
+    "alpha_s": 0.0029813726705924374,
+    "beta_s_per_byte": 4.2645702884127795e-09
+   }
+  }
+ }
+}

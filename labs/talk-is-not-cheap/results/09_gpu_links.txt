@@ -1,0 +1,38 @@
+# hardware: 2 x NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2, NCCL 2.30.7, 2 GPUs visible
+# command: python labs/talk-is-not-cheap/scripts/09_gpu_links.py
+
+1-3. Copy bandwidth, GB/s, median of 10, one direction
+path                                            GB/s
+---------------------------------------------  -----
+HBM, device to device on GPU 0 (read + write)  2,883
+PCIe host to GPU 0, pinned                      14.4
+PCIe GPU 0 to host, pinned                       1.9
+PCIe host to GPU 0, pageable                    12.1
+PCIe GPU 0 to host, pageable                     1.3
+PCIe host to GPU 1, pinned                      14.2
+PCIe GPU 1 to host, pinned                       1.8
+PCIe host to GPU 1, pageable                     6.6
+PCIe GPU 1 to host, pageable                     1.5
+GPU 0 to GPU 1 copy (peer access on)           383.5
+Transfer size 1 GiB. Spec values from the post: HBM3 3,350, PCIe Gen5 x16 63, NVLink 4 450.
+
+4. NCCL AllReduce over 2 GPUs, bus bandwidth GB/s (nccl-tests convention, 2(p-1)/p = 1 at p = 2)
+n         LL GB/s (time)  LL128 GB/s (time)  Simple GB/s (time)
+-------  ---------------  -----------------  ------------------
+4 KiB        0.0 (93 us)        0.0 (90 us)         0.1 (72 us)
+16 KiB       0.2 (92 us)        0.2 (73 us)         0.3 (63 us)
+64 KiB       0.7 (92 us)        0.9 (70 us)         1.0 (63 us)
+256 KiB      2.8 (93 us)        3.7 (70 us)         3.9 (67 us)
+1 MiB       10.7 (98 us)       13.1 (80 us)        10.8 (97 us)
+4 MiB       68.3 (61 us)       56.8 (74 us)        49.5 (85 us)
+16 MiB    113.3 (148 us)     162.7 (103 us)      144.1 (116 us)
+64 MiB    111.6 (601 us)     219.3 (306 us)      244.6 (274 us)
+256 MiB  105.6 (2542 us)    268.2 (1001 us)      291.3 (922 us)
+1 GiB    120.0 (8951 us)    300.5 (3573 us)     278.0 (3862 us)
+
+5. Overlap on 2 GPUs: bf16 8192^3 matmuls x 20 and a 1 GiB AllReduce
+matmul loop alone:           31.6 ms  (614 TFLOP/s)
+AllReduce alone:              3.4 ms
+one after the other:         34.3 ms
+on separate streams:         32.3 ms
+matmul loop by CUDA events, alone 35.8 ms, beside an AllReduce 36.1 ms: +0.7%
