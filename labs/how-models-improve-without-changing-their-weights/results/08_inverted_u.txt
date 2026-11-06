@@ -1,0 +1,13 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/how-models-improve-without-changing-their-weights/scripts/08_inverted_u.py
+
+steps T = 200, skill fades as exp(-t/30). Accuracy = P(correct state) at step t.
+problem pull       t=5     t=10    t=20    t=40    t=80    t=120   t=200   peak step  peak acc  final  neg flips
+easy    none        0.737   0.913   0.984   0.998   1.000   1.000   1.000        200     1.000  1.000      0.000
+easy    moderate    0.731   0.900   0.963   0.963   0.925   0.871   0.752         28     0.968  0.752      0.242
+easy    strong      0.720   0.876   0.923   0.898   0.796   0.669   0.433         21     0.923  0.433      0.562
+hard    none        0.213   0.357   0.531   0.681   0.763   0.781   0.786        200     0.786  0.786      0.000
+hard    moderate    0.212   0.351   0.513   0.637   0.667   0.634   0.546         69     0.670  0.546      0.212
+hard    strong      0.208   0.339   0.479   0.559   0.515   0.425   0.269         46     0.562  0.269      0.469
+With no pull the curve is monotone. With pull the peak appears, and the easy problem peaks first.
+'neg flips' is the share of traces that reached the correct state and ended outside it.

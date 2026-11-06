@@ -1,0 +1,23 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/how-models-improve-without-changing-their-weights/scripts/04_width_vs_depth.py --shapes 8x128,32x64,128x32 --repeats 3
+
+model HuggingFaceTB/SmolLM2-135M-Instruct: 135M params, 30 layers, d_model 576, kv_dim 192
+
+== The bill (analytic, prompt ignored) ==
+shape        option     weight GFLOP  attn GFLOP  decode steps  KV slots  KV MB (bf16)
+8x128       8 x 128           275.5        4.57           128      1024         22.5
+8x128       1 x 1024          275.5       36.27          1024      1024         22.5
+             deep/wide          1.00        7.95          8.00      1.00         1.00
+32x64        32 x 64           551.0        4.60            64      2048         45.0
+32x64        1 x 2048          551.0      145.03          2048      2048         45.0
+             deep/wide          1.00       31.52         32.00      1.00         1.00
+128x32        128 x 32         1101.9        4.67            32      4096         90.0
+128x32        1 x 4096         1101.9      579.96          4096      4096         90.0
+             deep/wide          1.00      124.15        128.00      1.00         1.00
+
+== Measured wall clock, temperature-1 sampling, no early stop, KV cache on ==
+shape      wide K x T (s)   deep 1 x KT (s)   deep/wide   tokens/s wide   tokens/s deep
+8x128                5.08             61.88       12.18             202              17
+32x64                 3.12            100.54       32.25             657              20
+128x32                 1.35            136.08      100.61            3028              30
+best of 3 runs each. Same number of generated tokens both ways.

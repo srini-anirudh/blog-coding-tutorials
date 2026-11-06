@@ -1,0 +1,26 @@
+{
+ "hardware": "hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "command: python labs/how-models-improve-without-changing-their-weights/scripts/04_width_vs_depth.py --shapes 8x128,32x64,128x32 --repeats 3",
+ "model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+ "device": "cuda",
+ "timings": [
+  {
+   "K": 8,
+   "T": 128,
+   "wide_s": 5.079258149024099,
+   "deep_s": 61.87683035200462
+  },
+  {
+   "K": 32,
+   "T": 64,
+   "wide_s": 3.116950548021123,
+   "deep_s": 100.53551730001345
+  },
+  {
+   "K": 128,
+   "T": 32,
+   "wide_s": 1.3525928559247404,
+   "deep_s": 136.08441999007482
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+{
+ "hardware": "hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "command": "command: python labs/how-models-improve-without-changing-their-weights/scripts/04_width_vs_depth.py --shapes 8x128,32x64 --repeats 2",
+ "model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+ "device": "cpu",
+ "timings": [
+  {
+   "K": 8,
+   "T": 128,
+   "wide_s": 19.166966991033405,
+   "deep_s": 243.62990911398083
+  },
+  {
+   "K": 32,
+   "T": 64,
+   "wide_s": 16.558552106958814,
+   "deep_s": 190.8478097440675
+  }
+ ]
+}

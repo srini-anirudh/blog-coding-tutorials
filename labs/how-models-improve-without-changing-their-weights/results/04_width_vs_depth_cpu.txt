@@ -1,0 +1,19 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/how-models-improve-without-changing-their-weights/scripts/04_width_vs_depth.py --shapes 8x128,32x64 --repeats 2
+
+model HuggingFaceTB/SmolLM2-135M-Instruct: 135M params, 30 layers, d_model 576, kv_dim 192
+
+== The bill (analytic, prompt ignored) ==
+shape        option     weight GFLOP  attn GFLOP  decode steps  KV slots  KV MB (bf16)
+8x128       8 x 128           275.5        4.57           128      1024         22.5
+8x128       1 x 1024          275.5       36.27          1024      1024         22.5
+             deep/wide          1.00        7.95          8.00      1.00         1.00
+32x64        32 x 64           551.0        4.60            64      2048         45.0
+32x64        1 x 2048          551.0      145.03          2048      2048         45.0
+             deep/wide          1.00       31.52         32.00      1.00         1.00
+
+== Measured wall clock, temperature-1 sampling, no early stop, KV cache on ==
+shape      wide K x T (s)   deep 1 x KT (s)   deep/wide   tokens/s wide   tokens/s deep
+8x128               19.17            243.63       12.71              53               4
+32x64                16.56            190.85       11.53             124              11
+best of 2 runs each. Same number of generated tokens both ways.

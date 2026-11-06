@@ -1,0 +1,57 @@
+hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+command: python labs/how-models-improve-without-changing-their-weights/scripts/07_budget_forcing.py
+
+model Qwen/Qwen2.5-0.5B-Instruct, greedy, 96 arithmetic problems, thinking limit 1024 tokens
+setting        think tokens  accuracy  capped  right->wrong  wrong->right   (flips vs natural stop)
+natural stop          178.7     0.500       0             0             0
+cap 16                 16.0     0.375      96            27            15
+cap 32                 32.0     0.375      96            25            13
+cap 64                 64.0     0.198      96            39            10
+cap 128               118.5     0.365      53            14             1
+wait x1               273.3     0.479       1             2             0
+wait x2               533.0     0.479      29             5             3
+wait x4               687.6     0.500      52             2             2
+wait x8              1024.0     0.479      96             5             3
+hmm x2                363.2     0.458       8             7             3
+(401s for all settings)
+
+== One question, three modes (the s1 counting example) ==
+-- natural stop (101 thinking tokens) --
+To determine how many times the letter 'r' appears in the word "raspberry", we can follow these steps:
+
+1. **Count the occurrences of 'r' in the word "raspberry":**
+   - The word "raspberry" consists of 6 letters.
+   - The letter 'r' appears once in the word "raspberry".
+
+2. **Conclusion:**
+   - The letter 'r' appears 1 time in the word "raspberry".
+
+ || Answer: 1
+
+-- wait x2 (1024 thinking tokens) --
+'m still unsure, let's consider the word "rarely":
+
+21. **Re-checking the word "rarely":**
+    - The word "rarely" consists of 6 letters.
+    - The letter 'r' appears once in the word "rarely".
+
+22. **Final Wait, I'm still not sure.**
+
+Given that I'm still unsure, let's consider the word "rarely":
+
+23. **Re-checking the word "rarely":**
+    - The word "rarely" consists of 6 letters.
+    - The letter 'r' appears once in the word "rarely".
+
+24. **Final Wait, I'm still not sure.**
+
+Given that I'm still unsure, let's consider the word "rarely":
+
+25. **Re-checking the word "rarely":**
+    - The word "rarely" consists of 6 letters.
+    - The letter 'r' appears once in the word "rarely || Answer: 1
+
+-- cap 16 (16 thinking tokens) --
+To determine how many times the letter 'r' appears in the word "ras || Answer: 2
+
+(truth: 3. '||' marks where the loop appended '\nAnswer:'.)

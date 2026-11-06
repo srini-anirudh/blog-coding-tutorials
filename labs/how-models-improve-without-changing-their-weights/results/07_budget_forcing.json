@@ -1,0 +1,93 @@
+{
+ "hardware": "hardware: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2",
+ "command": "command: python labs/how-models-improve-without-changing-their-weights/scripts/07_budget_forcing.py",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "n_problems": 96,
+ "settings": [
+  {
+   "setting": "natural stop",
+   "think_tokens": 178.69791666666666,
+   "accuracy": 0.5,
+   "capped": 0,
+   "right_to_wrong": 0,
+   "wrong_to_right": 0
+  },
+  {
+   "setting": "cap 16",
+   "think_tokens": 16.0,
+   "accuracy": 0.375,
+   "capped": 96,
+   "right_to_wrong": 27,
+   "wrong_to_right": 15
+  },
+  {
+   "setting": "cap 32",
+   "think_tokens": 32.0,
+   "accuracy": 0.375,
+   "capped": 96,
+   "right_to_wrong": 25,
+   "wrong_to_right": 13
+  },
+  {
+   "setting": "cap 64",
+   "think_tokens": 64.0,
+   "accuracy": 0.19791666666666666,
+   "capped": 96,
+   "right_to_wrong": 39,
+   "wrong_to_right": 10
+  },
+  {
+   "setting": "cap 128",
+   "think_tokens": 118.48958333333333,
+   "accuracy": 0.3645833333333333,
+   "capped": 53,
+   "right_to_wrong": 14,
+   "wrong_to_right": 1
+  },
+  {
+   "setting": "wait x1",
+   "think_tokens": 273.2604166666667,
+   "accuracy": 0.4791666666666667,
+   "capped": 1,
+   "right_to_wrong": 2,
+   "wrong_to_right": 0
+  },
+  {
+   "setting": "wait x2",
+   "think_tokens": 533.03125,
+   "accuracy": 0.4791666666666667,
+   "capped": 29,
+   "right_to_wrong": 5,
+   "wrong_to_right": 3
+  },
+  {
+   "setting": "wait x4",
+   "think_tokens": 687.6145833333334,
+   "accuracy": 0.5,
+   "capped": 52,
+   "right_to_wrong": 2,
+   "wrong_to_right": 2
+  },
+  {
+   "setting": "wait x8",
+   "think_tokens": 1024.0,
+   "accuracy": 0.4791666666666667,
+   "capped": 96,
+   "right_to_wrong": 5,
+   "wrong_to_right": 3
+  },
+  {
+   "setting": "hmm x2",
+   "think_tokens": 363.2291666666667,
+   "accuracy": 0.4583333333333333,
+   "capped": 8,
+   "right_to_wrong": 7,
+   "wrong_to_right": 3
+  }
+ ],
+ "counting_traces": {
+  "natural stop": "To determine how many times the letter 'r' appears in the word \"raspberry\", we can follow these steps:\n\n1. **Count the occurrences of 'r' in the word \"raspberry\":**\n   - The word \"raspberry\" consists of 6 letters.\n   - The letter 'r' appears once in the word \"raspberry\".\n\n2. **Conclusion:**\n   - The letter 'r' appears 1 time in the word \"raspberry\".\n\n || Answer: 1",
+  "wait x2": "To determine how many times the letter 'r' appears in the word \"raspberry\", we can follow these steps:\n\n1. **Count the occurrences of 'r' in the word \"raspberry\":**\n   - The word \"raspberry\" consists of 6 letters.\n   - The letter 'r' appears once in the word \"raspberry\".\n\n2. **Conclusion:**\n   - The letter 'r' appears 1 time in the word \"raspberry\".\n\n Wait, I'm still not sure. Let's double-check the word \"raspberry\" to ensure I'm counting correctly.\n\n3. **Re-checking the word \"raspberry\":**\n   - The word \"raspberry\" consists of 6 letters.\n   - The letter 'r' appears once in the word \"raspberry\".\n\n4. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n5. **Re-checking the word \"rarely\":**\n   - The word \"rarely\" consists of 6 letters.\n   - The letter 'r' appears once in the word \"rarely\".\n\n6. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n7. **Re-checking the word \"rarely\":**\n   - The word \"rarely\" consists of 6 letters.\n   - The letter 'r' appears once in the word \"rarely\".\n\n8. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n9. **Re-checking the word \"rarely\":**\n   - The word \"rarely\" consists of 6 letters.\n   - The letter 'r' appears once in the word \"rarely\".\n\n10. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n11. **Re-checking the word \"rarely\":**\n    - The word \"rarely\" consists of 6 letters.\n    - The letter 'r' appears once in the word \"rarely\".\n\n12. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n13. **Re-checking the word \"rarely\":**\n    - The word \"rarely\" consists of 6 letters.\n    - The letter 'r' appears once in the word \"rarely\".\n\n14. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n15. **Re-checking the word \"rarely\":**\n    - The word \"rarely\" consists of 6 letters.\n    - The letter 'r' appears once in the word \"rarely\".\n\n16. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n17. **Re-checking the word \"rarely\":**\n    - The word \"rarely\" consists of 6 letters.\n    - The letter 'r' appears once in the word \"rarely\".\n\n18. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n19. **Re-checking the word \"rarely\":**\n    - The word \"rarely\" consists of 6 letters.\n    - The letter 'r' appears once in the word \"rarely\".\n\n20. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n21. **Re-checking the word \"rarely\":**\n    - The word \"rarely\" consists of 6 letters.\n    - The letter 'r' appears once in the word \"rarely\".\n\n22. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n23. **Re-checking the word \"rarely\":**\n    - The word \"rarely\" consists of 6 letters.\n    - The letter 'r' appears once in the word \"rarely\".\n\n24. **Final Wait, I'm still not sure.**\n\nGiven that I'm still unsure, let's consider the word \"rarely\":\n\n25. **Re-checking the word \"rarely\":**\n    - The word \"rarely\" consists of 6 letters.\n    - The letter 'r' appears once in the word \"rarely || Answer: 1",
+  "cap 16": "To determine how many times the letter 'r' appears in the word \"ras || Answer: 2"
+ }
+}

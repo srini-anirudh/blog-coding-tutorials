@@ -1,0 +1,48 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/how-models-improve-without-changing-their-weights/scripts/06_real_scaling.py
+
+samples: Qwen/Qwen2.5-0.5B-Instruct, 96 problems x 64 samples, temperature 0.7
+samples were generated on: NVIDIA H100 80GB HBM3, torch 2.15.0+cu132, CUDA 13.2
+
+mean per-sample accuracy p = 0.499; problems never solved in 64 samples: 7/96
+
+== Coverage law ==
+Beta-binomial fit to the success counts: a = 0.697, b = 0.794
+k      1 - C(k) measured   Beta(a,b) prediction
+1                   0.501                0.533
+2                   0.353                0.384
+4                   0.244                0.260
+8                   0.170                0.168
+16                  0.127                0.107
+32                  0.102                0.067
+64                  0.073                0.041
+log-log slope for k >= 4: measured -0.422, fitted -a = -0.697
+
+== Selectors (random size-k subsets of the pool) ==
+verifier false-positive rate on wrong samples: last-digit 0.491, last-digit+length 0.367
+k      coverage  majority  best-logprob  last-digit (formula)  digit+length (formula)
+1         0.499     0.501         0.501       0.501 (0.499)         0.504 (0.499)
+2         0.647     0.505         0.541       0.586 (0.580)         0.591 (0.598)
+4         0.756     0.627         0.575       0.615 (0.613)         0.655 (0.647)
+8         0.830     0.717         0.591       0.620 (0.622)         0.667 (0.663)
+16        0.873     0.776         0.599       0.617 (0.623)         0.663 (0.666)
+32        0.898     0.808         0.582       0.621 (0.623)         0.669 (0.666)
+64        0.927     0.822         0.557       0.621 (0.623)         0.666 (0.666)
+
+P[modal answer of all 64 samples is correct] = 0.812  (the majority-vote limit)
+fraction with at least one correct sample     = 0.927  (a lower bound on 1 - pi0)
+generator-verifier gap at k = 64               = 0.105
+
+== Stratified by difficulty level ==
+level             p      coverage@64  majority-limit
+add 2d+2d         0.665        1.000           1.000
+add 3d+3d+3d      0.883        1.000           1.000
+mul 1d*2d         0.775        1.000           1.000
+mul 2d*2d         0.452        1.000           0.917
+mul+add 2d*2d+3d  0.573        1.000           0.917
+mul 3d*2d         0.267        0.917           0.750
+mul 3d*3d         0.061        0.583           0.250
+mul 2d*2d*2d      0.314        0.917           0.667
+levels 0-3: failure at k=1 0.306, at k=64 0.000, log-log slope -5.203
+levels 4-7: failure at k=1 0.696, at k=64 0.146, log-log slope -0.395
+The slope depends on which problems are in the benchmark, as Nuance 07 says.

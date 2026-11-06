@@ -1,0 +1,19 @@
+hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+command: python labs/how-models-improve-without-changing-their-weights/scripts/02_majority_ceiling.py
+
+300 problems, 256 samples each. Selectors use random subsets of k samples (20 draws per problem).
+k     coverage  majority  random-pick
+1        0.255     0.250     0.250
+2        0.389     0.259     0.257
+4        0.530     0.343     0.257
+8        0.653     0.401     0.250
+16       0.746     0.445     0.252
+32       0.811     0.463     0.233
+64       0.852     0.472     0.244
+128      0.874     0.486     0.235
+256      0.887     0.484     0.223
+
+coverage limit 1 - pi0          = 0.917
+majority limit P[mode correct]  = 0.473
+generator-verifier gap          = 0.443
+Random-pick is best-of-k under a score that carries no signal: it stays at the mean p for every k.
