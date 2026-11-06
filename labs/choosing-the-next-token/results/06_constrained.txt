@@ -1,0 +1,34 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python labs/choosing-the-next-token/scripts/06_constrained.py
+
+== Part 1: JSON person records, HuggingFaceTB/SmolLM2-135M-Instruct ==
+vocabulary strings decoded in 0.3 s
+
+[unconstrained greedy] example: '{\n  "name": "Maria Lopez",\n  "age": 34\n}'
+
+[constrained greedy] example: '{"name": "Maria Lopez", "age": 34}'
+
+[unconstrained T=1] example: '{\n  "name": "Maria Lopez",\n  "age": 34\n}'
+
+[constrained T=1] example: '{"name": "Maria", "age": 34}'
+
+automaton states visited and indexed: 24; mean allowed tokens per state: 21536 of 49152
+
+mode                    exact match of pattern parseable JSON in reply  name and age right
+unconstrained greedy                   0 / 12                12 / 12            11 / 12
+constrained greedy                    12 / 12                12 / 12            12 / 12
+unconstrained T=1                      1 / 12                 9 / 12             8 / 12
+constrained T=1                       12 / 12                12 / 12            10 / 12
+(the first constrained call per state builds its mask; later calls are dictionary lookups)
+
+== Part 2: masking vs conditioning, exact enumeration (synthetic models, vocabulary 3, length 5) ==
+L = sequences that end in token 2 and never contain two 0s in a row.
+TV(masked, exact) is the distortion. Importance resampling: draw K particles from the masked sampler,
+weight each by p(y) / q(y), keep one in proportion to its weight; 20000 rounds.
+seed    TV masked      K=1      K=4     K=16     K=64
+0           0.296    0.295    0.071    0.025    0.010
+1           0.345    0.344    0.068    0.018    0.013
+2           0.290    0.290    0.069    0.022    0.011
+3           0.479    0.473    0.246    0.069    0.020
+4           0.401    0.401    0.131    0.050    0.018
+(K=1 is the masked sampler itself; the floor near 0.01-0.02 is the sampling noise of 20000 draws)

@@ -1,0 +1,67 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python labs/choosing-the-next-token/scripts/03_degeneration.py
+
+== The repetition attractor, SmolLM2-135M ==
+The same sentence is repeated n times after a short lead-in. Mean probability the model gives to the sentence's
+own tokens on the next repetition:
+n repeats so far   sentence 1   sentence 2   sentence 3
+0                       0.075        0.203        0.103
+1                       0.533        0.602        0.631
+2                       0.831        0.820        0.861
+4                       0.839        0.835        0.867
+8                       0.846        0.853        0.869
+
+== Samplers: 8 prompts x 4 samples x 80 new tokens, seed 0 ==
+decoder                             rep-4  dist-2   tail      |C|    NLL
+human reference (WikiText)          0.008   0.764      -        -   3.07
+greedy                              0.268   0.505  0.000        -   1.28
+pure sampling                       0.006   0.867  0.171  49152.0   4.36
+top-k 50                            0.013   0.767  0.006     50.0   2.89
+top-p 0.9                           0.019   0.799  0.078    320.0   3.38
+epsilon 3e-4                        0.004   0.824  0.058    167.2   3.41
+eta 3e-4                            0.008   0.832  0.092    466.0   3.61
+min-p 0.1                           0.057   0.587  0.000      7.4   2.00
+typical 0.9                         0.017   0.799  0.081    387.5   3.44
+pure, T=1.5                         0.000   0.997  0.780  49152.0   9.53
+top-p 0.9, T=1.5, temper first      0.000   0.994  0.710  14416.8   9.00
+min-p 0.1, T=1.5, truncate first    0.039   0.634  0.000      7.2   2.23
+min-p 0.1, T=1.5, temper first      0.010   0.788  0.001     22.6   2.94
+
+== First continuation of prompt 1 under each decoder ==
+prompt: 'Robert Boulter is an English film, television and theatre actor. He had a guest-starring role on the television series The Bill in 20'
+
+[greedy]
+"06. He is the author of the novel The Man Who Wasn't There.\n\nBoulter was born in London, England, on 18 November 1950. He was the son of John Boulter, a British businessman, and his wife, Mary. His father was a successful businessman and a member of the British Parliament.\n\nBoulter"
+
+[pure sampling]
+"02, and was later on Fox's Mike Brown in the television show Charlie and his Sidekick. He has appeared in the major production of the sons of Osborne Liddell and one of his infant plays. He has appeared alongside Edmonds (Penny Bryant) and His Own Way, the ophics of Goggle and Game of Thrones, Billiam Jones, and Y"
+
+[top-k 50]
+"02, and was later on established in several films, including the American drama The Godfather. Boulter was the lead actor in director William Wyler's 1949 stage production of The Big Sleep. His character Celine, played by Audrey Hepburn, was voiced by the English actress, Jennifer Garner.\n\nHis first novel, The Pigeon of Paradise"
+
+[top-p 0.9]
+"02, and was later on Fox's Mike Brown in the television show Charlie and his Sidekick. He has appeared in the major production of the movie Watchmen by the cinematographer Kurt Wihls and the script has been moved to the netbooks.\n\n    Dick Toste writes about his career with The Tonight Show\n\n\n    Dick Toste's career in television began in the early 1"
+
+[epsilon 3e-4]
+'02, and was later on Fox\'s Action Squad.\n\nBoulter was originally known as "Jack B.B." A brief history about him began in the article The Jack B.B.B. Biography written by Celine.\n\nPicasso and His Own Favorite\n\n  • Picasso, during his day, was a passionate musician. It is possible that Boulter'
+
+[eta 3e-4]
+'02, and was later on Fox\'s Mike Brown in the television show Charlie and his Sidekick. He has appeared in the major production of the movie Watch The Bearded Man. Lohan is often criticised as being naïve or egotistical, and yet occasionally she defends herself for the way in which she was raised; she claims not to be "meant for what I did'
+
+[min-p 0.1]
+'02, and was later on the lead in The End of the World.\n\nBoulter is the author of the play "The Last Supper" and the film "The End of the World", and has won many awards for his work. In 2006 he received the British Film Institute Award for best acting in a play.\n\n\nBoulter was born in the'
+
+[typical 0.9]
+"02, and was later on Fox's Mike Brown in the television show Charlie and his Sidekick. He has appeared in the major production of the movie Watchmen by the cinematographer Kurt Wihls and the script has been moved to the netbooks.\n\n    Dick Toste writes about his career with The Tonight Show\n\n\n    Dick Toste's career in television began in the early 1"
+
+[pure, T=1.5]
+'02, and was flight deck master for Mike Colbands in Bone SERGY and his compatriot Keith Harlow. Médo worked annoyingly fondly with progressed Ukrainian front man Lbody Nih infant winner Dension na… Virtually. ndarray Dean dod first Gardens T6 liking Smart shotward oreedx still be drive loss Game chang livehoptainzilmeknowledge orbitalreised intellectual'
+
+[top-p 0.9, T=1.5, temper first]
+'02, and was handed on as Titus Mike Kiljanich for execution predictions in his Kenn Ethiopia comic book. Players iconKiloart Stivaro Osientu went on ESPMAAAA 2005úped out Toulaun Dean dod first Dick Tosteuds Smart shotward o Surx Stigops loss Game NH Young Rwikezilme Destinyre Gam Y'
+
+[min-p 0.1, T=1.5, truncate first]
+'02, and was later on the series in 2005.\n\nThe Boulters were born in the UK and emigrated to America in 1961.\n\nHe was the son of Robert Boulter, who was a former United States Navy officer, and the grandson of Alexander Boulter.\n\nHis father, Robert Boulter, had served'
+
+[min-p 0.1, T=1.5, temper first]
+'02, and was later on the music video of \'Greengrass and Gramsca\' in the album "Blackbird". His work also appeared in a television documentary series which focused on his childhood and later on his career as an actor. In 2006 Boulter joined the British TV programme \'British Comedy\' which he has worked on since the late 70'

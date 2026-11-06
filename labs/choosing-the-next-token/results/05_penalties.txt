@@ -1,0 +1,50 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python labs/choosing-the-next-token/scripts/05_penalties.py
+
+== The sign trap (synthetic logits; token 1 was already generated, its logit is negative) ==
+no penalty      logit of token 1  -1.00   p(token 1) = 0.0389
+naive z / 1.5   logit of token 1  -0.67   p(token 1) = 0.0535
+CTRL branch     logit of token 1  -1.50   p(token 1) = 0.0240
+
+== Shift invariance (same logits, plus a constant 5.0 before the penalty; tokens 0 and 2 seen) ==
+repetition 1.5  p before shift [0.446, 0.319, 0.164, 0.071]  after [0.166, 0.631, 0.061, 0.141]
+frequency 0.7   p before shift [0.47, 0.348, 0.105, 0.078]  after [0.47, 0.348, 0.105, 0.078]
+
+== Greedy decoding, SmolLM2-135M, 10 WikiText-2 prompts, 100 new tokens. Penalties use prompt + output ==
+processor                mean rep-4  prompts with rep-4 > 0.3
+none                          0.342                         5
+repetition 1.2 (CTRL)         0.011                         0
+repetition 1.2 naive          0.011                         0
+frequency 0.5                 0.137                         2
+presence 0.5                  0.241                         4
+no-repeat 3-gram              0.000                         0
+
+== Good repetition: greedy code completion, 60 new tokens. Count of times the identifiers reappear ==
+processor                 prompt 1  prompt 2  prompt 3
+none                            20        13         7
+repetition 1.2 (CTRL)            3         5         1
+repetition 1.2 naive             3         5         1
+frequency 0.5                   18        11         9
+presence 0.5                    14        11         9
+no-repeat 3-gram                 7         9         4
+
+== Completions of code prompt 1 ==
+'def mean(values):\n    total = 0\n    for value in values:\n'
+
+[none]
+'\ttotal += value\n    return total\n\ndef mean_of_values(values):\n    total = 0\n    for value in values:\n\ttotal += value\n    return total\n\ndef mean_of_values_with_mean(values):\n    total = 0\n    for value'
+
+[repetition 1.2 (CTRL)]
+'\ttotal += float((value - min_val) / max_val))\n\n    return (float("%.2f") * total).round()\n\n<|endoftext|>import numpy as np\r\nfrom scipy.stats import norm, spearmanr\r\n\r\n# Import the data from a csv file and convert'
+
+[repetition 1.2 naive]
+'\ttotal += float((value - min_val) / max_val))\n\n    return (float("%.2f") * total).round()\n\n<|endoftext|>import numpy as np\r\nfrom scipy.stats import norm, spearmanr\r\n\r\n# Import the data from a csv file and convert'
+
+[frequency 0.5]
+'\ttotal += value\n\treturn total / len(values)\n\ndef mean_of_list(values):\n    total = 0\n    for value in values:\n        total += value\n    return total / len(values)\n\n\n# def mean_of_list(values):\n'
+
+[presence 0.5]
+'\ttotal += value\n    return total\n\ndef mean_of_list(values):\n    total = 0\n    for value in values:\n\ttotal += value\n    return total\n\ndef mean_of_list(values, axis=None):\n    if axis is None:\n        axis'
+
+[no-repeat 3-gram]
+'\ttotal += value\n    return total\n\ndef mean_of_values(values, mean):\n    return mean\n\n# 1.1.2.1\n# The mean of a set of numbers is the sum of the numbers divided by the number of numbers in the set.\n'

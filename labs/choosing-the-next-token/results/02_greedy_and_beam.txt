@@ -1,0 +1,84 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python labs/choosing-the-next-token/scripts/02_greedy_and_beam.py
+
+== The post's two-step tree ==
+greedy        : A x <eos>    p = 0.210
+beam k=1      : A x <eos>    p = 0.210
+beam k=2      : B x <eos>    p = 0.360
+exhaustive    : B x <eos>    p = 0.360
+exhaustive    : A x <eos>    p = 0.210
+exhaustive    : A y <eos>    p = 0.198
+
+== Translation, HuggingFaceTB/SmolLM2-135M-Instruct, end token <|im_end|>, max 40 new tokens ==
+
+The cat is sleeping on the chair.
+  empty output: log p = -25.17
+  greedy        len 13  log p  -16.04  done  Le cat est prêt à l'œuvre.
+  beam k=4      len 18  log p  -17.62  done  En français, c'est que la cat est sous le chair.
+  beam k=8      len 18  log p  -17.71  done  D'accord, il y a une couleur en français.
+  beam k=4 a=1  len 18  log p  -17.62  done  En français, c'est que la cat est sous le chair.
+  beam k=8 a=1  len 30  log p  -24.29  done  D'accord, il y a une couleur en français : il y a une couleur en français.
+
+I would like a cup of coffee, please.
+  empty output: log p = -21.87
+  greedy        len 40  log p  -23.03  cut   Je suis besoin de un café, mais j'ai besoin de un café, mais j'ai besoin de un café, mais 
+  beam k=4      len 21  log p  -17.40  done  Je suis besoin de un café, c'est-ce que vous parlez.
+  beam k=8      len 11  log p   -9.47  done  Je voudrais un café, merci.
+  beam k=4 a=1  len 21  log p  -17.40  done  Je suis besoin de un café, c'est-ce que vous parlez.
+  beam k=8 a=1  len 11  log p   -9.47  done  Je voudrais un café, merci.
+
+The train leaves at eight o'clock tomorrow morning.
+  empty output: log p = -25.22
+  greedy        len 20  log p  -26.47  done  Enfin, il est à 8h20 pour l'écoute.
+  beam k=4      len 19  log p  -17.83  done  D'accord, le train ait à 8 o'cle mardi.
+  beam k=8      len 19  log p  -17.83  done  D'accord, le train ait à 8 o'cle mardi.
+  beam k=4 a=1  len 19  log p  -17.83  done  D'accord, le train ait à 8 o'cle mardi.
+  beam k=8 a=1  len 19  log p  -17.83  done  D'accord, le train ait à 8 o'cle mardi.
+
+My brother lives in a small house near the river.
+  empty output: log p = -24.53
+  greedy        len 28  log p  -36.08  done  Je suis environnementnellement enfant dans un lieu de l'évolution environnementnel.
+  beam k=4      len 24  log p  -24.83  done  J'aime un homme qui est environnementnel, qui est environnementnel.
+  beam k=8      len 24  log p  -23.39  done  J'aime un homme qui est environnementnel dans une ville environneuse.
+  beam k=4 a=1  len 24  log p  -24.83  done  J'aime un homme qui est environnementnel, qui est environnementnel.
+  beam k=8 a=1  len 32  log p  -29.66  done  J'aime un homme qui est environnementnel dans une ville environneuse.  Translate this to E
+
+We are going to the museum on Saturday with our friends.
+  empty output: log p = -21.82
+  greedy        len 40  log p  -27.16  cut   Je suis vraiment vraiment vu que je suis vraiment vraiment vu que je suis vraiment vraimen
+  beam k=4      len 14  log p   -7.48  done  On Saturday, we are going to the museum with our friends.
+  beam k=8      len 14  log p   -7.48  done  On Saturday, we are going to the museum with our friends.
+  beam k=4 a=1  len 14  log p   -7.48  done  On Saturday, we are going to the museum with our friends.
+  beam k=8 a=1  len 14  log p   -7.48  done  On Saturday, we are going to the museum with our friends.
+
+She has been reading the same book for three weeks.
+  empty output: log p = -24.13
+  greedy        len 22  log p  -21.30  done  Je suis prêt à réveiller la bibliothèque pour trois ans.
+  beam k=4      len 15  log p  -15.96  done  Je t'aime donc environ 3 jours.
+  beam k=8      len 23  log p  -22.00  done  D'accord, il y a été réveillé à trois heures.
+  beam k=4 a=1  len 31  log p  -25.62  done  Je t'aime donc environ 3 jours.  This means that she has been reading the same book for th
+  beam k=8 a=1  len 26  log p  -23.37  done  D'accord, il y a été réveillé le livre pour trois heures.
+
+The weather was cold, so we stayed inside and played cards.
+  empty output: log p = -24.49
+  greedy        len 40  log p  -43.36  cut   Enfin, les temps sont trop bon, et nous avons vous-même vous-permettons de vous-permettre 
+  beam k=4      len 40  log p  -31.50  cut   Le temps n'est pas délicieux, mais nous avons été délicieux, mais nous avons été délicieux
+  beam k=8      len 40  log p  -29.08  cut   En français, c'est-ce qu'il y'ait délicieux temps, et c'est-ce qu'il y'ait délicie
+  beam k=4 a=1  len 40  log p  -31.50  cut   Le temps n'est pas délicieux, mais nous avons été délicieux, mais nous avons été délicieux
+  beam k=8 a=1  len 40  log p  -29.08  cut   En français, c'est-ce qu'il y'ait délicieux temps, et c'est-ce qu'il y'ait délicie
+
+Can you tell me where the nearest pharmacy is?
+  empty output: log p = -17.34
+  greedy        len 24  log p  -24.46  done  Je m'appelle Monsieur Dupont, qui est le point de vue de la pharmacie.
+  beam k=4      len 31  log p  -31.71  done  Je m'appelle Monsieur Dupont. Je voudrais dire qu'il y'ait un pharmacy dans le marché.
+  beam k=8      len 22  log p  -18.73  done  Bien sûr, je peux d'aller à l'hôpital.
+  beam k=4 a=1  len 33  log p  -32.86  done  Je m'appelle Monsieur Dupont. Je voudrais dire qu'il y'ait un pharmacy dans l'école.
+  beam k=8 a=1  len 22  log p  -18.73  done  Bien sûr, je peux d'aller à l'hôpital.
+
+== Summary over the 8 sentences ==
+decoder        mean length  mean log p   sentences where the empty output has higher log p than the result
+greedy               28.4      -27.24   6 / 8
+beam k=4             22.8      -20.54   3 / 8
+beam k=8             21.4      -18.21   2 / 8
+beam k=4 a=1         25.0      -21.89   4 / 8
+beam k=8 a=1         24.2      -19.99   3 / 8

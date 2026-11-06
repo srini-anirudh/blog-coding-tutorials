@@ -1,0 +1,37 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python labs/choosing-the-next-token/scripts/07_contrastive.py
+
+== Why the plausibility constraint is needed: next token after one open-ended prompt ==
+no constraint  top tokens by log p_e - log p_a: "|'." (p_e 2.7e-08, p_a 3.8e-15), 'ocument' (p_e 1.3e-07, p_a 3.0e-13), '`):' (p_e 1.8e-07, p_a 4.3e-13), 'airobi' (p_e 5.6e-07, p_a 1.9e-12), 'olicy' (p_e 1.0e-08, p_a 4.8e-14)
+alpha = 0.1    top tokens by log p_e - log p_a: ' church' (p_e 1.3e-02, p_a 2.7e-03), ' narrow' (p_e 5.2e-03, p_a 1.3e-03), ' churches' (p_e 5.7e-03, p_a 1.7e-03), ' bridge' (p_e 5.2e-03, p_a 2.0e-03), ' houses' (p_e 5.8e-03, p_a 2.6e-03)
+
+== 8 WikiText-2 prompts x 100 new tokens ==
+decoder                               rep-4  dist-2    NLL
+human reference (WikiText)            0.012   0.712   3.05
+greedy, 135M                          0.389   0.413   1.11
+greedy, 360M                          0.409   0.398   0.91
+top-p 0.95, 360M                      0.006   0.867   3.22
+contrastive decoding, alpha 0.1       0.050   0.799   2.52
+contrastive decoding, no alpha        0.034   0.649   6.20
+contrastive search, 360M k=5 a=0.6    0.101   0.668   1.60
+
+== Continuations of prompt 1 ==
+prompt: 'Robert Boulter is an English film, television and theatre actor. He had a guest-starring role on the television series The Bill in 20'
+
+[greedy, 135M]
+"06. He is the author of the novel The Man Who Wasn't There.\n\nBoulter was born in London, England, on 18 November 1950. He was the son of John Boulter, a British businessman, and his wife, Mary. His father was a successful businessman and a member of the British Parliament.\n\nBoulter was born in London, England, on 18 November 1950. He was"
+
+[greedy, 360M]
+'01. He is best known for his role as the villain in the 1998 film The Devil Wears Prada.\n\nBoulter was born in London, England, on 23 April 1962. He is the son of a British diplomat and a French-Canadian mother. He is the grandson of a Canadian diplomat and a French-Canadian mother. He is the second son of a British diplomat and a French-Canadian mother. He is the'
+
+[top-p 0.95, 360M]
+'03. Boulter is popular in Britain because of his confident demeanor as a space man (he also stars as a space man in the British TV series Spacemen 1968: The First Mission to the Moon) and his mental realism as a man with an irrational fear of heights. In his UK-published autobiography, his enthusiastic sales tactics drew a cheery tone; he says that his rational fears arose from being raped.\n\n\nBoul'
+
+[contrastive decoding, alpha 0.1]
+'00. Boulter is known for playing the roles of a psychotic police inspector, an unstable judge, and the mad professor in the British television series Sherlock (2010–present), where he co-created and plays a mad scientist with an affinity for radioactivity, known as Doctor James Moriarty, played by Jim Broadbent. He also stars as Dr. Vincent Zador in the science-fiction horror film, The Event. In 1'
+
+[contrastive decoding, no alpha]
+'__[" taxpay Worksheattoos taxpay bays|\',\'|\'.Intf\x0bIntf|\',\'Intf\r\r\n           Intf|\'\\ comprom electrification|\'\\ Workshe Gould|\'\\Intf compromfetchall�MetaInfo� taxpay\x0b|\',\' Roe|\',\'olicies\r\r\n            comprom� Braille\r\r\n           CLUDIntf BordIntf Workshe taxpay|\',\' RoeViewSetinoza|\',\' RoeIntf|\',\'makedirs|\'\\ Roe|\',\'CLUD comprom bullets\r\r\n            Workshe\x0b Bord\x0bourgeois|\'\\ Roe\r\r\n            Roe|\','
+
+[contrastive search, 360M k=5 a=0.6]
+"00.\n\nActor Boulter was born in New York City, New York, United States. He is a member of the Actors Guild of America.\n\nBoulter's first film role was in the 1960 film The Man Who Knew Too Much. He was nominated for an Oscars for his performance in the film.\n\nBoulter's first television role was in the 1965 television series The Twilight Zone."

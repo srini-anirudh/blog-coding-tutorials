@@ -1,0 +1,74 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python labs/choosing-the-next-token/scripts/01_entropy_temperature.py
+
+== Exact identities on a 24-token Zipf-like logit vector (synthetic) ==
+max |softmax(z) - softmax(z + 7.3)|      = 0.00e+00
+T=0.5: dH/dT closed form 1.2155   finite difference 1.2155
+T=1.0: dH/dT closed form 1.9327   finite difference 1.9327
+T=2.0: dH/dT closed form 0.7535   finite difference 0.7535
+odds ratio p2/p1 at T=1: 0.1895   at T=0.5: 0.0359   (T=1 value squared: 0.0359)
+top-1 probability at T=0.1: 1.000000
+T      H (bits)  2^H
+0.05      0.000    1.00
+0.3       0.039    1.03
+0.7       0.711    1.64
+1.0       1.518    2.86
+1.5       2.750    6.73
+3.0       4.131   17.52
+6.0       4.489   22.45
+100.0     4.585   24.00
+(uniform over 24 tokens would be 4.585 bits, 24 options)
+
+== Entropy along real text, SmolLM2-135M (next-token entropy after each token, bits) ==
+
+'import numpy as np\nimport matplotlib.pyplot as plt'
+  after 'import'       H= 11.90 bits  2^H=  3822.8  p(actual next ' numpy')=0.001
+  after ' numpy'       H=  1.27 bits  2^H=     2.4  p(actual next ' as')=0.810
+  after ' as'          H=  0.16 bits  2^H=     1.1  p(actual next ' np')=0.989
+  after ' np'          H=  1.30 bits  2^H=     2.5  p(actual next '\n')=0.850
+  after '\n'           H=  1.48 bits  2^H=     2.8  p(actual next 'import')=0.552
+  after 'import'       H=  4.62 bits  2^H=    24.7  p(actual next ' matplotlib')=0.343
+  after ' matplotlib'  H=  0.60 bits  2^H=     1.5  p(actual next '.')=0.894
+  after '.'            H=  0.62 bits  2^H=     1.5  p(actual next 'pyplot')=0.939
+  after 'pyplot'       H=  0.03 bits  2^H=     1.0  p(actual next ' as')=0.998
+  after ' as'          H=  0.15 bits  2^H=     1.1  p(actual next ' plt')=0.987
+  after ' plt'         H=  0.63 bits  2^H=     1.5  p(actual next '(end)')=  -  
+
+'The most interesting thing about the model is that it'
+  after 'The'          H= 12.47 bits  2^H=  5691.8  p(actual next ' most')=0.012
+  after ' most'        H=  7.03 bits  2^H=   130.8  p(actual next ' interesting')=0.015
+  after ' interesting' H=  7.34 bits  2^H=   162.2  p(actual next ' thing')=0.232
+  after ' thing'       H=  3.30 bits  2^H=     9.8  p(actual next ' about')=0.482
+  after ' about'       H=  8.34 bits  2^H=   324.4  p(actual next ' the')=0.256
+  after ' the'         H= 11.89 bits  2^H=  3792.3  p(actual next ' model')=0.002
+  after ' model'       H=  3.35 bits  2^H=    10.2  p(actual next ' is')=0.624
+  after ' is'          H=  2.24 bits  2^H=     4.7  p(actual next ' that')=0.619
+  after ' that'        H=  4.56 bits  2^H=    23.7  p(actual next ' it')=0.445
+  after ' it'          H=  6.83 bits  2^H=   114.1  p(actual next '(end)')=  -  
+
+'{"name": "Alice", "age": 31}'
+  after '{"'           H= 11.79 bits  2^H=  3534.1  p(actual next 'name')=0.004
+  after 'name'         H=  5.92 bits  2^H=    60.4  p(actual next '":')=0.130
+  after '":'           H=  4.43 bits  2^H=    21.5  p(actual next ' "')=0.514
+  after ' "'           H= 10.76 bits  2^H=  1739.8  p(actual next 'Alice')=0.003
+  after 'Alice'        H=  2.04 bits  2^H=     4.1  p(actual next '",')=0.759
+  after '",'           H=  2.07 bits  2^H=     4.2  p(actual next ' "')=0.768
+  after ' "'           H=  7.95 bits  2^H=   247.1  p(actual next 'age')=0.189
+  after 'age'          H=  0.14 bits  2^H=     1.1  p(actual next '":')=0.986
+  after '":'           H=  0.61 bits  2^H=     1.5  p(actual next ' ')=0.878
+  after ' '            H=  2.09 bits  2^H=     4.3  p(actual next '3')=0.163
+  after '3'            H=  3.42 bits  2^H=    10.7  p(actual next '1')=0.060
+  after '1'            H=  2.73 bits  2^H=     6.7  p(actual next '}')=0.234
+  after '}'            H=  4.86 bits  2^H=    28.9  p(actual next '(end)')=  -  
+
+== Entropy over every position of 32 WikiText-2 passages (101 tokens each), SmolLM2-135M ==
+positions 3232  mean 4.66 bits  percentiles 10/25/50/75/90: 0.90 / 2.64 / 4.60 / 6.64 / 8.24
+median |H_t+1 - H_t| between adjacent positions: 2.16 bits; fraction of adjacent pairs that differ by more than 3 bits: 0.36
+
+== One temperature, two positions: the same change in T moves entropy by different amounts ==
+T      H(position with H near 0.5)  H(position with H near 6)   dH/dT low   dH/dT high   (nats per unit T)
+0.3           0.003 bits                1.327 bits         0.0588       4.4488
+0.7           0.188 bits                3.631 bits         0.5477       4.7766
+1.0           0.502 bits                6.000 bits         1.0115       5.9356
+1.5           2.687 bits               10.021 bits         6.5361       4.6783
+3.0          14.245 bits               14.434 bits         0.9970       0.6419

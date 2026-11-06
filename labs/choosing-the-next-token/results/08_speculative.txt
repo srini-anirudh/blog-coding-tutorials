@@ -1,0 +1,26 @@
+# AMD EPYC 7R13, 8 threads, CPU only, PyTorch 2.15.0, transformers 5.22.2
+$ python labs/choosing-the-next-token/scripts/08_speculative.py
+
+== Part 1: one token, synthetic p and q over 50 tokens, 200000 draws each ==
+case    TV(q, p)  TV(spec, p)  TV(iid p, p)  accept rate  1 - TV(q,p)
+0          0.061       0.0025        0.0019        0.938        0.939
+1          0.387       0.0052        0.0052        0.613        0.613
+2          0.440       0.0049        0.0034        0.561        0.560
+3          0.738       0.0026        0.0032        0.263        0.262
+4          0.657       0.0042        0.0042        0.343        0.343
+
+== Part 2: first emitted token, real models, 4000 independent rounds from one prompt, gamma = 4, T = 1 ==
+TV(draft p, target p)                    = 0.0721
+TV(speculative first token, target p)    = 0.0075
+TV(4000 iid target draws, target p)      = 0.0146   (pure sampling noise at this sample size)
+
+== Part 3: greedy speculative decoding vs target greedy, 6 prompts x 64 tokens, gamma = 4 ==
+identical token sequences: 6 / 6; target forward passes: 110 (plain greedy: 384)
+
+== Part 4: sampling at T = 1, 6 prompts x 64 tokens: draft acceptance and tokens per target pass ==
+gamma   draft acceptance  tokens per target pass  target passes
+1                  0.789                    1.78            216
+2                  0.652                    2.26            171
+4                  0.451                    2.76            140
+6                  0.356                    3.00            130
+(plain sampling needs one target pass per token: 384 passes for the same 384 tokens)
