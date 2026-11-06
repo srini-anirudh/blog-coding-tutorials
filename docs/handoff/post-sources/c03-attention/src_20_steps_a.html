@@ -1,0 +1,284 @@
+
+      <section class="build-step" id="step-01" data-step-title="Core attention">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Part 01</span></div>
+          <h2>Core attention: one function, one head</h2>
+          <p class="build-step__goal"><span>Goal</span> Write attention with every intermediate tensor visible, and show it equals PyTorch&rsquo;s version.</p>
+        </header>
+        <p>Attention takes three tensors. Queries ask. Keys answer how relevant they are. Values hold what gets passed along. Each output row is a weighted average of the value rows, and the weights come from query-key dot products.</p>
+        <a class="theory-link" href="../how-attention-moves-information/"><span class="theory-link__kicker">Derivation in</span>How attention moves information</a>
+        @@LIST attnzoo/core.py | def scaled_dot_product_attention( | return out, weights | 21-27 | <span class="ct-fig-num">Listing 1</span>The reference. The highlighted lines are the whole algorithm.
+        <p>Read the shapes in the docstring first. The leading dimensions are free, so the same function serves one head or many. The rows of <code>scores</code> are queries and the columns are keys. That is why the softmax runs on the last axis: each query spreads its attention over the keys.</p>
+        <p>The scale matters. If <code>q</code> and <code>k</code> have unit-variance entries, their dot product has variance <code>d</code>. Dividing by <code>sqrt(d)</code> brings it back to 1, so the softmax does not saturate as the head grows.</p>
+        <p>Run it on the smallest case that shows everything: two queries, three keys, four dimensions.</p>
+        @@TERM .venv/bin/python c03-attention/scripts/shapes.py | shapes.txt | --- attention on raw | [0.632
+        <figure class="ct-figure ct-figure--wide" id="fig-walk">
+          <div class="ct-figure__stage" tabindex="0" aria-label="Animated walk through the tensors of one attention call"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 1</span>One attention call, tensor by tensor, for B = 2, H = 4, N = 6, d = 8. The camera follows the data from the input to the merged output. The six-by-six grid holds real scores and weights from one head of <code>scripts/export_figure_data.py</code>. The other grids only show shapes.</figcaption>
+        </figure>
+        <table class="shape-table">
+          <caption>Shapes in the core function</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>q</td><td>(B, H, Nq, d)</td><td>One query vector per head and query position.</td></tr>
+            <tr><td>k, v</td><td>(B, H, Nk, d)</td><td>One key and one value per head and key position.</td></tr>
+            <tr><td>scores</td><td>(B, H, Nq, Nk)</td><td>Query i against key j in cell (i, j).</td></tr>
+            <tr><td>weights</td><td>(B, H, Nq, Nk)</td><td>Each row is a distribution over keys.</td></tr>
+            <tr><td>out</td><td>(B, H, Nq, d)</td><td>Same length as the queries, not the keys.</td></tr>
+          </tbody>
+        </table>
+        <h3>Self-attention: one sequence, three projections</h3>
+        <p>Self-attention means <code>q</code>, <code>k</code> and <code>v</code> are all linear projections of one sequence. That is all a head is.</p>
+        @@LIST attnzoo/core.py | class SelfAttentionHead | return out | | <span class="ct-fig-num">Listing 2</span>A single head. No masks, no positions, no tricks yet.
+        <h3>Cross-attention: two sequences</h3>
+        <p>Cross-attention changes one thing. The queries come from one sequence, and the keys and values come from another. The output length follows the queries. The other sequence can have any length and even a different width.</p>
+        @@LIST attnzoo/cross.py | class CrossAttention | return self.o_proj(merge_heads(out)) | 17-18 | <span class="ct-fig-num">Listing 3</span>The projections for keys and values start from the context width. Text to text, text to image, and learned latents to image are all this module.
+        @@OUT shapes.txt | --- cross-attention | latents -> image | scripts/shapes.py
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>We compare our function with the trusted one, on random inputs, with and without a causal mask.</p>
+          @@LIST tests/test_core.py | @pytest.mark.parametrize("causal" | torch.testing.assert_close(ours, ref | | 
+        </aside>
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Remove the <code>1/sqrt(d)</code>. Nothing crashes. The largest weight in each row just climbs as the head grows, and the softmax turns into a hard pick of one key.</p>
+          @@OUT break_it.txt | 1. Missing 1/sqrt(d) | 512 | scripts/break_it.py
+          <p>The mean top weight in the wrong column goes from 0.42 to 0.91, while the correct column stays near 0.11. Bugs that do not crash are the expensive kind. This is why a numeric test against a reference comes before everything else.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>shapes.py</code> prints weight rows that sum to 1.</li>
+            <li><code>tests/test_core.py</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-02" data-step-title="Masks">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Part 02</span></div>
+          <h2>Masks: deciding who may read whom</h2>
+          <p class="build-step__goal"><span>Goal</span> Build every mask you will meet by hand, look at each one, and catch the two classic mask bugs.</p>
+        </header>
+        <p>A mask is a boolean tensor of shape <code>(Nq, Nk)</code>. True means this query may read this key. We use the same convention as PyTorch&rsquo;s SDPA. The most important mask is causal, and it has one detail that many first versions get wrong.</p>
+        @@LIST attnzoo/masks.py | def causal_mask( | return k_pos <= q_pos | 7-9 | <span class="ct-fig-num">Listing 4</span>The causal mask, built from absolute positions. It lines up with the bottom-right corner, which is what decoding with a cache needs. We return to this in part 4.
+        <p>Padding is different. It belongs to keys, not to pairs. No query should read a pad token, so the mask has shape <code>(B, 1, 1, Nk)</code> and broadcasts over heads and queries.</p>
+        @@LIST attnzoo/masks.py | def padding_mask( | return attention_mask.bool()[:, None, None, :] | | 
+        <p>Multimodal sequences need one more rule. Image patches have no reading order, so patches of one image may see each other in both directions. Text stays causal, and text after the image sees all of it.</p>
+        @@LIST attnzoo/masks.py | def multimodal_mask( | return (causal | same_image)[:, None] | 11-13 | <span class="ct-fig-num">Listing 5</span>The multimodal mask is a causal mask plus one extra OR term.
+        <p>Try them. Pick a type and move the sliders. The printed tensor is what the matching function in <code>masks.py</code> returns.</p>
+        <figure class="ct-figure ct-figure--wide" id="fig-mask">
+          <div class="ct-knobs">
+            <label class="ct-knob">Mask
+              <select id="mask-type" aria-label="Mask type">
+                <option value="causal">causal</option>
+                <option value="bi">bidirectional</option>
+                <option value="pad">padding</option>
+                <option value="causalpad">causal + padding</option>
+                <option value="prefix">prefix-LM</option>
+                <option value="window" selected>sliding window</option>
+                <option value="localglobal">local + global</option>
+                <option value="docs">packed documents</option>
+                <option value="mm">multimodal</option>
+              </select>
+            </label>
+            <label class="ct-knob">N <input type="range" id="mask-n" min="4" max="16" value="10" /><output id="mask-n-out">10</output></label>
+            <label class="ct-knob" id="mask-w-knob">Window <input type="range" id="mask-w" min="1" max="8" value="3" /><output id="mask-w-out">3</output></label>
+            <label class="ct-knob" id="mask-p-knob"><span id="mask-p-label">Length</span> <input type="range" id="mask-p" min="1" max="8" value="3" /><output id="mask-p-out">3</output></label>
+          </div>
+          <div class="ct-figure__stage" id="mask-stage" aria-label="Attention mask grid: rows are queries, columns are keys"></div>
+          <div class="ct-readout" aria-live="polite">
+            <div><span>Allowed pairs</span><b id="mask-allowed">0</b></div>
+            <div><span>Of all N&times;N</span><b id="mask-frac">0%</b></div>
+            <div><span>Keys per query</span><b id="mask-range">0</b></div>
+          </div>
+          <pre class="mask-out" id="mask-code" aria-label="The mask tensor"></pre>
+          <figcaption><span class="ct-fig-num">Figure 2</span>The mask builder. Rows are queries and columns are keys. Blue cells may attend. Orange marks the image span in the multimodal mask. Density is how many scores survive, but the dense path still computes them all, as part 5 shows.</figcaption>
+        </figure>
+        <p>The script prints every mask in ASCII, including two you will see again later. Here are a few of them.</p>
+        @@TERM .venv/bin/python c03-attention/scripts/show_masks.py | show_masks.txt | packed documents | .....### 
+        @@OUT show_masks.txt | decoding: 2 queries | ######## | scripts/show_masks.py
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Two mask bugs come up again and again. The first inverts the mask with <code>triu</code>. The second blocks every key for a query, so the softmax has only minus infinity left to normalise.</p>
+          @@OUT break_it.txt | 2. Mask inverted | the causality check | scripts/break_it.py
+          @@OUT break_it.txt | 3. A row with no visible key | torch SDPA row 0 | scripts/break_it.py
+          <p>A NaN that appears in one whole row is the signature of a fully blocked query. Left padding produces exactly this: a pad token at position 0 can only see itself, and it is masked. SDPA returns zeros for such a row, so our library backend matches it explicitly.</p>
+        </aside>
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>The causality test states the property we care about. It never looks at the mask. Rewrite the future, then check that earlier outputs did not move.</p>
+          @@LIST tests/test_rope_cache.py | def test_causality_future_tokens | assert not torch.allclose | | 
+        </aside>
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>Test the behaviour, not the tensor. The inverted mask above still has the right shape and the right number of True cells, so a test that inspects the mask could pass. The causality test fails at once: token 0 moved by 0.145 when token 5 changed.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>show_masks.py</code> prints eleven masks and each one matches its definition.</li>
+            <li><code>tests/test_masks.py</code> and the causality test pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-03" data-step-title="Head sharing">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Part 03</span></div>
+          <h2>Head sharing: MHA, MQA and GQA</h2>
+          <p class="build-step__goal"><span>Goal</span> Write multi-head attention, fuse its projections, then share keys and values across heads until one module covers all three.</p>
+        </header>
+        <h3>Heads are a reshape</h3>
+        <p>Multi-head attention does not add a separate network per head. It projects to the full width and cuts the result into <code>H</code> slices, so <code>D = H * dh</code>. Two helpers do the cutting and the gluing.</p>
+        @@LIST attnzoo/heads.py | def split_heads( | return x.transpose(1, 2).contiguous().view(b, n, h * d) | 7,17 | <span class="ct-fig-num">Listing 6</span>Reshape, then move the head axis next to the batch axis so the matmuls batch over (B, H).
+        <p>The <code>contiguous()</code> call is not decoration. After <code>transpose</code>, the elements are no longer in the order <code>view</code> needs, and <code>view</code> refuses to run. See the shape errors in the Break it box below.</p>
+        @@LIST attnzoo/mha.py | class MultiHeadAttention | return self.o_proj(merge_heads(out))  # mix | 15-19 | <span class="ct-fig-num">Listing 7</span>Multi-head attention. The output projection is what lets heads exchange information.
+        <h3>Fused projections</h3>
+        <p>Three linear layers mean three matmuls. One wide layer does the same work in one call, and the output is split afterwards. The weight of the fused layer is the three weights stacked. So we can copy one into the other and check the outputs match.</p>
+        @@LIST attnzoo/mha.py | class FusedQKVAttention | return self.o_proj(merge_heads(out)) | 10 | <span class="ct-fig-num">Listing 8</span>One projection, then <code>chunk</code>.
+        @@OUT shapes.txt | --- three Linear | max &#124;separate | scripts/shapes.py
+        <p>Fusing does not change the maths or the parameter count. On this CPU it saved a little, 14.2 ms against 16.7 ms per call. The real benefit of fusing is on accelerators, where one big matmul can use the hardware better than three small launches. GPT-2 style code (<code>c_attn</code>) and <code>nn.MultiheadAttention</code> both use it.</p>
+        <h3>Sharing keys and values</h3>
+        <p>Queries are used once and thrown away. Keys and values for past tokens stay in the cache for the whole decode. So the cache pays for KV width, while the queries do not. That asymmetry is the idea behind multi-query attention. Keep <code>H</code> query heads, but use a single shared key and value head.</p>
+        @@LIST attnzoo/mha.py | class MultiQueryAttention | return self.o_proj(merge_heads(out)) | 8-9,14-15 | <span class="ct-fig-num">Listing 9</span>MQA. The shared K and V have one head of width dh, and broadcasting does the rest.
+        <p>GQA sits between the two. Groups of <code>n_rep = Hq / Hkv</code> query heads share one KV head. The maths is the same once the KV heads are repeated to line up with the query heads.</p>
+        @@LIST attnzoo/heads.py | def repeat_kv( | return x[:, :, None, :, :] | 4-5,9 | <span class="ct-fig-num">Listing 10</span>Query head h reads KV head h // n_rep.
+        <figure class="ct-figure ct-figure--wide" id="fig-gqa">
+          <div class="ct-figure__stage" tabindex="0" aria-label="Query heads sharing fewer and fewer key-value heads"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 3</span>Eight query heads, sharing fewer and fewer KV heads. The query heads never change. The KV heads merge into groups, and the cache tensor below shrinks in step. The strip shows one layer of the cached keys. Values take the same space again.</figcaption>
+        </figure>
+        <h3>One module for all three</h3>
+        <p>Since the only difference is <code>num_kv_heads</code>, one class can cover all three. This is the module later tutorials reuse. <a href="../build-a-modern-llm-from-scratch/">C4</a> mirrors a trimmed copy.</p>
+        <div class="code-tabs" data-label="The unified attention module">
+          @@LIST attnzoo/gqa.py | class GroupedQueryAttention | self.register_buffer("slopes" | 12-14 | | data-tab="gqa.py: __init__"
+          @@LIST attnzoo/gqa.py | class GroupedQueryAttention>>    def forward( | return self.o_proj(merge_heads(out)) | 12-14,23-24,27 | | data-tab="gqa.py: forward"
+        </div>
+        @@TERM .venv/bin/python c03-attention/scripts/compare_heads.py | compare_heads.txt | layer | GQA(Hkv=1)
+        <table class="shape-table">
+          <caption>Shapes in the unified module, with cached length T</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>hidden_states</td><td>(B, N, D)</td><td>Input, N new tokens.</td></tr>
+            <tr><td>q</td><td>(B, Hq, N, dh)</td><td>Only for the new tokens. Never cached.</td></tr>
+            <tr><td>k, v (new)</td><td>(B, Hkv, N, dh)</td><td>The part GQA makes smaller.</td></tr>
+            <tr><td>k, v (with cache)</td><td>(B, Hkv, T, dh)</td><td>All tokens so far, T = past + N.</td></tr>
+            <tr><td>out</td><td>(B, Hq, N, dh)</td><td>One output per query head.</td></tr>
+            <tr><td>merged</td><td>(B, N, Hq * dh)</td><td>Input to the output projection.</td></tr>
+          </tbody>
+        </table>
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>Copy the weights across and require equal outputs. <code>Hkv = Hq</code> must give MHA. <code>Hkv = 1</code> must give MQA. We also tile GQA&rsquo;s KV weights into a full MHA layer. They agree, which proves GQA is exactly MHA with tied KV heads.</p>
+          <div class="code-tabs" data-label="Equivalence tests">
+            @@LIST tests/test_heads.py | def test_gqa_equals_mha_when_kv_heads_equal_q_heads | torch.testing.assert_close(gqa(x), mha(x) | | | data-tab="MHA == GQA"
+            @@LIST tests/test_heads.py | def test_gqa_equals_mha_with_duplicated_kv_weights | torch.testing.assert_close(gqa(x), mha(x) | | | data-tab="GQA is tied MHA"
+            @@LIST tests/test_heads.py | def test_manual_mha_matches_torch_multihead_attention | torch.testing.assert_close(ours(x) | | | data-tab="Against nn.MultiheadAttention"
+          </div>
+        </aside>
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Shape mistakes are the friendly kind of bug. They fail at once with a message.</p>
+          @@OUT break_it.txt | 6. Shape mistakes | q width 8 | scripts/break_it.py
+        </aside>
+        <aside class="callout callout-nuance">
+          <p class="callout-label">Nuance</p>
+          <p>The parameter table shows GQA is not only about the cache. Going from MHA to GQA with <code>Hkv = 8</code> also removes 37.5% of this layer&rsquo;s weights. Whether that hurts quality is an empirical question. Ainslie et al. report that GQA with a moderate head count stays close to MHA while training faster than MQA. Our tests cover correctness, not quality, and this tutorial makes no quality claim of its own.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>compare_heads.py</code> prints differences near 1e-7 for both equivalences.</li>
+            <li><code>tests/test_heads.py</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-04" data-step-title="RoPE and KV cache">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Part 04</span></div>
+          <h2>RoPE and the KV cache</h2>
+          <p class="build-step__goal"><span>Goal</span> Put positions inside attention, stop recomputing history, and check the memory formula against real tensors.</p>
+        </header>
+        <h3>RoPE inside attention</h3>
+        <p>RoPE encodes position by rotating queries and keys. The rotation has a useful property: the dot product of a rotated query and a rotated key depends only on how far apart they are. We build the tables once.</p>
+        <a class="theory-link" href="../how-models-know-where-they-are/"><span class="theory-link__kicker">Derivation in</span>How models know where they are</a>
+        @@LIST attnzoo/rope.py | class RotaryEmbedding | return self.cos_cached[position_ids] | 10-13 | <span class="ct-fig-num">Listing 11</span>The frequencies and the cos and sin tables. Each pair of dimensions rotates at its own speed.
+        @@LIST attnzoo/rope.py | def rotate_half( | return rotate(q, cos, sin), rotate(k, cos, sin) | 9-10 | <span class="ct-fig-num">Listing 12</span>The rotation. Values are never rotated. Their job is content, not matching.
+        <p>This layout pairs dimension <code>i</code> with dimension <code>i + d/2</code>. It is the Llama and Hugging Face convention, and matching it lets us test against their code directly.</p>
+        <h3>Two modes of attention</h3>
+        <p>Generation runs in two modes with very different shapes. Prefill processes the prompt: <code>Nq = Nk = N</code>. Decode processes one new token: <code>Nq = 1</code>, and <code>Nk = T</code>, the whole history. Past keys and values never change, so we store them.</p>
+        <a class="theory-link" href="../the-mechanics-of-llm-inference/"><span class="theory-link__kicker">Theory in</span>The mechanics of LLM inference</a>
+        @@LIST attnzoo/kv_cache.py | class KVCache | return sum(t.numel() | 9-16 | <span class="ct-fig-num">Listing 13</span>The dynamic cache. The attention layer calls <code>get_seq_length</code> to find its position offset, and <code>update</code> to read the history.
+        <figure class="ct-figure ct-figure--wide" id="fig-cache">
+          <div class="ct-figure__stage" tabindex="0" aria-label="The KV cache growing during prefill and decode"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 4</span>Prefill, then decode. Each decode step adds one query row against all keys so far. The rows above it were computed earlier and are not recomputed. The strip at the bottom is the cache, and the byte counts are the ones the demo prints for Hkv = 2, dh = 8, fp32.</figcaption>
+        </figure>
+        @@TERM .venv/bin/python c03-attention/scripts/kv_cache_demo.py | kv_cache_demo.txt | step        Nq | formula 2 L B S
+        <table class="shape-table">
+          <caption>Prefill and decode</caption>
+          <thead><tr><th>Tensor</th><th>Prefill</th><th>Decode at length T</th></tr></thead>
+          <tbody>
+            <tr><td>q</td><td>(B, Hq, N, dh)</td><td>(B, Hq, 1, dh)</td></tr>
+            <tr><td>k, v used</td><td>(B, Hkv, N, dh)</td><td>(B, Hkv, T, dh)</td></tr>
+            <tr><td>scores</td><td>(B, Hq, N, N)</td><td>(B, Hq, 1, T)</td></tr>
+            <tr><td>position_ids</td><td>0 to N-1</td><td>T - 1 only</td></tr>
+          </tbody>
+        </table>
+        <p>The dynamic cache reallocates at every step because of <code>torch.cat</code>. A static cache reserves the whole buffer up front and writes in place. The address never changes, which compiled graphs need.</p>
+        @@LIST attnzoo/kv_cache.py | class StaticKVCache>>    def update( | return self.k[layer_idx, :, :, : start + n] | | <span class="ct-fig-num">Listing 14</span>The preallocated version writes into a slice. It has the same interface, so the attention layer does not know which one it holds.
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Two decode bugs produce wrong text without any error. First, <code>is_causal=True</code> looks like the obvious flag. But SDPA aligns it top-left, so the new token sees only key 0. Second, forget the offset and RoPE restarts at position 0 for every new token.</p>
+          @@OUT break_it.txt | 4. is_causal=True | causal_mask(1, 5) | scripts/break_it.py
+          @@OUT break_it.txt | 5. Forgetting the position | max error with position 0 | scripts/break_it.py
+          <p>The cache equivalence test catches both of them. This is why our SDPA backend only uses <code>is_causal</code> when <code>Nq == Nk</code>, and otherwise builds the bottom-right mask.</p>
+        </aside>
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>Cached decoding must equal the full forward. We run it for MHA, GQA and MQA, on both cache types. A second test compares the whole module with Hugging Face&rsquo;s <code>LlamaAttention</code>, using the same weights.</p>
+          <div class="code-tabs" data-label="Cache and trusted-implementation tests">
+            @@LIST tests/test_rope_cache.py | @pytest.mark.parametrize("cache_cls" | assert cache.get_seq_length() == 24 | | | data-tab="Cached == full"
+            @@LIST tests/test_rope_cache.py | def test_matches_hugging_face_llama_attention | torch.testing.assert_close(ours(x), ref | | | data-tab="Against Hugging Face"
+          </div>
+        </aside>
+        <h3>The KV memory formula</h3>
+        <p>The cache holds one key tensor and one value tensor per layer. So its size is:</p>
+        <p><code>M_KV = 2 * L * B * S * Hkv * dh * b</code></p>
+        <p>Here <code>L</code> is layers, <code>B</code> is batch, <code>S</code> is sequence length, and <code>b</code> is bytes per number. Do not trust a formula you have not measured. The benchmark fills the cache through real forward passes and compares byte counts. On MPS it also reads the allocator.</p>
+        @@TERM .venv/bin/python c03-attention/benchmarks/bench_kv_memory.py | bench_kv_memory.txt | Part 1 | 
+        <p>Formula and tensors agree exactly in every row. In the MPS column, the allocator growth is a little larger than the tensors, which is the overhead of the live input and layer buffers. The formula counts the cache, and the machine has to hold a bit more.</p>
+        <p>Part 2 of that output applies the verified formula to a full-size layer stack. A 128K-token context costs 64 GiB with MHA and 16 GiB with GQA at Hkv = 8, in bf16, before a single weight is loaded. That is why cache layout is an architecture decision. Try your own numbers.</p>
+        <figure class="ct-figure ct-figure--wide" id="fig-calc">
+          <div class="ct-knobs">
+            <label class="ct-knob">L <input type="range" id="kv-l" min="1" max="96" value="32" /><output id="kv-l-out"></output></label>
+            <label class="ct-knob">S <input type="range" id="kv-s" min="10" max="21" value="17" /><output id="kv-s-out"></output></label>
+            <label class="ct-knob">B <input type="range" id="kv-b" min="1" max="64" value="1" /><output id="kv-b-out"></output></label>
+            <label class="ct-knob">Hq <input type="range" id="kv-hq" min="1" max="8" value="5" /><output id="kv-hq-out"></output></label>
+            <label class="ct-knob">Hkv <input type="range" id="kv-hkv" min="0" max="5" value="3" /><output id="kv-hkv-out"></output></label>
+            <label class="ct-knob">dh <input type="range" id="kv-dh" min="4" max="8" value="7" /><output id="kv-dh-out"></output></label>
+            <label class="ct-knob">r <input type="range" id="kv-r" min="64" max="1024" step="32" value="512" /><output id="kv-r-out"></output></label>
+            <label class="ct-knob">dr <input type="range" id="kv-dr" min="8" max="128" step="8" value="64" /><output id="kv-dr-out"></output></label>
+            <label class="ct-knob">Precision <select id="kv-b-elem" aria-label="Precision"><option value="4">fp32 (4)</option><option value="2" selected>bf16 (2)</option><option value="1">8-bit (1)</option></select></label>
+          </div>
+          <div class="ct-figure__stage" id="kv-stage" aria-label="Bars comparing cache size for MHA, GQA, MQA and MLA"></div>
+          <div class="ct-readout" aria-live="polite">
+            <div><span>Dimension</span><b id="kv-d">0</b></div>
+            <div><span>GQA / MHA</span><b id="kv-r1">0</b></div>
+            <div><span>MLA / MHA</span><b id="kv-r2">0</b></div>
+          </div>
+          <pre class="mask-out" id="kv-code" aria-label="The formula with your values"></pre>
+          <figcaption><span class="ct-fig-num">Figure 5</span>KV cache calculator. It uses the formulas in <code>kv_cache.py</code>, which the benchmark verified above. Bars are computed, not measured, and they share one linear scale. Defaults are <code>L = 32</code>, 128K tokens, 32 heads, with the MLA ranks of DeepSeek-V2.</figcaption>
+        </figure>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>kv_cache_demo.py</code> reports differences near 1e-7 at each decode step, and 1,536 bytes from both the formula and the tensors.</li>
+            <li><code>bench_kv_memory.py</code> prints True in every row of part 1.</li>
+            <li><code>tests/test_rope_cache.py</code> passes, including the Hugging Face comparison.</li>
+          </ul>
+        </footer>
+      </section>

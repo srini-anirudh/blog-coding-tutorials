@@ -1,0 +1,393 @@
+      <section class="build-step" id="step-05" data-step-title="Distribution shift">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 05</span></div>
+          <h2>Break the clone with one small mistake</h2>
+          <p class="build-step__goal"><span>Goal</span> Put the policy one harmless step off the expert's path, and measure what happens.</p>
+        </header>
+        <p>A cloned policy has seen only the expert's states. The expert never errs. So the moment the policy makes any mistake, or the world behaves differently, it is somewhere it has never been. This is the compounding-error argument from the DAgger paper. We can measure it directly.</p>
+        <a class="theory-link" href="../reinforcement-learning-for-agents-from-first-principles/#cloning"><span class="theory-link__kicker">Derivation in</span>Why cloning is not enough</a>
+        <p>A perturbed start plays k wrong actions before the policy takes over: a search for an unrelated key, a read of a missing file, a malformed call. Each is harmless. The files do not change, and the budget still leaves room to finish. To make "a state no demonstration contains" a number, we abstract each state into its history of action types and outcome types.</p>
+        {{L agentrl/shift.py|^def random_mistake|^    return f"read||<span class="ct-fig-num">Listing 10</span>The injected mistakes. None of them changes a file.}}
+        {{L agentrl/shift.py|^def signature|^    return sum||<span class="ct-fig-num">Listing 11</span>The measure. Forced steps are excluded: we only count decisions the policy took itself.}}
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/scripts/distribution_shift.py --ckpt c12-agent-rl/runs/bc.pt</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/distribution_shift.py" data-label="Apple M5 CPU, 300 tasks per row">
+          <pre><code>{{N shift_output}}</code></pre>
+        </figure>
+        <figure class="ct-figure ct-figure--wide" id="fig-shift">
+          <div class="ct-figure__stage" aria-label="Animated state paths and a bar chart of success against injected mistakes"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 3</span>Top left: the abstract states every demonstration visits. Bottom left: the states after one forced mistake. Right: the measured cost, against the expert from the same starts.</figcaption>
+        </figure>
+        {{N shift_prose}}
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>The expert stays at or near 100% at every k. The drop belongs to the policy.</li>
+            <li>The unseen-state rate rises as success falls.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-06" data-step-title="Online rollouts">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 06</span></div>
+          <h2>Let the policy act in the environment</h2>
+          <p class="build-step__goal"><span>Goal</span> Generate whole episodes with the current policy, write a slow version first, then make it fast and prove the two agree.</p>
+        </header>
+        <p>DAgger would ask an expert to label the new states. For agents, that expert rarely exists. So the policy learns from its own consequences instead, and that starts with letting it act. Here is the naive rollout. It handles one episode and one token at a time.</p>
+        {{L agentrl/rollout_naive.py|^@torch.no_grad|^    return finish||<span class="ct-fig-num">Listing 12</span>The reference rollout. The highlighted loop generates one action. Each token needs a forward pass over the whole history.}}
+        <p>It works. It is also slow, so we profile it.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/benchmarks/bench_rollout.py</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/benchmarks/bench_rollout.py">
+          <pre><code>{{R bench_rollout.txt}}</code></pre>
+        </figure>
+        {{N rollout_prose}}
+        {{L agentrl/rollout.py|^@torch.no_grad|^    return result||<span class="ct-fig-num">Listing 13</span>Batched generation. One forward serves every episode that is waiting for an action. Each row reads its logits at its own last position.}}
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>Two equivalence tests hold this together. Greedy naive and greedy batched rollouts must give identical tokens. And the log-probabilities recorded during sampling must equal those from a training forward over the finished sequence, which means the GRPO ratio starts at exactly 1.</p>
+        </aside>
+        {{L tests/test_policy_rollout.py|^def test_rollout_logprobs_match|^    torch.testing.assert_close\(logp||<span class="ct-fig-num">Listing 14</span>If this test fails, every later number is wrong. Check it first when an RL run behaves strangely.}}
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_naive_and_batched_rollouts_agree_greedy</code> passes.</li>
+            <li><code>test_rollout_logprobs_match_a_training_forward</code> passes at tolerance 1e-5.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-07" data-step-title="Group advantages">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 07</span></div>
+          <h2>Outcome reward and group-relative advantages</h2>
+          <p class="build-step__goal"><span>Goal</span> Turn one bit of feedback per episode into a signed signal, with no critic.</p>
+        </header>
+        <p>We start with the honest reward: 1 if the files are right, 0 otherwise. It cannot be gamed by looking busy. It also says nothing about which action helped. To get a gradient from it, GRPO samples G trajectories for the same task and compares them with each other.</p>
+        <a class="theory-link" href="../how-reinforcement-learning-teaches-models-to-reason/"><span class="theory-link__kicker">Derivation in</span>GRPO from first principles</a>
+        {{L agentrl/advantages.py|^def group_relative|^    return adv||<span class="ct-fig-num">Listing 15</span>The whole baseline. Mean and std of a small group of rollouts replace a learned critic.}}
+        <p>Try it. Click a trajectory to change its reward. Notice what happens when every reward is the same.</p>
+        <figure class="ct-figure" id="fig-group">
+          <div class="ct-knobs">
+            <label class="ct-knob">Group size G <input type="range" id="grp-g" min="2" max="16" value="8" /><output id="grp-g-out">8</output></label>
+            <label class="ct-knob"><input type="checkbox" id="grp-scale" checked /> Divide by std (GRPO)</label>
+            <span class="ct-seg">
+              <button type="button" class="c12-btn" data-preset="one">One winner</button>
+              <button type="button" class="c12-btn" data-preset="half">Half</button>
+              <button type="button" class="c12-btn" data-preset="almost">One loser</button>
+              <button type="button" class="c12-btn" data-preset="fail">All fail</button>
+              <button type="button" class="c12-btn" data-preset="win">All win</button>
+            </span>
+          </div>
+          <div class="ct-figure__stage">
+            <div id="grp-cells" aria-label="Rewards of the G trajectories"></div>
+            <div id="grp-bars" aria-label="Group-relative advantages"></div>
+          </div>
+          <div class="ct-readout" aria-live="polite">
+            <div><span>Group mean</span><b id="grp-mean">0</b></div>
+            <div><span>Group std</span><b id="grp-std">0</b></div>
+            <div><span>Largest A</span><b id="grp-max">0</b></div>
+            <div><span>Policy gradient</span><b id="grp-signal">none</b></div>
+          </div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 4</span>Group-relative advantages. Click a trajectory to cycle its reward through 0, 1 and 0.5. Blue bars push the trajectory's actions up. Orange bars push them down. A flat group gives no gradient at all.</figcaption>
+        </figure>
+        {{N group_prose}}
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>We compare the implementation against a separate NumPy reference, and pin the properties: advantages sum to zero, a flat group gives zero everywhere, and one winner of eight gets a larger push than one loser of eight's opposite.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_group_relative_matches_numpy_reference</code> passes.</li>
+            <li><code>test_zero_variance_batch_produces_zero_policy_gradient</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-08" data-step-title="The GRPO update">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 08</span></div>
+          <h2>Write the GRPO update and train</h2>
+          <p class="build-step__goal"><span>Goal</span> A clipped surrogate over action tokens of whole episodes, and the first real RL learning curve.</p>
+        </header>
+        <p>The update is the same as in <a href="../post-train-an-llm/">C6</a>, applied to multi-turn sequences. Environment tokens stay out of the loss because of the mask. Everything else is PPO's clip and an optional KL to a reference policy.</p>
+        {{L agentrl/grpo.py|^def grpo_loss|^    return loss, stats||<span class="ct-fig-num">Listing 16</span>The loss. Highlighted: the ratio, the clip, and the mean over action tokens.}}
+        <p>The online loop is short. It samples tasks, rolls out G episodes per task, and updates.</p>
+        {{L agentrl/online.py|^def group_rollouts|^    return trajs||<span class="ct-fig-num">Listing 17</span>Group members share the task and the start. Their failure seeds differ, so one member may hit a timeout that another does not.}}
+        {{L agentrl/online.py|^def train_online|^    return history||<span class="ct-fig-num">Listing 18</span>The online RL loop. A fresh policy version generates every batch.}}
+        <table class="shape-table">
+          <caption>One iteration of the main run</caption>
+          <thead><tr><th>Quantity</th><th>Shape or size</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>tasks per iteration</td><td>24</td><td>Sampled from levels 1 to 5, half of level 1 to 3 starts perturbed.</td></tr>
+            <tr><td>G</td><td>8</td><td>Rollouts per task, so 192 episodes per iteration.</td></tr>
+            <tr><td>minibatch tokens</td><td>(64, T)</td><td>T is the longest episode in the minibatch.</td></tr>
+            <tr><td>adv_tok</td><td>(64, T)</td><td>Per-token advantage, zero off the action mask.</td></tr>
+            <tr><td>ratio</td><td>(64, T)</td><td>exp(log &pi;<sub>&theta;</sub> &minus; log &pi;<sub>old</sub>), exactly 1 before the first step.</td></tr>
+          </tbody>
+        </table>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/scripts/experiments.py main</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/experiments.py main" data-label="Apple M5 CPU, 2 threads (every 20th iteration)">
+          <pre><code>{{N main_output}}</code></pre>
+        </figure>
+        <figure class="ct-figure ct-figure--wide" id="fig-curves">
+          <div class="ct-knobs">
+            <label class="ct-knob">Experiment <select id="cv-exp" class="c12-select" aria-label="Experiment"></select></label>
+            <label class="ct-knob">Evaluation suite <select id="cv-suite" class="c12-select" aria-label="Evaluation suite"></select></label>
+          </div>
+          <div class="ct-figure__stage" id="cv-chart" aria-label="Learning curves from real runs"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 5</span>Every learning curve in this post, from real runs on the Apple M5 CPU. Each point is greedy success on fresh tasks. Choose the experiment and the suite. Single seed unless stated.</figcaption>
+        </figure>
+        {{N main_prose}}
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>The <code>failures</code> and <code>perturbed</code> suites rise above their BC values.</li>
+            <li>The <code>zero-var</code> column stays well below 1. If it is near 1, the update has no signal.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-09" data-step-title="Credit assignment">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 09</span></div>
+          <h2>Trajectory-level or action-level credit</h2>
+          <p class="build-step__goal"><span>Goal</span> Compare one advantage per episode against one advantage per action, on the long-horizon tasks.</p>
+        </header>
+        <p>Trajectory-level credit gives every action of an episode the same advantage. A winning episode with a pointless retry rewards the retry. Over many episodes the noise averages out, but it costs samples. The horizon makes this worse.</p>
+        <p>The alternative is a critic. The value head estimates V(s<sub>t</sub>), the expected final reward from a state. The difference V(s<sub>t+1</sub>) &minus; V(s<sub>t</sub>) then says whether one action helped. GAE blends these one-step differences.</p>
+        <a class="theory-link" href="../reinforcement-learning-for-agents-from-first-principles/#credit"><span class="theory-link__kicker">Derivation in</span>Credit over fifty steps</a>
+        {{L agentrl/advantages.py|^def gae|^    return adv||<span class="ct-fig-num">Listing 19</span>GAE in eight lines. With &lambda; = 1 this is the final reward minus the baseline. With &lambda; = 0 it is the one-step difference. The test checks both limits.}}
+        {{L agentrl/grpo.py|^def step_advantages|^    return \[\[\(a - mu||<span class="ct-fig-num">Listing 20</span>Both kinds of credit return per-step advantages, so the loss does not change. <code>to_tokens</code> then scatters them onto action tokens.}}
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/scripts/experiments.py credit</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/experiments.py credit" data-label="Apple M5 CPU, single seed, final evaluation">
+          <pre><code>{{N credit_output}}</code></pre>
+        </figure>
+        <p>Replay real episodes from a trained policy. Choose a group, a member and a credit mode. Find a wasted step and see what each mode says about it.</p>
+        <figure class="ct-figure ct-figure--wide" id="fig-replay">
+          <div class="ct-knobs">
+            <label class="ct-knob">Group <select id="rp-group" class="c12-select" aria-label="Task group"></select></label>
+            <span class="ct-seg" role="group" aria-label="Credit mode">
+              <button type="button" class="c12-btn" data-credit="traj" aria-pressed="true">Trajectory</button>
+              <button type="button" class="c12-btn" data-credit="gae" aria-pressed="false">GAE</button>
+              <button type="button" class="c12-btn" data-credit="td" aria-pressed="false">One-step TD</button>
+            </span>
+            <label class="ct-knob">Step <input type="range" id="rp-step" min="0" max="5" value="0" /><output id="rp-step-out">1</output></label>
+          </div>
+          <div id="rp-members" aria-label="Group members"></div>
+          <div class="ct-figure__stage" id="rp-steps" aria-label="Trajectory steps with advantages"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 6</span>Real rollouts of the policy trained with action-level credit. The advantages come from the same functions the update calls. Blue is positive, orange is negative.</figcaption>
+        </figure>
+        {{N credit_prose}}
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_gae_matches_explicit_sum_and_special_cases</code> passes.</li>
+            <li><code>test_to_tokens_puts_step_advantage_on_its_action_tokens_only</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-10" data-step-title="Shaping and the hack">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 10</span></div>
+          <h2>Shape the reward, then hack it on purpose</h2>
+          <p class="build-step__goal"><span>Goal</span> Add intermediate rewards, watch a reasonable-looking one destroy the policy, and fix it with a form that cannot be farmed.</p>
+        </header>
+        <p>Outcome rewards are sparse. So people add milestones. Here are two ways, in the same file.</p>
+        {{L agentrl/rewards.py|^def activity|^    return r$||<span class="ct-fig-num">Listing 21</span>The hackable reward. It pays for activity.}}
+        <p>Think about what the highest-scoring behaviour is. Solving a level 2 task gives 0.2 + 0.2 + 1 = 1.4. Looping <code>read</code> until the step budget ends gives 0.2 per call, for nine calls: 1.8. The reward prefers not solving the task. We wrote that, by accident, in one line.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/scripts/experiments.py shaping</code></pre>
+        </figure>
+        <figure class="ct-figure ct-figure--wide" id="fig-hack">
+          <div class="ct-figure__stage" aria-label="Animated learning curves of shaped return and true success under the hacked reward, with sample trajectories"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 7</span>The deliberate hack, real run. Two separate panels with one axis each. The box below shows one sampled trajectory from the start of the run, then one from the end.</figcaption>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/experiments.py shaping" data-label="Apple M5 CPU, single seed">
+          <pre><code>{{N shaping_output}}</code></pre>
+        </figure>
+        {{N shaping_prose}}
+        <p>The fix is potential-based shaping (Ng, Harada and Russell, 1999). Define &Phi;(s), the fraction of milestones reached. Pay &Phi;(s<sub>t+1</sub>) &minus; &Phi;(s<sub>t</sub>) on each step. Credit arrives early, but losing progress costs what gaining it paid.</p>
+        {{L agentrl/rewards.py|^def potential|^    return r$||<span class="ct-fig-num">Listing 22</span>Potential-based shaping. The environment defines &Phi; = 0 at the start and at the end.}}
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>Because &Phi; is 0 at both ends, the shaping terms cancel over an episode: the total shaped return equals the outcome, exactly. <code>test_potential_shaping_telescopes_to_the_outcome</code> checks this. So under trajectory-level GRPO, which only sees the sum, potential shaping changes nothing at all. It only matters with action-level credit, where the per-step rewards enter GAE. In practice, adding milestone potentials to a pure GRPO trainer is a no-op, and you should not expect it to help.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_activity_reward_pays_more_for_looping_than_for_solving</code> passes.</li>
+            <li>Always log true success beside the training reward. The gap between them is your reward-hack alarm.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-11" data-step-title="Exploration">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 11</span></div>
+          <h2>Exploration: temperature, group size, diverse starts</h2>
+          <p class="build-step__goal"><span>Goal</span> Measure what controls how much signal each batch of rollouts carries.</p>
+        </header>
+        <p>GRPO learns only from groups that disagree. So exploration has a concrete meaning here: it is whatever makes a group's outcomes differ. We measure the fraction of zero-variance groups, because each one is a batch of rollouts that taught nothing.</p>
+        <p>Three levers are in the code. Sampling temperature changes how often a group tries something else. Group size G changes how likely one member is to get lucky. The task sampler supplies diverse tasks and diverse starts. The temperature must also enter the training log-probabilities, otherwise the ratio no longer describes the sampling distribution. <code>token_logprobs</code> takes it as an argument for that reason.</p>
+        {{L agentrl/online.py|^class TaskSampler|^        return out||<span class="ct-fig-num">Listing 23</span>Diverse tasks and diverse initial states. The perturbed starts from step 5 are now training data.}}
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/scripts/experiments.py exploration
+$ .venv/bin/python c12-agent-rl/scripts/experiments.py groupsize</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/experiments.py" data-label="Apple M5 CPU, single seed, final iteration">
+          <pre><code>{{N explore_output}}</code></pre>
+        </figure>
+        {{N explore_prose}}
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Your training log reports zero-variance groups on every iteration.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-12" data-step-title="Curriculum">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 12</span></div>
+          <h2>Curriculum: from one tool to long horizons</h2>
+          <p class="build-step__goal"><span>Goal</span> Raise the difficulty only when the policy is ready, and compare that against starting at the hardest level.</p>
+        </header>
+        <p>The chance that a sampled episode solves a long task shrinks with its length. Below some point, whole groups fail and the update has nothing to work on. A curriculum keeps the policy where it sometimes succeeds. The ladder has five rungs.</p>
+        <figure class="ct-figure ct-figure--wide" id="fig-ladder">
+          <div class="ct-figure__stage" aria-label="Animated curriculum ladder from single tool to long horizon"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 8</span>The curriculum. Each rung adds one difficulty. The right side shows what the cloned policy scores before any RL.</figcaption>
+        </figure>
+        {{L agentrl/online.py|^class Curriculum|^        return False||<span class="ct-fig-num">Listing 24</span>Promotion on a rolling success rate. There is no demotion. An exercise asks you to add it.}}
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/scripts/experiments.py curriculum</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/experiments.py curriculum" data-label="Apple M5 CPU, single seed, final evaluation">
+          <pre><code>{{N curriculum_output}}</code></pre>
+        </figure>
+        {{N curriculum_prose}}
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_curriculum_advances_on_threshold_only</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-13" data-step-title="Failure recovery">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 13</span></div>
+          <h2>Failure recovery: timeouts, bad input, missing files</h2>
+          <p class="build-step__goal"><span>Goal</span> Inject the ways tools really fail, reward finishing anyway, and look at the behaviour that appears.</p>
+        </header>
+        <p>Real tools hang, crash, reject arguments and point at files that have moved. Demonstrations from clean runs show none of this. So we inject the failures in the environment, seeded per episode. A failed call costs a step, so a policy that panics runs out of budget.</p>
+        {{L agentrl/failures.py|^TIMEOUT|^    return None$||<span class="ct-fig-num">Listing 25</span>Four failure types. The stale path comes from the task generator: the task names a file that no longer exists, so the first edit returns <code>error no such file</code>.}}
+        <p>No recovery bonus is needed. The outcome reward already pays only the episodes that finish. Here is the same task before and after training.</p>
+        <figure class="code-output" data-from="results/recovery.txt" data-label="Greedy rollouts, same task and seed, Apple M5 CPU">
+          <pre><code>{{N recovery_output}}</code></pre>
+        </figure>
+        {{N recovery_prose}}
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_failure_injection_is_seeded_and_recoverable</code> passes.</li>
+            <li>The <code>failures</code> suite success rises above the BC value.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-14" data-step-title="Offline vs online">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 14</span></div>
+          <h2>Offline against online</h2>
+          <p class="build-step__goal"><span>Goal</span> Give offline and online training the same data budget and the same gradient steps, and compare.</p>
+        </header>
+        <p>Online rollouts cost environment time. Offline training reuses a stored dataset for free. So the question is what the free data can teach. We collect one buffer from the cloned policy, with as many trajectories as the online run will generate. Then we train two offline methods on it.</p>
+        {{L agentrl/offline.py|^def offline_grpo|^    return history||<span class="ct-fig-num">Listing 26</span>Offline GRPO reuses the stored groups and the stored log-probabilities. As the policy moves away from the behaviour policy, ratios leave the clip range.}}
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/scripts/experiments.py offline</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/experiments.py offline" data-label="Apple M5 CPU, single seed">
+          <pre><code>{{N offline_output}}</code></pre>
+        </figure>
+        {{N offline_prose}}
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Offline GRPO's <code>clip_frac</code> climbs through the run. Online stays lower, because its old log-probs refresh every iteration.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-15" data-step-title="The full system">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 15</span></div>
+          <h2>The full agent-RL system</h2>
+          <p class="build-step__goal"><span>Goal</span> Separate the loop into the components a production trainer has, each timed and each testable.</p>
+        </header>
+        <p>The loop in step 8 mixes everything together. A real system separates it, because each part scales and fails differently. Task sampler, env workers, rollouts, trajectory store, verifier, batches, update, new policy.</p>
+        {{L agentrl/system.py|^class Verifier|^        return traj||<span class="ct-fig-num">Listing 27</span>The verifier replays recorded actions on a fresh copy of the task and decides the reward from the files. The agent's claim and the rollout's claim do not count.}}
+        <a class="theory-link" href="../the-agent-evaluation-playbook/"><span class="theory-link__kicker">Why grade the state, not the claim</span>The agent evaluation playbook</a>
+        {{L agentrl/system.py|^    def iteration|^        return \{"version"||<span class="ct-fig-num">Listing 28</span>One pass through the pipeline, with a timer on each box.}}
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/scripts/train_system.py --iters 10</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/train_system.py" data-label="Apple M5 CPU, 2 threads">
+          <pre><code>{{N system_output}}</code></pre>
+        </figure>
+        <figure class="ct-figure ct-figure--wide" id="fig-system">
+          <div class="ct-figure__stage" aria-label="Animated pipeline: task sampler, env workers, rollouts, store, verifier, batches, update, new policy"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 9</span>The system, with the time each box took in a real run with instant tools.</figcaption>
+        </figure>
+        {{N system_prose}}
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>A run must survive a restart. <code>test_resume_gives_the_same_weights_as_an_uninterrupted_run</code> saves after one iteration, loads into a fresh system, and checks that the next iteration gives the same weights as an uninterrupted run. Weights, optimizer, sampler state, and both random generators are in the checkpoint. Forget any one of them and this test fails.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Verifier mismatches stay at 0 on a healthy run. Any other value means a bug or a tampered record.</li>
+            <li><code>test_system_iteration_runs_all_stages</code> and the resume test pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-16" data-step-title="Drop in a real LM">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 16</span></div>
+          <h2>Drop in a Hugging Face model</h2>
+          <p class="build-step__goal"><span>Goal</span> Prove the interfaces hold: the same rollout and update code runs a trusted Llama and SmolLM2 with LoRA.</p>
+        </header>
+        <p>All of this claims to be LM-shaped. Here is the proof. An adapter gives any causal LM the same <code>PolicyOutput</code>, and nothing in <code>rollout.py</code>, <code>grpo.py</code> or <code>online.py</code> changes.</p>
+        {{L agentrl/hf_policy.py|^class HFPolicy|^    return HFPolicy\(LlamaForCausalLM||<span class="ct-fig-num">Listing 29</span>The adapter, and a Llama the same size as our policy. This is the trusted implementation we compare against.}}
+        {{L tests/test_system_hf.py|^def test_tiny_llama_drops_in|^    assert any\(\(before\[k\]||<span class="ct-fig-num">Listing 30</span>The comparison test. The same rollout, the same log-probability identity, the same update, on HF Llama.}}
+        {{N hf_prose}}
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Add new marker tokens to SmolLM2 and train only LoRA. The model can never learn to end an action, because a new token's output row is frozen. Every episode then runs into the action limit. This is why <code>HFCodec</code> reuses the chat delimiters the model already knows.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_tiny_llama_drops_in_for_rollout_and_update</code> passes offline.</li>
+            <li><code>test_smollm_lora_runs_one_episode</code> passes with the model in your cache (marked <code>network</code>).</li>
+          </ul>
+        </footer>
+      </section>

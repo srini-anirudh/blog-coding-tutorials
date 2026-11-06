@@ -1,0 +1,14 @@
+/* ---------- article-specific figure styles (keep them light) ---------- */
+      .neg-grid { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 18px; align-items: start; }
+      .neg-scene svg { width: 100%; height: auto; display: block; }
+      .neg-panel { font: 13px/1.5 var(--mono); min-width: 0; }
+      .neg-panel p { margin: 0 0 10px; }
+      .neg-panel .neg-label { display: block; color: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+      .neg-true { background: rgba(47,143,91,0.22); color: inherit; padding: 0 3px; }
+      .neg-false { background: rgba(184,67,47,0.22); color: inherit; padding: 0 3px; }
+      .neg-leak { color: var(--ink-soft); font-family: var(--body); font-size: 16px; }
+      .neg-json { color: var(--muted); font-size: 11.5px; overflow-wrap: anywhere; }
+      .iou-out { margin: 8px 0 0; color: var(--ink-soft); font: 12.5px/1.5 var(--mono); overflow-wrap: anywhere; }
+      .iou-verdict { margin: 6px 0 0; color: var(--ink); font-size: 16.5px; min-height: 2.8em; }
+      #fig-batch svg, #fig-dpo svg, #fig-blind svg, #fig-grpo svg, #fig-freeze svg, #fig-hack svg { min-width: 640px; }
+      @media (max-width: 640px) { .neg-grid { grid-template-columns: 1fr; } .neg-scene { max-width: 260px; } }

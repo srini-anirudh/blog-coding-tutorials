@@ -1,0 +1,435 @@
+      <section class="build-step" id="step-11" data-step-title="Parameter count">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 11</span></div>
+          <h2>Derive the parameter count, then verify it</h2>
+          <p class="build-step__goal"><span>Goal</span> Write the size of every component as a formula, and check it against real modules and published model sizes.</p>
+        </header>
+        <p>If you can write the parameter count by hand, you understand the architecture. Every term comes from a matrix we already built.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/params.py" data-lines="8-34" data-lang="python" data-highlight="11-16">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 13</span>The closed form. RMSNorm has one gain per channel, and attention has four projections.</figcaption>
+        </figure>
+        <p>The check builds each model on PyTorch&rsquo;s meta device, which records shapes and allocates no memory. So Llama 3 8B fits on a laptop for counting.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/param_count.py
+{{R:param_count.txt}}</code></pre>
+        </figure>
+        <p>Formula and module agree on all three. The totals also agree with outside sources. SmolLM2-135M has 134,515,008 parameters when loaded from the Hub in step 12. Llama 3 8B&rsquo;s published size is 8.03B, and our formula gives 8,030,261,248. Try the formula yourself. A preset button fills in a real model, and a bad combination raises the same error as <code>ModelConfig</code>.</p>
+        <figure class="ct-figure ct-figure--wide" id="fig-params">
+          <div class="ct-knobs" role="group" aria-label="Presets">
+            <button type="button" data-preset="tiny" aria-pressed="true">tiny</button>
+            <button type="button" data-preset="smol" aria-pressed="false">SmolLM2-135M</button>
+            <button type="button" data-preset="llama" aria-pressed="false">Llama 3 8B</button>
+          </div>
+          <div class="ct-knobs">
+            <label class="ct-knob">V <input type="range" id="p-v" min="0" max="4" value="0" /><output id="p-v-out"></output></label>
+            <label class="ct-knob">D <input type="range" id="p-d" min="64" max="4096" step="32" value="256" /><output id="p-d-out"></output></label>
+            <label class="ct-knob">L <input type="range" id="p-l" min="1" max="64" value="6" /><output id="p-l-out"></output></label>
+            <label class="ct-knob">H <input type="range" id="p-h" min="0" max="7" value="3" /><output id="p-h-out"></output></label>
+            <label class="ct-knob">H_kv <input type="range" id="p-kv" min="0" max="3" value="1" /><output id="p-kv-out"></output></label>
+            <label class="ct-knob">F <input type="range" id="p-f" min="64" max="16384" step="64" value="704" /><output id="p-f-out"></output></label>
+            <label class="ct-knob"><input type="checkbox" id="p-tied" checked /> Tied head</label>
+          </div>
+          <div class="ct-figure__stage" id="params-stage" aria-label="Stacked bar of parameters by component"></div>
+          <p class="params-legend" id="p-legend"></p>
+          <p class="params-error" id="p-error" hidden></p>
+          <div class="ct-readout" aria-live="polite">
+            <div><span>Total parameters</span><b id="p-total"></b></div>
+            <div><span>Head width d</span><b id="p-hd"></b></div>
+            <div><span>KV cache, 4096 tokens, bf16</span><b id="p-kvmem"></b></div>
+          </div>
+          <figcaption><span class="ct-fig-num">Figure 5</span>Parameter calculator, using the same formula as <code>count_parameters</code>. With the Llama 3 8B preset, move H_kv between 1 and 32 and watch the cache move by a factor of 32 while the total hardly changes.</figcaption>
+        </figure>
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>Our script shows Llama 3 8B's attention at 2.147B parameters with 32 KV heads, 1.342B with 8, and 1.107B with 1. Going from 32 KV heads to 8 removes 10% of the whole model, but it removes 75% of the KV cache: 2.00 GiB becomes 0.50 GiB for 4096 tokens. So GQA is mainly an inference-memory decision, and only secondarily a parameter saving.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>All three totals print <code>equal=True</code>.</li>
+            <li><code>test_parameter_count_formula_matches_model</code> and <code>test_parameter_count_of_real_models</code> pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-12" data-step-title="Prove it against Llama">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 12</span></div>
+          <h2>Prove it against the trusted implementation</h2>
+          <p class="build-step__goal"><span>Goal</span> Give our weights to Hugging Face&rsquo;s <code>LlamaForCausalLM</code> and get the same logits. Then load real pretrained weights into our model.</p>
+        </header>
+        <p>So far each module passed its own small test. That cannot catch a wrong design choice that we made consistently, such as the RoPE pairing. A second, independent implementation can. Because we named our attributes after Hugging Face&rsquo;s, the conversion is a config translation and a key prefix.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/hf.py" data-lines="61-78" data-lang="python" data-highlight="5,13-14">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 14</span>The weight conversion. It fails loudly on any unexpected or missing key, so a silently random layer cannot slip through.</figcaption>
+        </figure>
+        <figure class="code-listing" data-src="c04-llm/tests/test_hf_parity.py" data-lines="10-19" data-lang="python" data-highlight="9-10">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 15</span>The strongest test in the folder. It runs for tied and untied heads, for MQA, and for a different RoPE theta.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/compare_hf.py --pretrained HuggingFaceTB/SmolLM2-135M
+{{R:compare_hf_short}}</code></pre>
+        </figure>
+        <p>The logit difference is exactly zero, in both directions. A real pretrained model runs through code we wrote today, and greedy decoding matches <code>generate()</code> token for token. The model itself is a small one, which shows in its answer.</p>
+        <aside class="callout callout-nuance">
+          <p class="callout-label">Nuance</p>
+          <p>Exactly zero means both paths ran the same floating-point operations in the same order, here through the same SDPA kernel. Do not expect that as a general rule. Our naive backend computes the same function and differs by about <code>1e-6</code>, because its operations run in a different order. So the test uses a tolerance of <code>1e-5</code>, and a bitwise match is a pleasant result and not a requirement.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Random tiny model and SmolLM2-135M both match within tolerance.</li>
+            <li><code>test_logits_and_loss_match_llama</code> passes. <code>test_smollm2_135m_logits_match</code> passes with <code>-m network</code>.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-13" data-step-title="Generation">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 13</span></div>
+          <h2>Generation: greedy, temperature, top-k, top-p</h2>
+          <p class="build-step__goal"><span>Goal</span> Turn one row of logits into one token, with each filter as a small pure function.</p>
+        </header>
+        <a class="theory-link" href="../choosing-the-next-token/"><span class="theory-link__kicker">Derivation in</span>Choosing the next token</a>
+        <p>Generation is a loop around one decision. Each filter takes logits and returns logits, so they compose, and each can be tested alone.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/sampling.py" data-lines="13-53" data-lang="python" data-highlight="16-17,33-34">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 16</span>Filters set logits to minus infinity, so softmax gives them probability 0. The <code>- probs</code> term in top-p keeps the token that crosses the threshold.</figcaption>
+        </figure>
+        <p>Run them on the model we train in step 15. Below is the real next-byte distribution after the prompt <code>ROMEO:\nI will </code>. Move the sliders to see what each filter does to it. The filters run in the same order as the code.</p>
+        <figure class="ct-figure ct-figure--wide" id="fig-sampling">
+          <div class="ct-knobs">
+            <label class="ct-knob">Temperature <input type="range" id="s-t" min="10" max="200" value="100" /><output id="s-t-out"></output></label>
+            <label class="ct-knob">Top-k <input type="range" id="s-k" min="1" max="256" value="256" /><output id="s-k-out"></output></label>
+            <label class="ct-knob">Top-p <input type="range" id="s-p" min="5" max="100" value="100" /><output id="s-p-out"></output></label>
+          </div>
+          <div class="ct-figure__stage" id="sampling-stage" aria-label="Next-byte probabilities"></div>
+          <div class="ct-readout" aria-live="polite">
+            <div><span>Tokens kept</span><b id="s-kept"></b></div>
+            <div><span>Top probability</span><b id="s-top"></b></div>
+            <div><span>Entropy</span><b id="s-ent"></b></div>
+          </div>
+          <figcaption><span class="ct-fig-num">Figure 6</span>All 256 real logits from the trained tiny model after the prompt above, saved in <code>results/sampling_logits.json</code>. The 14 most likely bytes are drawn. The readouts use all 256.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/walkthrough.py --step sampling</code></pre>
+        </figure>
+        <figure class="code-output" data-from="scripts/walkthrough.py --step sampling">
+          <pre><code>{{W:sampling}}</code></pre>
+        </figure>
+        <p>Here is what each setting does to the text, same model and seed.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/generate.py --compare --max-new-tokens 120
+{{R:generate_compare_short}}</code></pre>
+        </figure>
+        <aside class="callout callout-nuance">
+          <p class="callout-label">Nuance</p>
+          <p>%%NUANCE_SAMPLING%%</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Same seed gives the same output, through both generation paths.</li>
+            <li><code>test_top_p_keeps_smallest_nucleus</code> and <code>test_top_k_keeps_k_largest</code> pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-14" data-step-title="Cached generation">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 14</span></div>
+          <h2>Cached generation: same tokens, far less work</h2>
+          <p class="build-step__goal"><span>Goal</span> Keep past keys and values, prove the output does not change, and measure the saving.</p>
+        </header>
+        <a class="theory-link" href="../the-mechanics-of-llm-inference/"><span class="theory-link__kicker">Theory in</span>The mechanics of LLM inference</a>
+        <p>Start naive. To get one new token, run the whole sequence again and keep the last row of logits. This is correct and very wasteful, because past tokens do not change. Their keys and values do not change either. So we store them and pass only the new token.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/kv_cache.py" data-lines="13-35" data-lang="python" data-highlight="20-22">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 17</span>The cache, with the same interface as the C3 library and Hugging Face&rsquo;s <code>DynamicCache</code>. It grows by concatenation, which copies on every step and is simple enough for us to read.</figcaption>
+        </figure>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/generation.py" data-lines="34-55" data-lang="python" data-highlight="5-11">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 18</span>Both paths in one loop. Prefill runs the prompt. Decode feeds one token and reuses the cache.</figcaption>
+        </figure>
+        <figure class="ct-figure ct-figure--wide" id="fig-cache">
+          <div class="ct-figure__stage" tabindex="0" aria-label="Uncached and cached decoding, step by step"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 7</span>Blue tokens go through the model at this step. Gray tokens are not recomputed. The violet strip is the key tensor of one layer, and it grows one row per token. The counters show the total tokens processed by each path.</figcaption>
+        </figure>
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>A cache must change speed and nothing else. So we compare the logits of a full forward with token-by-token decoding, on both backends.</p>
+          <figure class="code-listing" data-src="c04-llm/tests/test_cache.py" data-lines="10-19" data-lang="python" data-highlight="7-9">
+            <pre><code>@@</code></pre>
+          </figure>
+        </aside>
+        <p>Now measure. The benchmark times each decode step separately.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/benchmarks/bench_generation.py --device mps
+{{R:bench_generation_mps.txt}}</code></pre>
+        </figure>
+        <figure class="ct-figure" id="fig-latency">
+          <div class="ct-figure__stage" aria-label="Measured decode latency"></div>
+          <figcaption><span class="ct-fig-num">Figure 8</span>Measured decode latency per step, tiny preset with random weights, on MPS (Apple M5). Each point is the median of 5 neighbouring steps. Hover for values. The table above holds the same numbers.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials" data-label="On the CPU, and with a larger model">
+          <pre><code>$ .venv/bin/python c04-llm/benchmarks/bench_generation.py --device cpu
+{{R:bench_generation_cpu_short}}
+$ .venv/bin/python c04-llm/benchmarks/bench_generation.py --device cpu \
+    --preset smollm2-135m --new-tokens 128
+{{R:bench_generation_smol_short}}</code></pre>
+        </figure>
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>%%INSIGHT_CACHE%%</p>
+        </aside>
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Forget that positions must continue from the cache. Every decode step then rotates its token as if it sat at position 0.</p>
+          <figure class="terminal" data-cwd="blog-coding-tutorials">
+            <pre><code>$ .venv/bin/python c04-llm/scripts/break_it.py --case position-offset
+{{B:position-offset}}</code></pre>
+          </figure>
+          <p>%%BREAK_POSITION%%</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Cached logits match full-forward logits within <code>1e-5</code>.</li>
+            <li><code>test_cached_generation_matches_uncached_greedy</code> and <code>test_chunked_prefill_equals_full_forward</code> pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-15" data-step-title="Train and save">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 15</span></div>
+          <h2>A quick training run, then save and load</h2>
+          <p class="build-step__goal"><span>Goal</span> Show that the architecture learns, with loss going down and samples improving, and that a checkpoint round-trips exactly.</p>
+        </header>
+        <a class="theory-link" href="../how-llms-are-pretrained/"><span class="theory-link__kicker">Theory in</span>How LLMs are pretrained</a>
+        <p>This is a sanity check and not a training recipe. It has no packing, no mixed precision and no resume. Those belong to <a href="../train-an-llm-from-scratch/">the next tutorial</a>. We train the tiny preset on Tiny Shakespeare, about 1.1 MB of text, one byte per token.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/train_sanity.py
+{{R:train_sanity_short}}</code></pre>
+        </figure>
+        <figure class="ct-figure" id="fig-training">
+          <div class="ct-figure__stage" aria-label="Training and validation loss"></div>
+          <figcaption><span class="ct-fig-num">Figure 9</span>Measured loss from the run above, on MPS (Apple M5). Step 0 is the untrained model, at the uniform-guess level. Hover for values.</figcaption>
+        </figure>
+        <aside class="callout callout-nuance">
+          <p class="callout-label">Nuance</p>
+          <p>%%NUANCE_TRAIN%%</p>
+        </aside>
+        <p>A native checkpoint is a folder with <code>config.json</code> and <code>model.safetensors</code>. Tied weights are stored once, because safetensors refuses shared tensors and the duplicate would waste space.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/checkpoint.py" data-lines="14-38" data-lang="python" data-highlight="6-9,18-21">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 19</span>Saving and loading. <code>load_checkpoint</code> allows exactly one missing key, the tied head, and rejects everything else. For Hugging Face format, <code>tinyllm.hf.save_hf</code> writes a folder that <code>AutoModelForCausalLM.from_pretrained</code> opens.</figcaption>
+        </figure>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Loss starts near 5.5 and falls below 2 within a few hundred steps.</li>
+            <li><code>test_round_trip_reproduces_logits</code>, <code>test_tied_weights_are_stored_once_and_retied</code>, <code>test_training_resumes_identically</code> and <code>test_save_hf_loads_with_automodel</code> pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-16" data-step-title="Optional MoE">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 16</span></div>
+          <h2>An optional mixture-of-experts block</h2>
+          <p class="build-step__goal"><span>Goal</span> Replace SwiGLU with a router and several expert MLPs, and see why routing needs its own loss.</p>
+        </header>
+        <p>Skip this step if you only want Llama. MoE keeps the parameter count of a large model and the compute of a small one. Each token runs through only k of E experts. Mixtral and DeepSeek use this idea, with more engineering around it.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/moe.py" data-lines="41-85" data-lang="python" data-highlight="6-9,26-27">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 20</span>A Python loop over experts, written for reading. Production kernels batch this, and compute the same thing. <code>test_moe_matches_dense_reference</code> checks it against a brute-force version that runs every expert on every token.</figcaption>
+        </figure>
+        <figure class="ct-figure ct-figure--wide" id="fig-moe">
+          <div class="ct-figure__stage" tabindex="0" aria-label="Mixture-of-experts routing"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 10</span>Routing six tokens through four experts with top-2. Router probabilities here are illustrative. The measured routing is in the output below.</figcaption>
+        </figure>
+        <p>Does the load-balancing loss matter in practice? We train a small MoE model twice on the same batches, once with the loss switched off.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/moe_demo.py --steps 300
+{{R:moe_demo.txt}}</code></pre>
+        </figure>
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>%%INSIGHT_MOE%%</p>
+        </aside>
+        <table class="shape-table">
+          <caption>Shapes in step 16, with N = B &times; T</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>flat</td><td>(N, D)</td><td>All tokens in the batch, pooled.</td></tr>
+            <tr><td>logits, probs</td><td>(N, E)</td><td>One score per expert per token.</td></tr>
+            <tr><td>top_p, top_idx</td><td>(N, k)</td><td>The chosen experts and their weights.</td></tr>
+            <tr><td>token_ids</td><td>(n_e,)</td><td>Tokens sent to expert e.</td></tr>
+            <tr><td>out</td><td>(N, D)</td><td>Weighted sum, one row per token.</td></tr>
+          </tbody>
+        </table>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Active parameters per token are about a third of the total in the demo model.</li>
+            <li>The tests in <code>test_moe.py</code> pass, including capacity overflow and the uniform-routing value of 1.0.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section id="comparison">
+        <h2>Design choices compared</h2>
+        <p>The first table compares attention choices on one small task. Rows differ only in KV heads. Same data, batches, steps and seed. Read it left to right: parameters and cache fall, and the question is how much loss they cost.</p>
+        <div class="comparison-table-wrap">
+          <table class="comparison-table">
+            <caption>MHA, GQA and MQA in the tiny preset, {{HEADS_STEPS}} steps on Tiny Shakespeare, MPS (Apple M5)</caption>
+            <thead><tr><th>Config</th><th>KV heads</th><th>Attention params</th><th>Cache per token, float32</th><th>Validation loss</th></tr></thead>
+            <tbody>
+{{HEADS_ROWS}}
+            </tbody>
+          </table>
+        </div>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/compare_heads.py --steps 400
+{{R:compare_heads.txt}}</code></pre>
+        </figure>
+        <p>%%READ_HEADS%%</p>
+        <p>The second table places our model next to the designs it descends from. The columns are the aspects we built in the steps above.</p>
+        <div class="comparison-table-wrap">
+          <table class="comparison-table">
+            <caption>From the 2017 transformer to tinyllm</caption>
+            <thead><tr><th>Aspect</th><th>2017 Transformer</th><th>GPT-2</th><th>tinyllm (Llama style)</th><th>What the change buys</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Norm</th><td>LayerNorm, post</td><td>LayerNorm, pre</td><td>RMSNorm, pre</td><td>Clean residual path. No mean or bias to compute.</td></tr>
+              <tr><th scope="row">Position</th><td>Fixed sinusoid, added</td><td>Learned, added</td><td>RoPE, on q and k</td><td>Score depends on offset. No position table in the weights.</td></tr>
+              <tr><th scope="row">Attention</th><td>MHA</td><td>MHA</td><td>GQA + SDPA</td><td>Smaller KV cache. Fused kernel.</td></tr>
+              <tr><th scope="row">Feed-forward</th><td>ReLU, F = 4D</td><td>GELU, F = 4D</td><td>SwiGLU, F about 8D/3</td><td>Gating, at about the same parameter count.</td></tr>
+              <tr><th scope="row">Biases</th><td>Yes</td><td>Yes</td><td>None</td><td>Fewer parameters, and the same norm gain does the job.</td></tr>
+              <tr><th scope="row">Weight tying</th><td>Yes</td><td>Yes</td><td>Optional</td><td>Saves V &times; D where the vocabulary is large.</td></tr>
+              <tr><th scope="row">Decoding</th><td>Encoder-decoder</td><td>Decoder only</td><td>Decoder only, KV cache</td><td>Roughly constant work per new token.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="run-everything">
+        <h2>Run everything</h2>
+        <p>The final folder, and every command that produced a number in this post. Outputs of these runs are saved in <code>c04-llm/results/</code>.</p>
+        <details class="repo-tree" open>
+          <summary>c04-llm/ <span class="repo-tree__hint">final tree</span></summary>
+<pre>{{TREE}}</pre>
+        </details>
+        <figure class="terminal" data-cwd="blog-coding-tutorials" data-label="Run it all">
+          <pre><code>$ .venv/bin/python -m pytest c04-llm -m "not slow and not gpu"
+$ .venv/bin/python -m pytest c04-llm -m network
+$ .venv/bin/python c04-llm/scripts/walkthrough.py --step all
+$ .venv/bin/python c04-llm/scripts/inspect_shapes.py
+$ .venv/bin/python c04-llm/scripts/param_count.py
+$ .venv/bin/python c04-llm/scripts/compare_hf.py --pretrained HuggingFaceTB/SmolLM2-135M
+$ .venv/bin/python c04-llm/scripts/train_sanity.py
+$ .venv/bin/python c04-llm/scripts/generate.py --compare
+$ .venv/bin/python c04-llm/scripts/break_it.py --case all --pretrained HuggingFaceTB/SmolLM2-135M --device cpu
+$ .venv/bin/python c04-llm/scripts/moe_demo.py --steps 300
+$ .venv/bin/python c04-llm/scripts/compare_heads.py --steps 400
+$ .venv/bin/python c04-llm/benchmarks/bench_generation.py --device mps
+$ .venv/bin/python c04-llm/benchmarks/bench_attention.py --device cpu
+{{R:pytest_short}}</code></pre>
+        </figure>
+      </section>
+
+      <section id="key-insights">
+        <h2>Key insights and nuances</h2>
+        <ul class="insight-list">
+          <li><strong>A wrong design choice can still write fluent text.</strong> Swapping the RoPE channel pairing left SmolLM2 fluent and raised its loss by over a nat per token. Only a numerical comparison catches this. <a href="#step-04">Step 4</a></li>
+          <li><strong>A bitwise match is a bonus, and a tolerance is the requirement.</strong> Our SDPA path differs from Llama by exactly 0, and our naive path by about <code>1e-6</code>, though both are correct. <a href="#step-12">Step 12</a></li>
+          <li><strong>RMSNorm has a floor.</strong> Below an input RMS near <code>sqrt(eps)</code> it stops rescaling. Real embeddings at RMS 0.02 already lose about 1.2%. <a href="#step-03">Step 3</a></li>
+          <li><strong>SwiGLU is where the parameters are.</strong> It holds 59% to 75% of the three models we counted. <a href="#step-06">Step 6</a></li>
+          <li><strong>GQA is an inference-memory decision.</strong> Going from 32 KV heads to 8 in Llama 3 8B removes 75% of the cache and 10% of the parameters. <a href="#step-11">Step 11</a></li>
+          <li><strong>Depth scaling keeps a new model near identity.</strong> Without it, a 48-layer stream ends about 12 times larger before any training. <a href="#step-10">Step 10</a></li>
+          <li><strong>A chunked-prefill mask bug hides for a long time.</strong> <code>is_causal=True</code> is safe for one token at a time and for a full forward. It only breaks when queries are several tokens shorter than keys. <a href="#step-05">Step 5</a></li>
+          <li><strong>%%KEY_CACHE%%</strong> <a href="#step-14">Step 14</a></li>
+          <li><strong>%%KEY_TRAIN%%</strong> <a href="#step-15">Step 15</a></li>
+          <li><strong>%%KEY_MOE%%</strong> <a href="#step-16">Step 16</a></li>
+        </ul>
+      </section>
+
+      <section id="exercises">
+        <h2>Exercises</h2>
+        <ol class="exercises">
+          <li><strong>Batched generation with left padding</strong><span class="exercise-level">Medium</span> Add an <code>attention_mask</code> argument. Make position ids skip padding, and combine the padding mask with the causal mask. Prove that a padded batch gives the same tokens as running each prompt alone.
+            <details><summary>Hint</summary><p>Compute positions with <code>attention_mask.cumsum(-1) - 1</code>. <code>attnzoo.masks.padding_mask</code> shows the 4D mask shape.</p></details>
+          </li>
+          <li><strong>A preallocated cache</strong><span class="exercise-level">Medium</span> Replace <code>torch.cat</code> with C3&rsquo;s <code>StaticKVCache</code> design. Run <code>bench_generation.py</code> again and report what changes on CPU and on MPS as T grows.</li>
+          <li><strong>Add qk-norm and compare losses</strong><span class="exercise-level">Medium</span> Apply RMSNorm to q and k per head, before RoPE, as OLMo 2 and Qwen3 do. Run <code>compare_heads.py</code> on it. Report whether the difference is larger than the noise between two seeds.</li>
+          <li><strong>Match Mixtral</strong><span class="exercise-level">Hard</span> Make <code>MoE</code> reproduce the logits of <code>MixtralForCausalLM</code> on a small config. Map the state dict keys and find which detail of routing or RoPE differs from ours, if any.</li>
+          <li><strong>Write a divergence finder</strong><span class="exercise-level">Hard</span> Write a <code>diagnose.py</code> that takes a model and a trusted reference. It should hook each block, find the first layer where their outputs differ, and name the sub-module. Test it on each case in <code>break_it.py</code>.</li>
+        </ol>
+      </section>
+
+      <section id="continue-reading">
+        <h2>Continue reading</h2>
+        <ul>
+          <li><a href="../train-an-llm-from-scratch/">Train an LLM From Scratch</a>: the next tutorial trains this model properly, with packing, schedules, mixed precision, checkpoint resume and DDP.</li>
+          <li><a href="../build-attention-from-scratch/">Build Attention From Scratch</a>: the attention library this model trims, with MLA, FlashAttention and more.</li>
+          <li><a href="../what-changed-inside-the-transformer/">What changed inside the transformer</a>: the arguments for each design choice we coded here.</li>
+          <li><a href="../the-mechanics-of-llm-inference/">The mechanics of LLM inference</a>: what happens beyond the KV cache once this model has to serve traffic.</li>
+        </ul>
+      </section>
+
+      <section id="references">
+        <h2>References</h2>
+        <p class="references-intro">Grouped by topic. Every entry links to its primary source.</p>
+        <div class="reference-group">
+          <h3>Architecture</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener noreferrer">Attention Is All You Need</a> &middot; Vaswani et al., 2017</li>
+            <li><a href="https://arxiv.org/abs/2302.13971" target="_blank" rel="noopener noreferrer">LLaMA: Open and Efficient Foundation Language Models</a> &middot; Touvron et al., 2023</li>
+            <li><a href="https://arxiv.org/abs/2307.09288" target="_blank" rel="noopener noreferrer">Llama 2: Open Foundation and Fine-Tuned Chat Models</a> &middot; Touvron et al., 2023</li>
+            <li><a href="https://arxiv.org/abs/2407.21783" target="_blank" rel="noopener noreferrer">The Llama 3 Herd of Models</a> &middot; Llama Team, 2024</li>
+            <li><a href="https://arxiv.org/abs/2502.02737" target="_blank" rel="noopener noreferrer">SmolLM2: When Smol Goes Big</a> &middot; Bakouch et al., 2025</li>
+            <li><a href="https://huggingface.co/HuggingFaceTB/SmolLM2-135M" target="_blank" rel="noopener noreferrer">HuggingFaceTB/SmolLM2-135M model card</a> &middot; the checkpoint loaded in step 12</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Components</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/1910.07467" target="_blank" rel="noopener noreferrer">Root Mean Square Layer Normalization</a> &middot; Zhang and Sennrich, 2019</li>
+            <li><a href="https://arxiv.org/abs/2002.04745" target="_blank" rel="noopener noreferrer">On Layer Normalization in the Transformer Architecture</a> &middot; Xiong et al., 2020</li>
+            <li><a href="https://arxiv.org/abs/2104.09864" target="_blank" rel="noopener noreferrer">RoFormer: Enhanced Transformer with Rotary Position Embedding</a> &middot; Su et al., 2021</li>
+            <li><a href="https://arxiv.org/abs/1911.02150" target="_blank" rel="noopener noreferrer">Fast Transformer Decoding: One Write-Head is All You Need</a> &middot; Shazeer, 2019</li>
+            <li><a href="https://arxiv.org/abs/2305.13245" target="_blank" rel="noopener noreferrer">GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints</a> &middot; Ainslie et al., 2023</li>
+            <li><a href="https://arxiv.org/abs/1612.08083" target="_blank" rel="noopener noreferrer">Language Modeling with Gated Convolutional Networks</a> &middot; Dauphin et al., 2016</li>
+            <li><a href="https://arxiv.org/abs/2002.05202" target="_blank" rel="noopener noreferrer">GLU Variants Improve Transformer</a> &middot; Shazeer, 2020</li>
+            <li><a href="https://arxiv.org/abs/1608.05859" target="_blank" rel="noopener noreferrer">Using the Output Embedding to Improve Language Models</a> &middot; Press and Wolf, 2016</li>
+            <li><a href="https://arxiv.org/abs/1611.01462" target="_blank" rel="noopener noreferrer">Tying Word Vectors and Word Classifiers</a> &middot; Inan et al., 2016</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Sampling</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/1805.04833" target="_blank" rel="noopener noreferrer">Hierarchical Neural Story Generation</a> &middot; Fan et al., 2018</li>
+            <li><a href="https://arxiv.org/abs/1904.09751" target="_blank" rel="noopener noreferrer">The Curious Case of Neural Text Degeneration</a> &middot; Holtzman et al., 2019</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Mixture of experts</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/2101.03961" target="_blank" rel="noopener noreferrer">Switch Transformers: Scaling to Trillion Parameter Models</a> &middot; Fedus et al., 2021</li>
+            <li><a href="https://arxiv.org/abs/2401.04088" target="_blank" rel="noopener noreferrer">Mixtral of Experts</a> &middot; Jiang et al., 2024</li>
+            <li><a href="https://arxiv.org/abs/2401.06066" target="_blank" rel="noopener noreferrer">DeepSeekMoE: Towards Ultimate Expert Specialization</a> &middot; Dai et al., 2024</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Code</h3>
+          <ul>
+            <li><a href="https://github.com/srini-anirudh/blog-coding-tutorials/tree/main/c04-llm" target="_blank" rel="noopener noreferrer">blog-coding-tutorials: c04-llm</a> &middot; the code for this tutorial</li>
+            <li><a href="https://github.com/huggingface/transformers/blob/main/src/transformers/models/llama/modeling_llama.py" target="_blank" rel="noopener noreferrer">transformers: modeling_llama.py</a> &middot; the trusted implementation</li>
+            <li><a href="https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt" target="_blank" rel="noopener noreferrer">Tiny Shakespeare</a> &middot; the training corpus, from char-rnn</li>
+          </ul>
+        </div>
+      </section>

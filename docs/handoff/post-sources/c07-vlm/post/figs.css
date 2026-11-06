@@ -1,0 +1,10 @@
+/* ---------- article-specific figure styles (keep them light) ---------- */
+      #fig-pipeline svg, #fig-scatter svg, #fig-resolution svg, #fig-generate svg, #fig-align svg { min-width: 620px; }
+      .mask-out { margin: 12px 0 0; padding: 10px 12px; overflow-x: auto; color: var(--ink); background: #fbfaf8; border: 1px solid #dedad2; font: 12.5px/1.45 var(--mono); white-space: pre; }
+      .tok-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 6px 2px 2px; }
+      .tok-chip { padding: 5px 8px; color: var(--ink); background: #fbfaf8; border: 1px solid var(--rule); border-radius: 3px; font: 12.5px/1.2 var(--mono); white-space: pre; cursor: pointer; }
+      .tok-chip.tok-i { border-color: #d66f00; color: #9a4f00; font-weight: 600; }
+      .tok-chip.tok-a, .tok-chip.tok-e { border-color: #2f8f5b; }
+      .tok-chip.is-on { color: #fff; background: #2f8f5b; border-color: #2f8f5b; }
+      .tok-chip.tok-i.is-on { color: #fff; background: #d66f00; border-color: #d66f00; }
+      .tok-chip:focus-visible { outline: 2px solid #0b5ea8; outline-offset: 1px; }

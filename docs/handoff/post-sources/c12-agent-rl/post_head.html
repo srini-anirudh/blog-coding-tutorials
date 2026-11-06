@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Build a filesystem environment, clone a scripted expert, watch distribution shift break it, then train the agent online with GRPO, real rewards and failure injection." />
+    <meta name="author" content="Anirudh Srinivasan" />
+    <link rel="canonical" href="https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/" />
+    <link rel="alternate" type="application/rss+xml" title="The Backward Pass RSS" href="https://srini-anirudh.github.io/feed.xml" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Anirudh Srinivasan" />
+    <meta property="og:title" content="Train an Agent With Reinforcement Learning: environment, BC, GRPO and the full system" />
+    <meta property="og:description" content="Build a filesystem environment, clone a scripted expert, watch distribution shift break it, then train the agent online with GRPO, real rewards and failure injection." />
+    <meta property="og:url" content="https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/" />
+    <meta property="og:image" content="https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/preview.png" />
+    <meta property="article:published_time" content="2026-11-06" />
+    <meta property="article:modified_time" content="2026-11-06" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Train an Agent With Reinforcement Learning: environment, BC, GRPO and the full system" />
+    <meta name="twitter:description" content="Build a filesystem environment, clone a scripted expert, watch distribution shift break it, then train the agent online with GRPO, real rewards and failure injection." />
+    <meta name="twitter:image" content="https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/preview.png" />
+    <title>Train an Agent With Reinforcement Learning: environment, BC, GRPO and the full system | Anirudh Srinivasan</title>
+    <link rel="icon" href="../../assets/images/favicon/a-icon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="../../assets/css/stylesheet.css" />
+    <link rel="stylesheet" href="../../assets/css/blog-shell.css?v=20260907-formula" />
+    <link rel="stylesheet" href="../../assets/css/code-tutorial.css?v=1" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "@id": "https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/#article",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/" },
+        "headline": "Train an Agent With Reinforcement Learning",
+        "description": "Build a filesystem environment, clone a scripted expert, watch distribution shift break it, then train the agent online with GRPO, real rewards and failure injection.",
+        "image": "https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/preview.png",
+        "datePublished": "2026-11-06",
+        "dateModified": "2026-11-06",
+        "author": { "@type": "Person", "@id": "https://srini-anirudh.github.io/#person", "name": "Anirudh Srinivasan", "url": "https://srini-anirudh.github.io/about.html" },
+        "publisher": { "@id": "https://srini-anirudh.github.io/#person" },
+        "keywords": ["Agent RL", "GRPO", "Environments"],
+        "isPartOf": [{ "@id": "https://srini-anirudh.github.io/blogs/#blog" }, { "@id": "https://srini-anirudh.github.io/blogs/#code" }]
+      }
+    </script>
+    <style>
+      :root {
+        --paper: #e4e2dc;
+        --paper-bright: #f7f6f3;
+        --ink: #14171a;
+        --ink-soft: #474e53;
+        --muted: #7b8388;
+        --rule: #cac6bd;
+        --display: "Bricolage Grotesque", system-ui, sans-serif;
+        --body: "Newsreader", Georgia, serif;
+        --mono: "IBM Plex Mono", ui-monospace, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background-color: var(--paper);
+        background-image: linear-gradient(rgba(20, 23, 26, 0.028) 1px, transparent 1px), linear-gradient(90deg, rgba(20, 23, 26, 0.028) 1px, transparent 1px);
+        background-size: 44px 44px;
+        font: 18.5px/1.68 var(--body);
+      }
+
+      .article-wrap { width: min(1180px, calc(100% - 52px)); margin: 0 auto; }
+      .article-mast { padding: 46px 0 30px; }
+      .article-eyebrow { color: var(--muted); font: 600 11.5px/1.4 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; }
+      .article-title { max-width: 14ch; margin: 28px 0 18px; font: 800 clamp(46px, 8.4vw, 104px)/0.92 var(--display); letter-spacing: -0.045em; }
+      .article-subtitle { max-width: 58ch; margin: 0; color: var(--ink-soft); font-size: clamp(20px, 2.3vw, 25px); font-style: italic; line-height: 1.4; }
+      .article-content { width: min(70ch, calc(100% - 32px)); margin: 54px auto; }
+      .article-content h2 { margin: 64px 0 16px; font: 700 clamp(30px, 4.5vw, 46px)/1.04 var(--display); letter-spacing: -0.025em; }
+      .article-content h3 { margin: 38px 0 10px; font: 700 25px/1.12 var(--display); }
+      .article-content p { margin: 0 0 18px; }
+      .article-content ul, .article-content ol { margin: 0 0 18px; padding-left: 1.3em; }
+      .article-content li { margin: 0 0 8px; }
+      .article-content a { color: var(--ink); }
+      .lede { color: var(--ink-soft); font-size: 20.5px; }
+      .toc { margin: 34px 0 48px; padding: 20px 22px; background: var(--paper-bright); border: 1px solid var(--rule); }
+      .toc h2 { margin: 0 0 12px; color: var(--muted); font: 600 11.5px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; }
+      .toc ol { margin: 0; padding-left: 1.4em; columns: 2; column-gap: 32px; font: 15px/1.9 var(--mono); }
+      .toc a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+      .references-intro { color: var(--muted); font-style: italic; }
+      .reference-group { margin: 0 0 30px; }
+      .reference-group h3 { padding-bottom: 7px; color: var(--ink-soft); border-bottom: 1px solid var(--rule); font: 600 11.5px/1.4 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; }
+      .reference-group ul { margin: 0; padding: 0; list-style: none; }
+      .reference-group li { margin: 0 0 13px; font-size: 16.5px; line-height: 1.45; }
+      .reference-group a { color: var(--ink); font-weight: 600; text-underline-offset: 3px; }
+      .article-footer { padding: 32px 0 0; color: var(--muted); border-top: 1px solid var(--rule); font: 12px/1.8 var(--mono); }
+      .insight-list li { margin-bottom: 12px; }
+
+      /* ---------- figure parts specific to this post (light only) ---------- */
+      .c12-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 8px 0 0; font: 11.5px/1.4 var(--mono); color: var(--ink-soft); }
+      .c12-legend i { display: inline-block; width: 12px; height: 3px; margin-right: 6px; vertical-align: middle; }
+      .c12-tip { min-height: 2.6em; margin: 6px 0 0; font: 11.5px/1.5 var(--mono); color: var(--ink-soft); }
+      .c12-tip b { color: var(--ink); }
+      .c12-select { max-width: 100%; padding: 4px 6px; color: var(--ink); background: #fbfaf8; border: 1px solid var(--rule); border-radius: 3px; font: 12px/1.3 var(--mono); }
+      .c12-btn { padding: 4px 9px; color: var(--ink); background: #fbfaf8; border: 1px solid var(--rule); border-radius: 3px; font: 11.5px/1.4 var(--mono); cursor: pointer; }
+      .c12-btn[aria-pressed="true"] { color: #fff; background: #0b5ea8; border-color: #0b5ea8; }
+      .c12-btn:focus-visible, .c12-cell:focus-visible, .c12-chip:focus-visible { outline: 2px solid #d66f00; outline-offset: 2px; }
+      #grp-cells { display: flex; flex-wrap: wrap; gap: 6px; }
+      .c12-cell { display: flex; flex-direction: column; align-items: center; width: 46px; padding: 4px 0; color: var(--ink); background: #fbfaf8; border: 1px solid var(--rule); border-radius: 3px; font: 11px/1.3 var(--mono); cursor: pointer; }
+      .c12-cell b { font-size: 14px; }
+      .c12-cell.is-win { background: rgba(47, 143, 91, 0.18); border-color: #2f8f5b; }
+      .c12-cell.is-mid { background: rgba(47, 143, 91, 0.08); border-color: #2f8f5b; }
+      #grp-bars { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+      .c12-advbar { position: relative; width: 46px; display: flex; flex-direction: column; align-items: center; font: 10.5px/1.3 var(--mono); }
+      .c12-advbar__up { display: flex; align-items: flex-end; height: 64px; }
+      .c12-advbar__up i { display: block; width: 26px; background: #0b5ea8; border-radius: 2px 2px 0 0; }
+      .c12-advbar__down { display: block; height: 64px; border-top: 1px solid #7b8388; width: 100%; text-align: center; }
+      .c12-advbar__down i { display: block; width: 26px; margin: 0 auto; background: #d66f00; border-radius: 0 0 2px 2px; }
+      .c12-advbar em { font-style: normal; color: var(--ink); }
+      #rp-members { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 10px; }
+      .c12-chip { padding: 3px 7px; color: var(--ink); background: #fbfaf8; border: 1px solid var(--rule); border-radius: 3px; font: 11px/1.3 var(--mono); cursor: pointer; }
+      .c12-chip.is-win { border-color: #2f8f5b; }
+      .c12-chip.is-lose { border-color: #d66f00; }
+      .c12-chip[aria-pressed="true"] { color: #fff; background: #14171a; border-color: #14171a; }
+      .c12-step { display: grid; grid-template-columns: minmax(0, 1fr) 54px 120px; gap: 8px; align-items: center; padding: 5px 7px; border-top: 1px solid #dedad2; font: 11.5px/1.35 var(--mono); }
+      .c12-step.is-current { background: rgba(214, 111, 0, 0.09); }
+      .c12-step.is-future { opacity: 0.45; }
+      .c12-step__t code { display: block; color: #0b5ea8; font: inherit; font-weight: 600; overflow-wrap: anywhere; background: none; padding: 0; }
+      .c12-step__t span { display: block; color: var(--ink-soft); overflow-wrap: anywhere; }
+      .c12-step__t span.is-err { color: #b8432f; }
+      .c12-step__v { color: var(--muted); }
+      .c12-step__bar { position: relative; height: 22px; background: linear-gradient(#cac6bd, #cac6bd) center / 1px 100% no-repeat; }
+      .c12-step__bar i { position: absolute; top: 4px; height: 14px; border-radius: 2px; }
+      .c12-step__bar em { position: absolute; top: 3px; right: 0; color: var(--ink); font-style: normal; font-size: 10.5px; }
+      .series-chain { margin: 22px 0; padding: 16px 18px; background: var(--paper-bright); border: 1px solid var(--rule); list-style: none; font: 14px/1.5 var(--mono); }
+      .series-chain li { position: relative; margin: 0; padding: 7px 0 7px 22px; }
+      .series-chain li::before { content: ""; position: absolute; left: 6px; top: 0; bottom: 0; width: 1px; background: var(--rule); }
+      .series-chain li::after { content: ""; position: absolute; left: 3px; top: 16px; width: 7px; height: 7px; background: #0b5ea8; border-radius: 50%; }
+      .series-chain span { display: block; color: var(--muted); font-size: 11.5px; }
+
+      @media (max-width: 640px) {
+        .article-wrap { width: calc(100% - 32px); }
+        .article-content { width: calc(100% - 32px); }
+        .toc ol { columns: 1; }
+        .c12-step { grid-template-columns: minmax(0, 1fr) 90px; }
+        .c12-step__v { display: none; }
+      }
+    </style>
+    <script>if (localStorage.getItem("darkMode") === "enabled") document.documentElement.classList.add("dark-mode");</script>
+  </head>
+  <body class="blog-article code-tutorial-article train-an-agent-with-rl-article">
+    <nav class="navbar" aria-label="Main navigation">
+      <div class="nav-container">
+        <a href="../../index.html" class="nav-logo" target="_self">Anirudh Srinivasan</a>
+        <div class="nav-empty-div"></div>
+        <ul class="nav-links">
+          <li><a href="../../index.html" target="_self">Home</a></li>
+          <li><a href="../../research.html" target="_self">Research</a></li>
+          <li><a href="../index.html" class="active" target="_self">Blogs</a></li>
+          <li><a href="../../projects.html" target="_self">Projects</a></li>
+          <li><a href="../../talks.html" target="_self">Talks</a></li>
+          <li><a href="../../assets/pdfs/Anirudh_Srinivasan_Resume.pdf">Resume</a></li>
+          <li><button class="color-mode-toggle" aria-label="Toggle color mode" title="Toggle color mode"><div class="sun"></div><div class="moon"></div></button></li>
+        </ul>
+        <div class="nav-toggle" role="button" tabindex="0" aria-label="Toggle navigation menu">
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+      </div>
+    </nav>

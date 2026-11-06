@@ -1,0 +1,261 @@
+    <header class="article-mast">
+      <div class="article-wrap">
+        <p class="article-eyebrow">Coding tutorial &middot; Build it from scratch</p>
+        <h1 class="article-title">Train an Agent With Reinforcement Learning</h1>
+        <p class="article-subtitle">We build a small filesystem environment, clone a scripted expert, watch one small mistake break the clone, and then train the agent online with GRPO. Every learning curve here ran on a laptop.</p>
+        <div class="article-taxonomy" aria-label="Tags">
+          <span>Agent RL</span><span>GRPO</span><span>Environments</span>
+        </div>
+        <div class="article-meta-bar">
+          <span>Anirudh Srinivasan</span><span>Published <time datetime="2026-11-06">November 6, 2026</time></span><span>Last modified <time datetime="2026-11-06">November 6, 2026</time></span><span>{{N readtime}} min read</span>
+          <button class="article-share" type="button" aria-label="Share this article">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"></path></svg>
+            Share
+          </button>
+          <span class="share-status" aria-live="polite"></span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="ml-series-nav" aria-label="Coding Tutorials series">
+      <a class="ml-series-nav__identity" href="../index.html?series=code">Coding Tutorials</a>
+      <span class="ml-series-nav__position">12 of 12 &middot; Agents</span>
+      <div class="ml-series-nav__links">
+        <a class="ml-series-nav__link" href="../add-memory-to-the-agent/"><span>Previous &middot; 11</span><strong>Add Memory and Context Engineering to the Agent</strong></a>
+        <span class="ml-series-nav__empty"></span>
+      </div>
+    </nav>
+
+    <main class="article-content">
+      <section class="build-brief" aria-labelledby="build-brief-title">
+        <div class="build-brief__head">
+          <h2 class="build-brief__kicker" id="build-brief-title">What you will build</h2>
+          <a class="build-brief__repo" href="https://github.com/srini-anirudh/blog-coding-tutorials/tree/main/c12-agent-rl" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i><span>blog-coding-tutorials/c12-agent-rl</span></a>
+        </div>
+        <div class="build-brief__body">
+          <p class="build-brief__deliverable">A complete agent-RL system: an environment with injected tool failures, a behaviour-cloned policy, a GRPO trainer with trajectory-level and action-level credit, reward shaping with a deliberate hack, a curriculum, and a pipeline with a trajectory store and an independent verifier.</p>
+          <dl class="build-brief__facts">
+            <div class="build-brief__wide">
+              <dt>Theory first</dt>
+              <dd>
+                <div class="theory-links">
+                  <a class="theory-link" href="../reinforcement-learning-for-agents-from-first-principles/">Reinforcement learning for agents</a>
+                  <a class="theory-link" href="../reinforcement-learning-from-first-principles/">Reinforcement learning from first principles</a>
+                  <a class="theory-link" href="../how-reinforcement-learning-teaches-models-to-reason/">How RL teaches models to reason</a>
+                  <a class="theory-link" href="../inside-an-ai-agent-harness/">Inside an AI agent harness</a>
+                  <a class="theory-link" href="../the-agent-evaluation-playbook/">The agent evaluation playbook</a>
+                </div>
+              </dd>
+            </div>
+            <div><dt>Time</dt><dd>About three hours, with the runs</dd></div>
+            <div><dt>Hardware</dt><dd>Any laptop CPU. No GPU needed.</dd></div>
+            <div><dt>You need</dt><dd>Python 3.10+, PyTorch 2.x, pytest. Transformers and PEFT for the last step.</dd></div>
+            <div><dt>Package</dt><dd><code>agentrl</code></dd></div>
+          </dl>
+          <details class="repo-tree">
+            <summary>Final repo tree <span class="repo-tree__hint">c12-agent-rl/</span></summary>
+<pre>{{N tree}}</pre>
+          </details>
+        </div>
+      </section>
+
+      <nav class="toc" aria-labelledby="toc-heading">
+        <h2 id="toc-heading">Contents</h2>
+        <ol>
+          <li><a href="#the-plan">The plan</a></li>
+          <li><a href="#step-01">Step 1: the environment</a></li>
+          <li><a href="#step-02">Step 2: record the trajectory</a></li>
+          <li><a href="#step-03">Step 3: a policy that can learn here</a></li>
+          <li><a href="#step-04">Step 4: behaviour cloning</a></li>
+          <li><a href="#step-05">Step 5: distribution shift</a></li>
+          <li><a href="#step-06">Step 6: online rollouts</a></li>
+          <li><a href="#step-07">Step 7: outcome reward and group advantages</a></li>
+          <li><a href="#step-08">Step 8: the GRPO update</a></li>
+          <li><a href="#step-09">Step 9: credit assignment</a></li>
+          <li><a href="#step-10">Step 10: shaping and the hack</a></li>
+          <li><a href="#step-11">Step 11: exploration</a></li>
+          <li><a href="#step-12">Step 12: curriculum</a></li>
+          <li><a href="#step-13">Step 13: failure recovery</a></li>
+          <li><a href="#step-14">Step 14: offline vs online</a></li>
+          <li><a href="#step-15">Step 15: the full system</a></li>
+          <li><a href="#step-16">Step 16: drop in a real LM</a></li>
+          <li><a href="#comparison">The methods compared</a></li>
+          <li><a href="#run-everything">Run everything</a></li>
+          <li><a href="#key-insights">Key insights and nuances</a></li>
+          <li><a href="#exercises">Exercises</a></li>
+          <li><a href="#series-outcome">What the series built</a></li>
+          <li><a href="#continue-reading">Continue reading</a></li>
+          <li><a href="#references">References</a></li>
+        </ol>
+      </nav>
+
+      <section id="the-plan">
+        <h2>The plan</h2>
+        <p class="lede">Can an agent that imitates successful runs be taught to handle what those runs never showed it? We build the system that answers this, and measure the answer.</p>
+        <p>The task is small. An agent must find the right config file, change one value, and submit. Five tools are available: <code>list</code>, <code>read</code>, <code>search</code>, <code>edit</code>, <code>submit</code>. The reward is 1 if the final files are correct, and 0 otherwise.</p>
+        <p>This toy has the same shape as real agent training. There is a task, a stateful world, tool output the model cannot predict, and a verifier. Because it is small, a policy can go through a real learning curve in minutes on a laptop. So every number in this post is measured. None is a sketch of what should happen.</p>
+        <p>We go from imitating demonstrations to learning from consequences. The derivations live in the theory posts. Here we implement each idea and look at what it does.</p>
+        <a class="theory-link" href="../reinforcement-learning-for-agents-from-first-principles/"><span class="theory-link__kicker">The theory of this post</span>Reinforcement learning for agents, from first principles</a>
+        <p>Clone the repo once. Every command below runs from its root.</p>
+        <figure class="terminal" data-cwd="code">
+          <pre><code>$ git clone https://github.com/srini-anirudh/blog-coding-tutorials.git
+$ cd blog-coding-tutorials
+$ python -m venv .venv &amp;&amp; .venv/bin/pip install -e ".[dev]"</code></pre>
+        </figure>
+      </section>
+
+      <section class="build-step" id="step-01" data-step-title="The environment">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 01</span></div>
+          <h2>Build the filesystem environment</h2>
+          <p class="build-step__goal"><span>Goal</span> A small world with state, five tools and an exact reward, driven entirely by text.</p>
+        </header>
+        <p>Start with what a task is. A task has some config files, a sentence that says what to change, and the files that a correct agent leaves behind. Each file holds three <code>key = value</code> lines.</p>
+        {{L agentrl/tasks.py|^class Subtask|"stale": 3\}||<span class="ct-fig-num">Listing 1</span>One required edit. The kind says how much the agent must discover before it can make the edit.}}
+        <p>The <code>kind</code> field is the difficulty. A <code>direct</code> task names the file. A <code>search</code> task names only the key, so the agent must find the file. A <code>dependent</code> task also hides the value: the agent must look up one key to learn what to write into another.</p>
+        <p>Now the environment. It has the five methods every RL environment has. Notice the types: strings go in and strings come out. A tiny word-level policy and a pretrained language model can both drive this, with no adapter inside the environment.</p>
+        {{L agentrl/env.py|^class FileSystemEnv|len\(self.history\) >= self.max_steps||<span class="ct-fig-num">Listing 2</span>The API. The reward is computed from the files, not reported by the agent.}}
+        <p>Three details matter. <code>reset</code> deep-copies the files, so no episode can leak into the next. <code>step</code> never raises on a bad action: a malformed call becomes the observation <code>error invalid input</code>, because the model has to read that message and react. And <code>reward</code> is a pure function of the final files.</p>
+        <p>Here are the tools. Only <code>edit</code> and <code>submit</code> change anything.</p>
+        {{L agentrl/env.py|^    def _run|return "submitted"||<span class="ct-fig-num">Listing 3</span>The five tools, about 25 lines. The <code>revealed</code> set records what the agent has observed. Shaped rewards use it later.}}
+        <figure class="ct-figure" id="fig-env">
+          <div class="ct-figure__stage" aria-label="Animated episode: the task, a search, a read, an edit and a submit, with the filesystem changing"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 1</span>One real level 3 episode from the task generator. The output of each tool becomes an argument of the next one.</figcaption>
+        </figure>
+        <p>Before any model exists, we need something that can solve every task. Otherwise a low score could mean the task is impossible. So we write a scripted expert. It is a generator: it yields an action and receives the tool's answer.</p>
+        {{L agentrl/expert.py|^def call|^    return "done"||<span class="ct-fig-num">Listing 4</span>The expert. <code>yield from</code> keeps each plan readable. It parses only the task text and the tool output, the same inputs the policy gets.}}
+        <p>Run it across the five curriculum levels.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/scripts/demo_env.py</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/demo_env.py">
+          <pre><code>{{N demo_output}}</code></pre>
+        </figure>
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>Tests pin the reward and the budget. An extra edit anywhere must make the reward 0. The expert must solve every level, which proves the tasks are solvable.</p>
+          <figure class="terminal" data-cwd="blog-coding-tutorials">
+            <pre><code>$ .venv/bin/python -m pytest c12-agent-rl/tests/test_env.py -q
+{{N test_env}}</code></pre>
+          </figure>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>demo_env.py</code> prints a successful episode for each level.</li>
+            <li>The expert's step count equals <code>optimal_steps</code> on the clean levels.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-02" data-step-title="Record the trajectory">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 02</span></div>
+          <h2>Record the trajectory as text and as tokens</h2>
+          <p class="build-step__goal"><span>Goal</span> One sequence that holds the whole episode, with a mask that says which tokens the policy produced.</p>
+        </header>
+        <p>A trajectory is &tau; = (s<sub>0</sub>, a<sub>0</sub>, r<sub>0</sub>, ..., s<sub>T</sub>). We store it two ways. The text view is for reading and for the verifier. The tensor view is for training.</p>
+        {{L agentrl/trajectory.py|^class Step|^    meta:||<span class="ct-fig-num">Listing 5</span>The record. Highlighted: the tensor view. It stores the token ids the policy actually sampled.}}
+        <aside class="callout callout-nuance">
+          <p class="callout-label">Nuance</p>
+          <p>Why store ids rather than re-tokenise the text later? With a word tokenizer it makes no difference, and a test confirms that. With a BPE tokenizer, decoding and re-encoding does not always give back the same ids. The log-probabilities in the update would then no longer describe what was sampled. Serving stacks that train agents keep token ids for this reason.</p>
+        </aside>
+        <p>The tensor layout is one line. Task, then action, then tool output, then the next action. This is one multi-turn conversation.</p>
+        {{L agentrl/codec.py|^def encode_trajectory|^    return traj||<span class="ct-fig-num">Listing 6</span>Text into tensors. Only action tokens get mask 1, and injected mistakes get 0.}}
+        <p>Look inside the tensors for one level 2 episode.</p>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/demo_env.py" data-label="Token view of one episode">
+          <pre><code>{{N demo_tokens}}</code></pre>
+        </figure>
+        <table class="shape-table">
+          <caption>The tensors of one training batch (B episodes, longest T tokens)</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>tokens</td><td>(B, T)</td><td>The whole episode, right-padded with <code>&lt;pad&gt;</code>.</td></tr>
+            <tr><td>action_mask</td><td>(B, T)</td><td>1 on tokens the policy sampled.</td></tr>
+            <tr><td>old_logprobs</td><td>(B, T)</td><td>log &pi;<sub>old</sub> of each sampled token, 0 elsewhere.</td></tr>
+            <tr><td>step_of_token</td><td>(B, T)</td><td>Which step each action token belongs to, &minus;1 elsewhere.</td></tr>
+            <tr><td>logits</td><td>(B, T, V)</td><td>V = {{N vocab}}. The next-token distribution at each position.</td></tr>
+            <tr><td>values</td><td>(B, T)</td><td>The critic's estimate of the final reward at each position.</td></tr>
+          </tbody>
+        </table>
+        <figure class="ct-figure ct-figure--wide" id="fig-tape">
+          <div class="ct-figure__stage" aria-label="Animated token tape of one episode with mask, log-probabilities and advantage rows"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 2</span>One real episode as tokens. Each row is a tensor. The camera follows how the update reads them.</figcaption>
+        </figure>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Every position in <code>state_positions</code> holds the <code>&lt;act&gt;</code> token.</li>
+            <li>A trajectory round-trips through JSON unchanged (<code>test_trajectory_json_roundtrip</code>).</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-03" data-step-title="A policy that can learn here">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 03</span></div>
+          <h2>Choose a policy that can learn on this machine</h2>
+          <p class="build-step__goal"><span>Goal</span> A language-model-shaped policy that is fast enough to produce real learning curves, with an interface a larger LM can fill.</p>
+        </header>
+        <p>The obvious choice is a pretrained LM with LoRA, as in C6 and C9. So we measure it first. The benchmark runs one GRPO iteration through each candidate: 16 episodes, then one update.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/benchmarks/bench_policy.py --tasks 4 --G 4</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/benchmarks/bench_policy.py">
+          <pre><code>{{R bench_policy.txt}}</code></pre>
+        </figure>
+        <p>{{N policy_choice}}</p>
+        <p>The policy is a small decoder-only transformer: {{N params}} parameters. It reads one token sequence and predicts the next token. It generates an action token by token until <code>&lt;eos&gt;</code>. So everything that follows is the code that would also train a larger LM. Step 16 proves that by swapping one in.</p>
+        {{L agentrl/policy.py|^class Block|^        return PolicyOutput||<span class="ct-fig-num">Listing 7</span>The policy. The block is a trimmed version of <a href="../build-a-modern-llm-from-scratch/">C4</a>. The value head is one linear layer. Only the action-level update uses it.}}
+        <p>One log-probability helper does the alignment that causes most bugs in this kind of code. <code>out[:, t]</code> scores <code>tokens[:, t]</code>, computed from the logits at position <code>t - 1</code>.</p>
+        {{L agentrl/policy.py|^def token_logprobs|^    return F.pad||<span class="ct-fig-num">Listing 8</span>The shift by one is here and nowhere else.}}
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>Right-padded batches need no attention mask. With causal attention, position t cannot see padding that comes after the sequence ends, so the logits at real positions are exact. The test <code>test_right_padding_needs_no_mask</code> checks this for our block, and <code>test_tiny_policy_right_padding_contract_matches_llama</code> checks it for Hugging Face Llama. In practice this removes a whole class of padding bugs from the rollout.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Changing a future token leaves earlier logits unchanged (<code>test_causality_future_tokens_do_not_change_past_logits</code>).</li>
+            <li>The checkpoint saves and loads with equal outputs.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-04" data-step-title="Behaviour cloning">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 04</span></div>
+          <h2>Clone the expert</h2>
+          <p class="build-step__goal"><span>Goal</span> Teach the action syntax and the procedure from clean demonstrations, then measure how far that gets.</p>
+        </header>
+        <p>Behaviour cloning minimises L = &minus;&sum;<sub>t</sub> log &pi;(a*<sub>t</sub> | s<sub>t</sub>). In code, this is cross-entropy with a loss mask. If you did <a href="../post-train-an-llm/">C6</a>, you have written this already. The only change is that the assistant turn is now many turns.</p>
+        {{L agentrl/bc.py|^def expert_demos|^    return -\(logp||<span class="ct-fig-num">Listing 9</span>The whole of behaviour cloning. Demonstrations come from clean environments at levels 1 to 3.}}
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c12-agent-rl/scripts/train_bc.py --demos 30000 --steps 3000 --layers 3</code></pre>
+        </figure>
+        <figure class="code-output" data-from="c12-agent-rl/scripts/train_bc.py" data-label="Apple M5 CPU, 2 threads">
+          <pre><code>{{R train_bc.txt}}</code></pre>
+        </figure>
+        {{N bc_prose}}
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Train on 4,000 demonstrations instead of 30,000. An early version of this tutorial did that, with two layers. The training loss reached 0.0016, and yet greedy success on level 3 was far below levels 1 and 2. The failing episodes all look like this:</p>
+          <figure class="code-output" data-label="What you see">
+            <pre><code>task [3]: set mode in web/base to value of limit
+  0: search limit                 -> found cache/dev
+  1: read cache/dev               -> limit = 95 ; mode = 71 ; level = 56
+  2: edit web/base mode 71        -> ok
+  3: submit                       -> submitted</code></pre>
+          </figure>
+          <p>The policy read the right file and copied the wrong value. Level 3 needs a two-hop lookup: find the key from the task in the observation, then take the number after it. With few demonstrations the model memorises instead. A small loss on the training set says little here, so always evaluate on fresh tasks.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Loss falls below 0.01 and the <code>clean</code> suite passes on unseen tasks.</li>
+            <li><code>test_bc_loss_drops_and_save_load_roundtrip</code> passes.</li>
+          </ul>
+        </footer>
+      </section>

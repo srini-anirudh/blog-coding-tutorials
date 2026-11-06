@@ -1,0 +1,193 @@
+      <section id="comparison">
+        <h2>The methods compared</h2>
+        <p>Rows are the training methods we ran. Columns are what the post measured. Read a column to see which method moved that suite. All numbers are greedy success on fresh tasks, from one seed, on the Apple M5 CPU. Differences of a few points on a single seed are not meaningful.</p>
+        <div class="comparison-table-wrap">
+          <table class="comparison-table">
+            <caption>Agent training methods in this tutorial</caption>
+            <thead><tr><th>Method</th><th>Needs</th><th>New env steps</th><th>Clean</th><th>Perturbed</th><th>Failures</th><th>Long</th><th>Main risk</th></tr></thead>
+            <tbody>
+{{N comparison_rows}}
+            </tbody>
+          </table>
+        </div>
+        <p>{{N comparison_note}}</p>
+      </section>
+
+      <section id="run-everything">
+        <h2>Run everything</h2>
+        <p>The final folder, and every command that produced a number in this post. Checkpoints go to <code>runs/</code>, which git ignores. Measured outputs are in <code>results/</code>.</p>
+        <details class="repo-tree" open>
+          <summary>c12-agent-rl/ <span class="repo-tree__hint">final tree</span></summary>
+<pre>{{N tree}}</pre>
+        </details>
+        <figure class="terminal" data-cwd="blog-coding-tutorials" data-label="Run it all">
+          <pre><code>$ .venv/bin/python -m pytest c12-agent-rl -m "not slow and not gpu" -q
+$ .venv/bin/python c12-agent-rl/scripts/demo_env.py
+$ .venv/bin/python c12-agent-rl/scripts/train_bc.py --demos 30000 --steps 3000 --layers 3
+$ .venv/bin/python c12-agent-rl/scripts/distribution_shift.py
+$ .venv/bin/python c12-agent-rl/benchmarks/bench_rollout.py
+$ .venv/bin/python c12-agent-rl/benchmarks/bench_policy.py --tasks 4 --G 4
+$ .venv/bin/python c12-agent-rl/scripts/experiments.py main
+$ .venv/bin/python c12-agent-rl/scripts/experiments.py credit
+$ .venv/bin/python c12-agent-rl/scripts/experiments.py shaping
+$ .venv/bin/python c12-agent-rl/scripts/experiments.py exploration
+$ .venv/bin/python c12-agent-rl/scripts/experiments.py groupsize
+$ .venv/bin/python c12-agent-rl/scripts/experiments.py curriculum
+$ .venv/bin/python c12-agent-rl/scripts/experiments.py offline
+$ .venv/bin/python c12-agent-rl/scripts/recovery_demo.py
+$ .venv/bin/python c12-agent-rl/scripts/export_figures.py
+$ .venv/bin/python c12-agent-rl/scripts/train_system.py --iters 10</code></pre>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials" data-label="Test result">
+          <pre><code>$ .venv/bin/python -m pytest c12-agent-rl -m "not slow and not gpu" -q
+{{N test_all}}</code></pre>
+        </figure>
+      </section>
+
+      <section id="key-insights">
+        <h2>Key insights and nuances</h2>
+        <ul class="insight-list">
+{{N insights}}
+        </ul>
+      </section>
+
+      <section id="exercises">
+        <h2>Exercises</h2>
+        <ol class="exercises">
+          <li><strong>Add DAgger</strong><span class="exercise-level">Medium</span> The scripted expert plans from the task text, so it can label any state. Roll out the cloned policy, ask the expert for the right action at each state it visits, add those to the demos and retrain. Compare the perturbed suite with step 5.
+            <details><summary>Hint</summary><p>Replay the actions so far through a fresh <code>ScriptedExpert</code> plan to get the next expert action. Forced steps stay masked.</p></details>
+          </li>
+          <li><strong>Try anchor-state groups</strong><span class="exercise-level">Hard</span> Trajectory groups compare whole episodes. Group-in-Group Policy Optimization compares actions taken from the same abstract state. Use <code>signature</code> from <code>shift.py</code> as the anchor, and compare against <code>group_relative</code> on the long suite.
+            <details><summary>Hint</summary><p>Compute one advantage per step: the step's return minus the mean return of all steps with the same signature in the batch.</p></details>
+          </li>
+          <li><strong>Add demotion and an automatic curriculum</strong><span class="exercise-level">Medium</span> Give <code>Curriculum</code> a demotion rule, then replace the fixed stages with sampling weights set by each level's zero-variance rate. Does it beat the fixed ladder?</li>
+          <li><strong>Break the verifier</strong><span class="exercise-level">Easy</span> Change <code>FileSystemEnv.reward</code> so it checks only the first subtask. Find which suite and which log line reveals the change first, and how long the policy takes to exploit it on level 5.</li>
+          <li><strong>Train the real LM</strong><span class="exercise-level">Hard</span> Use <code>smollm_policy</code> and the same <code>train_online</code>. First do SFT on the expert demos with LoRA, then GRPO. On a CUDA GPU, measure how many iterations per hour you get, and note what you had to change. Keep a small G at first.</li>
+        </ol>
+      </section>
+
+      <section id="series-outcome">
+        <h2>What the series built</h2>
+        <p>This is the last post in the series. Here is what you have now built, each piece from the one before it.</p>
+        <ol class="series-chain">
+          <li><a href="../pytorch-from-first-principles/">Raw PyTorch training loop</a><span>C1: tensors, autograd, optimizers, written by hand</span></li>
+          <li><a href="../the-hugging-face-stack/">The Hugging Face stack</a><span>C2: Transformers, Datasets, Trainer and Accelerate, opened up</span></li>
+          <li><a href="../build-attention-from-scratch/">Attention library</a><span>C3: MHA, GQA, MLA and fused kernels, with equivalence tests</span></li>
+          <li><a href="../build-a-modern-llm-from-scratch/">Modern LLM</a><span>C4: RoPE, GQA, KV cache and generation</span></li>
+          <li><a href="../train-an-llm-from-scratch/">Distributed LLM trainer</a><span>C5: data pipeline, mixed precision, DDP and resume</span></li>
+          <li><a href="../post-train-an-llm/">SFT, DPO and GRPO pipeline</a><span>C6: post-training a real pretrained model</span></li>
+          <li><a href="../build-a-vlm-from-scratch/">Vision-language model</a><span>C7: encoder, connector and image-token splicing</span></li>
+          <li><a href="../train-a-real-vlm/">Multimodal training system</a><span>C8: stages, mixtures and evaluation</span></li>
+          <li><a href="../post-train-a-vlm/">Multimodal RL system</a><span>C9: preferences, hallucination and vision rewards</span></li>
+          <li><a href="../build-an-agent-harness-from-scratch/">Coding-agent harness</a><span>C10: tools, the loop, permissions and event logs</span></li>
+          <li><a href="../add-memory-to-the-agent/">Agent memory system</a><span>C11: context engineering and stored memory</span></li>
+          <li><a href="#the-plan">Agent RL environment</a><span>C12: this post, from a toy filesystem to a full training system</span></li>
+        </ol>
+        <p>You should be able to go from a tensor operation all the way to a foundation model and agent system without any layer feeling magical. The GRPO loss in this post is a <code>log_softmax</code> and a <code>gather</code> from C1. It runs over a model from C4, with a loss mask from C6, in a loop whose environment has the shape of the harness from C10. There is no separate magic for the last step.</p>
+        <p>The toy here is small on purpose. To scale it, swap the environment for a sandboxed repository, swap the policy for a real LM, and put the rollouts on an inference server. The theory posts cover what changes then.</p>
+      </section>
+
+      <section id="continue-reading">
+        <h2>Continue reading</h2>
+        <ul>
+          <li><a href="../reinforcement-learning-for-agents-from-first-principles/">Reinforcement learning for agents, from first principles</a>: the theory behind every step of this post, including echo traps and environment scaling, which we did not build.</li>
+          <li><a href="../reinforcement-learning-from-first-principles/">Reinforcement learning from first principles</a>: returns, policy gradients and baselines, derived.</li>
+          <li><a href="../how-reinforcement-learning-teaches-models-to-reason/">How reinforcement learning teaches models to reason</a>: GRPO, RLVR and what the reward really buys in reasoning models.</li>
+          <li><a href="../the-agent-evaluation-playbook/">The agent evaluation playbook</a>: how to grade agents once the suite is bigger than four rows.</li>
+          <li><a href="../inside-an-ai-agent-harness/">Inside an AI agent harness</a>: the production shape of the environment we built here.</li>
+          <li><a href="../add-memory-to-the-agent/">Add Memory and Context Engineering to the Agent</a>: the previous tutorial, and the context policy this one's long episodes would need at scale.</li>
+        </ul>
+      </section>
+
+      <section id="references">
+        <h2>References</h2>
+        <p class="references-intro">Grouped by topic. Every entry links to its primary source.</p>
+        <div class="reference-group">
+          <h3>Imitation and distribution shift</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/1011.0686" target="_blank" rel="noopener noreferrer">A Reduction of Imitation Learning and Structured Prediction to No-Regret Online Learning</a> &middot; Ross, Gordon and Bagnell, 2011 (DAgger)</li>
+            <li><a href="https://arxiv.org/abs/2510.08558" target="_blank" rel="noopener noreferrer">Agent Learning via Early Experience</a> &middot; Zhang et al., 2025</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Policy optimisation and credit</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/1707.06347" target="_blank" rel="noopener noreferrer">Proximal Policy Optimization Algorithms</a> &middot; Schulman et al., 2017</li>
+            <li><a href="https://arxiv.org/abs/1506.02438" target="_blank" rel="noopener noreferrer">High-Dimensional Continuous Control Using Generalized Advantage Estimation</a> &middot; Schulman et al., 2015</li>
+            <li><a href="https://arxiv.org/abs/2402.03300" target="_blank" rel="noopener noreferrer">DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models</a> &middot; Shao et al., 2024 (GRPO)</li>
+            <li><a href="https://arxiv.org/abs/2503.20783" target="_blank" rel="noopener noreferrer">Understanding R1-Zero-Like Training: A Critical Perspective</a> &middot; Liu et al., 2025 (Dr. GRPO)</li>
+            <li><a href="https://arxiv.org/abs/2503.14476" target="_blank" rel="noopener noreferrer">DAPO: An Open-Source LLM Reinforcement Learning System at Scale</a> &middot; Yu et al., 2025 (token-level loss normalisation)</li>
+            <li><a href="https://arxiv.org/abs/2505.10978" target="_blank" rel="noopener noreferrer">Group-in-Group Policy Optimization for LLM Agent Training</a> &middot; Feng et al., 2025</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Multi-turn agent RL</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/2509.02547" target="_blank" rel="noopener noreferrer">The Landscape of Agentic Reinforcement Learning for LLMs: A Survey</a> &middot; Zhang et al., 2025</li>
+            <li><a href="https://arxiv.org/abs/2510.01132" target="_blank" rel="noopener noreferrer">A Practitioner's Guide to Multi-turn Agentic Reinforcement Learning</a> &middot; 2025</li>
+            <li><a href="https://arxiv.org/abs/2503.09516" target="_blank" rel="noopener noreferrer">Search-R1: Training LLMs to Reason and Leverage Search Engines with Reinforcement Learning</a> &middot; Jin et al., 2025</li>
+            <li><a href="https://arxiv.org/abs/2504.20073" target="_blank" rel="noopener noreferrer">RAGEN: Understanding Self-Evolution in LLM Agents via Multi-Turn Reinforcement Learning</a> &middot; Wang et al., 2025</li>
+            <li><a href="https://arxiv.org/abs/2509.08755" target="_blank" rel="noopener noreferrer">AgentGym-RL: Training LLM Agents for Long-Horizon Decision Making through Multi-Turn Reinforcement Learning</a> &middot; Xi et al., 2025</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Rewards and reward hacking</h3>
+          <ul>
+            <li><a href="https://andrewng.org/publications/policy-invariance-under-reward-transformations-theory-and-application-to-reward-shaping" target="_blank" rel="noopener noreferrer">Policy Invariance Under Reward Transformations: Theory and Application to Reward Shaping</a> &middot; Ng, Harada and Russell, 1999</li>
+            <li><a href="https://lilianweng.github.io/posts/2024-11-28-reward-hacking/" target="_blank" rel="noopener noreferrer">Reward Hacking in Reinforcement Learning</a> &middot; Weng, 2024</li>
+            <li><a href="https://arxiv.org/abs/2604.15149" target="_blank" rel="noopener noreferrer">LLMs Gaming Verifiers: RLVR can Lead to Reward Hacking</a> &middot; 2026</li>
+            <li><a href="https://arxiv.org/abs/2605.21384" target="_blank" rel="noopener noreferrer">SpecBench: Measuring Reward Hacking in Long-Horizon Coding Agents</a> &middot; 2026</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Models and code used</h3>
+          <ul>
+            <li><a href="https://github.com/srini-anirudh/blog-coding-tutorials/tree/main/c12-agent-rl" target="_blank" rel="noopener noreferrer">blog-coding-tutorials: c12-agent-rl</a> &middot; the code for this tutorial</li>
+            <li><a href="https://huggingface.co/HuggingFaceTB/SmolLM2-135M-Instruct" target="_blank" rel="noopener noreferrer">SmolLM2-135M-Instruct</a> &middot; Hugging Face</li>
+            <li><a href="https://github.com/huggingface/peft" target="_blank" rel="noopener noreferrer">PEFT</a> &middot; Hugging Face</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <aside class="article-citation" aria-labelledby="cite-this-article">
+      <p class="article-citation-kicker">Use and attribution</p>
+      <h2 id="cite-this-article">Cite this article</h2>
+      <p class="article-citation-reference">Srinivasan, A. (2026). <cite>Train an Agent With Reinforcement Learning</cite> [Blog post]. <a href="https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/">https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/</a></p>
+      <div class="article-citation-code">
+        <pre><code>@misc{srinivasan2026trainagentrl,
+  author       = {Srinivasan, Anirudh},
+  title        = {Train an Agent With Reinforcement Learning},
+  year         = {2026},
+  month        = {nov},
+  howpublished = {Blog post},
+  url          = {https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/},
+  note         = {Published 2026-11-06; updated 2026-11-06}
+}</code></pre>
+        <button class="citation-copy" type="button" data-copy-citation><i class="fas fa-copy" aria-hidden="true"></i>Copy BibTeX</button>
+        <span class="citation-status" aria-live="polite"></span>
+      </div>
+    </aside>
+
+    <footer class="article-footer">
+      <div class="article-wrap">
+        <p>Anirudh Srinivasan &middot; Train an Agent With Reinforcement Learning</p>
+      </div>
+    </footer>
+    <footer class="site-footer" aria-label="Contact links">
+      <span>Anirudh Srinivasan</span>
+      <a href="mailto:anirudhsrinivasan.tms@gmail.com" title="Email"><i class="fas fa-envelope"></i>Email</a>
+      <a href="https://github.com/srini-anirudh" title="GitHub"><i class="fab fa-github"></i>GitHub</a>
+      <a href="https://www.linkedin.com/in/anirudh-srini/" title="LinkedIn"><i class="fab fa-linkedin"></i>LinkedIn</a>
+      <a href="https://scholar.google.com/citations?hl=en&amp;user=bhm5TBQAAAAJ" title="Google Scholar"><i class="fas fa-graduation-cap"></i>Google Scholar</a>
+      <a href="https://x.com/Anirud_Srini" title="X / Twitter"><i class="fab fa-x-twitter"></i>X</a>
+      <a href="../../assets/pdfs/Anirudh_Srinivasan_Resume.pdf" title="Resume"><i class="fas fa-file-lines"></i>Resume</a>
+    </footer>
+    <script src="../../assets/js/blogs.js?v=20260907-formula"></script>
+    <script src="../../assets/js/code-tutorial.js?v=1"></script>
+    <script>window.C12_DATA = {{DATA}};</script>
+    <script>
+{{FIGURES}}
+    </script>
+  </body>
+</html>

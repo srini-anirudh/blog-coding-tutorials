@@ -1,0 +1,38 @@
+c09-vlm-post-training/
+├── README.md                 # how to run everything, results table
+├── conftest.py
+├── vlmalign/
+│   ├── scenes.py             # synthetic images with exact facts
+│   ├── tasks.py              # questions and sentence templates
+│   ├── preference.py         # hallucination negatives, balanced and biased
+│   ├── model.py              # SmolVLM loading, prompts, answers
+│   ├── logprobs.py           # batches, encode-once path, sequence log-probs
+│   ├── dpo.py                # image-conditioned DPO loss and pair batches
+│   ├── blind.py              # text-only preference probe
+│   ├── rewards.py            # exact match, IoU, Dice, CER, ANLS, field accuracy
+│   ├── rl_tasks.py           # RL tasks and reward registry
+│   ├── grpo.py               # rollouts, relative advantages, clipped loss
+│   ├── lora.py               # a minimal LoRA
+│   ├── freeze.py             # the three freeze modes
+│   ├── evaluate.py           # VQA and preference accuracy, real or grey image
+│   ├── tiny.py               # tiny random Idefics3 for offline tests
+│   └── device.py
+├── scripts/
+│   ├── show_pairs.py         # pairs and one batch, tensor by tensor
+│   ├── blind_probe.py        # the text-only check
+│   ├── reward_audit.py       # hand-written answers against every reward
+│   ├── show_rollouts.py      # one GRPO group printed
+│   ├── train_dpo.py
+│   ├── train_grpo.py         # freeze ablation and reward hacking
+│   ├── perception_probe.py   # did image features change?
+│   └── run_all.sh
+├── benchmarks/
+│   └── bench_encode_once.py
+├── results/                  # real logs and JSON from this machine
+└── tests/
+    ├── test_rewards.py
+    ├── test_data.py
+    ├── test_logprobs_dpo.py
+    ├── test_lora_freeze.py
+    ├── test_grpo.py
+    └── test_smolvlm_network.py

@@ -2,6 +2,8 @@
 
 Code for the coding tutorials on [The Backward Pass](https://srini-anirudh.github.io/blogs/?series=code).
 
+> **Status: work in progress.** The code is being finished and the blog posts are not published yet, so the post links below do not work yet. See [HANDOFF.md](HANDOFF.md).
+
 > Build the thing. Inspect every tensor. Train it. Break it. Profile it. Scale it.
 
 Each folder is one tutorial: a complete, tested build that the matching blog post walks through step by step.

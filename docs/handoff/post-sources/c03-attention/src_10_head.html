@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Build attention in PyTorch from one head to MHA, GQA, MLA and tiled online softmax, with tests against SDPA and measured benchmarks." />
+    <meta name="author" content="Anirudh Srinivasan" />
+    <link rel="canonical" href="https://srini-anirudh.github.io/blogs/build-attention-from-scratch/" />
+    <link rel="alternate" type="application/rss+xml" title="The Backward Pass RSS" href="https://srini-anirudh.github.io/feed.xml" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Anirudh Srinivasan" />
+    <meta property="og:title" content="Build Attention From Scratch: MHA, GQA, MLA and FlashAttention in PyTorch" />
+    <meta property="og:description" content="Build attention in PyTorch from one head to MHA, GQA, MLA and tiled online softmax, with tests against SDPA and measured benchmarks." />
+    <meta property="og:url" content="https://srini-anirudh.github.io/blogs/build-attention-from-scratch/" />
+    <meta property="og:image" content="https://srini-anirudh.github.io/blogs/build-attention-from-scratch/preview.png" />
+    <meta property="article:published_time" content="2026-11-06" />
+    <meta property="article:modified_time" content="2026-11-06" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Build Attention From Scratch: MHA, GQA, MLA and FlashAttention in PyTorch" />
+    <meta name="twitter:description" content="Build attention in PyTorch from one head to MHA, GQA, MLA and tiled online softmax, with tests against SDPA and measured benchmarks." />
+    <meta name="twitter:image" content="https://srini-anirudh.github.io/blogs/build-attention-from-scratch/preview.png" />
+    <title>Build Attention From Scratch: MHA, GQA, MLA and FlashAttention in PyTorch | Anirudh Srinivasan</title>
+    <link rel="icon" href="../../assets/images/favicon/a-icon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="../../assets/css/stylesheet.css" />
+    <link rel="stylesheet" href="../../assets/css/blog-shell.css?v=20260907-formula" />
+    <link rel="stylesheet" href="../../assets/css/code-tutorial.css?v=1" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "@id": "https://srini-anirudh.github.io/blogs/build-attention-from-scratch/#article",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://srini-anirudh.github.io/blogs/build-attention-from-scratch/" },
+        "headline": "Build Attention From Scratch: MHA, GQA, MLA and FlashAttention in PyTorch",
+        "description": "Build attention in PyTorch from one head to MHA, GQA, MLA and tiled online softmax, with tests against SDPA and measured benchmarks.",
+        "image": "https://srini-anirudh.github.io/blogs/build-attention-from-scratch/preview.png",
+        "datePublished": "2026-11-06",
+        "dateModified": "2026-11-06",
+        "author": { "@type": "Person", "@id": "https://srini-anirudh.github.io/#person", "name": "Anirudh Srinivasan", "url": "https://srini-anirudh.github.io/about.html" },
+        "publisher": { "@id": "https://srini-anirudh.github.io/#person" },
+        "keywords": ["Attention", "KV cache", "FlashAttention"],
+        "isPartOf": [{ "@id": "https://srini-anirudh.github.io/blogs/#blog" }, { "@id": "https://srini-anirudh.github.io/blogs/#code" }]
+      }
+    </script>
+    <style>
+      :root {
+        --paper: #e4e2dc;
+        --paper-bright: #f7f6f3;
+        --ink: #14171a;
+        --ink-soft: #474e53;
+        --muted: #7b8388;
+        --rule: #cac6bd;
+        --display: "Bricolage Grotesque", system-ui, sans-serif;
+        --body: "Newsreader", Georgia, serif;
+        --mono: "IBM Plex Mono", ui-monospace, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background-color: var(--paper);
+        background-image: linear-gradient(rgba(20, 23, 26, 0.028) 1px, transparent 1px), linear-gradient(90deg, rgba(20, 23, 26, 0.028) 1px, transparent 1px);
+        background-size: 44px 44px;
+        font: 18.5px/1.68 var(--body);
+      }
+
+      .article-wrap { width: min(1180px, calc(100% - 52px)); margin: 0 auto; }
+      .article-mast { padding: 46px 0 30px; }
+      .article-eyebrow { color: var(--muted); font: 600 11.5px/1.4 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; }
+      .article-title { max-width: 14ch; margin: 28px 0 18px; font: 800 clamp(46px, 8.4vw, 104px)/0.92 var(--display); letter-spacing: -0.045em; }
+      .article-subtitle { max-width: 58ch; margin: 0; color: var(--ink-soft); font-size: clamp(20px, 2.3vw, 25px); font-style: italic; line-height: 1.4; }
+      .article-content { width: min(70ch, calc(100% - 32px)); margin: 54px auto; }
+      .article-content h2 { margin: 64px 0 16px; font: 700 clamp(30px, 4.5vw, 46px)/1.04 var(--display); letter-spacing: -0.025em; }
+      .article-content h3 { margin: 38px 0 10px; font: 700 25px/1.12 var(--display); }
+      .article-content p { margin: 0 0 18px; }
+      .article-content ul, .article-content ol { margin: 0 0 18px; padding-left: 1.3em; }
+      .article-content li { margin: 0 0 8px; }
+      .article-content a { color: var(--ink); }
+      .lede { color: var(--ink-soft); font-size: 20.5px; }
+      .toc { margin: 34px 0 48px; padding: 20px 22px; background: var(--paper-bright); border: 1px solid var(--rule); }
+      .toc h2 { margin: 0 0 12px; color: var(--muted); font: 600 11.5px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; }
+      .toc ol { margin: 0; padding-left: 1.4em; columns: 2; column-gap: 32px; font: 15px/1.9 var(--mono); }
+      .toc a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+      .references-intro { color: var(--muted); font-style: italic; }
+      .reference-group { margin: 0 0 30px; }
+      .reference-group h3 { padding-bottom: 7px; color: var(--ink-soft); border-bottom: 1px solid var(--rule); font: 600 11.5px/1.4 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; }
+      .reference-group ul { margin: 0; padding: 0; list-style: none; }
+      .reference-group li { margin: 0 0 13px; font-size: 16.5px; line-height: 1.45; }
+      .reference-group a { color: var(--ink); font-weight: 600; text-underline-offset: 3px; }
+      .article-footer { padding: 32px 0 0; color: var(--muted); border-top: 1px solid var(--rule); font: 12px/1.8 var(--mono); }
+      .insight-list li { margin-bottom: 12px; }
+
+      /* ---------- article-specific figure styles (keep them light) ---------- */
+      #fig-walk svg, #fig-gqa svg, #fig-cache svg, #fig-mla svg, #fig-tiles svg, #fig-swin svg { min-width: 560px; }
+      .mask-out { margin: 12px 0 0; padding: 10px 12px; overflow-x: auto; color: var(--ink); background: #fbfaf8; border: 1px solid #dedad2; font: 12px/1.45 var(--mono); }
+      .ct-knob select { padding: 4px 6px; color: var(--ink); background: #fbfaf8; border: 1px solid var(--rule); border-radius: 3px; font: 12px var(--mono); }
+      .ct-knob.is-off { opacity: 0.38; }
+      .chart-tip { min-height: 1.5em; margin: 6px 0 0; color: var(--ink-soft); font: 12.5px/1.5 var(--mono); }
+      .chart-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 6px; color: var(--ink-soft); font: 12px/1.4 var(--mono); }
+      .chart-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+
+      @media (max-width: 640px) {
+        .article-wrap { width: calc(100% - 32px); }
+        .article-content { width: calc(100% - 32px); }
+        .toc ol { columns: 1; }
+      }
+    </style>
+    <script>if (localStorage.getItem("darkMode") === "enabled") document.documentElement.classList.add("dark-mode");</script>
+  </head>
+  <body class="blog-article code-tutorial-article build-attention-from-scratch-article">
+    <nav class="navbar" aria-label="Main navigation">
+      <div class="nav-container">
+        <a href="../../index.html" class="nav-logo" target="_self">Anirudh Srinivasan</a>
+        <div class="nav-empty-div"></div>
+        <ul class="nav-links">
+          <li><a href="../../index.html" target="_self">Home</a></li>
+          <li><a href="../../research.html" target="_self">Research</a></li>
+          <li><a href="../index.html" class="active" target="_self">Blogs</a></li>
+          <li><a href="../../projects.html" target="_self">Projects</a></li>
+          <li><a href="../../talks.html" target="_self">Talks</a></li>
+          <li><a href="../../assets/pdfs/Anirudh_Srinivasan_Resume.pdf">Resume</a></li>
+          <li><button class="color-mode-toggle" aria-label="Toggle color mode" title="Toggle color mode"><div class="sun"></div><div class="moon"></div></button></li>
+        </ul>
+        <div class="nav-toggle" role="button" tabindex="0" aria-label="Toggle navigation menu">
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+      </div>
+    </nav>
+
+    <header class="article-mast">
+      <div class="article-wrap">
+        <p class="article-eyebrow">Coding tutorial &middot; Build it from scratch</p>
+        <h1 class="article-title">Build Attention From Scratch</h1>
+        <p class="article-subtitle">We write attention by hand, one tensor at a time, and grow it into MHA, GQA, MLA and a tiled online softmax. Every version is tested against a trusted implementation and measured on a laptop.</p>
+        <div class="article-taxonomy" aria-label="Tags">
+          <span>Attention</span><span>KV cache</span><span>FlashAttention</span>
+        </div>
+        <div class="article-meta-bar">
+          <span>Anirudh Srinivasan</span><span>Published <time datetime="2026-11-06">November 6, 2026</time></span><span>Last modified <time datetime="2026-11-06">November 6, 2026</time></span><span>@@READTIME@@ min read</span>
+          <button class="article-share" type="button" aria-label="Share this article">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"></path></svg>
+            Share
+          </button>
+          <span class="share-status" aria-live="polite"></span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="ml-series-nav" aria-label="Coding Tutorials series">
+      <a class="ml-series-nav__identity" href="../index.html?series=code">Coding Tutorials</a>
+      <span class="ml-series-nav__position">03 of 12 &middot; Raw mechanics</span>
+      <div class="ml-series-nav__links">
+        <a class="ml-series-nav__link" href="../the-hugging-face-stack/"><span>Previous &middot; 02</span><strong>The Hugging Face Stack</strong></a>
+        <a class="ml-series-nav__link" href="../build-a-modern-llm-from-scratch/"><span>Next &middot; 04</span><strong>Build a Modern LLM From Scratch</strong></a>
+      </div>
+    </nav>
+
+    <main class="article-content">
+      <section class="build-brief" aria-labelledby="build-brief-title">
+        <div class="build-brief__head">
+          <h2 class="build-brief__kicker" id="build-brief-title">What you will build</h2>
+          <a class="build-brief__repo" href="https://github.com/srini-anirudh/blog-coding-tutorials/tree/main/c03-attention" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i><span>blog-coding-tutorials/c03-attention</span></a>
+        </div>
+        <div class="build-brief__body">
+          <p class="build-brief__deliverable">A small attention library called <code>attnzoo</code>. One config describes the architecture (MHA, MQA, GQA, MLA, linear, cross). A separate setting picks the kernel that runs it (naive, SDPA, tiled, FlashAttention). A test suite proves the versions agree with each other, with PyTorch and with Hugging Face.</p>
+          <dl class="build-brief__facts">
+            <div class="build-brief__wide">
+              <dt>Theory first</dt>
+              <dd>
+                <div class="theory-links">
+                  <a class="theory-link" href="../how-attention-moves-information/">How attention moves information</a>
+                  <a class="theory-link" href="../how-models-know-where-they-are/">How models know where they are</a>
+                  <a class="theory-link" href="../the-mechanics-of-llm-inference/">The mechanics of LLM inference</a>
+                  <a class="theory-link" href="../why-fast-gpus-still-wait-for-memory/">Why fast GPUs still wait for memory</a>
+                  <a class="theory-link" href="../what-changed-inside-the-transformer/">What changed inside the transformer</a>
+                </div>
+              </dd>
+            </div>
+            <div><dt>Time</dt><dd>A long afternoon, or one part per sitting</dd></div>
+            <div><dt>Hardware</dt><dd>Any laptop CPU. MPS optional. CUDA only for the real FlashAttention kernel.</dd></div>
+            <div><dt>You need</dt><dd>Python 3.10+, PyTorch 2.5+, pytest, <a href="../pytorch-from-first-principles/">C1</a></dd></div>
+            <div><dt>Package</dt><dd><code>attnzoo</code></dd></div>
+          </dl>
+          <details class="repo-tree">
+            <summary>Final repo tree <span class="repo-tree__hint">c03-attention/</span></summary>
+<pre>c03-attention/
+├── README.md               # how to run everything, results table
+├── attnzoo/
+│   ├── core.py             # part 1: attention with every step visible
+│   ├── masks.py            # part 2: every mask, by hand
+│   ├── heads.py            # part 3: split, merge, repeat_kv
+│   ├── mha.py              # part 3: MHA, fused QKV, MQA
+│   ├── gqa.py              # part 3: the unified module
+│   ├── rope.py             # part 4: RoPE
+│   ├── kv_cache.py         # part 4: dynamic and static caches
+│   ├── attention_window.py # part 5: chunked sliding window
+│   ├── linear.py           # part 5: linear attention and Performer
+│   ├── vision.py           # part 6: patches and windows
+│   ├── pos2d.py            # part 6: 2D positions
+│   ├── cross.py            # part 6: cross-attention and gates
+│   ├── resampler.py        # part 6: Q-Former and Perceiver
+│   ├── fusion.py           # part 6: VLM fusion patterns
+│   ├── mla.py              # part 7: multi-head latent attention
+│   ├── attention_naive.py  # part 8: the reference backend
+│   ├── attention_sdpa.py   # part 8: the torch backend
+│   ├── attention_tiled.py  # part 8: online softmax
+│   ├── attention_flash.py  # part 8: GPU-only kernels
+│   ├── backends.py         # part 8: one signature, many kernels
+│   ├── stability.py        # part 9: QK-norm, soft-cap
+│   ├── biases.py           # part 9: ALiBi, relative bias
+│   ├── variants.py         # part 9: research variants
+│   ├── config.py           # part 10: AttentionConfig
+│   └── library.py          # part 10: build_attention
+├── configs/                # Llama-like, DeepSeek-like, Mistral-like
+├── scripts/                # one demo per part
+├── benchmarks/             # KV memory, window, backends, zoo
+├── results/                # the real outputs quoted in this post
+└── tests/                  # 11 files, run in seconds</pre>
+          </details>
+        </div>
+      </section>
+
+      <nav class="toc" aria-labelledby="toc-heading">
+        <h2 id="toc-heading">Contents</h2>
+        <ol>
+          <li><a href="#the-plan">The plan</a></li>
+          <li><a href="#step-01">Part 1: core attention</a></li>
+          <li><a href="#step-02">Part 2: masks</a></li>
+          <li><a href="#step-03">Part 3: head sharing</a></li>
+          <li><a href="#step-04">Part 4: RoPE and the KV cache</a></li>
+          <li><a href="#step-05">Part 5: sparse, local, linear</a></li>
+          <li><a href="#step-06">Part 6: vision and cross-modal</a></li>
+          <li><a href="#step-07">Part 7: latent attention</a></li>
+          <li><a href="#step-08">Part 8: SDPA and tiled attention</a></li>
+          <li><a href="#step-09">Part 9: stability tricks</a></li>
+          <li><a href="#step-10">Part 10: the unified library</a></li>
+          <li><a href="#step-11">Part 11: the test suite</a></li>
+          <li><a href="#step-12">Part 12: benchmark the zoo</a></li>
+          <li><a href="#comparison">The architectures compared</a></li>
+          <li><a href="#run-everything">Run everything</a></li>
+          <li><a href="#key-insights">Key insights and nuances</a></li>
+          <li><a href="#exercises">Exercises</a></li>
+          <li><a href="#continue-reading">Continue reading</a></li>
+          <li><a href="#references">References</a></li>
+        </ol>
+      </nav>
+
+      <section id="the-plan">
+        <h2>The plan</h2>
+        <p class="lede">Almost every speed and memory decision in a modern language model lives inside one small function. What does that function compute, tensor by tensor, and how do we know each faster version is still correct?</p>
+        <p>We answer by building it. We start with four lines of PyTorch. We add one idea at a time and test each one. By the end the same four lines run behind a config that covers the attention of Llama, DeepSeek and Swin.</p>
+        <p>The derivations live in the theory posts, so we link them and move on. Here we implement the idea and look at what happens.</p>
+        <p>The post has twelve parts. Each stands alone, so you can stop after any of them.</p>
+        <div class="comparison-table-wrap">
+          <table class="comparison-table">
+            <caption>The twelve parts and what each one adds</caption>
+            <thead><tr><th>Part</th><th>We build</th><th>Main check</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">1. Core attention</th><td>Scaled dot-product, one head, cross-attention</td><td>Equals <code>F.scaled_dot_product_attention</code></td></tr>
+              <tr><th scope="row">2. Masks</th><td>Causal, padding, prefix, document, multimodal</td><td>Changing the future does not change the past</td></tr>
+              <tr><th scope="row">3. Head sharing</th><td>MHA, fused QKV, MQA, GQA in one module</td><td>GQA equals MHA when H<sub>KV</sub> = H<sub>Q</sub></td></tr>
+              <tr><th scope="row">4. RoPE and cache</th><td>Rotations, offsets, dynamic and static caches</td><td>Cached output equals the full forward; formula equals tensor bytes</td></tr>
+              <tr><th scope="row">5. Sparse and linear</th><td>Window masks, a chunked kernel, linear attention</td><td>Chunked equals masked; recurrence equals parallel</td></tr>
+              <tr><th scope="row">6. Vision and multimodal</th><td>ViT, Swin windows, 2D RoPE, Q-Former, Perceiver</td><td>One big window equals global attention</td></tr>
+              <tr><th scope="row">7. Latent attention</th><td>MLA in four steps, then without materialising K</td><td>Absorbed equals explicit</td></tr>
+              <tr><th scope="row">8. Backends</th><td>SDPA, online softmax, FlashAttention</td><td>Tiled equals naive</td></tr>
+              <tr><th scope="row">9. Stability</th><td>Dropout, ALiBi, QK-norm, soft-cap, variants</td><td>Logits stay bounded as activations grow</td></tr>
+              <tr><th scope="row">10. Library</th><td><code>AttentionConfig</code> and <code>build_attention</code></td><td>Every architecture on every backend</td></tr>
+              <tr><th scope="row">11. Tests</th><td>The whole suite, in one run</td><td>All pass</td></tr>
+              <tr><th scope="row">12. Benchmarks</th><td>Training, prefill and decode for the whole zoo</td><td>Real numbers from this machine</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Clone the repo once. Every command below runs from its root.</p>
+        <figure class="terminal" data-cwd="code">
+          <pre><code>$ git clone https://github.com/srini-anirudh/blog-coding-tutorials.git
+$ cd blog-coding-tutorials
+$ python -m venv .venv &amp;&amp; .venv/bin/pip install -e ".[dev]"</code></pre>
+        </figure>
+        <p>Every number below comes from one Apple M5 laptop with 16 GB of memory, in CPU or MPS mode, running PyTorch 2.15. Several other long jobs were using the same machine at the time. So read absolute timings as rough, and trust the ratios and scaling more. Memory counts and numerical errors do not depend on load.</p>
+      </section>

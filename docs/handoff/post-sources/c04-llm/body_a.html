@@ -1,0 +1,495 @@
+      <section class="build-brief" aria-labelledby="build-brief-title">
+        <div class="build-brief__head">
+          <h2 class="build-brief__kicker" id="build-brief-title">What you will build</h2>
+          <a class="build-brief__repo" href="https://github.com/srini-anirudh/blog-coding-tutorials/tree/main/c04-llm" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i><span>blog-coding-tutorials/c04-llm</span></a>
+        </div>
+        <div class="build-brief__body">
+          <p class="build-brief__deliverable"><code>tinyllm</code>, a Llama-style decoder with RMSNorm, RoPE, grouped-query attention, SwiGLU, a KV cache and modern sampling. It reproduces the logits of Hugging Face&rsquo;s <code>LlamaForCausalLM</code> and runs the real SmolLM2-135M weights.</p>
+          <dl class="build-brief__facts">
+            <div class="build-brief__wide">
+              <dt>Theory first</dt>
+              <dd>
+                <div class="theory-links">
+                  <a class="theory-link" href="../what-changed-inside-the-transformer/">What changed inside the transformer</a>
+                  <a class="theory-link" href="../the-mechanics-of-llm-inference/">The mechanics of LLM inference</a>
+                </div>
+              </dd>
+            </div>
+            <div><dt>Time</dt><dd>About 2 hours, plus a few minutes of training</dd></div>
+            <div><dt>Hardware</dt><dd>Any laptop. Runs here on an Apple M5 with MPS. No GPU needed.</dd></div>
+            <div><dt>You need</dt><dd>Python 3.10+, PyTorch 2.x, transformers, safetensors, pytest</dd></div>
+            <div><dt>Package</dt><dd><code>tinyllm</code></dd></div>
+          </dl>
+          <details class="repo-tree">
+            <summary>Final repo tree <span class="repo-tree__hint">c04-llm/</span></summary>
+<pre>{{TREE}}</pre>
+          </details>
+        </div>
+      </section>
+
+      <nav class="toc" aria-labelledby="toc-heading">
+        <h2 id="toc-heading">Contents</h2>
+        <ol>
+          <li><a href="#the-plan">The plan</a></li>
+          <li><a href="#step-01">Step 1: the configuration</a></li>
+          <li><a href="#step-02">Step 2: embeddings and weight tying</a></li>
+          <li><a href="#step-03">Step 3: RMSNorm</a></li>
+          <li><a href="#step-04">Step 4: RoPE</a></li>
+          <li><a href="#step-05">Step 5: GQA attention</a></li>
+          <li><a href="#step-06">Step 6: SwiGLU</a></li>
+          <li><a href="#step-07">Step 7: the decoder block</a></li>
+          <li><a href="#step-08">Step 8: the stack and LM head</a></li>
+          <li><a href="#step-09">Step 9: the shifted loss</a></li>
+          <li><a href="#step-10">Step 10: initialisation</a></li>
+          <li><a href="#step-11">Step 11: parameter count</a></li>
+          <li><a href="#step-12">Step 12: prove it against Llama</a></li>
+          <li><a href="#step-13">Step 13: generation</a></li>
+          <li><a href="#step-14">Step 14: cached generation</a></li>
+          <li><a href="#step-15">Step 15: train and save</a></li>
+          <li><a href="#step-16">Step 16: optional MoE block</a></li>
+          <li><a href="#comparison">Design choices compared</a></li>
+          <li><a href="#run-everything">Run everything</a></li>
+          <li><a href="#key-insights">Key insights and nuances</a></li>
+          <li><a href="#exercises">Exercises</a></li>
+          <li><a href="#continue-reading">Continue reading</a></li>
+          <li><a href="#references">References</a></li>
+        </ol>
+      </nav>
+
+      <section id="the-plan">
+        <h2>The plan</h2>
+        <p class="lede">What is inside a modern language model, tensor by tensor? And how do you prove that your version is correct, and not only plausible?</p>
+        <p>We answer both by building one. The model follows the Llama design, which is also the design of SmolLM2, Qwen and many others. It differs from the 2017 transformer in four places. It uses RMSNorm instead of LayerNorm. It uses RoPE instead of added position vectors. It shares keys and values across query heads. It replaces the plain MLP with a gated one.</p>
+        <a class="theory-link" href="../what-changed-inside-the-transformer/"><span class="theory-link__kicker">Why these changes</span>What changed inside the transformer</a>
+        <p>This post does not repeat those arguments. It writes the code, runs it, and looks at the tensors. Each step adds one module and one check. At step 12 we hand our weights to Hugging Face and ask for the same logits. Then we run the other direction and load a real pretrained model into our own code.</p>
+        <p>The attention code comes from <a href="../build-attention-from-scratch/">Build Attention From Scratch</a>. We keep its GQA and RoPE design and its names, trimmed to what a decoder needs, and a test checks that the two agree. Every number below came from these scripts on an Apple M5. Commands run from the repo root.</p>
+        <figure class="terminal" data-cwd="code">
+          <pre><code>$ git clone https://github.com/srini-anirudh/blog-coding-tutorials.git
+$ cd blog-coding-tutorials
+$ python -m venv .venv &amp;&amp; .venv/bin/pip install -e ".[dev]"</code></pre>
+        </figure>
+        <p>Here is the whole journey in one figure. Press Next to walk it, or read on and come back to it.</p>
+        <figure class="ct-figure ct-figure--wide" id="fig-flow">
+          <div class="ct-figure__stage" tabindex="0" aria-label="Animated walk of one token through a decoder block"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 1</span>One token through one block of the tiny preset, for the input &ldquo;The cat sat&rdquo; (B = 1, T = 11). The camera follows the data. Shapes and RMS values come from <code>scripts/inspect_shapes.py</code>.</figcaption>
+        </figure>
+      </section>
+
+      <section class="build-step" id="step-01" data-step-title="Configuration">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 01</span></div>
+          <h2>Put every number in one configuration</h2>
+          <p class="build-step__goal"><span>Goal</span> A dataclass that describes the whole architecture and rejects impossible shapes early.</p>
+        </header>
+        <p>Every module reads its sizes from one object. That lets us save the architecture next to the weights, translate it to Hugging Face later, and build Llama 3 8B on the meta device from one line.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/config.py" data-lines="10-51" data-lang="python" data-highlight="9-15,32-36">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 1</span>The first seven fields are the contract the next tutorial trains. The validation catches the two mistakes that otherwise surface as a confusing reshape error deep in attention.</figcaption>
+        </figure>
+        <p>Three of the checks encode real constraints. Head width must be an integer. Query heads must divide evenly among key and value heads. RoPE rotates pairs of channels, so head width must be even.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/walkthrough.py --step config</code></pre>
+        </figure>
+        <figure class="code-output" data-from="scripts/walkthrough.py --step config">
+          <pre><code>{{W:config}}</code></pre>
+        </figure>
+        <table class="shape-table">
+          <caption>The symbols used in this post, with the tiny preset's values</caption>
+          <thead><tr><th>Symbol</th><th>Field</th><th>Tiny</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>V</td><td>vocab_size</td><td>256</td><td>One token per byte.</td></tr>
+            <tr><td>D</td><td>hidden_size</td><td>256</td><td>Width of the residual stream.</td></tr>
+            <tr><td>L</td><td>num_layers</td><td>6</td><td>Decoder blocks.</td></tr>
+            <tr><td>H</td><td>num_heads</td><td>8</td><td>Query heads.</td></tr>
+            <tr><td>H_kv</td><td>num_kv_heads</td><td>2</td><td>Key and value heads.</td></tr>
+            <tr><td>d</td><td>head_dim</td><td>32</td><td>Width of one head, D // H.</td></tr>
+            <tr><td>F</td><td>intermediate_size</td><td>704</td><td>Width inside SwiGLU.</td></tr>
+          </tbody>
+        </table>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>num_kv_heads=3</code> raises a clear <code>ValueError</code>.</li>
+            <li><code>test_config_rejects_bad_heads</code> and <code>test_config_files_match_presets</code> pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-02" data-step-title="Embeddings">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 02</span></div>
+          <h2>Token embeddings and weight tying</h2>
+          <p class="build-step__goal"><span>Goal</span> Turn ids into vectors, and use one matrix for both reading and scoring tokens.</p>
+        </header>
+        <p>An embedding is a lookup table: <code>X = E[ids]</code>. The table has V rows and D columns. The same id always returns the same row, at any position. Position enters later, inside attention.</p>
+        <p>We use a byte tokenizer, so V is exactly 256 and nothing needs downloading or training. <a href="../train-an-llm-from-scratch/">The next tutorial</a> replaces it with a trained BPE tokenizer.</p>
+        <p>Weight tying means the output layer reuses the embedding matrix. Tying is one assignment in the constructor. After it, both names point to the same <code>Parameter</code>, and gradients from both uses add up in one place.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/model.py" data-lines="30-41" data-lang="python" data-highlight="10-11">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 2</span>The model constructor. The highlighted assignment is all of weight tying. Attribute names match Hugging Face, which pays off in step 12.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/walkthrough.py --step embeddings</code></pre>
+        </figure>
+        <figure class="code-output" data-from="scripts/walkthrough.py --step embeddings">
+          <pre><code>{{W:embeddings}}</code></pre>
+        </figure>
+        <table class="shape-table">
+          <caption>Shapes in step 2</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>input_ids</td><td>(B, T)</td><td>Integers in 0 to V - 1.</td></tr>
+            <tr><td>embed_tokens.weight</td><td>(V, D)</td><td>One learned row per token.</td></tr>
+            <tr><td>x</td><td>(B, T, D)</td><td>The row for each token.</td></tr>
+          </tbody>
+        </table>
+        <aside class="callout callout-nuance">
+          <p class="callout-label">Nuance</p>
+          <p>Tying saves little in this model: 65,536 of 4.36M parameters, or 1.5%. In SmolLM2-135M it saves 28.3M of 162.8M, or 17%. The saving grows with vocabulary size, while the body of the model does not depend on V. That is why large models with big budgets, such as Llama 3 8B, can afford to leave it off.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Both uses of a byte give the same vector.</li>
+            <li><code>test_weight_tying_shares_storage</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-03" data-step-title="RMSNorm">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 03</span></div>
+          <h2>RMSNorm from scratch</h2>
+          <p class="build-step__goal"><span>Goal</span> Rescale each token vector to unit root-mean-square, with no mean subtraction and no bias.</p>
+        </header>
+        <a class="theory-link" href="../the-geometry-of-normalization/"><span class="theory-link__kicker">Derivation in</span>The geometry of normalization</a>
+        <p>RMSNorm is LayerNorm without the centring. It divides each token by its own RMS, then applies a learned gain per channel. It has D parameters and needs no running statistics.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/norm.py" data-lines="9-25" data-lang="python" data-highlight="16-17">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 3</span>The squares and their mean run in float32, even in a bf16 model. Otherwise the sum of squares loses too many bits.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/walkthrough.py --step rmsnorm</code></pre>
+        </figure>
+        <figure class="code-output" data-from="scripts/walkthrough.py --step rmsnorm">
+          <pre><code>{{W:rmsnorm}}</code></pre>
+        </figure>
+        <p>The first lines hold a surprise. An input with RMS 0.0194 comes out at 0.9869, and one with RMS 0.001 comes out at 0.2921. The reason is epsilon. The output RMS is <code>r / sqrt(r&sup2; + eps)</code>, so with <code>eps = 1e-5</code> the norm stops rescaling once <code>r</code> falls near <code>sqrt(eps)</code>, which is 0.0032. Drag the slider to see it.</p>
+        <figure class="ct-figure" id="fig-rms">
+          <div class="ct-knobs">
+            <label class="ct-knob">Input RMS <input type="range" id="rms-scale" min="-30" max="20" value="-17" aria-describedby="rms-scale-out" /><output id="rms-scale-out"></output></label>
+            <label class="ct-knob">Epsilon <input type="range" id="rms-eps" min="-8" max="-3" value="-5" step="1" aria-describedby="rms-eps-out" /><output id="rms-eps-out"></output></label>
+          </div>
+          <div class="ct-figure__stage" aria-label="One token vector before and after RMSNorm"></div>
+          <div class="ct-readout" aria-live="polite">
+            <div><span>Input RMS</span><b id="rms-in"></b></div>
+            <div><span>Output RMS</span><b id="rms-out"></b></div>
+            <div><span>Shortfall from 1</span><b id="rms-ratio"></b></div>
+          </div>
+          <figcaption><span class="ct-fig-num">Figure 2</span>One 32-channel token vector before and after RMSNorm. The input panel rescales itself so you can see its shape at any size. The output axis is fixed. The default slider position is the real embedding scale from step 2, near 0.02.</figcaption>
+        </figure>
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>Our freshly initialised embeddings have RMS 0.020, so the first norm in the model loses about 1.2% to epsilon. That is harmless at this scale. It would not be harmless at <code>initializer_range = 0.002</code>. Here the first norm would return vectors far below unit scale, and every layer after it would see a weak signal. Check what eps does before you shrink an init.</p>
+        </aside>
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p><code>test_rmsnorm_matches_torch</code> compares against <code>torch.nn.RMSNorm</code>, which PyTorch added in 2.4. The maximum difference above is exactly 0.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Output RMS is 1 for any input much larger than <code>sqrt(eps)</code>.</li>
+            <li><code>test_rmsnorm_output_has_unit_rms</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-04" data-step-title="RoPE">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 04</span></div>
+          <h2>Rotary position embeddings</h2>
+          <p class="build-step__goal"><span>Goal</span> Make the query-key score depend on the distance between two tokens, and not on where they sit.</p>
+        </header>
+        <a class="theory-link" href="../how-models-know-where-they-are/"><span class="theory-link__kicker">Derivation in</span>How models know where they are</a>
+        <p>RoPE adds nothing to the token vector. It rotates each pair of channels by an angle proportional to position. Each pair rotates at its own speed. Queries and keys are rotated. Values are not. This is the same module as in <a href="../build-attention-from-scratch/">Build Attention From Scratch</a>.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/rope.py" data-lines="13-57" data-lang="python" data-highlight="8-13,25-27">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 4</span>The table is a pure function of the config, so it stays out of the checkpoint. <code>rotate_half</code> fixes which channels form a pair.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/walkthrough.py --step rope</code></pre>
+        </figure>
+        <figure class="code-output" data-from="scripts/walkthrough.py --step rope">
+          <pre><code>{{W:rope}}</code></pre>
+        </figure>
+        <p>Read the last four lines. The first three have offset 3 and identical scores, even at positions 100 apart. The fourth has offset 2 and a different score. That is the whole property, measured.</p>
+        <figure class="ct-figure ct-figure--wide" id="fig-rope">
+          <div class="ct-figure__stage" tabindex="0" aria-label="RoPE clocks"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 3</span>Two of the 16 channel pairs in one head, drawn as clocks. Query and key both turn as positions grow, and the angle between them stays fixed while the offset stays fixed. The arrows are illustrative. The scores in the notes are the measured ones above.</figcaption>
+        </figure>
+        <table class="shape-table">
+          <caption>Shapes in step 4</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>inv_freq</td><td>(d/2,)</td><td>One rotation speed per channel pair.</td></tr>
+            <tr><td>cos_cached, sin_cached</td><td>(max_seq_len, d)</td><td>Tables indexed by absolute position.</td></tr>
+            <tr><td>cos, sin</td><td>(B, T, d)</td><td>The rows for these T positions.</td></tr>
+          </tbody>
+        </table>
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Some codebases pair channels as (0, 1), (2, 3) instead of (i, i + d/2). Both are valid RoPE, so a model trained with one is broken under the other. We load SmolLM2-135M and swap only the pairing. The result is the most dangerous kind of bug, because the model still writes fluent English.</p>
+          <figure class="terminal" data-cwd="blog-coding-tutorials">
+            <pre><code>$ .venv/bin/python c04-llm/scripts/break_it.py --case rope-layout \
+    --pretrained HuggingFaceTB/SmolLM2-135M
+{{B:rope-layout}}</code></pre>
+          </figure>
+          <p>Only the loss reveals it, up by more than a nat per token. A visual check of samples would pass. This is why step 12 compares numbers.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Rotation keeps the vector norm.</li>
+            <li><code>test_rope_dot_product_depends_only_on_offset</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-05" data-step-title="GQA attention">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 05</span></div>
+          <h2>Grouped-query attention, naive first</h2>
+          <p class="build-step__goal"><span>Goal</span> A readable reference, a fast SDPA version, and a test that they agree, with a cache slot ready for step 14.</p>
+        </header>
+        <a class="theory-link" href="../how-attention-moves-information/"><span class="theory-link__kicker">Derivation in</span>How attention moves information</a>
+        <p>Grouped-query attention keeps all H query heads and reduces keys and values to H_kv heads. Several query heads read each key and value head. The reshape helpers below are trimmed copies from <a href="../build-attention-from-scratch/">the attention tutorial</a>.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/attention_naive.py" data-lines="13-60" data-lang="python" data-highlight="31-34,46-48">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 5</span>The reference implementation. <code>causal_mask</code> takes two lengths because a cache makes queries shorter than keys. The diagonal then shifts right.</figcaption>
+        </figure>
+        <p>Next we hand the same maths to PyTorch&rsquo;s fused kernel. There is one trap, and the code comments mark it. <code>is_causal=True</code> builds a triangle aligned to the top-left corner. That is correct only when queries and keys have the same length.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/attention_sdpa.py" data-lines="11-30" data-lang="python" data-highlight="11-18">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 6</span>The three mask cases of real decoding. <code>enable_gqa</code> broadcasts the shared heads inside the kernel, so no copy is made.</figcaption>
+        </figure>
+        <p>The module itself is mostly projections. RoPE tables come in from the model, so they are computed once per call and shared across layers.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/attention.py" data-lines="22-60" data-lang="python" data-highlight="17-20,34-38">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 7</span>Keys are cached after rotation, so a cached key never needs to be rotated again.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/walkthrough.py --step attention</code></pre>
+        </figure>
+        <figure class="code-output" data-from="scripts/walkthrough.py --step attention">
+          <pre><code>{{W:attention}}</code></pre>
+        </figure>
+        <figure class="ct-figure ct-figure--wide" id="fig-gqa">
+          <div class="ct-figure__stage" tabindex="0" aria-label="Query heads sharing key and value heads"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 4</span>How 8 query heads share key and value heads as H_kv drops from 8 to 1. Query head <code>h</code> reads KV head <code>h // n_rep</code>. Cache sizes are for the tiny preset in float32.</figcaption>
+        </figure>
+        <table class="shape-table">
+          <caption>Shapes in step 5, tiny preset, B = 1, T = 11</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>q</td><td>(B, H, T, d)</td><td>(1, 8, 11, 32)</td></tr>
+            <tr><td>k, v</td><td>(B, H_kv, T, d)</td><td>(1, 2, 11, 32)</td></tr>
+            <tr><td>repeat_kv(k, 4)</td><td>(B, H, T, d)</td><td>(1, 8, 11, 32)</td></tr>
+            <tr><td>scores</td><td>(B, H, T, T)</td><td>(1, 8, 11, 11)</td></tr>
+            <tr><td>attention output</td><td>(B, H, T, d)</td><td>(1, 8, 11, 32)</td></tr>
+            <tr><td>after o_proj</td><td>(B, T, D)</td><td>(1, 11, 256)</td></tr>
+          </tbody>
+        </table>
+        <p>How much does the fused kernel save inside the full model? We time forward plus backward, per training step.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/benchmarks/bench_attention.py --device cpu
+{{R:bench_attention_cpu.txt}}
+$ .venv/bin/python c04-llm/benchmarks/bench_attention.py --device mps
+{{R:bench_attention_mps.txt}}</code></pre>
+        </figure>
+        <aside class="callout callout-nuance">
+          <p class="callout-label">Nuance</p>
+          <p>%%NUANCE_SDPA%%</p>
+        </aside>
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Always pass <code>is_causal=True</code>, and prefill the prompt in chunks of 8 on top of a cache.</p>
+          <figure class="terminal" data-cwd="blog-coding-tutorials">
+            <pre><code>$ .venv/bin/python c04-llm/scripts/break_it.py --case is-causal-with-cache
+{{B:is-causal-with-cache}}</code></pre>
+          </figure>
+          <p>The first chunk is correct because it starts at the top-left. Every later chunk is wrong by up to 0.9 logits on random weights. Token-by-token decoding hides this bug, because a single query needs no mask. So the bug only appears when someone adds chunked prefill later.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Naive and SDPA differ by about <code>1e-7</code>.</li>
+            <li><code>test_naive_and_sdpa_agree</code> and <code>test_same_output_as_attnzoo</code> pass. The second one checks tinyllm against the C3 library, including its cache protocol.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-06" data-step-title="SwiGLU">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 06</span></div>
+          <h2>SwiGLU, the gated feed-forward</h2>
+          <p class="build-step__goal"><span>Goal</span> Implement <code>down(silu(x W_gate) * (x W_up))</code> and understand why F is not 4D.</p>
+        </header>
+        <a class="theory-link" href="../why-neural-networks-need-nonlinearity/"><span class="theory-link__kicker">Background in</span>Why neural networks need nonlinearity</a>
+        <p>Attention mixes across positions. The MLP works inside each position. SwiGLU makes two wide copies of the token. One copy, after <code>silu</code>, becomes a gate that scales the other copy channel by channel. A third matrix projects back down.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/mlp.py" data-lines="10-25" data-lang="python" data-highlight="14-16">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 8</span>Three matrices, no biases. The gate multiplication is the only nonlinearity in the block other than the attention softmax.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/walkthrough.py --step swiglu</code></pre>
+        </figure>
+        <figure class="code-output" data-from="scripts/walkthrough.py --step swiglu">
+          <pre><code>{{W:swiglu}}</code></pre>
+        </figure>
+        <p>A classic MLP with F = 4D has 8D&sup2; weights. SwiGLU with width F has 3DF. They match at F = 8D/3. That is the origin of the odd-looking numbers in real configs. SmolLM2-135M uses exactly 8D/3: 1536 for D = 576. Llama 3 8B uses more, 14,336 for D = 4096, which is a ratio of 3.5.</p>
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>The word &ldquo;feed-forward&rdquo; undersells this layer. In all three models we count in step 11, SwiGLU holds the largest share of the parameters: 75% of tiny, 59% of SmolLM2-135M and 70% of Llama 3 8B. So if you need to shrink a model, F is the first number to look at, before heads or layers.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Output shape equals input shape. Gate values never fall below -0.278.</li>
+            <li><code>test_swiglu_shapes_and_formula</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-07" data-step-title="Decoder block">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 07</span></div>
+          <h2>The decoder block</h2>
+          <p class="build-step__goal"><span>Goal</span> Assemble two pre-norm residual branches into a block whose output shape equals its input shape.</p>
+        </header>
+        <p>Each branch normalises its own input, computes, and adds the result to the stream. The stream itself is never normalised inside a block. That gives gradients a clean path from the loss to the first layer.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/block.py" data-lines="16-40" data-lang="python" data-highlight="20-21">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 9</span>Two lines do the architecture. The rest is the optional MoE branch from step 16.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/walkthrough.py --step block</code></pre>
+        </figure>
+        <figure class="code-output" data-from="scripts/walkthrough.py --step block">
+          <pre><code>{{W:block}}</code></pre>
+        </figure>
+        <p>A fresh block is close to the identity function. With a unit-scale input, the attention branch has RMS 0.016 and the MLP branch has RMS 0.008. Training gradually grows these branches.</p>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>block(x)</code> matches the hand-computed sum exactly.</li>
+            <li><code>test_gradients_reach_every_parameter</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-08" data-step-title="Stack and LM head">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 08</span></div>
+          <h2>The decoder stack and LM head</h2>
+          <p class="build-step__goal"><span>Goal</span> Repeat L blocks, add a final norm, and score every token in the vocabulary at every position.</p>
+        </header>
+        <p>The stack is a loop. Two details matter. Positions must start after the cached tokens, which is the job of <code>past</code>. And the final norm is needed because the stream has never been normalised.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/model.py" data-lines="43-76" data-lang="python" data-highlight="17-19,27">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 10</span>The forward pass, and the public contract: it returns an object with <code>.logits</code>, <code>.loss</code> and <code>.past_key_values</code>.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/walkthrough.py --step stack</code></pre>
+        </figure>
+        <figure class="code-output" data-from="scripts/walkthrough.py --step stack">
+          <pre><code>{{W:stack}}</code></pre>
+        </figure>
+        <p>The last output line is a causality check on the whole model. Changing tokens at position 8 and later leaves logits 0 to 7 bitwise unchanged.</p>
+        <table class="shape-table">
+          <caption>Shapes through the whole model</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Tiny, B = 1, T = 11</th></tr></thead>
+          <tbody>
+            <tr><td>input_ids</td><td>(B, T)</td><td>(1, 11)</td></tr>
+            <tr><td>x, every block</td><td>(B, T, D)</td><td>(1, 11, 256)</td></tr>
+            <tr><td>cos, sin</td><td>(B, T, d)</td><td>(1, 11, 32)</td></tr>
+            <tr><td>cache, per layer</td><td>(B, H_kv, T, d), twice</td><td>(1, 2, 11, 32)</td></tr>
+            <tr><td>logits</td><td>(B, T, V)</td><td>(1, 11, 256)</td></tr>
+          </tbody>
+        </table>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Largest next-token probability is near uniform on random weights: 0.024 against 0.0039 for exactly uniform.</li>
+            <li><code>test_causality_future_tokens_do_not_change_past_logits</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-09" data-step-title="Shifted loss">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 09</span></div>
+          <h2>The shifted cross-entropy loss</h2>
+          <p class="build-step__goal"><span>Goal</span> Score each position against the token after it, and let callers mask positions out.</p>
+        </header>
+        <p>The model predicts the next token, so targets are the inputs moved left by one. The last position has no target. The first token is never predicted.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/loss.py" data-lines="11-24" data-lang="python" data-highlight="7-8">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 11</span>Hugging Face shifts inside the model too, so <code>labels = input_ids</code> is correct for both. The value <code>-100</code> is the convention for &ldquo;do not score&rdquo;.</figcaption>
+        </figure>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/walkthrough.py --step loss</code></pre>
+        </figure>
+        <figure class="code-output" data-from="scripts/walkthrough.py --step loss">
+          <pre><code>{{W:loss}}</code></pre>
+        </figure>
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Remove the shift, then train for 100 steps. The loss looks wonderful, and the model has learned nothing useful.</p>
+          <figure class="terminal" data-cwd="blog-coding-tutorials">
+            <pre><code>$ .venv/bin/python c04-llm/scripts/break_it.py --case no-shift --device cpu
+{{B:no-shift}}</code></pre>
+          </figure>
+          <p>Each position can read its own target, because attention includes the current token. So the model learns to copy, and sampling repeats the last character. A loss below the entropy of English text after 50 steps is a bug, not progress.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>The hand computation and <code>causal_lm_loss</code> agree to four decimals.</li>
+            <li><code>test_loss_is_shifted</code> and <code>test_loss_ignores_masked_labels</code> pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-10" data-step-title="Initialisation">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 10</span></div>
+          <h2>Initialisation</h2>
+          <p class="build-step__goal"><span>Goal</span> Start near the uniform loss, and keep the residual stream stable at any depth.</p>
+        </header>
+        <a class="theory-link" href="../why-transformers-do-not-explode/"><span class="theory-link__kicker">Derivation in</span>Why transformers do not explode</a>
+        <p>Two rules cover it. Every weight starts small, with standard deviation 0.02. The two projections that write onto the residual stream are scaled down further by the square root of 2L, because each block adds two random contributions and their variance accumulates.</p>
+        <figure class="code-listing" data-src="c04-llm/tinyllm/init.py" data-lines="16-36" data-lang="python" data-highlight="10-11,15">
+          <pre><code>@@</code></pre>
+          <figcaption><span class="ct-fig-num">Listing 12</span>Scaling <code>o_proj</code> and <code>down_proj</code> by depth follows GPT-2. Norm gains start at 1.</figcaption>
+        </figure>
+        <p>A correct model should start near <code>ln V</code>, the loss of a uniform guess. That number is your first sanity check on any new model, and it costs one forward pass. Here we also test what happens without the depth scaling, in a 48-layer model.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c04-llm/scripts/break_it.py --case init
+{{B:init}}</code></pre>
+        </figure>
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>Without the depth scaling, a 48-layer model's stream reaches RMS 0.69 at the last layer. With it, the stream reaches 0.059, even though both start from embeddings of RMS 0.02. So the scaled model begins close to a stack of identity blocks. The unscaled one has already drifted by a factor of 12 before seeing any data.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Initial loss on the tiny model is near ln 256 = 5.545.</li>
+            <li><code>test_initial_loss_is_near_uniform</code> passes.</li>
+          </ul>
+        </footer>
+      </section>

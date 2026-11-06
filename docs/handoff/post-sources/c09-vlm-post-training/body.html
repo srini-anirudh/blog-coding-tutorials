@@ -1,0 +1,604 @@
+      <section class="build-brief" aria-labelledby="build-brief-title">
+        <div class="build-brief__head">
+          <h2 class="build-brief__kicker" id="build-brief-title">What you will build</h2>
+          <a class="build-brief__repo" href="https://github.com/srini-anirudh/blog-coding-tutorials/tree/main/c09-vlm-post-training" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i><span>blog-coding-tutorials/c09-vlm-post-training</span></a>
+        </div>
+        <div class="build-brief__body">
+          <p class="build-brief__deliverable">A post-training system for a real pretrained VLM: exact synthetic scenes, five kinds of hallucination negatives, image-conditioned DPO written by hand, a blind-preference check, tested visual rewards, visual GRPO, a freeze ablation, and a reward we hack on purpose.</p>
+          <dl class="build-brief__facts">
+            <div class="build-brief__wide">
+              <dt>Theory first</dt>
+              <dd>
+                <div class="theory-links">
+                  <a class="theory-link" href="../aligning-vision-language-models/">Aligning vision-language models</a>
+                  <a class="theory-link" href="../rewarding-what-the-model-sees/">Rewarding what the model sees</a>
+                  <a class="theory-link" href="../teaching-a-model-what-we-prefer/">Teaching a model what we prefer</a>
+                  <a class="theory-link" href="../how-reinforcement-learning-teaches-models-to-reason/">How reinforcement learning teaches models to reason</a>
+                </div>
+              </dd>
+            </div>
+            <div><dt>Time</dt><dd>About 3 hours, with the real runs</dd></div>
+            <div><dt>Hardware</dt><dd>Apple M5, 16 GB, MPS. CPU works but is slow. CUDA is picked up if present.</dd></div>
+            <div><dt>You need</dt><dd>Python 3.10+, PyTorch, transformers 5, Pillow, pytest</dd></div>
+            <div><dt>Package</dt><dd><code>vlmalign</code></dd></div>
+          </dl>
+          <details class="repo-tree">
+            <summary>Final repo tree <span class="repo-tree__hint">c09-vlm-post-training/</span></summary>
+<pre>[[TREE]]</pre>
+          </details>
+        </div>
+      </section>
+
+      <nav class="toc" aria-labelledby="toc-heading">
+        <h2 id="toc-heading">Contents</h2>
+        <ol>
+          <li><a href="#the-plan">The plan</a></li>
+          <li><a href="#step-01">Step 1: scenes with exact truth</a></li>
+          <li><a href="#step-02">Step 2: hallucination negatives</a></li>
+          <li><a href="#step-03">Step 3: one pair as tensors</a></li>
+          <li><a href="#step-04">Step 4: sequence log-probabilities</a></li>
+          <li><a href="#step-05">Step 5: image-conditioned DPO</a></li>
+          <li><a href="#step-06">Step 6: the blind-preference check</a></li>
+          <li><a href="#step-07">Step 7: visual rewards</a></li>
+          <li><a href="#step-08">Step 8: visual GRPO</a></li>
+          <li><a href="#step-09">Step 9: the freeze ablation</a></li>
+          <li><a href="#step-10">Step 10: hack the reward</a></li>
+          <li><a href="#comparison">The training modes compared</a></li>
+          <li><a href="#run-everything">Run everything</a></li>
+          <li><a href="#key-insights">Key insights and nuances</a></li>
+          <li><a href="#exercises">Exercises</a></li>
+          <li><a href="#continue-reading">Continue reading</a></li>
+          <li><a href="#references">References</a></li>
+        </ol>
+      </nav>
+
+      <section id="the-plan">
+        <h2>The plan</h2>
+        <p class="lede">When a vision-language model starts to prefer the true answer after post-training, did it look at the image, or did it learn which words tend to win?</p>
+        <p>Most of this tutorial exists to answer that question with numbers. A VLM can lower a preference loss without using a single pixel. It can also raise a visual reward by gaming the reward. Both failures look like progress on a training curve.</p>
+        <p>So we build the alignment stack on images where we know every fact exactly. We draw the image ourselves, so we know the true colour, count, position and text. That makes every preference label and every reward exact, and it lets us run controls that real datasets cannot.</p>
+        <p>We post-train a real pretrained model, <code>HuggingFaceTB/SmolVLM-256M-Instruct</code>. The tiny VLM from <a href="../build-a-vlm-from-scratch/">C7</a> and <a href="../train-a-real-vlm/">C8</a> is not capable enough for this. Preference learning and RL refine a model that can already do the task sometimes. A model that cannot read a colour gives DPO and GRPO nothing to refine.</p>
+        <div class="theory-links">
+          <a class="theory-link" href="../aligning-vision-language-models/"><span class="theory-link__kicker">Theory</span>Aligning vision-language models</a>
+          <a class="theory-link" href="../rewarding-what-the-model-sees/"><span class="theory-link__kicker">Theory</span>Rewarding what the model sees</a>
+        </div>
+        <p>Clone the repo once. Every command below runs from its root, using the shared virtual environment.</p>
+        <figure class="terminal" data-cwd="code">
+          <pre><code>$ git clone https://github.com/srini-anirudh/blog-coding-tutorials.git
+$ cd blog-coding-tutorials
+$ python -m venv .venv &amp;&amp; .venv/bin/pip install -e ".[dev]"</code></pre>
+        </figure>
+        <aside class="callout callout-nuance">
+          <p class="callout-label">Nuance</p>
+          <p>Every run here is short: 60 to 150 update steps on a shared laptop. The numbers are real, and they are small. Treat them as a working demonstration of the method, not as a benchmark of SmolVLM. Where a gain is within the noise of a held-out set of this size, the text says so.</p>
+        </aside>
+      </section>
+
+      <section class="build-step" id="step-01" data-step-title="Scenes with exact truth">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 01</span></div>
+          <h2>Draw scenes where the truth is exact</h2>
+          <p class="build-step__goal"><span>Goal</span> A seeded image generator, and questions whose answers we compute instead of annotate.</p>
+        </header>
+        <p>A scene is a few coloured shapes and one printed word on a white canvas. Objects live in distinct cells of a 3 by 3 grid, so they never overlap. Each pair of colour and shape appears at most once, which keeps every question unambiguous.</p>
+        [[L vlmalign/scenes.py | ^def sample_scene | auto | 2,16-20 | One seed gives one scene. Drawing at 512 pixels matches the size SmolVLM uses, so we avoid a resample.]]
+        <p>Questions come with a sentence template that has one slot. This is what makes hallucination negatives cheap later: a rejected answer is the same sentence with one slot changed.</p>
+        [[L vlmalign/tasks.py | ^def ask | 26 | 8,13 | Two of the five question kinds. The answer is computed from the scene, and the template holds one slot.]]
+        <p>Next, load the model. SmolVLM normally splits a large image into tiles. Our scenes do not need that, so we switch it off. One 512 by 512 tile gives 64 image tokens instead of 1,088, which makes every later step faster.</p>
+        [[L vlmalign/model.py | ^def load_processor | auto | 2-4 | Turning off tiling. The first run of this tutorial had 1,141 tokens per prompt. This line brings it to 81.]]
+        <table class="shape-table">
+          <caption>What goes into SmolVLM-256M for one image</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>pixel_values</td><td>(1, 1, 3, 512, 512)</td><td>Batch, images per row, channels, height, width.</td></tr>
+            <tr><td>Vision output</td><td>(1, 1024, 768)</td><td>32 &times; 32 patches of 16 pixels, from a SigLIP encoder.</td></tr>
+            <tr><td>Connector output</td><td>(1, 64, 576)</td><td>Pixel shuffle by 4 merges 16 patches into one token, then a linear projection.</td></tr>
+            <tr><td>input_ids</td><td>(1, 81)</td><td>17 text tokens around 64 <code>&lt;image&gt;</code> placeholders, for a short question.</td></tr>
+            <tr><td>logits</td><td>(1, 81, 49280)</td><td>One distribution over the vocabulary per position.</td></tr>
+          </tbody>
+        </table>
+        <p>Before we train anything, measure what the pretrained model can do. Greedy short answers, 30 questions per kind, on the fixed evaluation set that <code>train_dpo.py</code> prints first.</p>
+        <div id="baseline-table">
+        [[BASELINE]]
+        </div>
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>[[INSIGHT_BASE]]</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>The same seed produces the same pixels.</li>
+            <li><code>test_render_draws_the_object_colour_at_its_centre</code> and <code>test_answers_match_the_scene</code> pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-02" data-step-title="Hallucination negatives">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 02</span></div>
+          <h2>Generate hallucination negatives</h2>
+          <p class="build-step__goal"><span>Goal</span> Turn every question into a preference pair, in two versions: one that needs the image, and one that does not.</p>
+        </header>
+        <p>A multimodal preference example has four fields: image, prompt, chosen, rejected. The chosen answer states the true fact. The rejected answer is a hallucination we manufacture, and it comes in five kinds: wrong colour, wrong count, wrong object, false OCR and wrong spatial relation.</p>
+        <p>How we draw the wrong value matters more than anything else in this step. So we write two samplers that share everything else.</p>
+        [[L vlmalign/preference.py | ^def wrong_value | auto | 5-6,8,10,12,14-15 | The balanced sampler draws from the same set as true values. The biased sampler uses tempting shortcuts.]]
+        <p>Try both. Pick a kind, switch the sampler, and read the note under the pair.</p>
+        <figure class="ct-figure ct-figure--wide" id="fig-neg">
+          <div class="ct-knobs" role="group" aria-label="Hallucination kind">
+            <button type="button" data-kind="color" aria-pressed="true">Wrong colour</button>
+            <button type="button" data-kind="count" aria-pressed="false">Wrong count</button>
+            <button type="button" data-kind="object" aria-pressed="false">Wrong object</button>
+            <button type="button" data-kind="ocr" aria-pressed="false">False OCR</button>
+            <button type="button" data-kind="spatial" aria-pressed="false">Wrong relation</button>
+          </div>
+          <div class="ct-knobs" role="group" aria-label="Negative sampler">
+            <button type="button" data-mode="balanced" aria-pressed="true">Balanced sampler</button>
+            <button type="button" data-mode="biased" aria-pressed="false">Biased sampler</button>
+            <button type="button" data-new>New scene</button>
+          </div>
+          <div class="ct-figure__stage">
+            <div class="neg-grid">
+              <div class="neg-scene"></div>
+              <div class="neg-panel">
+                <p><span class="neg-label">Prompt</span><span class="neg-prompt"></span></p>
+                <p><span class="neg-label">Chosen</span><span class="neg-chosen"></span></p>
+                <p><span class="neg-label">Rejected</span><span class="neg-rejected"></span></p>
+                <p class="neg-leak" aria-live="polite"></p>
+                <p class="neg-json"></p>
+              </div>
+            </div>
+          </div>
+          <figcaption><span class="ct-fig-num">Figure 1</span>The hallucination-negative generator, ported to JavaScript from <code>preference.py</code>. Dashed outlines mark the objects the question is about. The scene layouts here use a browser random generator, so they differ from the Python seeds, but the sampling rules are the same.</figcaption>
+        </figure>
+        <p>A note on true values. If we let true counts follow the scene generator, they skew towards 1 and 2. Then a rejected answer of 3 would mostly appear on the rejected side, and text alone would predict the label. So <code>build_pairs</code> picks the target true value first, uniformly, then searches for a scene that has it.</p>
+        [[L vlmalign/preference.py | ^def build_pairs | auto | 14-19 | Stratify on the true value first. Then true and wrong values have the same uniform distribution, which makes each pair exchangeable.]]
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c09-vlm-post-training/scripts/show_pairs.py</code></pre>
+        </figure>
+        [[O results/show_pairs.log | scripts/show_pairs.py | --- balanced | rejected The blue triangle is to the right]]
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>A negative must be false for this image, and balanced values must appear about equally on both sides. <code>test_negatives_are_always_false</code> and <code>test_balanced_pairs_are_exchangeable</code> check both.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>You can read a pair and predict the answer only by looking at the image, on the balanced side.</li>
+            <li>On the biased side, you can often answer without the image. Keep that in mind for step 6.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-03" data-step-title="One pair as tensors">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 03</span></div>
+          <h2>Turn one pair into tensors</h2>
+          <p class="build-step__goal"><span>Goal</span> A batch where chosen and rejected share an image, and only answer tokens carry a label.</p>
+        </header>
+        <p>Each pair makes two rows. Both rows hold the same prompt ids, and then their own answer. We tokenize the answer separately and append it. That keeps the prompt ids identical to what <code>generate()</code> conditions on, so we train on the same probabilities the model samples from.</p>
+        [[L vlmalign/model.py | ^def encode_answer | auto | 9-10 | The answer ends with end_of_utterance, because stopping is part of what the model must learn.]]
+        <p>Now build the batch. Rows are padded on the right, labels are <code>-100</code> outside the answer, and each row keeps an index into a smaller tensor of distinct images.</p>
+        [[L vlmalign/logprobs.py | ^def build_batch | auto | 10-12 | Prompt and padding positions stay at IGNORE, which is -100.]]
+        [[L vlmalign/dpo.py | ^def pair_batch | auto | 13-14 | Row 2i is the chosen answer, row 2i+1 the rejected one. Both point at image i.]]
+        <p>Look at what actually comes out. Two pairs give four rows and two images.</p>
+        [[O results/show_pairs.log | scripts/show_pairs.py | --- one batch | mask=0]]
+        <table class="shape-table">
+          <caption>A batch of P = 2 preference pairs</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>input_ids</td><td>(2P, T) = (4, 90)</td><td>Prompt ids, then answer ids, then right padding.</td></tr>
+            <tr><td>attention_mask</td><td>(2P, T)</td><td>0 on padding.</td></tr>
+            <tr><td>labels</td><td>(2P, T)</td><td>Answer ids. -100 on prompt and padding.</td></tr>
+            <tr><td>image_index</td><td>(2P,)</td><td>Which row of <code>pixel_values</code> this sequence looks at.</td></tr>
+            <tr><td>pixel_values</td><td>(P, 1, 3, 512, 512)</td><td>One entry per distinct image, not per row.</td></tr>
+          </tbody>
+        </table>
+        <figure class="ct-figure ct-figure--wide" id="fig-batch">
+          <div class="ct-figure__stage"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 2</span>One real pair as tensors. The camera moves from the token rows, to the labels, to the image placeholders, and then into the answer, where the real per-token log-probabilities of the pretrained model are drawn.</figcaption>
+        </figure>
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Label the whole row instead of the answer: in <code>build_batch</code>, change <code>labels[i, len(p): len(r)]</code> to <code>labels[i, : len(r)]</code>. The sum now includes the 64 <code>&lt;image&gt;</code> positions and the prompt. The difference between chosen and rejected barely changes, because those positions match across rows, but the value of each sum becomes large. <code>test_batch_shapes_and_label_mask</code> fails on the first assert about <code>IGNORE</code>.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Row 0 has 64 image tokens, and only its 6 answer tokens have labels.</li>
+            <li><code>test_chosen_and_rejected_share_the_prompt_and_differ_in_the_answer</code> passes.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-04" data-step-title="Sequence log-probabilities">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 04</span></div>
+          <h2>Compute sequence log-probabilities, naively and then fast</h2>
+          <p class="build-step__goal"><span>Goal</span> One number per row: the log-probability of its answer, verified against the Hugging Face loss, with the vision encoder run only once per image.</p>
+        </header>
+        <p>Everything in DPO and GRPO reduces to one quantity, the sum of log-probabilities over answer tokens. The tensor work is three lines: shift, log-softmax, gather.</p>
+        [[L vlmalign/logprobs.py | ^def token_logprobs | auto | 6-9 | Position t predicts token t+1, so logits drop their last position and labels drop their first.]]
+        <p>The naive way to get logits is to hand <code>pixel_values</code> to the model. It runs the vision encoder once per row. But chosen and rejected share an image, and G rollouts share an image. So we run it once per distinct image and write the features into the placeholder slots ourselves.</p>
+        [[L vlmalign/logprobs.py | ^def merge_image_tokens | auto | 7-9 | masked_scatter fills the image slots with features in order. Gradients flow through it into the connector and the vision encoder.]]
+        [[L vlmalign/logprobs.py | ^def forward_logits | auto | 9-14 | The naive path and the fast path. A test proves they return identical logits.]]
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p>Compare against a trusted implementation. Our sum must equal minus the Hugging Face mean cross-entropy times the number of answer tokens. The tests use a tiny random Idefics3 with SmolVLM&rsquo;s module layout, so they run offline in seconds.</p>
+          [[L tests/test_logprobs_dpo.py | ^def test_sequence_logprob_matches_hf_loss | auto | | Our log-probability against the Hugging Face loss. Passing means our shift and mask match the library's.]]
+        </aside>
+        <p>Now measure what the fast path saves. One forward and backward pass on one image and G rollouts, with all three model parts trainable.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c09-vlm-post-training/benchmarks/bench_encode_once.py --groups 4 8 16</code></pre>
+        </figure>
+        [[O results/bench_encode_once.log | benchmarks/bench_encode_once.py | device= ]]
+        <aside class="callout callout-nuance">
+          <p class="callout-label">Nuance</p>
+          <p>[[NUANCE_BENCH]]</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_encode_once_equals_naive_path</code>, <code>test_sequence_logprob_matches_hf_loss</code> and <code>test_padding_does_not_change_a_row</code> pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-05" data-step-title="Image-conditioned DPO">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 05</span></div>
+          <h2>Write image-conditioned DPO by hand</h2>
+          <p class="build-step__goal"><span>Goal</span> The DPO loss with the image inside every term, trained on balanced negatives, with no second model in memory.</p>
+        </header>
+        <p>The derivation is in the theory post. Here is what the loss looks like in code. The image does not appear in this function, because it is already inside each log-probability.</p>
+        <a class="theory-link" href="../teaching-a-model-what-we-prefer/"><span class="theory-link__kicker">Derivation in</span>Teaching a model what we prefer</a>
+        [[L vlmalign/dpo.py | ^def dpo_loss | auto | 4-6 | The implicit rewards are log-ratios against the reference. The margin is their difference.]]
+        <p>The standard loss needs a reference model. A full second copy of SmolVLM costs about 1 GB. We avoid it in two ways. First, the reference never changes, so we score every training pair once and keep the numbers. Second, we train a LoRA adapter, whose zero initial state means a fresh adapter leaves the model exactly at the reference.</p>
+        [[L vlmalign/dpo.py | ^def reference_logprobs | auto | | Score the frozen starting model once, then keep two numbers per pair.]]
+        <p>TRL makes the same two choices. Its <code>DPOTrainer</code> has <code>precompute_ref_logps</code>, it can use a disabled adapter as the reference, and its default loss line is <code>-F.logsigmoid(self.beta * delta_score)</code>, which is the same as ours. We write ours by hand so nothing is hidden, not because the library is wrong.</p>
+        [[L vlmalign/lora.py | ^class LoRALinear | auto | 7-8,13 | B starts at zero, so a fresh adapter is an exact no-op. A test checks this, and another compares against PEFT.]]
+        <p>Here is one training step, from the script.</p>
+        [[L scripts/train_dpo.py | ^    for step in range\(args.steps\): | 8 | 2-6 | One DPO step. Pair indices select both the batch and its stored reference values.]]
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c09-vlm-post-training/scripts/train_dpo.py --negatives balanced --steps 150</code></pre>
+        </figure>
+        [[O results/dpo_balanced.log | scripts/train_dpo.py, Apple M5, MPS | \[dpo_balanced\] reference | step 149 | ^(\[dpo~step)]]
+        <figure class="ct-figure ct-figure--wide" id="fig-dpo">
+          <div class="ct-figure__stage"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 3</span>DPO on one real held-out pair. Hollow dots are the reference, which is the pretrained model. Filled dots are the policy after 150 steps. The lower panel is the real loss curve of this run.</figcaption>
+        </figure>
+        [[RESULT_DPO]]
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>Remove the reference: set <code>ref_chosen</code> and <code>ref_rejected</code> to zero. At step 0 the margin is no longer zero, because long answers have large negative log-probabilities that do not cancel when chosen and rejected tokenize to different lengths. <code>test_dpo_loss_is_log2_when_policy_equals_reference</code> is the check that catches this: the loss at step 0 must be exactly ln 2.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>The first batch has loss 0.693 and margin 0.</li>
+            <li><code>test_one_dpo_step_increases_the_margin</code> and <code>test_fresh_lora_is_an_exact_no_op</code> pass.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-06" data-step-title="The blind check">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 06</span></div>
+          <h2>Check whether the preference needs the image</h2>
+          <p class="build-step__goal"><span>Goal</span> Two judges that cannot see: a text-only probe on the dataset, and the VLM on grey images.</p>
+        </header>
+        <p>Nothing in the DPO loss forces the model to use the image. If the words predict the label, the cheapest way to lower the loss is to learn the words. Agrawal and colleagues showed the same effect for VQA, where models learned answer priors from biased splits. So we test for it directly, in two ways.</p>
+        <h3>Judge 1: a text-only probe on the dataset</h3>
+        <p>This judge never loads the model. It is a logistic regression over word counts, predicting which of two answers was chosen. Its features flip sign when the two answers swap, so it cannot learn to prefer whichever comes first.</p>
+        [[L vlmalign/blind.py | ^def pair_features | auto | 7-8 | Antisymmetric features, plus prompt-by-answer crosses. The probe has no bias term.]]
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c09-vlm-post-training/scripts/blind_probe.py --train 1000 --test 500</code></pre>
+        </figure>
+        [[O results/blind_probe.log | scripts/blind_probe.py | negatives ]]
+        <p>On balanced pairs the probe scores about chance on held-out data. On biased pairs it reaches 100% for colour, count and object, and 99% for OCR. Spatial stays near chance in both, because a flip of left and right has no text-only hint. The biased total sits near 91% only because spatial pulls it down.</p>
+        <aside class="callout callout-insight">
+          <p class="callout-label">Insight</p>
+          <p>Exchangeability gives this check a clean zero. If (a, b) and (b, a) are equally likely as (chosen, rejected), then any scorer that ignores the image is right on one and wrong on the other. So it scores 50% in expectation, whatever its priors are. Any held-out score above 50% on such a set must come from the image. You do not get this guarantee on natural data, which is why the stratification in step 2 is worth its few lines.</p>
+        </aside>
+        <h3>Judge 2: the VLM on a grey image</h3>
+        <p>The second judge is the model itself. We replace every image with a grey square of the same size and score the same pairs. The code path is the same: we only swap the images passed to <code>pair_batch</code>.</p>
+        [[L vlmalign/evaluate.py | ^def preference_accuracy | auto | 10 | The blind path differs by one line: the image.]]
+        <figure class="ct-figure ct-figure--wide" id="fig-blind">
+          <div class="ct-figure__stage"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 4</span>Preference accuracy with and without visual evidence. The orange dashed line is 50%, which is where any blind scorer lands on a balanced set. All stages are real results on held-out pairs (150 pairs per evaluation, 30 per kind).</figcaption>
+        </figure>
+        [[RESULT_BLIND]]
+        <aside class="callout callout-break">
+          <p class="callout-label">Break it</p>
+          <p>The biased run is itself the failure. Train it next to the balanced run and compare them on balanced pairs, as the figure does in its last stage.</p>
+          <figure class="terminal" data-cwd="blog-coding-tutorials">
+            <pre><code>$ .venv/bin/python c09-vlm-post-training/scripts/train_dpo.py --negatives biased --steps 150</code></pre>
+          </figure>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_text_probe_sees_bias_but_not_balance</code> passes.</li>
+            <li>You would now run this probe before any preference training, because it costs seconds and needs no GPU.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-07" data-step-title="Visual rewards">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 07</span></div>
+          <h2>Write and test visual reward functions</h2>
+          <p class="build-step__goal"><span>Goal</span> Small tested functions from prediction and ground truth to a number in [0, 1], one per visual task.</p>
+        </header>
+        <p>A reward is a specification. It should be short enough to read at once and tested like any other function. We write one for each skill in the plan.</p>
+        <div class="code-tabs" data-label="Rewards">
+          [[L vlmalign/rewards.py | ^def exact_match | auto | | VQA: exact match after normalising case, punctuation, articles and number words.]]
+          [[L vlmalign/rewards.py | ^def box_iou | auto | | Boxes: intersection over union.]]
+          [[L vlmalign/rewards.py | ^def mask_dice | auto | | Masks: Dice, which is always at least IoU.]]
+          [[L vlmalign/rewards.py | ^def anls | auto | | OCR: ANLS. Similarity below 0.5 is cut to zero.]]
+          [[L vlmalign/rewards.py | ^def field_accuracy | auto | | Structured extraction: fraction of gold fields that match. Extra keys earn nothing.]]
+        </div>
+        <table class="shape-table">
+          <caption>Visual reward functions</caption>
+          <thead><tr><th>Task</th><th>Function</th><th>Prediction type</th><th>Key property</th></tr></thead>
+          <tbody>
+            <tr><td>VQA</td><td><code>exact_match</code></td><td>str</td><td>All or nothing. No gradient of quality.</td></tr>
+            <tr><td>Box</td><td><code>box_reward</code></td><td>str, parsed to 4 numbers</td><td>IoU, and 0 if unparseable, so format is part of the task.</td></tr>
+            <tr><td>Mask</td><td><code>mask_iou</code>, <code>mask_dice</code></td><td>(H, W) bool</td><td>Dice = 2 IoU / (1 + IoU).</td></tr>
+            <tr><td>OCR</td><td><code>anls</code>, <code>cer</code></td><td>str</td><td>Rewards near-misses. ANLS caps garbage at 0.</td></tr>
+            <tr><td>Structured</td><td><code>field_accuracy</code></td><td>JSON str</td><td>Invalid JSON scores 0. Extra keys add nothing.</td></tr>
+          </tbody>
+        </table>
+        <p>We also write two deliberately weak rewards for step 10. <code>center_in_box</code> pays if the gold centre lies inside the predicted box. <code>caption_recall</code> pays for each true item mentioned. Before training on any reward, audit it with hand-written bad answers. This costs nothing.</p>
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c09-vlm-post-training/scripts/reward_audit.py</code></pre>
+        </figure>
+        [[O results/reward_audit.log | scripts/reward_audit.py | task: box ]]
+        <p>Drag the blue box below. Then press the whole-image preset, which is the third row of the first table.</p>
+        <figure class="ct-figure" id="fig-iou">
+          <div class="ct-knobs" role="group" aria-label="Box presets">
+            <button type="button" data-preset="tight">Tight box</button>
+            <button type="button" data-preset="whole">Whole image</button>
+            <button type="button" data-preset="tiny">Tiny box at centre</button>
+            <button type="button" data-preset="off">Wrong place</button>
+          </div>
+          <div class="ct-figure__stage"></div>
+          <div class="ct-readout" aria-live="polite">
+            <div><span>IoU</span><b id="iou-iou">0</b></div>
+            <div><span>Dice of boxes</span><b id="iou-dice">0</b></div>
+            <div><span>Weak: centre in box</span><b id="iou-center">0</b></div>
+          </div>
+          <p class="iou-out" id="iou-text"></p>
+          <p class="iou-verdict" id="iou-verdict"></p>
+          <figcaption><span class="ct-fig-num">Figure 5</span>IoU against a weak reward. The green box and dot are the gold box and its centre. Drag the blue box to move it, and drag its square corner to resize it, or focus the corner and use the arrow keys. A tiny box at the centre also scores full marks on the weak reward. Only IoU penalises both kinds of cheating.</figcaption>
+        </figure>
+        <aside class="callout callout-test">
+          <p class="callout-label">Test</p>
+          <p><code>test_box_iou_known_values</code> uses boxes whose answer we can compute by hand (1/3 at half overlap). <code>test_center_in_box_is_gameable_iou_is_not</code> and <code>test_caption_recall_rewards_hallucination_f1_does_not</code> record the known exploits as tests, so the weak rewards cannot be mistaken for strong ones later.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>All nine tests in <code>tests/test_rewards.py</code> pass.</li>
+            <li>The audit table shows a whole-image box scoring 1.00 on the weak reward and 0.038 on IoU.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-08" data-step-title="Visual GRPO">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 08</span></div>
+          <h2>Build visual GRPO</h2>
+          <p class="build-step__goal"><span>Goal</span> G sampled answers per image, rewards from the scene, relative advantages, one policy update.</p>
+        </header>
+        <p>GRPO needs no value model. For each image and prompt it samples G answers and compares them with each other. The method comes from DeepSeekMath, and the theory post covers why it works. We only add the image.</p>
+        <a class="theory-link" href="../how-reinforcement-learning-teaches-models-to-reason/"><span class="theory-link__kicker">Derivation in</span>How reinforcement learning teaches models to reason</a>
+        [[L vlmalign/grpo.py | ^def group_advantages | auto | 7,9 | Each answer is compared only with others for the same image. We keep the optional std scale, and Dr. GRPO's variant without it.]]
+        <p>Rollouts are sampled at temperature 1 with no top-k or top-p, so that we sample the policy we then differentiate. Every row in a group shares one image, so the fast path from step 4 pays off here most.</p>
+        [[L vlmalign/grpo.py | ^def sample_group | auto | 5-8,13 | num_return_sequences gives G samples for one image. Everything after the first end_of_utterance becomes padding.]]
+        [[L vlmalign/grpo.py | ^def grpo_loss | auto | 8,10 | The clipped objective. With one update per batch the ratio is 1, so the gradient is the advantage times the score. KL to a reference is optional.]]
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c09-vlm-post-training/scripts/show_rollouts.py --group 8</code></pre>
+        </figure>
+        [[O results/show_rollouts.log | scripts/show_rollouts.py | prompt: | answer tokens per row ]]
+        <p>Read the third group. All eight samples are wrong and identical, so every advantage is zero. Nothing is learned from that image, however bad the answers are.</p>
+        <figure class="ct-figure ct-figure--wide" id="fig-grpo">
+          <div class="ct-figure__stage"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 6</span>One real GRPO group for one synthetic image, from <code>show_rollouts.py</code>. Rollouts appear, the scene scores them, the group mean and standard deviation become advantages, and the advantages decide which tokens move up or down.</figcaption>
+        </figure>
+        <table class="shape-table">
+          <caption>Shapes in one GRPO step (P = 4 images, G = 8 rollouts)</caption>
+          <thead><tr><th>Tensor</th><th>Shape</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>completions</td><td>(G, L)</td><td>Sampled ids per image, padded after the stop token.</td></tr>
+            <tr><td>rewards</td><td>(P, G) = (4, 8)</td><td>One number per rollout.</td></tr>
+            <tr><td>advantages</td><td>(P, G) &rarr; (32,)</td><td>Zero mean within each image.</td></tr>
+            <tr><td>input_ids</td><td>(32, T)</td><td>Prompts plus completions, right padded.</td></tr>
+            <tr><td>pixel_values</td><td>(4, 1, 3, 512, 512)</td><td>Four images, not 32.</td></tr>
+            <tr><td>logp, mask</td><td>(32, T &minus; 1)</td><td>Per token. Each advantage is broadcast along its row.</td></tr>
+          </tbody>
+        </table>
+        <p>One training step, from the script. It is short because the pieces already exist.</p>
+        [[L scripts/train_grpo.py | ^        # 1\) rollouts | 16 | 2-5,11,13 | One visual GRPO step. We also log a strict reward, even when training on a weak one.]]
+        <aside class="callout callout-nuance">
+          <p class="callout-label">Nuance</p>
+          <p>We set the KL weight to zero by default, as Liu and colleagues recommend in Dr. GRPO, and take one update per batch. The code supports both a KL term and several updates, with clipping, but a short laptop run does not need them. Setting them differently is a real choice to evaluate, not a free default.</p>
+        </aside>
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_group_advantages_are_relative_within_each_image</code> and <code>test_on_policy_grpo_gradient_is_advantage_times_score</code> pass.</li>
+            <li>A flat group gives zero advantage in your own printout.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-09" data-step-title="Freeze ablation">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 09</span></div>
+          <h2>Ask whether RL improved perception or reasoning</h2>
+          <p class="build-step__goal"><span>Goal</span> The same GRPO run three times, with different parts allowed to learn, and tests that separate seeing from counting.</p>
+        </header>
+        <p>Counting is SmolVLM&rsquo;s weakest skill here, so it is the task with the most room to move. We run GRPO on it with exact-match reward, three times. The seed and the data are the same. Only the trainable set changes.</p>
+        [[L vlmalign/freeze.py | ^def configure_trainable | auto | 7-13 | Freeze everything, then open up one part at a time. A test checks that image features cannot change when the vision encoder and connector are frozen.]]
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c09-vlm-post-training/scripts/train_grpo.py --freeze llm --steps 60 --eval both
+$ .venv/bin/python c09-vlm-post-training/scripts/train_grpo.py --freeze projector+llm --steps 60
+$ .venv/bin/python c09-vlm-post-training/scripts/train_grpo.py --freeze all --steps 60</code></pre>
+        </figure>
+        <p>An accuracy gain alone does not separate perception from reasoning. So we measure three things after each run.</p>
+        <ul>
+          <li><strong>Counting from pixels.</strong> The training task itself, on 100 held-out images.</li>
+          <li><strong>Counting from text.</strong> We write the objects in the prompt and show a grey image. Here perception is not needed.</li>
+          <li><strong>The perception probe.</strong> A fresh linear probe from pooled image features to per-shape counts, on 800 other scenes. If it improves, the features changed in a useful way.</li>
+        </ul>
+        [[L vlmalign/evaluate.py | ^def text_count_accuracy | auto | 4-6 | The control for reasoning: the same counting question with the objects written in the prompt and a grey image.]]
+        [[L scripts/perception_probe.py | ^def probe_accuracy | auto | 4 | The control for perception: ridge regression from image features to per-shape counts.]]
+        <figure class="ct-figure ct-figure--wide" id="fig-freeze">
+          <div class="ct-figure__stage"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 7</span>The freeze ablation. Left: which parts train, with real trainable counts. Right: real held-out accuracy before and after 60 GRPO steps on counting, using 100 images for the first group and 60 for the second, and 120 questions for the last.</figcaption>
+        </figure>
+        [[RESULT_FREEZE]]
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li><code>test_freeze_modes_control_what_moves</code> passes for all three modes.</li>
+            <li><code>results/grpo_count_exact_*.json</code> and <code>results/perception_probe.json</code> hold your own numbers.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section class="build-step" id="step-10" data-step-title="Hack the reward">
+        <header class="build-step__head">
+          <div class="build-step__topline"><span class="build-step__badge">Step 10</span></div>
+          <h2>Hack the reward on purpose</h2>
+          <p class="build-step__goal"><span>Goal</span> Train on a weak reward, watch how the policy responds, and build the monitors that catch it.</p>
+        </header>
+        <p>The prompt is <code>List the colors of the shapes in the image.</code> The weak reward is recall: the fraction of true colours mentioned. A caption that names every colour earns full marks. Hallucinated colours cost nothing, which links this step back to the start of the tutorial.</p>
+        [[L vlmalign/rewards.py | ^def caption_recall | auto | | The weak reward. Nothing penalises naming a colour that is not there.]]
+        [[L vlmalign/rewards.py | ^def caption_f1 | auto | 3-6 | The fix. A hallucinated mention costs precision.]]
+        <p>The monitors are small. We count the colours named, the colours named that are not in the image, the answer length, and a strict reward we do not train on. We log them on every step, whatever the training reward is.</p>
+        [[L vlmalign/rl_tasks.py | ^def caption_stats | auto | | Monitors. The training reward cannot see them, so they cannot be gamed by accident.]]
+        <figure class="terminal" data-cwd="blog-coding-tutorials">
+          <pre><code>$ .venv/bin/python c09-vlm-post-training/scripts/train_grpo.py --task caption --reward color_recall --steps 60 --max-new-tokens 24 --eval both
+$ .venv/bin/python c09-vlm-post-training/scripts/train_grpo.py --task caption --reward color_f1 --steps 60 --max-new-tokens 24</code></pre>
+        </figure>
+        <figure class="ct-figure ct-figure--wide" id="fig-hack">
+          <div class="ct-figure__stage"></div>
+          <p class="ct-figure__note"></p>
+          <figcaption><span class="ct-fig-num">Figure 8</span>A run trained on the weak recall reward. Left: weak reward against honest F1. Right: colours named against colours that were not in the image. Curves are moving averages of 8 steps, with 32 rollouts per step. Real run, Apple M5, MPS.</figcaption>
+        </figure>
+        [[RESULT_HACK]]
+        <footer class="build-step__checkpoint">
+          <p class="checkpoint-label">Checkpoint</p>
+          <ul>
+            <li>Your log shows <code>colors=</code> and <code>halluc=</code> next to the reward.</li>
+            <li>You can name, for each reward in this post, one output that games it.</li>
+          </ul>
+        </footer>
+      </section>
+
+      <section id="comparison">
+        <h2>The training modes compared</h2>
+        <p>Rows are the post-training runs we did. Columns are the aspects this post introduced. Read across a row to see what a run could change and what it actually changed. Then read down the &ldquo;can it use a shortcut&rdquo; column: that is what you need to check first.</p>
+        <div class="comparison-table-wrap">
+          [[COMPARISON]]
+        </div>
+      </section>
+
+      <section id="run-everything">
+        <h2>Run everything</h2>
+        <p>The final folder, and every command that produced a number in this post. <code>scripts/run_all.sh</code> runs them in order and writes logs and JSON to <code>results/</code>.</p>
+        <details class="repo-tree" open>
+          <summary>c09-vlm-post-training/ <span class="repo-tree__hint">final tree</span></summary>
+<pre>[[TREE]]</pre>
+        </details>
+        <figure class="terminal" data-cwd="blog-coding-tutorials" data-label="Run it all">
+          <pre><code>$ .venv/bin/python -m pytest c09-vlm-post-training -m "not slow and not gpu" -q
+$ c09-vlm-post-training/scripts/run_all.sh</code></pre>
+        </figure>
+        <figure class="code-output" data-from="pytest, Apple M5">
+          <pre><code>[[PYTEST]]</code></pre>
+        </figure>
+        <p>Nothing in this tutorial needs a GPU. On CUDA, <code>pick_device</code> selects it automatically. No GPU numbers are quoted here, because none were measured.</p>
+      </section>
+
+      <section id="key-insights">
+        <h2>Key insights and nuances</h2>
+        <ul class="insight-list">
+          [[INSIGHTS]]
+        </ul>
+      </section>
+
+      <section id="exercises">
+        <h2>Exercises</h2>
+        <ol class="exercises">
+          <li><strong>Grounding with GRPO</strong><span class="exercise-level">Hard</span> Add a task that asks for the box of a named object, using <code>box_reward</code>. Train it on the weak <code>center_in_box</code> reward and then on IoU. Log mean box area as the monitor.
+            <details><summary>Hint</summary><p>SmolVLM rarely writes four numbers unprompted. Give the format in the prompt, and count how many rollouts parse at all. If none parse, every group is flat, and nothing is learned.</p></details>
+          </li>
+          <li><strong>Measure the shortcut per kind</strong><span class="exercise-level">Medium</span> Make only OCR biased in <code>wrong_value</code> and leave the rest balanced. Train DPO and report grey-image accuracy per kind. Does the shortcut stay in OCR, or does it reach the other kinds?</li>
+          <li><strong>Add a shape of the wrong kind of hard</strong><span class="exercise-level">Medium</span> Make object sizes smaller in <code>sample_scene</code> and rerun the perception probe on the pretrained features. Find the size at which counting stops being linearly readable.
+            <details><summary>Hint</summary><p>A 16-pixel patch merges into one token per 64 pixels. Objects smaller than that share a token.</p></details>
+          </li>
+          <li><strong>Switch off the std scale</strong><span class="exercise-level">Easy</span> Pass <code>scale_by_std=False</code> to <code>group_advantages</code> and compare counting after 60 steps. Then compare the fraction of groups with one correct answer at each setting, to see how Dr. GRPO changes the weight of those groups.</li>
+          <li><strong>A better shortcut meter</strong><span class="exercise-level">Hard</span> Replace the bag-of-words probe with a small sequence model trained on the same pairs. Can a stronger blind judge beat 50% on the balanced set? If it does, you have found a leak in the generator, and you should fix it.</li>
+        </ol>
+      </section>
+
+      <section id="continue-reading">
+        <h2>Continue reading</h2>
+        <ul>
+          <li><a href="../aligning-vision-language-models/">Aligning vision-language models</a>: the theory of hallucination, multimodal preferences and safety.</li>
+          <li><a href="../rewarding-what-the-model-sees/">Rewarding what the model sees</a>: the theory of visual rewards and multimodal RL.</li>
+          <li><a href="../when-language-must-point/">When language must point</a>: grounding and the box and mask outputs these rewards score.</li>
+          <li><a href="../measuring-what-a-vlm-can-do/">Measuring what a VLM can do</a>: the benchmarks and metrics behind ANLS, CER and IoU.</li>
+          <li><a href="../post-train-an-llm/">Post-Train an LLM</a>: the text-only version of this stack, with SFT.</li>
+          <li><a href="../build-an-agent-harness-from-scratch/">Build an Agent Harness From Scratch</a>: where the series goes next.</li>
+        </ul>
+      </section>
+
+      <section id="references">
+        <h2>References</h2>
+        <p class="references-intro">Grouped by topic. Every entry links to its primary source.</p>
+        <div class="reference-group">
+          <h3>Preference learning and hallucination</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener noreferrer">Direct Preference Optimization: Your Language Model is Secretly a Reward Model</a> &middot; Rafailov et al., 2023</li>
+            <li><a href="https://arxiv.org/abs/2311.16839" target="_blank" rel="noopener noreferrer">Beyond Hallucinations: Enhancing LVLMs through Hallucination-Aware Direct Preference Optimization</a> &middot; Zhao et al., 2023</li>
+            <li><a href="https://arxiv.org/abs/1809.02156" target="_blank" rel="noopener noreferrer">Object Hallucination in Image Captioning</a> &middot; Rohrbach et al., 2018</li>
+            <li><a href="https://arxiv.org/abs/1712.00377" target="_blank" rel="noopener noreferrer">Don&rsquo;t Just Assume; Look and Answer: Overcoming Priors for Visual Question Answering</a> &middot; Agrawal et al., 2018</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Reinforcement learning</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/2402.03300" target="_blank" rel="noopener noreferrer">DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models</a> &middot; Shao et al., 2024</li>
+            <li><a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener noreferrer">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</a> &middot; DeepSeek-AI, 2025</li>
+            <li><a href="https://arxiv.org/abs/2503.20783" target="_blank" rel="noopener noreferrer">Understanding R1-Zero-Like Training: A Critical Perspective</a> &middot; Liu et al., 2025</li>
+            <li><a href="https://arxiv.org/abs/1707.06347" target="_blank" rel="noopener noreferrer">Proximal Policy Optimization Algorithms</a> &middot; Schulman et al., 2017</li>
+            <li><a href="https://arxiv.org/abs/1606.06565" target="_blank" rel="noopener noreferrer">Concrete Problems in AI Safety</a> &middot; Amodei et al., 2016</li>
+            <li><a href="https://arxiv.org/abs/2209.13085" target="_blank" rel="noopener noreferrer">Defining and Characterizing Reward Hacking</a> &middot; Skalse et al., 2022</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Metrics</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/1905.13648" target="_blank" rel="noopener noreferrer">Scene Text Visual Question Answering</a> &middot; Biten et al., 2019 (ANLS)</li>
+            <li><a href="https://arxiv.org/abs/2007.00398" target="_blank" rel="noopener noreferrer">DocVQA: A Dataset for VQA on Document Images</a> &middot; Mathew et al., 2021</li>
+          </ul>
+        </div>
+        <div class="reference-group">
+          <h3>Model and tools</h3>
+          <ul>
+            <li><a href="https://arxiv.org/abs/2504.05299" target="_blank" rel="noopener noreferrer">SmolVLM: Redefining Small and Efficient Multimodal Models</a> &middot; Marafioti et al., 2025</li>
+            <li><a href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noopener noreferrer">LoRA: Low-Rank Adaptation of Large Language Models</a> &middot; Hu et al., 2021</li>
+            <li><a href="https://github.com/huggingface/trl" target="_blank" rel="noopener noreferrer">TRL: Transformer Reinforcement Learning</a> &middot; Hugging Face</li>
+            <li><a href="https://github.com/srini-anirudh/blog-coding-tutorials/tree/main/c09-vlm-post-training" target="_blank" rel="noopener noreferrer">blog-coding-tutorials: c09-vlm-post-training</a> &middot; the code for this tutorial</li>
+          </ul>
+        </div>
+      </section>

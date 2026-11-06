@@ -1,0 +1,5 @@
+- [Commit habits](feedback-commits.md) — commit + push often; no Claude attribution in commits
+- [Blog writing rules](feedback-blog-writing.md) — follow docs/blog-writing-guide.md; short sentences, no 'respectively', deep lit survey, light figures
+- [VLM series project](project-vlm-series.md) — 20-post VLM series done; 3 research drafts held for author review
+- [Research interests](project-research-interests.md) — 3 interests; don't draft sovereign-FM / VLM-infra theses until user says
+- [Coding tutorials series](project-code-series.md) — C1–C12 code-first posts; code in separate repo backward-pass-code
