@@ -1,0 +1,59 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads | torch 2.15.0+cu132",
+  "command": "python labs/inside-a-modern-vision-encoder/scripts/03_pixel_shuffle.py",
+  "shapes": [
+    [
+      "InternVL tile (InternViT-300M, d=1024)",
+      "1024 x 1024",
+      "256 x 4096",
+      "4x",
+      "0.0"
+    ],
+    [
+      "SmolVLM-256M crop (config.json, d=768)",
+      "1024 x 768",
+      "64 x 12288",
+      "16x",
+      "0.0"
+    ],
+    [
+      "27 x 27 grid, r = 3 (the post's SmolVLM example)",
+      "729 x 1152",
+      "81 x 10368",
+      "9x",
+      "0.0"
+    ]
+  ],
+  "bar_tile": {
+    "original": {
+      "rmse": 0.0,
+      "swing": {
+        "2": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "9": 1.0,
+        "15": 1.0
+      }
+    },
+    "pixel shuffle, then inverse": {
+      "rmse": 0.0,
+      "swing": {
+        "2": 1.0,
+        "3": 1.0,
+        "5": 1.0,
+        "9": 1.0,
+        "15": 1.0
+      }
+    },
+    "2x2 average pool, then repeat": {
+      "rmse": 0.23879234492778778,
+      "swing": {
+        "2": 0.5,
+        "3": 0.5,
+        "5": 0.5,
+        "9": 1.0,
+        "15": 0.5
+      }
+    }
+  }
+}

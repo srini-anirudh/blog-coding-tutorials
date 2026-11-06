@@ -1,0 +1,972 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads | torch 2.15.0+cu132",
+  "command": "python labs/inside-a-modern-vision-encoder/scripts/01_intake_bench.py",
+  "bench": [
+    {
+      "shape": "A4 page 1:1.41",
+      "strategy": "CLIP crop 224",
+      "patches": 256,
+      "llm_tokens": 256,
+      "views": 1,
+      "scale_x": 0.3085,
+      "scale_y": 0.3086,
+      "distortion_pct": 0.0,
+      "discarded_pct": 29.1,
+      "padding_pct": 0.0,
+      "resolved_measured": 3,
+      "resolved_proxy": 2,
+      "worst_swing": {
+        "24": null,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 0.894,
+        "3": null
+      },
+      "notes": []
+    },
+    {
+      "shape": "A4 page 1:1.41",
+      "strategy": "Squash 336",
+      "patches": 576,
+      "llm_tokens": 576,
+      "views": 1,
+      "scale_x": 0.4628,
+      "scale_y": 0.3281,
+      "distortion_pct": 41.0,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 4,
+      "resolved_proxy": 4,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 0.984,
+        "3": 0.082
+      },
+      "notes": []
+    },
+    {
+      "shape": "A4 page 1:1.41",
+      "strategy": "Letterbox 384",
+      "patches": 729,
+      "llm_tokens": 729,
+      "views": 1,
+      "scale_x": 0.3747,
+      "scale_y": 0.375,
+      "distortion_pct": 0.1,
+      "discarded_pct": 0.0,
+      "padding_pct": 29.2,
+      "resolved_measured": 5,
+      "resolved_proxy": 4,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 0.812
+      },
+      "notes": []
+    },
+    {
+      "shape": "A4 page 1:1.41",
+      "strategy": "AnyRes tiles",
+      "patches": 2880,
+      "llm_tokens": 2880,
+      "views": 5,
+      "scale_x": 0.657,
+      "scale_y": 0.6562,
+      "distortion_pct": 0.1,
+      "discarded_pct": 0.0,
+      "padding_pct": 29.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": [
+        "token count before LLaVA-NeXT removes padded features and adds row-end tokens"
+      ]
+    },
+    {
+      "shape": "A4 page 1:1.41",
+      "strategy": "InternVL tiles + shuffle",
+      "patches": 13312,
+      "llm_tokens": 3328,
+      "views": 13,
+      "scale_x": 1.8512,
+      "scale_y": 1.75,
+      "distortion_pct": 5.8,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "A4 page 1:1.41",
+      "strategy": "Native (Qwen)",
+      "patches": 3848,
+      "llm_tokens": 962,
+      "views": 1,
+      "scale_x": 1.0028,
+      "scale_y": 1.0117,
+      "distortion_pct": 0.9,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "A4 page 1:1.41",
+      "strategy": "NaFlex 1024",
+      "patches": 999,
+      "llm_tokens": 999,
+      "views": 1,
+      "scale_x": 0.595,
+      "scale_y": 0.5781,
+      "distortion_pct": 2.9,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Photo 4:3",
+      "strategy": "CLIP crop 224",
+      "patches": 256,
+      "llm_tokens": 256,
+      "views": 1,
+      "scale_x": 0.292,
+      "scale_y": 0.2917,
+      "distortion_pct": 0.1,
+      "discarded_pct": 25.1,
+      "padding_pct": 0.0,
+      "resolved_measured": 3,
+      "resolved_proxy": 2,
+      "worst_swing": {
+        "24": null,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 0.82,
+        "3": null
+      },
+      "notes": []
+    },
+    {
+      "shape": "Photo 4:3",
+      "strategy": "Squash 336",
+      "patches": 576,
+      "llm_tokens": 576,
+      "views": 1,
+      "scale_x": 0.3281,
+      "scale_y": 0.4375,
+      "distortion_pct": 33.3,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 4,
+      "resolved_proxy": 4,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 0.984,
+        "3": 0.084
+      },
+      "notes": []
+    },
+    {
+      "shape": "Photo 4:3",
+      "strategy": "Letterbox 384",
+      "patches": 729,
+      "llm_tokens": 729,
+      "views": 1,
+      "scale_x": 0.375,
+      "scale_y": 0.375,
+      "distortion_pct": 0.0,
+      "discarded_pct": 0.0,
+      "padding_pct": 25.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 4,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 0.812
+      },
+      "notes": []
+    },
+    {
+      "shape": "Photo 4:3",
+      "strategy": "AnyRes tiles",
+      "patches": 2880,
+      "llm_tokens": 2880,
+      "views": 5,
+      "scale_x": 0.6562,
+      "scale_y": 0.6562,
+      "distortion_pct": 0.0,
+      "discarded_pct": 0.0,
+      "padding_pct": 25.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": [
+        "token count before LLaVA-NeXT removes padded features and adds row-end tokens"
+      ]
+    },
+    {
+      "shape": "Photo 4:3",
+      "strategy": "InternVL tiles + shuffle",
+      "patches": 13312,
+      "llm_tokens": 3328,
+      "views": 13,
+      "scale_x": 1.75,
+      "scale_y": 1.75,
+      "distortion_pct": 0.0,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Photo 4:3",
+      "strategy": "Native (Qwen)",
+      "patches": 3996,
+      "llm_tokens": 999,
+      "views": 1,
+      "scale_x": 1.0117,
+      "scale_y": 0.9844,
+      "distortion_pct": 2.8,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Photo 4:3",
+      "strategy": "NaFlex 1024",
+      "patches": 972,
+      "llm_tokens": 972,
+      "views": 1,
+      "scale_x": 0.5625,
+      "scale_y": 0.5625,
+      "distortion_pct": 0.0,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Screenshot 16:9",
+      "strategy": "CLIP crop 224",
+      "patches": 256,
+      "llm_tokens": 256,
+      "views": 1,
+      "scale_x": 0.3887,
+      "scale_y": 0.3889,
+      "distortion_pct": 0.1,
+      "discarded_pct": 43.7,
+      "padding_pct": 0.0,
+      "resolved_measured": 3,
+      "resolved_proxy": 3,
+      "worst_swing": {
+        "24": null,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": null
+      },
+      "notes": []
+    },
+    {
+      "shape": "Screenshot 16:9",
+      "strategy": "Squash 336",
+      "patches": 576,
+      "llm_tokens": 576,
+      "views": 1,
+      "scale_x": 0.3281,
+      "scale_y": 0.5833,
+      "distortion_pct": 77.8,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 4,
+      "resolved_proxy": 4,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 0.984,
+        "3": 0.082
+      },
+      "notes": []
+    },
+    {
+      "shape": "Screenshot 16:9",
+      "strategy": "Letterbox 384",
+      "patches": 729,
+      "llm_tokens": 729,
+      "views": 1,
+      "scale_x": 0.375,
+      "scale_y": 0.375,
+      "distortion_pct": 0.0,
+      "discarded_pct": 0.0,
+      "padding_pct": 43.8,
+      "resolved_measured": 5,
+      "resolved_proxy": 4,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 0.812
+      },
+      "notes": []
+    },
+    {
+      "shape": "Screenshot 16:9",
+      "strategy": "AnyRes tiles",
+      "patches": 2880,
+      "llm_tokens": 2880,
+      "views": 5,
+      "scale_x": 0.6562,
+      "scale_y": 0.6562,
+      "distortion_pct": 0.0,
+      "discarded_pct": 0.0,
+      "padding_pct": 43.8,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": [
+        "token count before LLaVA-NeXT removes padded features and adds row-end tokens"
+      ]
+    },
+    {
+      "shape": "Screenshot 16:9",
+      "strategy": "InternVL tiles + shuffle",
+      "patches": 3072,
+      "llm_tokens": 768,
+      "views": 3,
+      "scale_x": 0.875,
+      "scale_y": 0.7778,
+      "distortion_pct": 12.5,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Screenshot 16:9",
+      "strategy": "Native (Qwen)",
+      "patches": 3108,
+      "llm_tokens": 777,
+      "views": 1,
+      "scale_x": 1.0117,
+      "scale_y": 1.0208,
+      "distortion_pct": 0.9,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Screenshot 16:9",
+      "strategy": "NaFlex 1024",
+      "patches": 1008,
+      "llm_tokens": 1008,
+      "views": 1,
+      "scale_x": 0.6562,
+      "scale_y": 0.6667,
+      "distortion_pct": 1.6,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 0.922
+      },
+      "notes": []
+    },
+    {
+      "shape": "Receipt 1:3.2",
+      "strategy": "CLIP crop 224",
+      "patches": 256,
+      "llm_tokens": 256,
+      "views": 1,
+      "scale_x": 0.7,
+      "scale_y": 0.7002,
+      "distortion_pct": 0.0,
+      "discarded_pct": 68.8,
+      "padding_pct": 0.0,
+      "resolved_measured": 1,
+      "resolved_proxy": 1,
+      "worst_swing": {
+        "24": null,
+        "15": null,
+        "9": 1.0,
+        "5": null,
+        "3": null
+      },
+      "notes": []
+    },
+    {
+      "shape": "Receipt 1:3.2",
+      "strategy": "Squash 336",
+      "patches": 576,
+      "llm_tokens": 576,
+      "views": 1,
+      "scale_x": 1.05,
+      "scale_y": 0.3281,
+      "distortion_pct": 220.0,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 4,
+      "resolved_proxy": 4,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 0.984,
+        "3": 0.082
+      },
+      "notes": []
+    },
+    {
+      "shape": "Receipt 1:3.2",
+      "strategy": "Letterbox 384",
+      "patches": 729,
+      "llm_tokens": 729,
+      "views": 1,
+      "scale_x": 0.375,
+      "scale_y": 0.375,
+      "distortion_pct": 0.0,
+      "discarded_pct": 0.0,
+      "padding_pct": 68.8,
+      "resolved_measured": 5,
+      "resolved_proxy": 4,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 0.812
+      },
+      "notes": []
+    },
+    {
+      "shape": "Receipt 1:3.2",
+      "strategy": "AnyRes tiles",
+      "patches": 2304,
+      "llm_tokens": 2304,
+      "views": 4,
+      "scale_x": 0.9844,
+      "scale_y": 0.9844,
+      "distortion_pct": 0.0,
+      "discarded_pct": 0.0,
+      "padding_pct": 6.2,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": [
+        "token count before LLaVA-NeXT removes padded features and adds row-end tokens"
+      ]
+    },
+    {
+      "shape": "Receipt 1:3.2",
+      "strategy": "InternVL tiles + shuffle",
+      "patches": 4096,
+      "llm_tokens": 1024,
+      "views": 4,
+      "scale_x": 1.4,
+      "scale_y": 1.3125,
+      "distortion_pct": 6.7,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Receipt 1:3.2",
+      "strategy": "Native (Qwen)",
+      "patches": 1628,
+      "llm_tokens": 407,
+      "views": 1,
+      "scale_x": 0.9625,
+      "scale_y": 1.0117,
+      "distortion_pct": 5.1,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Receipt 1:3.2",
+      "strategy": "NaFlex 1024",
+      "patches": 1008,
+      "llm_tokens": 1008,
+      "views": 1,
+      "scale_x": 0.9,
+      "scale_y": 0.875,
+      "distortion_pct": 2.9,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Panorama 3:1",
+      "strategy": "CLIP crop 224",
+      "patches": 256,
+      "llm_tokens": 256,
+      "views": 1,
+      "scale_x": 0.6572,
+      "scale_y": 0.6569,
+      "distortion_pct": 0.1,
+      "discarded_pct": 66.7,
+      "padding_pct": 0.0,
+      "resolved_measured": 1,
+      "resolved_proxy": 1,
+      "worst_swing": {
+        "24": null,
+        "15": null,
+        "9": 1.0,
+        "5": null,
+        "3": null
+      },
+      "notes": []
+    },
+    {
+      "shape": "Panorama 3:1",
+      "strategy": "Squash 336",
+      "patches": 576,
+      "llm_tokens": 576,
+      "views": 1,
+      "scale_x": 0.3281,
+      "scale_y": 0.9853,
+      "distortion_pct": 200.3,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 4,
+      "resolved_proxy": 4,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 0.984,
+        "3": 0.082
+      },
+      "notes": []
+    },
+    {
+      "shape": "Panorama 3:1",
+      "strategy": "Letterbox 384",
+      "patches": 729,
+      "llm_tokens": 729,
+      "views": 1,
+      "scale_x": 0.375,
+      "scale_y": 0.3754,
+      "distortion_pct": 0.1,
+      "discarded_pct": 0.0,
+      "padding_pct": 66.7,
+      "resolved_measured": 5,
+      "resolved_proxy": 4,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 0.812
+      },
+      "notes": []
+    },
+    {
+      "shape": "Panorama 3:1",
+      "strategy": "AnyRes tiles",
+      "patches": 2304,
+      "llm_tokens": 2304,
+      "views": 4,
+      "scale_x": 0.9844,
+      "scale_y": 0.9853,
+      "distortion_pct": 0.1,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": [
+        "token count before LLaVA-NeXT removes padded features and adds row-end tokens"
+      ]
+    },
+    {
+      "shape": "Panorama 3:1",
+      "strategy": "InternVL tiles + shuffle",
+      "patches": 4096,
+      "llm_tokens": 1024,
+      "views": 4,
+      "scale_x": 1.3125,
+      "scale_y": 1.3138,
+      "distortion_pct": 0.1,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Panorama 3:1",
+      "strategy": "Native (Qwen)",
+      "patches": 1776,
+      "llm_tokens": 444,
+      "views": 1,
+      "scale_x": 1.0117,
+      "scale_y": 0.9853,
+      "distortion_pct": 2.7,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    },
+    {
+      "shape": "Panorama 3:1",
+      "strategy": "NaFlex 1024",
+      "patches": 990,
+      "llm_tokens": 990,
+      "views": 1,
+      "scale_x": 0.8594,
+      "scale_y": 0.8446,
+      "distortion_pct": 1.8,
+      "discarded_pct": 0.0,
+      "padding_pct": 0.0,
+      "resolved_measured": 5,
+      "resolved_proxy": 5,
+      "worst_swing": {
+        "24": 1.0,
+        "15": 1.0,
+        "9": 1.0,
+        "5": 1.0,
+        "3": 1.0
+      },
+      "notes": []
+    }
+  ],
+  "calculator": {
+    "1 MP square": {
+      "clip_crop": {
+        "patches": 256,
+        "llm_tokens": 256
+      },
+      "squash": {
+        "patches": 576,
+        "llm_tokens": 576
+      },
+      "letterbox": {
+        "patches": 729,
+        "llm_tokens": 729
+      },
+      "anyres": {
+        "patches": 2880,
+        "llm_tokens": 2880
+      },
+      "internvl": {
+        "patches": 10240,
+        "llm_tokens": 2560
+      },
+      "qwen": {
+        "patches": 5476,
+        "llm_tokens": 1369
+      },
+      "naflex": {
+        "patches": 1024,
+        "llm_tokens": 1024
+      }
+    },
+    "A4 @ 200 dpi": {
+      "clip_crop": {
+        "patches": 256,
+        "llm_tokens": 256
+      },
+      "squash": {
+        "patches": 576,
+        "llm_tokens": 576
+      },
+      "letterbox": {
+        "patches": 729,
+        "llm_tokens": 729
+      },
+      "anyres": {
+        "patches": 2880,
+        "llm_tokens": 2880
+      },
+      "internvl": {
+        "patches": 7168,
+        "llm_tokens": 1792
+      },
+      "qwen": {
+        "patches": 19824,
+        "llm_tokens": 4956
+      },
+      "naflex": {
+        "patches": 999,
+        "llm_tokens": 999
+      }
+    },
+    "1440p screenshot": {
+      "clip_crop": {
+        "patches": 256,
+        "llm_tokens": 256
+      },
+      "squash": {
+        "patches": 576,
+        "llm_tokens": 576
+      },
+      "letterbox": {
+        "patches": 729,
+        "llm_tokens": 729
+      },
+      "anyres": {
+        "patches": 2880,
+        "llm_tokens": 2880
+      },
+      "internvl": {
+        "patches": 9216,
+        "llm_tokens": 2304
+      },
+      "qwen": {
+        "patches": 18564,
+        "llm_tokens": 4641
+      },
+      "naflex": {
+        "patches": 1008,
+        "llm_tokens": 1008
+      }
+    },
+    "4K frame": {
+      "clip_crop": {
+        "patches": 256,
+        "llm_tokens": 256
+      },
+      "squash": {
+        "patches": 576,
+        "llm_tokens": 576
+      },
+      "letterbox": {
+        "patches": 729,
+        "llm_tokens": 729
+      },
+      "anyres": {
+        "patches": 2880,
+        "llm_tokens": 2880
+      },
+      "internvl": {
+        "patches": 9216,
+        "llm_tokens": 2304
+      },
+      "qwen": {
+        "patches": 42196,
+        "llm_tokens": 10549
+      },
+      "naflex": {
+        "patches": 1008,
+        "llm_tokens": 1008
+      }
+    },
+    "Long receipt": {
+      "clip_crop": {
+        "patches": 256,
+        "llm_tokens": 256
+      },
+      "squash": {
+        "patches": 576,
+        "llm_tokens": 576
+      },
+      "letterbox": {
+        "patches": 729,
+        "llm_tokens": 729
+      },
+      "anyres": {
+        "patches": 2304,
+        "llm_tokens": 2304
+      },
+      "internvl": {
+        "patches": 6144,
+        "llm_tokens": 1536
+      },
+      "qwen": {
+        "patches": 8988,
+        "llm_tokens": 2247
+      },
+      "naflex": {
+        "patches": 980,
+        "llm_tokens": 980
+      }
+    }
+  },
+  "walkthrough": {
+    "dino_v1_patches": 196,
+    "qwen_patches": 9804,
+    "qwen_llm_tokens": 2451,
+    "qwen_capped_patches": 4920
+  },
+  "qwen25_vit_flops": {
+    "page 1200x1600": {
+      "patches": 9804,
+      "all_full": {
+        "projections": 12352349798400,
+        "attention": 15748041277440,
+        "total": 28100391075840
+      },
+      "windowed": {
+        "projections": 12352349798400,
+        "attention": 2058457251840,
+        "total": 14410807050240
+      }
+    },
+    "4K frame 3840x2160": {
+      "patches": 42196,
+      "all_full": {
+        "projections": 53163989401600,
+        "attention": 291717515837440,
+        "total": 344881505239040
+      },
+      "windowed": {
+        "projections": 53163989401600,
+        "attention": 36851839467520,
+        "total": 90015828869120
+      }
+    }
+  }
+}

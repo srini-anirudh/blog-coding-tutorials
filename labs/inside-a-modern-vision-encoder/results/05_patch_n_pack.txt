@@ -1,0 +1,25 @@
+# hardware: AMD EPYC 7R13, 8 threads | torch 2.15.0+cu132
+# command: python labs/inside-a-modern-vision-encoder/scripts/05_patch_n_pack.py
+Four images packed into one sequence of 108 patches, against each image encoded alone:
+image  patches  max diff, block-diag mask  max diff, no mask  pooled cosine, no mask
+-----  -------  -------------------------  -----------------  ----------------------
+32x48  24       0.0e+00                    0.25               0.996
+64x32  32       0.0e+00                    0.20               0.998
+40x40  25       9.5e-07                    0.21               0.997
+24x72  27       8.3e-07                    0.32               0.994
+
+One 16-patch image in a batch padded to the longest row (padding = zero-pixel patches):
+row length  padding  max diff, masked  pooled cos, masked  pooled cos, no mask, real only  pooled cos, no mask, all
+----------  -------  ----------------  ------------------  ------------------------------  ------------------------
+16          0%       0.0e+00           1.0000              1.0000                          1.0000
+32          50%      0.0e+00           1.0000              0.8325                          0.8064
+64          75%      0.0e+00           1.0000              0.6821                          0.5843
+128         88%      0.0e+00           1.0000              0.6048                          0.4618
+256         94%      0.0e+00           1.0000              0.5663                          0.4007
+
+512 images, long side uniform in 400-1600 px, six aspect ratios, Qwen2-VL patch counts (300 to 12996 patches):
+  pad to longest, batches of 8: 4,159,808 slots, 56% padding
+  first-fit packing into 142 sequences of 12,996: 1,845,432 slots, 1% padding
+  attention query-key pairs: dense padded 3.624e+10, block-diagonal 1.025e+10 (3.5x fewer)
+
+2D RoPE: q.k for the same (5, 3) offset at three absolute positions: 0.23995, 0.23995, 0.23995

@@ -1,0 +1,6 @@
+data_cache/
+runs/
+*.pt
+*.safetensors
+*.npz
+__pycache__/

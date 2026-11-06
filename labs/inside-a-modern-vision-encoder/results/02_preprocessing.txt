@@ -1,0 +1,48 @@
+# hardware: AMD EPYC 7R13, 8 threads | torch 2.15.0+cu132
+# command: python labs/inside-a-modern-vision-encoder/scripts/02_preprocessing.py
+4000 px page of 3 px strokes -> 336
+resampler                          RMSE vs area average  std of output
+---------------------------------  --------------------  -------------
+PIL box (area average, reference)  0.000                 0.014
+PIL bicubic (antialiased)          0.015                 0.003
+PIL nearest                        0.505                 0.499
+torch bicubic antialias=True       0.014                 0.002
+torch bicubic antialias=False      0.450                 0.444
+
+2048 px zone plate -> 336
+resampler                          RMSE vs area average  std of output
+---------------------------------  --------------------  -------------
+PIL box (area average, reference)  0.000                 0.059
+PIL bicubic (antialiased)          0.030                 0.048
+PIL nearest                        0.349                 0.354
+torch bicubic antialias=True       0.030                 0.047
+torch bicubic antialias=False      0.297                 0.303
+
+PIL bicubic vs torch bicubic on a synthetic RGB photo (8-bit levels):
+resize                 torch setting          mean |diff|  max |diff|  values off by > 2
+---------------------  ---------------------  -----------  ----------  -----------------
+1024x768 -> 336x252    torch antialias=True   0.05         8           0.0%
+1024x768 -> 336x252    torch antialias=False  0.12         82          0.7%
+1024x768 -> 224x168    torch antialias=True   0.05         3           0.0%
+1024x768 -> 224x168    torch antialias=False  0.18         146         0.9%
+1024x768 -> 1344x1008  torch antialias=True   0.02         7           0.0%
+1024x768 -> 1344x1008  torch antialias=False  0.03         10          0.1%
+
+Normalised with the wrong constants: x_seen = gain * x_expected + offset (R G B):
+normalised with  model expects  gain            offset
+---------------  -------------  --------------  --------------------
+OpenAI CLIP      SigLIP (0.5)   1.86 1.91 1.81  +0.069 +0.161 +0.333
+OpenAI CLIP      ImageNet       0.85 0.86 0.82  +0.013 -0.007 -0.008
+SigLIP (0.5)     OpenAI CLIP    0.54 0.52 0.55  -0.037 -0.084 -0.184
+SigLIP (0.5)     ImageNet       0.46 0.45 0.45  -0.030 -0.088 -0.188
+ImageNet         OpenAI CLIP    1.17 1.17 1.23  -0.015 +0.008 +0.010
+ImageNet         SigLIP (0.5)   2.18 2.23 2.22  +0.066 +0.196 +0.418
+
+EXIF orientation 6 (phone held upright): Image.open gives 64x32; ImageOps.exif_transpose gives 32x64.
+
+Black chart lines on a transparent PNG: background minus line brightness (1 = fully visible):
+flattening                     line contrast
+-----------------------------  -------------
+convert('RGB'), alpha dropped  0.00
+composite on white             1.00
+composite on black             0.00

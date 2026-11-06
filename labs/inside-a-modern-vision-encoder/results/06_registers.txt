@@ -1,0 +1,16 @@
+# hardware: AMD EPYC 7R13, 8 threads | torch 2.15.0+cu132
+# command: python labs/inside-a-modern-vision-encoder/scripts/06_registers.py
+160 mini-ImageNet validation images, 224 x 224 (256 resize, centre crop), 256 patches each.
+Norms are of each block's output tokens, before the final LayerNorm.
+outlier = patch token with norm > 3x its image's median patch norm.
+peak block = the block where the no-register model's largest token stands out most; the
+registers model is read at that same block. 'last' = the final block.
+
+model                        registers  peak block  median patch norm  > 3x   images with > 3x  max / median  max / its 8 neighbours  > 3x, last block  mean register norm
+---------------------------  ---------  ----------  -----------------  -----  ----------------  ------------  ----------------------  ----------------  ------------------
+dinov2-small                 0          11 of 12    7.1                0.21%  41%               2.5           2.3                     0.00%             -
+dinov2-with-registers-small  4          11 of 12    18.7               0.00%  0%                1.5           1.4                     0.00%             47.4
+dinov2-base                  0          9 of 12     8.6                1.66%  100%              53.0          53.3                    0.25%             -
+dinov2-with-registers-base   4          9 of 12     20.0               0.00%  0%                1.3           1.2                     0.00%             64.1
+dinov2-large                 0          20 of 24    18.0               0.40%  100%              27.6          28.5                    0.00%             -
+dinov2-with-registers-large  4          20 of 24    76.9               0.00%  0%                1.3           1.2                     0.00%             178.4

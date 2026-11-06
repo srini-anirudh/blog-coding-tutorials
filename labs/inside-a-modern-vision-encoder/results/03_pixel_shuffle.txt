@@ -1,0 +1,15 @@
+# hardware: AMD EPYC 7R13, 8 threads | torch 2.15.0+cu132
+# command: python labs/inside-a-modern-vision-encoder/scripts/03_pixel_shuffle.py
+Pixel shuffle shapes (random features), and the error after the inverse:
+input                                             patches x dim  tokens x dim  fewer tokens  max |inverse - input|
+------------------------------------------------  -------------  ------------  ------------  ---------------------
+InternVL tile (InternViT-300M, d=1024)            1024 x 1024    256 x 4096    4x            0.0
+SmolVLM-256M crop (config.json, d=768)            1024 x 768     64 x 12288    16x           0.0
+27 x 27 grid, r = 3 (the post's SmolVLM example)  729 x 1152     81 x 10368    9x            0.0
+
+448 px bar tile as raw 14 px patches (1024 tokens) compressed 4x, then expanded back:
+path                           RMSE   swing 2px  swing 3px  swing 5px  swing 9px  swing 15px
+-----------------------------  -----  ---------  ---------  ---------  ---------  ----------
+original                       0.000  1.00       1.00       1.00       1.00       1.00
+pixel shuffle, then inverse    0.000  1.00       1.00       1.00       1.00       1.00
+2x2 average pool, then repeat  0.239  0.50       0.50       0.50       1.00       0.50

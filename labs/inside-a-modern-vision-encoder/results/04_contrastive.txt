@@ -1,0 +1,19 @@
+# hardware: AMD EPYC 7R13, 8 threads | torch 2.15.0+cu132
+# command: python labs/inside-a-modern-vision-encoder/scripts/04_contrastive.py
+Raise one off-diagonal logit of an 8 x 8 batch by 3. Other cells whose gradient changes:
+  CLIP softmax: 14 of 63    SigLIP sigmoid: 0 of 63
+
+SigLIP loss on a 256 batch, full matrix against block by block:
+blocks per side  full       chunked    |diff|   logits held at once
+---------------  ---------  ---------  -------  -------------------
+2                10.034235  10.034235  0.0e+00  16,384 of 65,536
+4                10.034235  10.034234  9.5e-07  4,096 of 65,536
+8                10.034235  10.034237  1.9e-06  1,024 of 65,536
+
+Toy two-tower retrieval (top-1 among 2000 held-out pairs), 200,000 pairs seen per run, 3 seeds, mean +/- std. Total time 2419 s.
+batch  steps  CLIP softmax     SigLIP sigmoid
+-----  -----  ---------------  ---------------
+8      25000  0.381 +/- 0.012  0.437 +/- 0.009
+32     6250   0.441 +/- 0.007  0.460 +/- 0.004
+128    1562   0.466 +/- 0.001  0.477 +/- 0.002
+512    390    0.486 +/- 0.001  0.487 +/- 0.002

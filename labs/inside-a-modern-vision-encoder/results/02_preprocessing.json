@@ -1,0 +1,187 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads | torch 2.15.0+cu132",
+  "command": "python labs/inside-a-modern-vision-encoder/scripts/02_preprocessing.py",
+  "4000 px page of 3 px strokes -> 336": {
+    "PIL box (area average, reference)": {
+      "rmse_vs_box": 0.0,
+      "output_std": 0.013892630077770625
+    },
+    "PIL bicubic (antialiased)": {
+      "rmse_vs_box": 0.015013892372442567,
+      "output_std": 0.0029280865619503425
+    },
+    "PIL nearest": {
+      "rmse_vs_box": 0.5046110227554126,
+      "output_std": 0.4985007994498646
+    },
+    "torch bicubic antialias=True": {
+      "rmse_vs_box": 0.014220828901212436,
+      "output_std": 0.002367607666842398
+    },
+    "torch bicubic antialias=False": {
+      "rmse_vs_box": 0.4501552828839738,
+      "output_std": 0.44422794550771116
+    }
+  },
+  "2048 px zone plate -> 336": {
+    "PIL box (area average, reference)": {
+      "rmse_vs_box": 0.0,
+      "output_std": 0.05851082770021052
+    },
+    "PIL bicubic (antialiased)": {
+      "rmse_vs_box": 0.029578315965059065,
+      "output_std": 0.04753270849187449
+    },
+    "PIL nearest": {
+      "rmse_vs_box": 0.34907866809987453,
+      "output_std": 0.3538998951917969
+    },
+    "torch bicubic antialias=True": {
+      "rmse_vs_box": 0.029550359846517004,
+      "output_std": 0.047492393527953015
+    },
+    "torch bicubic antialias=False": {
+      "rmse_vs_box": 0.29741699315763637,
+      "output_std": 0.30312256198085447
+    }
+  },
+  "library_disagreement": {
+    "336x252": {
+      "torch antialias=True": {
+        "mean_abs": 0.04891030486268581,
+        "max_abs": 8.0,
+        "pixels_off_by_more_than_2": 2.362055933484505e-05
+      },
+      "torch antialias=False": {
+        "mean_abs": 0.11983497102544721,
+        "max_abs": 82.0,
+        "pixels_off_by_more_than_2": 0.0065468316956412195
+      }
+    },
+    "224x168": {
+      "torch antialias=True": {
+        "mean_abs": 0.04861996882086168,
+        "max_abs": 3.0,
+        "pixels_off_by_more_than_2": 4.4288548752834467e-05
+      },
+      "torch antialias=False": {
+        "mean_abs": 0.17611784297052155,
+        "max_abs": 146.0,
+        "pixels_off_by_more_than_2": 0.009141156462585034
+      }
+    },
+    "1344x1008": {
+      "torch antialias=True": {
+        "mean_abs": 0.020718921249055177,
+        "max_abs": 7.0,
+        "pixels_off_by_more_than_2": 1.722332451499118e-06
+      },
+      "torch antialias=False": {
+        "mean_abs": 0.03028131101977828,
+        "max_abs": 10.0,
+        "pixels_off_by_more_than_2": 0.0008045753023431595
+      }
+    }
+  },
+  "norm_mismatch": {
+    "OpenAI CLIP -> SigLIP (0.5)": [
+      [
+        1.861299393953472,
+        0.06903686020532225
+      ],
+      [
+        1.9134904829489245,
+        0.16139335478432704
+      ],
+      [
+        1.813058378920571,
+        0.33283861013700516
+      ]
+    ],
+    "OpenAI CLIP -> ImageNet": [
+      [
+        0.8524751224306902,
+        0.013197878386718036
+      ],
+      [
+        0.8572437363611182,
+        -0.00699380771517825
+      ],
+      [
+        0.815876270514257,
+        -0.008016365100062126
+      ]
+    ],
+    "SigLIP (0.5) -> OpenAI CLIP": [
+      [
+        0.53725908,
+        -0.03709068000000004
+      ],
+      [
+        0.52260516,
+        -0.084345
+      ],
+      [
+        0.55155422,
+        -0.18357853999999996
+      ]
+    ],
+    "SigLIP (0.5) -> ImageNet": [
+      [
+        0.458,
+        -0.030000000000000027
+      ],
+      [
+        0.448,
+        -0.08799999999999997
+      ],
+      [
+        0.45,
+        -0.18799999999999994
+      ]
+    ],
+    "ImageNet -> OpenAI CLIP": [
+      [
+        1.1730547598253274,
+        -0.015481834061135406
+      ],
+      [
+        1.166529375,
+        0.008158482142857061
+      ],
+      [
+        1.2256760444444443,
+        0.00982546666666664
+      ]
+    ],
+    "ImageNet -> SigLIP (0.5)": [
+      [
+        2.1834061135371177,
+        0.06550218340611359
+      ],
+      [
+        2.232142857142857,
+        0.19642857142857134
+      ],
+      [
+        2.2222222222222223,
+        0.41777777777777764
+      ]
+    ]
+  },
+  "exif": {
+    "without_exif_transpose": [
+      64,
+      32
+    ],
+    "with_exif_transpose": [
+      32,
+      64
+    ]
+  },
+  "alpha": {
+    "convert('RGB'), alpha dropped": 0.0,
+    "composite on white": 1.0,
+    "composite on black": 0.0
+  }
+}

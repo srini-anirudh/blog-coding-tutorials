@@ -1,0 +1,72 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads | torch 2.15.0+cu132",
+  "command": "python labs/inside-a-modern-vision-encoder/scripts/07_preprocessing_tax.py",
+  "images": 1000,
+  "k": 10,
+  "results": {
+    "facebook/dinov2-small": {
+      "correct: bicubic AA, crop, ImageNet constants": {
+        "knn_top1": 0.9649999737739563,
+        "cos_to_correct": 1.0,
+        "seconds": 85.82029557228088
+      },
+      "SigLIP constants (0.5 / 0.5)": {
+        "knn_top1": 0.9670000076293945,
+        "cos_to_correct": 0.9837484955787659,
+        "seconds": 105.35032987594604
+      },
+      "OpenAI CLIP constants": {
+        "knn_top1": 0.9639999866485596,
+        "cos_to_correct": 0.9986429810523987,
+        "seconds": 142.5736107826233
+      },
+      "torch bicubic, antialias=False": {
+        "knn_top1": 0.9670000076293945,
+        "cos_to_correct": 0.9951487183570862,
+        "seconds": 155.64717721939087
+      },
+      "PIL nearest": {
+        "knn_top1": 0.9660000205039978,
+        "cos_to_correct": 0.9746218323707581,
+        "seconds": 100.20193719863892
+      },
+      "squash to 224 instead of crop": {
+        "knn_top1": 0.9670000076293945,
+        "cos_to_correct": 0.929706871509552,
+        "seconds": 112.75449991226196
+      }
+    },
+    "facebook/dinov2-base": {
+      "correct: bicubic AA, crop, ImageNet constants": {
+        "knn_top1": 0.9890000224113464,
+        "cos_to_correct": 1.0,
+        "seconds": 286.6976885795593
+      },
+      "SigLIP constants (0.5 / 0.5)": {
+        "knn_top1": 0.9879999756813049,
+        "cos_to_correct": 0.9894828200340271,
+        "seconds": 219.2792103290558
+      },
+      "OpenAI CLIP constants": {
+        "knn_top1": 0.9879999756813049,
+        "cos_to_correct": 0.9989371299743652,
+        "seconds": 204.0400218963623
+      },
+      "torch bicubic, antialias=False": {
+        "knn_top1": 0.9860000014305115,
+        "cos_to_correct": 0.9957531690597534,
+        "seconds": 198.73658204078674
+      },
+      "PIL nearest": {
+        "knn_top1": 0.9869999885559082,
+        "cos_to_correct": 0.979123592376709,
+        "seconds": 176.32613849639893
+      },
+      "squash to 224 instead of crop": {
+        "knn_top1": 0.9860000014305115,
+        "cos_to_correct": 0.9403041005134583,
+        "seconds": 128.13320326805115
+      }
+    }
+  }
+}

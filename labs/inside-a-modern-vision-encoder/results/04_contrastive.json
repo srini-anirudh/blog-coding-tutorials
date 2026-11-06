@@ -1,0 +1,201 @@
+{
+  "hardware": "AMD EPYC 7R13, 8 threads | torch 2.15.0+cu132",
+  "command": "python labs/inside-a-modern-vision-encoder/scripts/04_contrastive.py",
+  "coupling": {
+    "clip": 14,
+    "siglip": 0
+  },
+  "chunked": [
+    [
+      2,
+      "10.034235",
+      "10.034235",
+      "0.0e+00",
+      "16,384 of 65,536"
+    ],
+    [
+      4,
+      "10.034235",
+      "10.034234",
+      "9.5e-07",
+      "4,096 of 65,536"
+    ],
+    [
+      8,
+      "10.034235",
+      "10.034237",
+      "1.9e-06",
+      "1,024 of 65,536"
+    ]
+  ],
+  "sweep": [
+    {
+      "loss": "clip",
+      "batch": 8,
+      "steps": 25000,
+      "top1": 0.36550000309944153,
+      "final_train_loss": 0.00404291832819581
+    },
+    {
+      "loss": "clip",
+      "batch": 8,
+      "steps": 25000,
+      "top1": 0.39399999380111694,
+      "final_train_loss": 0.006362196058034897
+    },
+    {
+      "loss": "clip",
+      "batch": 8,
+      "steps": 25000,
+      "top1": 0.3824999928474426,
+      "final_train_loss": 0.027922431007027626
+    },
+    {
+      "loss": "clip",
+      "batch": 32,
+      "steps": 6250,
+      "top1": 0.44600000977516174,
+      "final_train_loss": 0.2344876229763031
+    },
+    {
+      "loss": "clip",
+      "batch": 32,
+      "steps": 6250,
+      "top1": 0.43050000071525574,
+      "final_train_loss": 0.0877441018819809
+    },
+    {
+      "loss": "clip",
+      "batch": 32,
+      "steps": 6250,
+      "top1": 0.44600000977516174,
+      "final_train_loss": 0.17360162734985352
+    },
+    {
+      "loss": "clip",
+      "batch": 128,
+      "steps": 1562,
+      "top1": 0.46549999713897705,
+      "final_train_loss": 0.5003077387809753
+    },
+    {
+      "loss": "clip",
+      "batch": 128,
+      "steps": 1562,
+      "top1": 0.46549999713897705,
+      "final_train_loss": 0.48750537633895874
+    },
+    {
+      "loss": "clip",
+      "batch": 128,
+      "steps": 1562,
+      "top1": 0.46700000762939453,
+      "final_train_loss": 0.38967782258987427
+    },
+    {
+      "loss": "clip",
+      "batch": 512,
+      "steps": 390,
+      "top1": 0.4855000078678131,
+      "final_train_loss": 1.2267229557037354
+    },
+    {
+      "loss": "clip",
+      "batch": 512,
+      "steps": 390,
+      "top1": 0.48399999737739563,
+      "final_train_loss": 1.0918211936950684
+    },
+    {
+      "loss": "clip",
+      "batch": 512,
+      "steps": 390,
+      "top1": 0.48750001192092896,
+      "final_train_loss": 0.9880329370498657
+    },
+    {
+      "loss": "siglip",
+      "batch": 8,
+      "steps": 25000,
+      "top1": 0.42899999022483826,
+      "final_train_loss": 0.37719234824180603
+    },
+    {
+      "loss": "siglip",
+      "batch": 8,
+      "steps": 25000,
+      "top1": 0.4494999945163727,
+      "final_train_loss": 0.2871992588043213
+    },
+    {
+      "loss": "siglip",
+      "batch": 8,
+      "steps": 25000,
+      "top1": 0.4320000112056732,
+      "final_train_loss": 0.35340362787246704
+    },
+    {
+      "loss": "siglip",
+      "batch": 32,
+      "steps": 6250,
+      "top1": 0.46299999952316284,
+      "final_train_loss": 0.9422129392623901
+    },
+    {
+      "loss": "siglip",
+      "batch": 32,
+      "steps": 6250,
+      "top1": 0.45500001311302185,
+      "final_train_loss": 0.4263482689857483
+    },
+    {
+      "loss": "siglip",
+      "batch": 32,
+      "steps": 6250,
+      "top1": 0.4625000059604645,
+      "final_train_loss": 0.6262088418006897
+    },
+    {
+      "loss": "siglip",
+      "batch": 128,
+      "steps": 1562,
+      "top1": 0.4805000126361847,
+      "final_train_loss": 1.2538410425186157
+    },
+    {
+      "loss": "siglip",
+      "batch": 128,
+      "steps": 1562,
+      "top1": 0.47450000047683716,
+      "final_train_loss": 1.2784254550933838
+    },
+    {
+      "loss": "siglip",
+      "batch": 128,
+      "steps": 1562,
+      "top1": 0.476500004529953,
+      "final_train_loss": 1.1456148624420166
+    },
+    {
+      "loss": "siglip",
+      "batch": 512,
+      "steps": 390,
+      "top1": 0.484499990940094,
+      "final_train_loss": 2.3580732345581055
+    },
+    {
+      "loss": "siglip",
+      "batch": 512,
+      "steps": 390,
+      "top1": 0.48750001192092896,
+      "final_train_loss": 2.2573728561401367
+    },
+    {
+      "loss": "siglip",
+      "batch": 512,
+      "steps": 390,
+      "top1": 0.4894999861717224,
+      "final_train_loss": 2.190239191055298
+    }
+  ]
+}
