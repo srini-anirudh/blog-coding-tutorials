@@ -1,5 +1,5 @@
 [project]
-name = "backward-pass-code"
+name = "blog-coding-tutorials"
 version = "0.1.0"
 description = "Code for The Backward Pass coding tutorials: from tensors to foundation models and agents."
 requires-python = ">=3.10"

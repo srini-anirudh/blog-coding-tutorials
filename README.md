@@ -1,4 +1,4 @@
-# backward-pass-code
+# blog-coding-tutorials
 
 Code for the coding tutorials on [The Backward Pass](https://srini-anirudh.github.io/blogs/?series=code).
 

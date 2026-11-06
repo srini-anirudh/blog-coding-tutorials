@@ -10,3 +10,7 @@ wandb/
 *.safetensors
 data/cache/
 .DS_Store
+data_cache/
+*.bin
+*.ckpt
+*.pth
