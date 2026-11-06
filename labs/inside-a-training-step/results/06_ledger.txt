@@ -1,0 +1,15 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/inside-a-training-step/scripts/06_ledger.py
+## TinyLLM (C4), L=4, H=256, BF16 weights, 3,426,560 parameters, B=2, S=256
+category                | bytes / param | MiB  
+------------------------+---------------+------
+params (torch.bfloat16) | 2             | 6.536
+grads                   | 2             | 6.536
+master (fp32)           | 4             | 13.07
+adam m (fp32)           | 4             | 13.07
+adam v (fp32)           | 4             | 13.07
+total                   | 16            | 52.29
+post's recipe: {'params (bf16)': 2, 'grads (bf16)': 2, 'master (fp32)': 4, 'adam m (fp32)': 4, 'adam v (fp32)': 4}, 16 bytes per parameter
+
+activations saved at the turn: 24.93 MiB, 22.92 H BF16-sized elements per token per block. 03_lifetime.py explains why this is above 16H. In BF16 it is higher still, because C4's RMSNorm upcasts to FP32 and saves 4-byte tensors.
+model states / activations here: 2.10. At the post's shape the ratio is 6.28: activations scale with B, S and depth, not with parameters.

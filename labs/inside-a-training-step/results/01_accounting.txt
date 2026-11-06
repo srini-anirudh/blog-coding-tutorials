@@ -1,0 +1,65 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/inside-a-training-step/scripts/01_accounting.py
+## The model: L=32, H=4096, 32 heads, I=11008, V=32000, S=4096, B=1
+parameters 32(4H^2 + 3HI) + 2VH = 6,738,149,376 = 6.74B   (post: 6.74e9)
+
+## One block, op by op (BF16, causal FlashAttention). Ridge point of an H100: 295 FLOP/byte
+op                | GFLOP   | HBM MB | FLOP/byte | bound   | share of FLOPs
+------------------+---------+--------+-----------+---------+---------------
+rmsnorm (attn)    | 0.06711 | 67.11  | 1         | memory  | 0.004%        
+qkv proj          | 412.3   | 234.9  | 1755      | compute | 22.961%       
+attention (flash) | 137.4   | 134.2  | 1024      | compute | 7.654%        
+out proj          | 137.4   | 100.7  | 1365      | compute | 7.654%        
+residual add      | 0.01678 | 100.7  | 0.1667    | memory  | 0.001%        
+rmsnorm (mlp)     | 0.06711 | 67.11  | 1         | memory  | 0.004%        
+gate proj         | 369.4   | 213.9  | 1727      | compute | 20.570%       
+up proj           | 369.4   | 213.9  | 1727      | compute | 20.570%       
+silu * mul        | 0.2254  | 270.5  | 0.8333    | memory  | 0.013%        
+down proj         | 369.4   | 213.9  | 1727      | compute | 20.570%       
+residual add      | 0.01678 | 100.7  | 0.1667    | memory  | 0.001%        
+projections: 92.3% of block FLOPs (post: 92%); without the causal saving 85.8%
+norms, adds, silu*mul: 0.022% of FLOPs (post: under 0.05%)
+silu*mul traffic: 271 MB per layer, 8.66 GB per step (post: 270 MB, 8.6 GB)
+
+## Tensor sizes (BF16)
+tensor           | shape               | elements (M) | MB   
+-----------------+---------------------+--------------+------
+block input X    | [1, 4096, 4096]     | 16.78        | 33.55
+Q, K, V (packed) | [1, 4096, 12288]    | 50.33        | 100.7
+per-head view    | [1, 32, 4096, 128]  | 16.78        | 33.55
+attention scores | [1, 32, 4096, 4096] | 536.9        | 1074 
+MLP intermediate | [1, 4096, 11008]    | 45.09        | 90.18
+logits           | [1, 4096, 32000]    | 131.1        | 262.1
+logits in FP32, plus softmax, plus its gradient: 3 x 0.524 = 1.57 GB (post: about 1.5 GB)
+
+## Where 2ND stops being true
+P_layer = 202.4M, S* = P_layer / 2H = 24,704 tokens (post: about 24,700)
+S=4096: attention / projections = 0.166 without masking, 0.083 causal; attention share of block FLOPs = 0.142 / 0.077
+S=32768: attention / projections = 1.326 without masking, 0.663 causal; attention share of block FLOPs = 0.570 / 0.399
+post: about 17% at S=4096. That matches attention / projections without masking (0.166).
+post: at 32k, 2ND under-counts by more than a third. The causal attention share there is 0.40.
+
+## Training FLOPs and the time wall
+6ND per 4096-token step = 1.656e+14 FLOPs; 8ND with full recompute = 2.208e+14
+forward+backward at 100% of 989 TFLOP/s: 167 ms; at 50%: 335 ms (post: about 330 ms)
+6ND for 2T tokens = 8.09e+22 FLOPs (post: 8.1e22); at 45% MFU = 4.45e+14 FLOP/s; 5.76 years on one H100 (post: about six)
+
+## The memory ledger
+params (bf16)      13.5 GB
+grads (bf16)       13.5 GB
+master (fp32)      27.0 GB
+adam m (fp32)      27.0 GB
+adam v (fp32)      27.0 GB
+total             107.8 GB
+post: 13.5 / 13.5 / 27.0 / 27.0 / 27.0, total 108 GB; overshoot of 80 GB = 35% (post: 35%)
+activations L*B*S*16H*2 = 17.2 GB = 4.2 MB per token (post: 17.2 GB, 4.2 MB)
+with full checkpointing: (L + 16) H per token = 1.61 GB, a 10.7x cut (post: about 10x)
+compute with full checkpointing: 8ND / 6ND = 1.33x (post: +33%, and HFU = 1.33 MFU)
+
+## Precision
+BF16 unit roundoff 2^-8 = 3.91e-03 (post: about 4e-3); an Adam step near 1e-4 relative is 39x smaller
+H100 BF16 / FP32 dense peak: 989 / 67 TFLOP/s
+
+## The optimizer step
+bytes per parameter: 28, FLOPs about 12: 0.43 FLOP/byte, 689x below the ridge (post: 0.43, about 700x)
+traffic 189 GB per step; at 2.5 TB/s 75 ms (post: 189 GB, 75 ms); 19% of a step with 330 ms of compute (post: 20%)

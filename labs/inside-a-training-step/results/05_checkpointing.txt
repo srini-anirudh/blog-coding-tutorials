@@ -1,0 +1,10 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/inside-a-training-step/scripts/05_checkpointing.py
+## TinyLLM (C4), L=4, H=256, B=2, S=256, FP32, SDPA. Forward+backward, median of 7
+mode      | saved at turn MiB | per block MiB | memory cut | FLOPs x | time x | max |grad diff|
+----------+-------------------+---------------+------------+---------+--------+----------------
+none      | 44.3              | 10.45         | 1          | 1       | 1      | 0              
+selective | 34.91             | 8.102         | 1.269      | 1       | 1.114  | 0              
+full      | 4.756             | 0.5625        | 9.315      | 1.255   | 1.279  | 0              
+full: each block keeps only its input. selective: the two RMSNorms and the SiLU-multiply are rerun, every GEMM output is kept, so FLOPs do not change. The LM head and loss are never checkpointed here, which caps the cut for this small, shallow model.
+Timings on a shared CPU are rough; the FLOP ratio is exact.

@@ -1,0 +1,11 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/inside-a-training-step/scripts/07_optimizer.py
+## AdamW step, 5e+07 parameters in tensors shaped like H=1024 blocks, median of 5
+variant  | params   | tensors | ms    | useful GB/s (28 B/param)
+---------+----------+---------+-------+-------------------------
+for-loop | 50601984 | 36      | 72.64 | 19.5                    
+foreach  | 50601984 | 36      | 81.72 | 17.34                   
+fused    | 50601984 | 36      | 18.04 | 78.56                   
+master   | 50601984 | 36      | 67.63 | 20.95                   
+arithmetic intensity: about 12 FLOPs / 28 bytes = 0.43 FLOP/byte
+at the fastest variant's rate, a 6.74B-parameter step would take 2402 ms (post: about 75 ms at 2.5 TB/s on an H100)

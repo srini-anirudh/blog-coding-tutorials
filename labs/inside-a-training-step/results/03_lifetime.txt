@@ -1,0 +1,80 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/inside-a-training-step/scripts/03_lifetime.py
+## TinyLLM (C4), L=4, H=256, B=2, S=256, FP32, SDPA attention
+156 save/release events. Peak 44.30 MiB at event 77; the loss exists at event 77. Live after backward: 0 bytes
+
+    0 forward  embed        0.00 MiB |
+    5 forward  block 0      1.63 MiB |##
+   10 forward  block 0      3.26 MiB |####
+   15 forward  block 0      5.27 MiB |######
+   20 forward  block 1     11.14 MiB |#############
+   25 forward  block 1     13.14 MiB |###############
+   30 forward  block 1     14.65 MiB |#################
+   35 forward  block 1     19.68 MiB |######################
+   40 forward  block 2     22.53 MiB |#########################
+   45 forward  block 2     24.54 MiB |############################
+   50 forward  block 2     27.38 MiB |###############################
+   55 forward  block 3     31.92 MiB |####################################
+   60 forward  block 3     34.42 MiB |#######################################
+   65 forward  block 3     35.93 MiB |#########################################
+   70 forward  block 3     41.80 MiB |###############################################
+   75 forward  head        44.30 MiB |##################################################
+   77 forward  head        44.30 MiB |##################################################  <- the turn: loss computed
+   80 backward head        43.30 MiB |#################################################
+   85 backward block 3     40.46 MiB |##############################################
+   90 backward block 3     35.43 MiB |########################################
+   95 backward block 3     33.42 MiB |######################################
+  100 backward block 3     31.91 MiB |####################################
+  105 backward block 2     26.04 MiB |#############################
+  110 backward block 2     24.04 MiB |###########################
+  115 backward block 2     22.03 MiB |#########################
+  120 backward block 1     18.34 MiB |#####################
+  125 backward block 1     14.65 MiB |#################
+  130 backward block 1     12.64 MiB |##############
+  135 backward block 1     10.64 MiB |############
+  140 backward block 0      4.77 MiB |#####
+  145 backward block 0      2.76 MiB |###
+  150 backward block 0      1.51 MiB |##
+  155 backward embed        0.00 MiB |
+
+## Nested lifetimes: each block's saved tensors live from its forward to its backward
+owner   | first save | last release | lifetime (events) | saved MiB
+--------+------------+--------------+-------------------+----------
+embed   | 0          | 155          | 155               | 0.003906 
+block 0 | 1          | 154          | 153               | 10.64    
+block 1 | 20         | 135          | 115               | 10.39    
+block 2 | 37         | 118          | 81                | 10.39    
+block 3 | 54         | 101          | 47                | 10.39    
+head    | 71         | 84           | 13                | 2.502    
+
+## What one block saves (block 1)
+shape           | dtype         | KiB 
+----------------+---------------+-----
+[2, 256, 256]   | torch.float32 | 512 
+[2, 256, 1]     | torch.float32 | 2   
+[2, 256, 256]   | torch.float32 | 512 
+[512, 256]      | torch.float32 | 512 
+[2, 4, 256, 64] | torch.float32 | 512 
+[2, 4, 256, 64] | torch.float32 | 512 
+[2, 4, 256, 64] | torch.float32 | 512 
+[2, 4, 256]     | torch.float32 | 8   
+[2, 4, 256, 64] | torch.float32 | 512 
+[2, 256, 256]   | torch.float32 | 512 
+[2, 256, 1]     | torch.float32 | 2   
+[2, 256, 256]   | torch.float32 | 512 
+[512, 256]      | torch.float32 | 512 
+[2, 256, 688]   | torch.float32 | 1376
+[2, 256, 688]   | torch.float32 | 1376
+[2, 256, 688]   | torch.float32 | 1376
+[512, 688]      | torch.float32 | 1376
+saved per token per block: 20.90 H elements. The post counts about 16H: 8 H-wide tensors and 3 I-wide ones, 8 + 3 x 2.69 = 16.06H.
+The gap is two unfused ops. Each RMSNorm also saves its value before the gain (2 x 1H), and the SiLU-multiply saves silu(gate) as a fourth I-wide tensor (2.69H): 16.06 + 2 + 2.69 = 20.75H. Selective recompute in 05_checkpointing.py removes exactly these.
+
+## Saved bytes per block against sequence length: naive attention keeps the S x S scores, SDPA does not
+S    | naive MiB | sdpa MiB | naive / sdpa
+-----+-----------+----------+-------------
+128  | 2.86      | 2.597    | 1.102       
+256  | 6.252     | 5.193    | 1.204       
+512  | 14.63     | 10.39    | 1.408       
+1024 | 37.76     | 20.77    | 1.818       
+SDPA grows linearly with S. Naive attention adds terms in S^2 (scores and softmax, per head).

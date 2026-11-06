@@ -1,0 +1,13 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "ledger": {
+  "params (torch.bfloat16)": 2.0,
+  "grads": 2.0,
+  "master (fp32)": 4.0,
+  "adam m (fp32)": 4.0,
+  "adam v (fp32)": 4.0,
+  "total": 16.0
+ },
+ "params": 3426560,
+ "activations_bytes": 26138612
+}

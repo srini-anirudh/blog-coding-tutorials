@@ -1,0 +1,70 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "params": 6738149376,
+ "ops": [
+  {
+   "name": "rmsnorm (attn)",
+   "flops": 67108864,
+   "hbm_bytes": 67108864
+  },
+  {
+   "name": "qkv proj",
+   "flops": 412316860416,
+   "hbm_bytes": 234881024
+  },
+  {
+   "name": "attention (flash)",
+   "flops": 137438953472.0,
+   "hbm_bytes": 134217728
+  },
+  {
+   "name": "out proj",
+   "flops": 137438953472,
+   "hbm_bytes": 100663296
+  },
+  {
+   "name": "residual add",
+   "flops": 16777216,
+   "hbm_bytes": 100663296
+  },
+  {
+   "name": "rmsnorm (mlp)",
+   "flops": 67108864,
+   "hbm_bytes": 67108864
+  },
+  {
+   "name": "gate proj",
+   "flops": 369367187456,
+   "hbm_bytes": 213909504
+  },
+  {
+   "name": "up proj",
+   "flops": 369367187456,
+   "hbm_bytes": 213909504
+  },
+  {
+   "name": "silu * mul",
+   "flops": 225443840,
+   "hbm_bytes": 270532608
+  },
+  {
+   "name": "down proj",
+   "flops": 369367187456,
+   "hbm_bytes": 213909504
+  },
+  {
+   "name": "residual add",
+   "flops": 16777216,
+   "hbm_bytes": 100663296
+  }
+ ],
+ "ledger": {
+  "params (bf16)": 13476298752,
+  "grads (bf16)": 13476298752,
+  "master (fp32)": 26952597504,
+  "adam m (fp32)": 26952597504,
+  "adam v (fp32)": 26952597504,
+  "total": 107810390016
+ },
+ "activations": 17179869184
+}

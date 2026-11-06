@@ -1,0 +1,10 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "tinyllm": {
+  "N": 3293184,
+  "D": 512,
+  "forward": 3909091328,
+  "backward": 7818182656,
+  "total": 11727273984
+ }
+}

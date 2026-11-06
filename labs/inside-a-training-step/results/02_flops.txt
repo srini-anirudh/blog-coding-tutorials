@@ -1,0 +1,39 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132
+# command: python labs/inside-a-training-step/scripts/02_flops.py
+## Y = XW, X [512, 256], W [256, 384]. Forward is 2*S*H*H' = 100663296
+case                     | forward FLOPs | backward FLOPs | backward / forward
+-------------------------+---------------+----------------+-------------------
+both grads               | 100663296     | 201326592      | 2                 
+frozen W (dW skipped)    | 100663296     | 100663296      | 1                 
+first layer (dX skipped) | 100663296     | 100663296      | 1                 
+
+## TinyLLM (C4), L=4, H=256, I=688, V=512, B=2, S=256. Naive attention, so QK^T and PV are plain matmuls
+matmul parameters N = 3,293,184 (embedding lookup excluded), tokens D = 512
+forward  3.9091e+09 = 2.318 ND; predicted 2ND + 4BS^2HL = 2.318 ND
+backward 7.8182e+09 = 2.000 x forward
+total    6.955 ND (6ND plus the attention term)
+
+## The attention term grows with S: forward / 2ND, measured and predicted 1 + 2LSH/N
+S    | measured | predicted
+-----+----------+----------
+64   | 1.04     | 1.04     
+256  | 1.159    | 1.159    
+1024 | 1.637    | 1.637    
+2048 | 2.274    | 2.274    
+S* = P_layer / 2H = 1544 for this shape: past it, attention FLOPs exceed a block's GEMMs
+
+## Freezing. Backward FLOPs relative to the fully trainable model
+case                                                   | backward / trainable backward
+-------------------------------------------------------+------------------------------
+freeze block 1 only (a frozen middle layer)            | 0.8965                       
+freeze embeddings + blocks 0-1 (a frozen bottom tower) | 0.5172                       
+A frozen middle block still passes dX down, so only its dW GEMMs vanish. A frozen bottom block needs neither, so its whole backward vanishes.
+
+## Recomputation. Total training FLOPs as a multiple of N*D
+checkpointing | FLOPs / ND | vs none
+--------------+------------+--------
+none          | 6.955      | 1      
+selective     | 6.955      | 1      
+full          | 8.766      | 1.26   
+Full recompute reruns each block's forward, but not the LM head, so it lands under 8/6 = 1.33x. It also skips each block's last GEMM (down_proj): torch's checkpoint stops recomputing once every saved tensor is rebuilt, and nothing saves that GEMM's output. tests/test_mechanisms.py checks this FLOP for FLOP.
+Selective recompute reruns only elementwise ops, which the counter does not count.

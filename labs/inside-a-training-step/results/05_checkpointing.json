@@ -1,0 +1,24 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "none": {
+  "saved_at_turn_bytes": 46454772,
+  "per_block_bytes": 10956800.0,
+  "flops": 11995709440,
+  "fwd_bwd_ms": 87.75288425385952,
+  "max_grad_diff_vs_none": 0.0
+ },
+ "selective": {
+  "saved_at_turn_bytes": 36607988,
+  "per_block_bytes": 8495104.0,
+  "flops": 11995709440,
+  "fwd_bwd_ms": 97.79067197814584,
+  "max_grad_diff_vs_none": 0.0
+ },
+ "full": {
+  "saved_at_turn_bytes": 4986868,
+  "per_block_bytes": 589824.0,
+  "flops": 15049162752,
+  "fwd_bwd_ms": 112.19785688444972,
+  "max_grad_diff_vs_none": 0.0
+ }
+}

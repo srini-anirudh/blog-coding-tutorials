@@ -1,0 +1,27 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "for-loop": {
+  "params": 50601984,
+  "tensors": 36,
+  "ms": 72.64218805357814,
+  "useful GB/s": 19.50458252930075
+ },
+ "foreach": {
+  "params": 50601984,
+  "tensors": 36,
+  "ms": 81.71907812356949,
+  "useful GB/s": 17.33812451796797
+ },
+ "fused": {
+  "params": 50601984,
+  "tensors": 36,
+  "ms": 18.036006949841976,
+  "useful GB/s": 78.55705289647905
+ },
+ "master": {
+  "params": 50601984,
+  "tensors": 36,
+  "ms": 67.62963021174073,
+  "useful GB/s": 20.95021882515083
+ }
+}

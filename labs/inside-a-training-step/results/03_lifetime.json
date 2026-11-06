@@ -1,0 +1,786 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0+cu132",
+ "mountain": [
+  [
+   "forward",
+   "embed",
+   4096
+  ],
+  [
+   "forward",
+   "block 0",
+   528384
+  ],
+  [
+   "forward",
+   "block 0",
+   530432
+  ],
+  [
+   "forward",
+   "block 0",
+   1054720
+  ],
+  [
+   "forward",
+   "block 0",
+   1579008
+  ],
+  [
+   "forward",
+   "block 0",
+   1710080
+  ],
+  [
+   "forward",
+   "block 0",
+   1841152
+  ],
+  [
+   "forward",
+   "block 0",
+   2365440
+  ],
+  [
+   "forward",
+   "block 0",
+   2889728
+  ],
+  [
+   "forward",
+   "block 0",
+   3414016
+  ],
+  [
+   "forward",
+   "block 0",
+   3422208
+  ],
+  [
+   "forward",
+   "block 0",
+   3946496
+  ],
+  [
+   "forward",
+   "block 0",
+   4470784
+  ],
+  [
+   "forward",
+   "block 0",
+   4472832
+  ],
+  [
+   "forward",
+   "block 0",
+   4997120
+  ],
+  [
+   "forward",
+   "block 0",
+   5521408
+  ],
+  [
+   "forward",
+   "block 0",
+   6930432
+  ],
+  [
+   "forward",
+   "block 0",
+   8339456
+  ],
+  [
+   "forward",
+   "block 0",
+   9748480
+  ],
+  [
+   "forward",
+   "block 0",
+   11157504
+  ],
+  [
+   "forward",
+   "block 1",
+   11681792
+  ],
+  [
+   "forward",
+   "block 1",
+   11683840
+  ],
+  [
+   "forward",
+   "block 1",
+   12208128
+  ],
+  [
+   "forward",
+   "block 1",
+   12732416
+  ],
+  [
+   "forward",
+   "block 1",
+   13256704
+  ],
+  [
+   "forward",
+   "block 1",
+   13780992
+  ],
+  [
+   "forward",
+   "block 1",
+   14305280
+  ],
+  [
+   "forward",
+   "block 1",
+   14313472
+  ],
+  [
+   "forward",
+   "block 1",
+   14837760
+  ],
+  [
+   "forward",
+   "block 1",
+   15362048
+  ],
+  [
+   "forward",
+   "block 1",
+   15364096
+  ],
+  [
+   "forward",
+   "block 1",
+   15888384
+  ],
+  [
+   "forward",
+   "block 1",
+   16412672
+  ],
+  [
+   "forward",
+   "block 1",
+   17821696
+  ],
+  [
+   "forward",
+   "block 1",
+   19230720
+  ],
+  [
+   "forward",
+   "block 1",
+   20639744
+  ],
+  [
+   "forward",
+   "block 1",
+   22048768
+  ],
+  [
+   "forward",
+   "block 2",
+   22573056
+  ],
+  [
+   "forward",
+   "block 2",
+   22575104
+  ],
+  [
+   "forward",
+   "block 2",
+   23099392
+  ],
+  [
+   "forward",
+   "block 2",
+   23623680
+  ],
+  [
+   "forward",
+   "block 2",
+   24147968
+  ],
+  [
+   "forward",
+   "block 2",
+   24672256
+  ],
+  [
+   "forward",
+   "block 2",
+   25196544
+  ],
+  [
+   "forward",
+   "block 2",
+   25204736
+  ],
+  [
+   "forward",
+   "block 2",
+   25729024
+  ],
+  [
+   "forward",
+   "block 2",
+   26253312
+  ],
+  [
+   "forward",
+   "block 2",
+   26255360
+  ],
+  [
+   "forward",
+   "block 2",
+   26779648
+  ],
+  [
+   "forward",
+   "block 2",
+   27303936
+  ],
+  [
+   "forward",
+   "block 2",
+   28712960
+  ],
+  [
+   "forward",
+   "block 2",
+   30121984
+  ],
+  [
+   "forward",
+   "block 2",
+   31531008
+  ],
+  [
+   "forward",
+   "block 2",
+   32940032
+  ],
+  [
+   "forward",
+   "block 3",
+   33464320
+  ],
+  [
+   "forward",
+   "block 3",
+   33466368
+  ],
+  [
+   "forward",
+   "block 3",
+   33990656
+  ],
+  [
+   "forward",
+   "block 3",
+   34514944
+  ],
+  [
+   "forward",
+   "block 3",
+   35039232
+  ],
+  [
+   "forward",
+   "block 3",
+   35563520
+  ],
+  [
+   "forward",
+   "block 3",
+   36087808
+  ],
+  [
+   "forward",
+   "block 3",
+   36096000
+  ],
+  [
+   "forward",
+   "block 3",
+   36620288
+  ],
+  [
+   "forward",
+   "block 3",
+   37144576
+  ],
+  [
+   "forward",
+   "block 3",
+   37146624
+  ],
+  [
+   "forward",
+   "block 3",
+   37670912
+  ],
+  [
+   "forward",
+   "block 3",
+   38195200
+  ],
+  [
+   "forward",
+   "block 3",
+   39604224
+  ],
+  [
+   "forward",
+   "block 3",
+   41013248
+  ],
+  [
+   "forward",
+   "block 3",
+   42422272
+  ],
+  [
+   "forward",
+   "block 3",
+   43831296
+  ],
+  [
+   "forward",
+   "head",
+   44355584
+  ],
+  [
+   "forward",
+   "head",
+   44357632
+  ],
+  [
+   "forward",
+   "head",
+   44881920
+  ],
+  [
+   "forward",
+   "head",
+   45406208
+  ],
+  [
+   "forward",
+   "head",
+   46450688
+  ],
+  [
+   "forward",
+   "head",
+   46454768
+  ],
+  [
+   "forward",
+   "head",
+   46454772
+  ],
+  [
+   "backward",
+   "head",
+   46450692
+  ],
+  [
+   "backward",
+   "head",
+   46450688
+  ],
+  [
+   "backward",
+   "head",
+   45406208
+  ],
+  [
+   "backward",
+   "head",
+   44881920
+  ],
+  [
+   "backward",
+   "head",
+   44357632
+  ],
+  [
+   "backward",
+   "head",
+   44355584
+  ],
+  [
+   "backward",
+   "head",
+   43831296
+  ],
+  [
+   "backward",
+   "block 3",
+   42422272
+  ],
+  [
+   "backward",
+   "block 3",
+   41013248
+  ],
+  [
+   "backward",
+   "block 3",
+   39604224
+  ],
+  [
+   "backward",
+   "block 3",
+   38195200
+  ],
+  [
+   "backward",
+   "block 3",
+   37670912
+  ],
+  [
+   "backward",
+   "block 3",
+   37146624
+  ],
+  [
+   "backward",
+   "block 3",
+   37144576
+  ],
+  [
+   "backward",
+   "block 3",
+   36620288
+  ],
+  [
+   "backward",
+   "block 3",
+   36096000
+  ],
+  [
+   "backward",
+   "block 3",
+   35571712
+  ],
+  [
+   "backward",
+   "block 3",
+   35047424
+  ],
+  [
+   "backward",
+   "block 3",
+   35039232
+  ],
+  [
+   "backward",
+   "block 3",
+   34514944
+  ],
+  [
+   "backward",
+   "block 3",
+   33990656
+  ],
+  [
+   "backward",
+   "block 3",
+   33466368
+  ],
+  [
+   "backward",
+   "block 3",
+   33464320
+  ],
+  [
+   "backward",
+   "block 3",
+   32940032
+  ],
+  [
+   "backward",
+   "block 2",
+   31531008
+  ],
+  [
+   "backward",
+   "block 2",
+   30121984
+  ],
+  [
+   "backward",
+   "block 2",
+   28712960
+  ],
+  [
+   "backward",
+   "block 2",
+   27303936
+  ],
+  [
+   "backward",
+   "block 2",
+   26779648
+  ],
+  [
+   "backward",
+   "block 2",
+   26255360
+  ],
+  [
+   "backward",
+   "block 2",
+   26253312
+  ],
+  [
+   "backward",
+   "block 2",
+   25729024
+  ],
+  [
+   "backward",
+   "block 2",
+   25204736
+  ],
+  [
+   "backward",
+   "block 2",
+   24680448
+  ],
+  [
+   "backward",
+   "block 2",
+   24156160
+  ],
+  [
+   "backward",
+   "block 2",
+   24147968
+  ],
+  [
+   "backward",
+   "block 2",
+   23623680
+  ],
+  [
+   "backward",
+   "block 2",
+   23099392
+  ],
+  [
+   "backward",
+   "block 2",
+   22575104
+  ],
+  [
+   "backward",
+   "block 2",
+   22573056
+  ],
+  [
+   "backward",
+   "block 2",
+   22048768
+  ],
+  [
+   "backward",
+   "block 1",
+   20639744
+  ],
+  [
+   "backward",
+   "block 1",
+   19230720
+  ],
+  [
+   "backward",
+   "block 1",
+   17821696
+  ],
+  [
+   "backward",
+   "block 1",
+   16412672
+  ],
+  [
+   "backward",
+   "block 1",
+   15888384
+  ],
+  [
+   "backward",
+   "block 1",
+   15364096
+  ],
+  [
+   "backward",
+   "block 1",
+   15362048
+  ],
+  [
+   "backward",
+   "block 1",
+   14837760
+  ],
+  [
+   "backward",
+   "block 1",
+   14313472
+  ],
+  [
+   "backward",
+   "block 1",
+   13789184
+  ],
+  [
+   "backward",
+   "block 1",
+   13264896
+  ],
+  [
+   "backward",
+   "block 1",
+   13256704
+  ],
+  [
+   "backward",
+   "block 1",
+   12732416
+  ],
+  [
+   "backward",
+   "block 1",
+   12208128
+  ],
+  [
+   "backward",
+   "block 1",
+   11683840
+  ],
+  [
+   "backward",
+   "block 1",
+   11681792
+  ],
+  [
+   "backward",
+   "block 1",
+   11157504
+  ],
+  [
+   "backward",
+   "block 0",
+   9748480
+  ],
+  [
+   "backward",
+   "block 0",
+   8339456
+  ],
+  [
+   "backward",
+   "block 0",
+   6930432
+  ],
+  [
+   "backward",
+   "block 0",
+   5521408
+  ],
+  [
+   "backward",
+   "block 0",
+   4997120
+  ],
+  [
+   "backward",
+   "block 0",
+   4472832
+  ],
+  [
+   "backward",
+   "block 0",
+   4470784
+  ],
+  [
+   "backward",
+   "block 0",
+   3946496
+  ],
+  [
+   "backward",
+   "block 0",
+   3422208
+  ],
+  [
+   "backward",
+   "block 0",
+   2897920
+  ],
+  [
+   "backward",
+   "block 0",
+   2373632
+  ],
+  [
+   "backward",
+   "block 0",
+   2365440
+  ],
+  [
+   "backward",
+   "block 0",
+   1841152
+  ],
+  [
+   "backward",
+   "block 0",
+   1710080
+  ],
+  [
+   "backward",
+   "block 0",
+   1579008
+  ],
+  [
+   "backward",
+   "block 0",
+   1054720
+  ],
+  [
+   "backward",
+   "block 0",
+   530432
+  ],
+  [
+   "backward",
+   "block 0",
+   528384
+  ],
+  [
+   "backward",
+   "block 0",
+   4096
+  ],
+  [
+   "backward",
+   "embed",
+   0
+  ]
+ ],
+ "per_token_per_block_H": 20.8984375
+}
