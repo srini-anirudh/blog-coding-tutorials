@@ -18,6 +18,7 @@ HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 
 from harness import Agent, AgentConfig, ContextBuilder, ScriptedModel, ToolRegistry, call, tool  # noqa: E402
+from harness.tokens import count_tokens  # noqa: E402
 
 
 @tool
@@ -40,8 +41,10 @@ def run(steps: int, budget: int | None) -> dict:
     assert result.status == "done"
     per_step = [e.data["usage"]["prompt"] for e in agent.log.of_type("ModelResponse")]
     replay_ok = agent.log.to_messages() == [m for _, m in agent.history]
+    compactions = agent.log.of_type("Compaction")
     return {"steps": steps, "budget": budget, "cumulative": sum(per_step), "peak": max(per_step),
-            "compactions": len(agent.log.of_type("Compaction")), "per_step": per_step, "replay_ok": replay_ok}
+            "compactions": len(compactions), "per_step": per_step, "replay_ok": replay_ok,
+            "summary_tokens": count_tokens(compactions[-1].data["summary"]) if compactions else 0}
 
 
 def main() -> None:
@@ -60,6 +63,24 @@ def main() -> None:
     out = HERE / "results" / "compaction_series.json"
     out.write_text(json.dumps(series))
     print("\nper-step prompt sizes for the 80-step run saved to results/compaction_series.json")
+
+    # The limit of this compaction: the summary keeps one line per call and is never dropped,
+    # so on a long enough run the summary alone outgrows the budget.
+    print("\n--- long runs: where the budget stops holding ---")
+    print(f"{'steps':>6}{'budget':>10}{'peak prompt':>14}{'held':>6}{'cumulative':>13}{'compactions':>13}"
+          f"{'last summary':>14}")
+    totals = {}
+    for budget in (4000, 8000):
+        for steps in (320, 640):
+            r = run(steps, budget)
+            totals[steps, budget] = r["cumulative"]
+            held = "yes" if r["peak"] <= budget else "NO"
+            print(f"{steps:>6}{budget:>10}{r['peak']:>14}{held:>6}{r['cumulative']:>13}"
+                  f"{r['compactions']:>13}{r['summary_tokens']:>14}")
+            assert r["replay_ok"]
+    for budget in (4000, 8000):
+        growth = totals[640, budget] / totals[320, budget]
+        print(f"budget {budget}: cumulative tokens grow {growth:.1f}x from 320 to 640 steps")
 
 
 if __name__ == "__main__":

@@ -29,28 +29,33 @@
 }
 
 preset         tools  estimate  tokenizer
-full              20      3160          -
-minimal            4       834          -
-small-model        5       998          -
+full              20      3160       1676
+minimal            4       834        453
+small-model        5       998        537
 
 tool                      estimate  tokenizer
-read_file                      195          -
-list_dir                       163          -
-write_file                     155          -
-edit_file                      237          -
-apply_patch                    144          -
-search                         218          -
-find_files                     141          -
-find_symbol                    133          -
-repo_map                       171          -
-run_command                    213          -
-run_tests                      179          -
-run_linter                     136          -
-run_typecheck                  133          -
-build                          129          -
-update_plan                    179          -
-git_status                      89          -
-git_diff                       157          -
-git_log                        111          -
-checkpoint                     129          -
-revert_to_checkpoint           127          -
+read_file                      195        108
+list_dir                       163         85
+write_file                     155         79
+edit_file                      237        128
+apply_patch                    144         82
+search                         218        118
+find_files                     141         77
+find_symbol                    133         71
+repo_map                       171         94
+run_command                    213        117
+run_tests                      179        100
+run_linter                     136         72
+run_typecheck                  133         70
+build                          129         67
+update_plan                    179        102
+git_status                      89         48
+git_diff                       157         81
+git_log                        111         57
+checkpoint                     129         67
+revert_to_checkpoint           127         70
+
+text              estimate  tokenizer   ratio
+english prose          320        321    1.00
+python code           2580       2241    1.15
+json schemas          3160       1676    1.89

@@ -42,8 +42,9 @@ def truncate_output(text: str, max_lines: int = 120, max_line_chars: int = 400,
                     spill_path: Path | None = None, spill_name: str | None = None) -> Truncated:
     """Head + tail + rescued error lines. `max_lines` bounds the shown line count.
 
-    If `spill_path` is given, the full text is written there and the footer tells the
-    model to read `spill_name` (the workspace-relative path) for the rest.
+    If `spill_path` is given, `text` is written there and the footer tells the model to
+    read `spill_name` (the workspace-relative path) for the rest. If capture already lost
+    bytes before `text` was made, the footer and the spill file both say how many.
     """
     lines = [ln if len(ln) <= max_line_chars else ln[:max_line_chars] + f" ...[{len(ln) - max_line_chars} chars]"
              for ln in text.splitlines()]
@@ -71,11 +72,23 @@ def truncate_output(text: str, max_lines: int = 120, max_line_chars: int = 400,
             out.append(f"... [{i - prev - 1} lines omitted] ...")
         out.append(lines[i])
         prev = i
+    dropped = capture_dropped_bytes(text)
+    lost = f"; {dropped} bytes were dropped from the middle during capture and are lost" if dropped else ""
     if spill_path is not None:
         spill_path.parent.mkdir(parents=True, exist_ok=True)
-        spill_path.write_text(text)
-        out.append(f"[output truncated: {n} lines total; full text saved to {spill_name or spill_path.name}, "
+        spill_path.write_text(f"[incomplete: {dropped} bytes were dropped during capture]\n{text}" if dropped else text)
+        count, saved = ("kept", "kept") if dropped else ("total", "full")
+        name = spill_name or spill_path.name
+        out.append(f"[output truncated: {n} lines {count}{lost}; {saved} text saved to {name}, "
                    f"read it with read_file if you need more]")
     else:
-        out.append(f"[output truncated: showing {len(keep)} of {n} lines]")
+        out.append(f"[output truncated: showing {len(keep)} of {n} lines{lost}]")
     return Truncated("\n".join(out), n, len(keep), rescued, truncated=True)
+
+
+_NOT_CAPTURED = re.compile(r"^\.\.\. \[(\d+) bytes not captured\] \.\.\.$", re.M)
+
+
+def capture_dropped_bytes(text: str) -> int:
+    """Bytes the sandbox's `_Capture` threw away before `text` existed, read from its marker line."""
+    return sum(int(n) for n in _NOT_CAPTURED.findall(text))

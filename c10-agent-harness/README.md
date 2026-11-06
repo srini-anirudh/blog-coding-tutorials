@@ -41,7 +41,7 @@ C11 builds on these names, all importable from `harness`: `Agent`, `AgentConfig`
 From the repo root:
 
 ```bash
-python -m pytest c10-agent-harness -m "not slow and not gpu and not network"   # about 30 s
+python -m pytest c10-agent-harness -m "not slow and not gpu and not network"   # about 35 s
 python -m pytest c10-agent-harness -m "network and not slow"                   # downloads a tokenizer
 python -m pytest c10-agent-harness -m "slow"                                   # loads Qwen2.5-0.5B on CPU
 ```
@@ -59,7 +59,7 @@ Redirect a command's output to the `.txt` file to reproduce it. Event logs and J
 | Command | Result file |
 |---|---|
 | `python c10-agent-harness/scripts/minimal_loop.py` | `results/minimal_loop.txt` |
-| `python c10-agent-harness/scripts/show_schemas.py` | `results/schemas.txt` |
+| `python c10-agent-harness/scripts/show_schemas.py --tokenizer Qwen/Qwen2.5-0.5B-Instruct` | `results/schemas.txt` |
 | `python c10-agent-harness/scripts/demo_fix_test.py` | `results/demo_output.txt`, `results/demo_events.jsonl` |
 | `python c10-agent-harness/scripts/demo_docker_sandbox.py` | `results/docker_sandbox.txt` |
 | `python c10-agent-harness/scripts/compare_trusted.py` | `results/compare_trusted.txt` |
@@ -108,8 +108,22 @@ All numbers come from an AMD EPYC 7R13, 8 threads, CPU only, with Docker 29.1.4.
 | Silent corruptions in 1400 edits with simulated slips | whole file 600, search/replace 0, strict diff 0, anchored diff 0 | `bench_edit_formats.txt` |
 | Our anchored applier against `git apply`, 400 diffs | same result on all 400 | `compare_trusted.txt` |
 | 80 steps, cumulative prompt tokens, no budget and a 2000-token budget | 1150281 and 123219, 89% saved | `bench_compaction.txt` |
+| Peak prompt under a 4000-token budget, 160, 320 and 640 steps | 3998, 4433, 8273: holds at 160, fails from 320 | `bench_compaction.txt` |
+| Peak prompt under an 8000-token budget, 320 and 640 steps | 7961, 8273: holds at 320, fails at 640 | `bench_compaction.txt` |
 | Failing assertion kept in a 20000-line log | head + tail 0%, head + tail + rescue 100% | `bench_truncation.txt` |
+| Schema cost, full toolset, estimate and Qwen2.5-0.5B tokenizer | 3160 and 1676, the estimate is 1.89x high on JSON | `schemas.txt` |
 | Qwen2.5-0.5B on the toy repo, 8 threads on CPU | did not fix the bug: one bad edit, then it gave up after 2 steps | `hf_output.txt` |
+
+Compaction does not hold a budget forever. The summary keeps one line per tool call and is never
+dropped. It reaches 7687 tokens at 640 steps, so the 4000 and 8000 budgets end at the same peak of
+8273. At budget 4000 compaction ran on 448 of the 640 steps. Cumulative tokens grow 2.9x from 320 to
+640 steps at budget 4000, and 2.3x at budget 8000. Linear growth would be 2x.
+
+The truncation result holds only for what capture kept. Past `capture_bytes` (1 MB per stream by
+default), `_Capture` loses the middle before truncation sees it, so a failure there is gone from
+both the observation and the spill file. The footer, the spill file's first line and the
+`run_tests` details then say how many bytes were lost, and do not claim the full text. The count
+is read from capture's marker line, so a program that prints that exact line gets the same note.
 
 Qwen2.5-0.5B is a tiny model, and this result is the honest one. The harness stopped its edit
 with a clear error, and the model did not recover.
@@ -125,3 +139,6 @@ Nothing in this folder needs a GPU.
 - macOS and Docker Desktop. The Docker tests ran on Linux with cgroup v2. The cgroup test skips on
   other hosts.
 - Any real remote model. No API key was used.
+- Real ruff and mypy. Neither is installed here, so `run_linter` used its built-in checker and
+  `run_typecheck` reported `unavailable`. Their output parsers are tested only on hand-written canned
+  text, not on captured output from either tool.

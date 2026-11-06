@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -188,3 +189,28 @@ def test_docker_runs_for_real(docker_ready, tmp_path):
 
 def test_path_helper_is_used_by_sandbox(tmp_path):
     assert LocalSandbox(tmp_path).resolve_cwd(".") == Path(tmp_path).resolve()
+
+
+def test_footer_and_spill_tell_the_truth_when_capture_dropped_bytes(tmp_path):
+    """Past 1 MB, `_Capture` loses the middle before truncation sees it. Nothing may claim "full text"."""
+    (tmp_path / "gen.py").write_text("for i in range(20000):\n"
+                                     "    print('E   AssertionError: lost' if i == 10000 else f'{i:<99}')\n")
+    out = run_command(make_ctx(tmp_path), f"{sys.executable} gen.py")
+    footer = next(ln for ln in out.content.splitlines() if ln.startswith("[output truncated"))
+    assert "full text" not in footer and "AssertionError" not in out.content
+    dropped = int(re.search(r"; (\d+) bytes were dropped", footer)[1])
+
+    spill = next((tmp_path / ".harness" / "outputs").glob("*-stdout.txt")).read_text()
+    header, body = spill.split("\n", 1)
+    assert f"{dropped} bytes" in header and "AssertionError" not in spill
+    marker = f"\n... [{dropped} bytes not captured] ...\n"
+    stdout_bytes = int(re.search(r"(\d+) B stdout", out.content)[1])
+    assert stdout_bytes == dropped + len(body.replace(marker, "", 1).encode())  # the number is exact
+
+
+def test_footer_still_promises_the_full_text_when_nothing_was_dropped(tmp_path):
+    (tmp_path / "gen.py").write_text("for i in range(5000):\n    print(i)\n")
+    out = run_command(make_ctx(tmp_path), f"{sys.executable} gen.py")
+    assert "5000 lines total; full text saved to" in out.content and "dropped" not in out.content
+    spill = next((tmp_path / ".harness" / "outputs").glob("*-stdout.txt")).read_text()
+    assert spill.splitlines()[0] == "0" and len(spill.splitlines()) == 5000

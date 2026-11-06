@@ -17,4 +17,13 @@
 
 per-step prompt sizes for the 80-step run saved to results/compaction_series.json
 
+--- long runs: where the budget stops holding ---
+ steps    budget   peak prompt  held   cumulative  compactions  last summary
+   320      4000          4433    NO      1080826          128          3847
+   640      4000          8273    NO      3115706          448          7687
+   320      8000          7961   yes      1794749           24          3727
+   640      8000          8273    NO      4088445          133          7687
+budget 4000: cumulative tokens grow 2.9x from 320 to 640 steps
+budget 8000: cumulative tokens grow 2.3x from 320 to 640 steps
+
 hardware: AMD EPYC 7R13, 8 threads

@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import re
+
 import pytest
 from helpers import make_ctx, toy_workspace
 
+from harness.fs_tools import FileTracker
 from harness.permissions import PermissionPolicy, Risk, classify_command
+from harness.planning import Plan
 from harness.sandbox import ExecResult
+from harness.tools import ToolContext
 from harness.verify import CheckResult, build, builtin_lint, parse_pytest, run_linter, run_tests, run_typecheck
 
 
@@ -116,3 +121,68 @@ def test_hard_ceiling_cannot_be_approved():
     policy = PermissionPolicy(approver=lambda *a: True, deny_above=Risk.WORKSPACE_WRITE)
     d = policy.check("x", {}, Risk.EXTERNAL)
     assert not d.allowed and not d.asked
+
+
+def test_run_tests_details_say_when_capture_lost_a_failure(tmp_path):
+    """The second failure's assertion falls in the part of a >1 MB log that capture drops."""
+    (tmp_path / "test_big.py").write_text(
+        "def _noisy():\n    for i in range(14000):\n        print('x' * 99)\n\n"
+        "def test_first():\n    _noisy()\n    assert 'first' == 'one'\n\n"
+        "def test_second():\n    _noisy()\n    assert 'second' == 'two'\n\n"
+        "def test_third():\n    _noisy()\n    assert 'third' == 'three'\n")
+    out = run_tests(make_ctx(tmp_path))
+    assert out.data["status"] == "fail" and out.data["failed"] == 3
+    assert "assert 'second' == 'two'" not in out.data["details"]
+    assert re.search(r"\d+ bytes were dropped from the middle during capture", out.data["details"])
+
+
+class _CannedTool:
+    """A sandbox that answers with fixed tool output. Neither ruff nor mypy is installed here."""
+
+    python = "python"
+
+    def __init__(self, stdout: str, code: int):
+        self.stdout, self.code = stdout, code
+
+    def run(self, command: str, timeout: float | None = None, cwd: str = ".") -> ExecResult:
+        if "--version" in command:
+            return ExecResult(command, 0, "1.0.0\n", "", 0.01)
+        return ExecResult(command, self.code, self.stdout, "", 0.01)
+
+
+def _canned_ctx(tmp_path, stdout: str, code: int) -> ToolContext:
+    return ToolContext(tmp_path, _CannedTool(stdout, code), FileTracker(), Plan())
+
+
+def test_ruff_concise_output_is_normalised(tmp_path):
+    canned = ("src/a.py:1:8: F401 [*] `os` imported but unused\n"
+              "src/b.py:12:5: E711 Comparison to `None` should be `cond is None`\n"
+              "Found 2 errors.\n[*] 1 fixable with the `--fix` option.\n")
+    d = run_linter(_canned_ctx(tmp_path, canned, 1)).data
+    assert (d["status"], d["failed"]) == ("fail", 2)
+    first, second = d["diagnostics"]
+    assert (first["file"], first["line"], first["code"]) == ("src/a.py", 1, "F401")
+    assert first["message"] == "[*] `os` imported but unused"
+    assert (second["file"], second["line"], second["code"]) == ("src/b.py", 12, "E711")
+
+
+def test_ruff_clean_output_passes(tmp_path):
+    out = run_linter(_canned_ctx(tmp_path, "All checks passed!\n", 0))
+    assert out.data["status"] == "pass" and out.data["diagnostics"] == [] and not out.is_error
+
+
+def test_mypy_output_is_normalised_and_notes_are_skipped(tmp_path):
+    canned = ('src/a.py:7: error: Incompatible return value type (got "str", expected "int")  [return-value]\n'
+              'src/a.py:7: note: See the docs for more\n'
+              'src/b.py:3: error: Cannot find implementation or library stub\n')
+    d = run_typecheck(_canned_ctx(tmp_path, canned, 1)).data
+    assert (d["status"], d["failed"]) == ("fail", 2)
+    first, second = d["diagnostics"]
+    assert (first["file"], first["line"], first["code"]) == ("src/a.py", 7, "return-value")
+    assert first["message"] == 'Incompatible return value type (got "str", expected "int")'
+    assert (second["line"], second["code"]) == (3, "error")  # no [code] on the line: fall back to the severity
+
+
+def test_mypy_clean_output_passes(tmp_path):
+    out = run_typecheck(_canned_ctx(tmp_path, "", 0))
+    assert out.data["status"] == "pass" and out.data["diagnostics"] == [] and not out.is_error
