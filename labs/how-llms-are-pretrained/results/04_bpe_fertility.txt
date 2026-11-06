@@ -1,0 +1,38 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/how-llms-are-pretrained/scripts/04_bpe_fertility.py
+
+BPE training text: 121 WikiText-2 articles, 2,007,137 bytes
+
+our BPE: 2000 merges in 17.1 s, 500 merges in 3.4 s
+first 500 merges of the 2000-merge run == the 500-merge run: True
+encodings of 256,081 validation characters identical: True
+round trip decode(encode(x)) == x: True
+first 10 merges: [' t', 'he', ' a', 'in', ' the', 'er', 'on', 're', ' s', 'ed']
+
+Hugging Face tokenizers trainer: 2000 and 500 merges learned; small run is a prefix of the large run: True
+
+Bytes per token (higher compresses better)
+tokenizer               vocab   English prose    Python code
+ours, 500 merges          756            2.28           1.45
+ours, 2000 merges       2,256            2.93           1.63
+GPT-2                  50,257            4.60           2.17
+SmolLM2                49,152            4.19           3.71
+Qwen2.5               151,665            4.30           4.00
+
+One sentence, six languages: tokens, and tokens relative to English
+tokenizer                  English       French       German        Hindi       Telugu      Chinese
+ours, 500 merges         29 (1.0x)    50 (1.7x)    47 (1.6x)   147 (5.1x)   244 (8.4x)    51 (1.8x)
+ours, 2000 merges        26 (1.0x)    43 (1.7x)    46 (1.8x)   147 (5.7x)   244 (9.4x)    51 (2.0x)
+GPT-2                    16 (1.0x)    28 (1.8x)    31 (1.9x)    86 (5.4x)   244 (15.2x)    36 (2.2x)
+SmolLM2                  16 (1.0x)    27 (1.7x)    29 (1.8x)    68 (4.2x)   244 (15.2x)    29 (1.8x)
+Qwen2.5                  16 (1.0x)    23 (1.4x)    24 (1.5x)    56 (3.5x)   136 (8.5x)    11 (0.7x)
+UTF-8 bytes:                    74           78           77          147          244           51
+
+Digits: how '2024 2025 1234567' is split
+  GPT-2    ['20', '24', ' 2025', ' 123', '45', '67']
+  SmolLM2  ['2', '0', '2', '4', ' ', '2', '0', '2', '5', ' ', '1', '2', '3', '4', '5', '6', '7']
+  Qwen2.5  ['2', '0', '2', '4', ' ', '2', '0', '2', '5', ' ', '1', '2', '3', '4', '5', '6', '7']
+
+What fertility costs. C = 6 N D with D = bytes x tokens per byte.
+  On Python code, ours, 500 merges needs 2.75x the tokens of Qwen2.5, so 2.75x the training FLOPs for the same bytes.
+  fp32 logits for batch 8 x 8192 tokens x 100,000 vocab: 26.2 GB for one tensor.

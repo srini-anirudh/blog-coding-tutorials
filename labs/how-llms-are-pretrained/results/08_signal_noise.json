@@ -1,0 +1,77 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only",
+ "command": "python labs/how-llms-are-pretrained/scripts/08_signal_noise.py",
+ "rows": [
+  {
+   "metric": "prose",
+   "signal": 0.33114094881299705,
+   "noise": 0.004142124915741041,
+   "snr": 79.94470363619025,
+   "decision_accuracy": 0.925
+  },
+  {
+   "metric": "code",
+   "signal": 0.3589355493030269,
+   "noise": 0.0039802436820103124,
+   "snr": 90.17929000812794,
+   "decision_accuracy": 0.9666666666666667
+  },
+  {
+   "metric": "math",
+   "signal": 0.4636782571578252,
+   "noise": 0.0038919891245060016,
+   "snr": 119.13657575204002,
+   "decision_accuracy": 0.9083333333333333
+  },
+  {
+   "metric": "mean",
+   "signal": 0.18492791973448913,
+   "noise": 0.002854193562156382,
+   "snr": 64.7916533014578,
+   "decision_accuracy": 0.875
+  },
+  {
+   "metric": "prose_8",
+   "signal": 0.3509251633234974,
+   "noise": 0.010127922866305046,
+   "snr": 34.649272901850686,
+   "decision_accuracy": 0.9166666666666666
+  },
+  {
+   "metric": "code_8",
+   "signal": 0.3950841796005478,
+   "noise": 0.011088775656067288,
+   "snr": 35.62919765487141,
+   "decision_accuracy": 0.9333333333333333
+  },
+  {
+   "metric": "math_8",
+   "signal": 0.45190584920301385,
+   "noise": 0.0049534926669185155,
+   "snr": 91.22974022370703,
+   "decision_accuracy": 0.9
+  },
+  {
+   "metric": "mean_8",
+   "signal": 0.18867515338974306,
+   "noise": 0.005210551377684157,
+   "snr": 36.210208807805714,
+   "decision_accuracy": 0.8416666666666667
+  },
+  {
+   "metric": "mc_acc",
+   "signal": 0.05049365677983721,
+   "noise": 0.018508433313642658,
+   "snr": 2.728143215807363,
+   "decision_accuracy": 0.7844827586206896
+  },
+  {
+   "metric": "mc_acc_20",
+   "signal": 0.06343057228182639,
+   "noise": 0.0643036080577195,
+   "snr": 0.9864232225490448,
+   "decision_accuracy": 0.6379310344827587
+  }
+ ],
+ "r2_logsnr_decision": 0.8186034699802938
+}

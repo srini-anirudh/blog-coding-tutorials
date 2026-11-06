@@ -1,0 +1,39 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/how-llms-are-pretrained/scripts/02_pipeline_funnel.py
+
+Survivors after each stage, by page type (order: quality -> exact dedup -> MinHash -> decontamination)
+
+page type                   crawl    quality rules      exact dedup    MinHash dedup  decontamination
+arithmetic                     20                0                0                0                0
+article                       300              280              257              213              213
+code                           40                3                3                3                3
+error page                     30                0                0                0                0
+exact copy                     50               47               23               23               23
+mirror                         80               78               78               44               44
+quotes eval set                20               19               19               19                0
+scraper copy                   60                0                0                0                0
+spam                           30                0                0                0                0
+table                          20                0                0                0                0
+total                         650              427              380              302              283
+Dedup keeps whichever copy was crawled first, so some originals go and their mirror or copy stays.
+
+bytes kept: 3,191,046 of 6,734,221 (47.4%). This toy crawl is far cleaner than a real one,
+where published pipelines keep roughly 1-10% of raw bytes.
+
+First rule each page failed, by page type
+  arithmetic       mean_word_length 20
+  article          dup_5gram 19, too_few_sentences 1
+  code             curly_bracket 18, dup_5gram 10, alpha_words 6, symbol_ratio 2, word_count 1
+  error page       word_count 30
+  exact copy       dup_5gram 3
+  mirror           dup_5gram 2
+  quotes eval set  dup_5gram 1
+  scraper copy     ellipsis_lines 59, dup_5gram 1
+  spam             stopwords 30
+  table            word_count 20
+
+Order changes the outcome. 60 articles were crawled first as an excerpt scraper's copy
+(paragraphs cut short, ending in '...'), then later as the original.
+  filter then dedup: 302 pages kept; originals of the 60 scraped articles kept: 56
+  dedup then filter: 259 pages kept; originals of the 60 scraped articles kept: 13
+  Dedup first keeps the scraper copy (it came first). The ellipsis rule then deletes it, and the article is gone.

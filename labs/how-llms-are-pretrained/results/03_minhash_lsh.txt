@@ -1,0 +1,36 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/how-llms-are-pretrained/scripts/03_minhash_lsh.py
+
+Random set pairs, 200 elements each, 400 pairs per J. k = 112 hashes.
+
+ true J  mean est.  std of est.  sqrt(J(1-J)/k)  candidate rate  1-(1-J^r)^b
+  0.099      0.099       0.0291          0.0282           0.000        0.000
+  0.299      0.297       0.0409          0.0432           0.000        0.001
+  0.498      0.497       0.0480          0.0472           0.043        0.052
+  0.600      0.600       0.0461          0.0463           0.198        0.211
+  0.702      0.697       0.0441          0.0432           0.540        0.574
+  0.747      0.749       0.0375          0.0411           0.745        0.759
+  0.802      0.802       0.0407          0.0377           0.930        0.927
+  0.896      0.894       0.0284          0.0289           1.000        0.999
+
+S-curve inflection (1/b)^(1/r) for b=14, r=8: 0.719
+
+Moving the threshold: bands x rows, all with about 112 hashes
+  b   r  threshold   P@J=0.5  P@J=0.7  P@J=0.8  P@J=0.9
+ 28   4      0.435     0.836    1.000    1.000    1.000
+ 16   7      0.673     0.118    0.747    0.977    1.000
+ 14   8      0.719     0.053    0.565    0.924    1.000
+  8  14      0.862     0.000    0.053    0.302    0.875
+  7  16      0.885     0.000    0.023    0.181    0.762
+
+Edited copies of one real WikiText-2 article (5-word shingles), against the original
+article: 'Military history of Australia' (16390 words)
+edit                                        true J  MinHash J  LSH flags it
+replace 1% of words at random                0.907      0.902          True
+replace 3% of words at random                0.753      0.759          True
+replace 5% of words at random                0.633      0.536         False
+replace 10% of words at random               0.415      0.464         False
+replace 20% of words at random               0.195      0.170         False
+append one word repeated 40 times            1.000      1.000          True
+keep the first half                          0.500      0.482         False
+One changed word removes up to 5 shingles, so 5% random word edits already cut J to about 0.6.

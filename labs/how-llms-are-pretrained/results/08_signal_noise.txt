@@ -1,0 +1,27 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/how-llms-are-pretrained/scripts/08_signal_noise.py
+
+computed from results/07_mixture_s.json (NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2)
+and results/07_mixture_m.json (NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2)
+16 recipes. Small model 672,640 params, large model 3,475,712 params.
+
+small-model metric           signal    noise     SNR  decision acc.
+prose bpb, 256 windows       0.3311   0.0041    79.9           0.93
+code bpb, 256 windows        0.3589   0.0040    90.2           0.97
+math bpb, 256 windows        0.4637   0.0039   119.1           0.91
+mean bpb, 256 windows        0.1849   0.0029    64.8           0.88
+prose bpb, 8 windows         0.3509   0.0101    34.6           0.92
+code bpb, 8 windows          0.3951   0.0111    35.6           0.93
+math bpb, 8 windows          0.4519   0.0050    91.2           0.90
+mean bpb, 8 windows          0.1887   0.0052    36.2           0.84
+arith. test error, 200 items   0.0505   0.0185     2.7           0.78
+arith. test error, 20 items   0.0634   0.0643     1.0           0.64
+
+R^2 between log SNR and decision accuracy over these 10 metrics: 0.82
+Ten metrics from one toy suite is a tiny sample; read it as a direction, not a measurement.
+
+Arithmetic test accuracy, chance = 0.25: small models 0.19 to 0.36, large models 0.20 to 0.33
+
+The two best recipes on the small model (runs 9 and 13), last 5 checkpoints:
+  mean    run 9: [2.2575, 2.2445, 2.2389, 2.238, 2.23]  run 13: [2.2889, 2.2764, 2.2685, 2.2617, 2.26]  gap 0.0293, checkpoints where the order flips: 0%
+  mean_8  run 9: [2.4915, 2.4837, 2.4745, 2.4845, 2.4663]  run 13: [2.5176, 2.505, 2.5058, 2.4956, 2.4904]  gap 0.0228, checkpoints where the order flips: 0%

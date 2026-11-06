@@ -1,0 +1,34 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/how-llms-are-pretrained/scripts/05_packing_masks.py
+
+Largest per-token loss difference (nats) from running the document alone. 0 means identical.
+Columns: document 2 and document 3 of the packed row (document 1 is the same in every setting).
+
+GPT-2 (absolute positions): document lengths [24, 24, 27] tokens, fp32, eager attention
+  causal mask, positions keep counting        2.23e+00   3.14e+00
+  causal mask, positions reset                2.94e+00   1.01e+01
+  document mask, positions keep counting      1.46e+01   1.01e+01
+  document mask, positions reset              0.00e+00   0.00e+00
+  mean loss of documents 2 and 3 alone: [2.421, 3.496]
+
+SmolLM2-135M (RoPE): document lengths [24, 23, 25] tokens, fp32, eager attention
+  causal mask, positions keep counting        1.76e+00   2.95e+00
+  causal mask, positions reset                5.97e+00   1.14e+01
+  document mask, positions keep counting      4.41e-06   1.05e-05
+  document mask, positions reset              0.00e+00   0.00e+00
+  mean loss of documents 2 and 3 alone: [2.018, 1.061]
+
+SmolLM2-135M (RoPE): one document, positions starting at an offset, document mask only
+   start position  fp32 max diff  bf16 max diff
+                0       0.00e+00       0.00e+00
+              100       7.63e-06       9.98e-02
+             1000       5.13e-06       1.40e-01
+             8000       7.87e-06       1.56e-01
+            30000       6.44e-06       1.62e-01
+  Each column compares a shifted run with an unshifted run in the same precision. In fp32 a shift is
+  invisible. In bf16 any shift changes the rounding, and the change is about the same size at 100
+  as at 30,000, so here it is rounding noise, not a drift that grows with position.
+
+Reading: a document mask alone makes packing exact for the RoPE model, because RoPE depends only on
+relative offsets. GPT-2 needs both the mask and the position reset. Resetting positions without a
+mask fixes nothing, because tokens still attend to the previous documents.

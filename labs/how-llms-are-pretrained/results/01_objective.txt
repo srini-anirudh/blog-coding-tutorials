@@ -1,0 +1,23 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/how-llms-are-pretrained/scripts/01_objective.py
+
+model openai-community/gpt2, text: 'The objective is simple. The distribution being optimised is not.', 13 tokens
+
+ t  prefix ends with true next       p(true)  -log p   top guess
+ 0  'The'            ' objective'     0.0001   9.393   '\n'
+ 1  ' objective'     ' is'            0.1944   1.638   ' of'
+ 2  ' is'            ' simple'        0.0102   4.582   ' to'
+ 3  ' simple'        '.'              0.1543   1.869   ':'
+ 4  '.'              ' The'           0.0910   2.397   ' The'
+ 5  ' The'           ' distribution'   0.0001   8.820   ' goal'
+ 6  ' distribution'  ' being'         0.0003   8.259   ' of'
+ 7  ' being'         ' optim'         0.0003   8.010   ' the'
+ 8  ' optim'         'ised'           0.8172   0.202   'ised'
+ 9  'ised'           ' is'            0.0537   2.924   ','
+10  ' is'            ' not'           0.0317   3.450   ' to'
+11  ' not'           '.'              0.0062   5.088   ' the'
+
+sum of -log p over 12 predictions: 56.6319 nats
+mean (what training reports):      4.7193 nats per token
+Hugging Face loss (mean):          4.7193
+vocabulary size: 50257. Each prediction is a distribution over all of it; one entry enters the loss.

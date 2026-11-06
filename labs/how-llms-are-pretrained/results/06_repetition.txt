@@ -1,0 +1,30 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2
+# command: python labs/how-llms-are-pretrained/scripts/06_repetition.py --device cuda
+
+Part 1. D'/(U E): value of the data actually seen, relative to fresh data, R* = 15.4
+  epochs E         1      2      4      8     16     40    100
+  D'/(U E)     1.000  0.984  0.931  0.828  0.662  0.379  0.164
+  D'/U          1.00   1.97   3.73   6.63  10.59  15.18  16.38
+  ceiling as E grows: D'/U -> 1 + R* = 16.4
+
+  trained E=1   U= 8,192,000 bytes  final val 2.2224 bpb (14 s, 672,640 params)
+  trained E=2   U= 4,096,000 bytes  final val 2.2566 bpb (13 s, 672,640 params)
+  trained E=4   U= 2,048,000 bytes  final val 2.2842 bpb (13 s, 672,640 params)
+  trained E=8   U= 1,024,000 bytes  final val 2.3510 bpb (13 s, 672,640 params)
+  trained E=16  U=   512,000 bytes  final val 2.5309 bpb (13 s, 672,640 params)
+  trained E=32  U=   256,000 bytes  final val 3.2393 bpb (13 s, 672,640 params)
+  trained E=64  U=   128,000 bytes  final val 5.1553 bpb (13 s, 672,640 params)
+
+Part 2. Same budget of 8,192,000 training bytes for every run, constant learning rate after warmup.
+   E    unique U  val bpb  best bpb  measured D_eff  D_eff/U  formula D/U  value kept
+   1   8,192,000   2.2224    2.2224       8,192,000     1.00         1.00        1.00 
+   2   4,096,000   2.2566    2.2566       7,170,938     1.75         1.97        0.88 
+   4   2,048,000   2.2842    2.2842       6,390,195     3.12         3.73        0.78 
+   8   1,024,000   2.3510    2.3459       4,885,600     4.77         6.63        0.60 
+  16     512,000   2.5309    2.4817       2,918,772     5.70        10.59        0.36 
+  32     256,000   3.2393    2.7077         828,188     3.24        14.34        0.10 
+  64     128,000   5.1553    2.8544         204,800     1.60        16.14        0.03 
+
+R* fitted to these runs: 2.46 (paper: 15.4, fitted at far larger scale)
+'value kept' = D_eff / bytes seen: 1.00 means repeats were worth as much as fresh bytes.
+'best bpb' below 'val bpb' means the run overfit: validation loss rose again before the end.

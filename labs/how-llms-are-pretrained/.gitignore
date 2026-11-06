@@ -1,0 +1,6 @@
+# checkpoints, caches and downloaded data stay out of git
+*.pt
+*.bin
+runs/
+data_cache/
+__pycache__/
