@@ -1,0 +1,39 @@
+Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4
+Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/02_best_of_n.py
+
+heavy-tailed scorer (fool rate 0.004)
+   N  scorer picks  oracle (pass@N)
+----  ------------  ---------------
+   1         0.262            0.262
+   2        0.4065             0.44
+   4          0.57           0.6425
+   8         0.704            0.807
+  16        0.7845           0.9035
+  32         0.824            0.968
+  64         0.823           0.9905
+ 128        0.7865            0.998
+ 256        0.7135           0.9995
+ 512        0.6295                1
+1024         0.515                1
+2048        0.4025                1
+peak: N=32, accuracy 0.824; at N=2048: 0.403
+
+same scorer, no confident errors
+   N  scorer picks  oracle (pass@N)
+----  ------------  ---------------
+   1         0.262            0.262
+   2        0.4075             0.44
+   4         0.574           0.6425
+   8        0.7165            0.807
+  16        0.8105           0.9035
+  32        0.8855            0.968
+  64        0.9295           0.9905
+ 128         0.957            0.998
+ 256         0.971           0.9995
+ 512        0.9805                1
+1024        0.9915                1
+2048        0.9975                1
+peak: N=2048, accuracy 0.998; at N=2048: 0.998
+
+2000 simulated problems, solve rate per problem ~ U(0.02, 0.5), scorer = 2*correct + N(0,1),
+plus +4 on a wrong candidate with the stated fool rate. Parameters are chosen, not fitted to any paper.

@@ -1,0 +1,53 @@
+Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4
+Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/05_baselines.py
+
+One prompt, 6 whole responses, 0/1 verifier. J = 0.4606
+exact gradient on the logits: [0.0942, 0.0493, -0.0209, -0.0284, -0.0721, -0.022]
+200000 groups per cell. scale = projection of the mean estimate on the exact gradient (1 = unbiased).
+variance = trace of the covariance of one group's estimate / |exact gradient|^2.
+
+G = 2   (mean-centred prediction: scale = (G-1)/G = 0.5000)
+     estimator   scale  cosine  rel. bias  variance
+--------------  ------  ------  ---------  --------
+     reinforce   1.005       1   0.009189     8.246
+constant b=0.5   1.001       1   0.005548     4.804
+          mean  0.5034       1     0.4966     2.628
+          rloo   1.007       1    0.00817     10.51
+          grpo   1.007       1   0.008004     10.51
+
+G = 4   (mean-centred prediction: scale = (G-1)/G = 0.7500)
+     estimator   scale  cosine  rel. bias  variance
+--------------  ------  ------  ---------  --------
+     reinforce   1.003       1   0.008214     4.126
+constant b=0.5   1.001       1   0.004422     2.404
+          mean  0.7501       1     0.2499      1.86
+          rloo       1       1   0.004079     3.307
+          grpo   1.617       1     0.6172     8.634
+
+G = 8   (mean-centred prediction: scale = (G-1)/G = 0.8750)
+     estimator   scale  cosine  rel. bias  variance
+--------------  ------  ------  ---------  --------
+     reinforce   1.002       1   0.005274     2.062
+constant b=0.5   1.001       1   0.001935     1.199
+          mean  0.8759       1     0.1242     1.055
+          rloo   1.001       1   0.001663     1.378
+          grpo   1.861       1     0.8607     4.724
+
+G = 16   (mean-centred prediction: scale = (G-1)/G = 0.9375)
+     estimator   scale  cosine  rel. bias  variance
+--------------  ------  ------  ---------  --------
+     reinforce  0.9998       1   0.000707     1.033
+constant b=0.5  0.9997       1  0.0007484    0.6009
+          mean  0.9371       1    0.06289    0.5581
+          rloo  0.9996       1  0.0007618     0.635
+          grpo   1.938       1     0.9383     2.366
+
+G = 64   (mean-centred prediction: scale = (G-1)/G = 0.9844)
+     estimator   scale  cosine  rel. bias  variance
+--------------  ------  ------  ---------  --------
+     reinforce       1       1  0.0003312    0.2571
+constant b=0.5  0.9996       1  0.0008087    0.1499
+          mean   0.984       1    0.01601    0.1446
+          rloo  0.9996       1  0.0006602    0.1492
+          grpo   1.989       1     0.9891    0.5881
+

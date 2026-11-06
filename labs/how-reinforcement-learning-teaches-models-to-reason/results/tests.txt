@@ -1,0 +1,5 @@
+Hardware: AMD EPYC 7R13, 2 threads (set in conftest.py), CPU only. torch 2.15.0, numpy 2.5.4
+Command: python -m pytest labs/how-reinforcement-learning-teaches-models-to-reason -m "not slow and not gpu and not network" -o addopts="--import-mode=importlib" -q -p no:cacheprovider
+
+............................                                             [100%]
+28 passed in 5.31s

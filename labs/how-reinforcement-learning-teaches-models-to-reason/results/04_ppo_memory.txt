@@ -1,0 +1,19 @@
+Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4
+Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/04_ppo_memory.py
+
+Measured bytes per trained parameter after one AdamW step: fp32 16.00, bf16 + fp32 master 16.00
+
+7B parameters per model, 16 B per trained parameter, 2 B per frozen one:
+            pipeline         model   GB
+--------------------  ------------  ---
+      PPO-based RLHF        policy  112
+      PPO-based RLHF        critic  112
+      PPO-based RLHF     reference   14
+      PPO-based RLHF  reward_model   14
+      PPO-based RLHF         total  252
+GRPO with a verifier        policy  112
+GRPO with a verifier     reference   14
+GRPO with a verifier         total  126
+
+Critic share of PPO state: 44.4%. GRPO / PPO: 50.0%
+This is arithmetic on stated byte counts, not a measured 7B run. Activations and KV cache are excluded.

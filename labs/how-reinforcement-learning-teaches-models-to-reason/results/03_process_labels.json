@@ -1,0 +1,35 @@
+{
+ "hardware": "Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4",
+ "command": "Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/03_process_labels.py",
+ "outcome_reward_rate": 0.59934,
+ "false_positive_rate": 0.11874728868421931,
+ "labels": [
+  [
+   "weak completer",
+   0.5,
+   0.02,
+   0.9960333135038667,
+   0.8511988873435327,
+   0.3633837001784652,
+   1.0
+  ],
+  [
+   "medium completer",
+   0.8,
+   0.15,
+   1.0,
+   0.2712433936022253,
+   0.9432123735871505,
+   0.9970570236439499
+  ],
+  [
+   "strong completer",
+   0.95,
+   0.4,
+   1.0,
+   0.01663421418636996,
+   0.9995764425936943,
+   0.8269819193324062
+  ]
+ ]
+}

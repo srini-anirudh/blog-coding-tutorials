@@ -1,0 +1,43 @@
+Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4
+Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/07_length_bias.py
+
+Toy: hidden state 'knows' (right 90%) or 'guesses' (right 10%), seen by the policy. Length never
+affects correctness. Start: mean length 40 in both states. 64 prompts x 8 samples per step, Adam lr 0.02.
+
+1. Estimator bias at initialization, no optimizer: mean push on each state's stop logit
+   (negative = write longer), over 200000 groups.
+      loss  push (guess)     stderr  z (guess)  push (knows)  z (knows)
+----------  ------------  ---------  ---------  ------------  ---------
+      grpo      -0.02575  9.814e-05     -262.4       0.02586      262.7
+      dapo     -0.001286  1.472e-05     -87.37      0.001283      87.25
+dapo_batch    -1.253e-05  1.379e-05    -0.9084     1.283e-05     0.9342
+    drgrpo     1.013e-07  2.534e-07     0.3996    -8.885e-08    -0.3524
+
+2. Training, 400 steps, 3 seeds. Lengths are means over the step's samples.
+      loss  seed  wrong len @0  wrong len @400  right len  E[len] guess  E[len] knows  accuracy  truncated
+----------  ----  ------------  --------------  ---------  ------------  ------------  --------  ---------
+      grpo     0         41.47           621.7      44.94          1241         1.067    0.4922     0.2148
+      grpo     1         41.48           664.1      59.19          1335         1.065    0.4941     0.2324
+      grpo     2         42.63           668.3      60.89          1377         1.067    0.4941       0.25
+      dapo     0         41.47           703.9      61.42          1947          9.34    0.4922      0.293
+      dapo     1         41.48           745.4      75.18          1945         12.13    0.4941      0.293
+      dapo     2         42.63           743.9      75.43          2092           9.8    0.4941     0.3184
+dapo_batch     0         41.47           69.05      30.48         76.09         27.24    0.4922          0
+dapo_batch     1         41.48           33.49      49.85         34.99          51.7    0.4941          0
+dapo_batch     2         42.63           62.56      30.35         62.17         26.87    0.4941          0
+    drgrpo     0         41.47            55.7      31.12         60.45         28.71    0.4922          0
+    drgrpo     1         41.48           29.47      56.45         30.15         59.28    0.4941          0
+    drgrpo     2         42.63           48.57      32.84         47.37          30.8    0.4941          0
+
+Mean length of wrong responses over training (seed 0):
+step   grpo   dapo  dapo_batch  drgrpo
+----  -----  -----  ----------  ------
+   0  41.47  41.47       41.47   41.47
+  50  87.29  93.54       47.92   46.63
+ 100  157.7  198.8       35.61   33.88
+ 150  247.3  350.4       39.03   35.44
+ 200    375  501.3       42.59    38.9
+ 250  420.6  534.9       41.28   36.44
+ 300  525.3  633.8       41.85   35.42
+ 350  571.4  670.3       52.59   42.69
+ 400  621.7  703.9       69.05    55.7

@@ -1,0 +1,19 @@
+Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4
+Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/01_reward_channels.py
+
+Question: A box holds 6 rows of 7 eggs. How many eggs?  Truth: 42
+         rollout  math_reward  format_reward  surface_proxy
+----------------  -----------  -------------  -------------
+    terse, right            1              1          0.013
+  careful, right            1              1           0.27
+   fluent, wrong            0              1           0.84
+no format, right            1              0          0.167
+
+Ways a rule verifier can still be fooled or can mislead:
+                             case  math_reward  format_reward
+---------------------------------  -----------  -------------
+                two boxed answers            1              1
+answer copied from a leaky prompt            1              1
+                empty think block            1              0
+
+math_reward cost: 1.55 microseconds per call (20000 calls, one CPU thread)

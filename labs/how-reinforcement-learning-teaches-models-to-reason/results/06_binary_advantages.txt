@@ -1,0 +1,44 @@
+Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4
+Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/06_binary_advantages.py
+
+GRPO advantages in a group of 8 with k right. 'pop' divides by the population std (the post's
+algebra); 'unbiased' divides by the n-1 std, as TRL and C06 do.
+  p  A_right (pop)  A_wrong (pop)  A_right (unbiased)  A_wrong (unbiased)  rare/common
+---  -------------  -------------  ------------------  ------------------  -----------
+1/8          2.646         -0.378               2.475             -0.3536            7
+2/8          1.732        -0.5774                1.62             -0.5401            3
+3/8          1.291        -0.7746               1.208             -0.7246        1.667
+4/8              1             -1              0.9354             -0.9354            1
+5/8         0.7746         -1.291              0.7246              -1.208        1.667
+6/8         0.5774         -1.732              0.5401               -1.62            3
+7/8          0.378         -2.646              0.3536              -2.475            7
+
+Chance a group is not unanimous, so it carries any gradient: 1 - p^G - (1-p)^G
+   p     G=4      G=8    G=16    G=64
+----  ------  -------  ------  ------
+0.01  0.0394  0.07726  0.1485  0.4744
+0.05  0.1855   0.3366  0.5599  0.9625
+ 0.1  0.3438   0.5695  0.8147  0.9988
+ 0.3  0.7518   0.9423  0.9967       1
+ 0.5   0.875   0.9922       1       1
+ 0.9  0.3438   0.5695  0.8147  0.9988
+0.95  0.1855   0.3366  0.5599  0.9625
+0.99  0.0394  0.07726  0.1485  0.4744
+
+How hard one prompt pushes: sum |A_i| over the group, G=8.
+k right  GRPO (z-score)  Dr. GRPO (mean only)
+-------  --------------  --------------------
+    0/8               0                     0
+    1/8           5.292                  1.75
+    2/8           6.928                     3
+    3/8           7.746                  3.75
+    4/8               8                     4
+    5/8           7.746                  3.75
+    6/8           6.928                     3
+    7/8           5.292                  1.75
+    8/8               0                     0
+weight of a 1/8 prompt relative to a 4/8 prompt: GRPO 0.661, mean-only 0.438
+
+Dynamic sampling, 4096 prompts with solve rate ~ Beta(0.4, 0.4), G=8:
+  groups with a gradient: 0.532; all right: 0.228; all wrong: 0.240
+  rollouts spent per informative group without filtering: 15.03 (minimum 8)

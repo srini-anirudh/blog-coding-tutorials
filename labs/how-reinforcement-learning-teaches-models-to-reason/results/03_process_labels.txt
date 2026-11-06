@@ -1,0 +1,13 @@
+Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4
+Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/03_process_labels.py
+
+100000 six-step derivations, first-mistake rate 0.1 per step, 0.15 chance a broken one lands right.
+Outcome reward 1 rate: 0.599
+Rewarded trajectories that contain a wrong step: 0.119
+
+Monte Carlo step labels, 8 completions per step. hard = any completion right; soft = more than half.
+       completer  a_clean  a_rescue  hard: good->good  hard: bad->bad  soft: good->good  soft: bad->bad
+----------------  -------  --------  ----------------  --------------  ----------------  --------------
+  weak completer      0.5      0.02             0.996          0.8512            0.3634               1
+medium completer      0.8      0.15                 1          0.2712            0.9432          0.9971
+strong completer     0.95       0.4                 1         0.01663            0.9996           0.827

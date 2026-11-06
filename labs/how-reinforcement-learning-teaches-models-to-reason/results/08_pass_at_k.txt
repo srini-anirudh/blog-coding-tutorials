@@ -1,0 +1,34 @@
+Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4
+Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/08_pass_at_k.py
+
+16 strategies, 2000 held-out test problems. Common strategy solves 60% of solvable problems; each problem has one rare strategy; 5% unsolvable.
+GRPO, 300 steps x 64 prompts x 8 samples, Adam lr 0.05. pass@k is exact.
+
+     policy  pass@1  pass@2  pass@4  pass@8  pass@16  pass@32  pass@64  pass@128  pass@256  pass@1024
+-----------  ------  ------  ------  ------  -------  -------  -------  --------  --------  ---------
+       base  0.1146   0.212  0.3659  0.5629   0.7443   0.8647   0.9305    0.9485    0.9495     0.9495
+rl beta=0.0  0.4662  0.5606  0.5838   0.585   0.5856   0.5867   0.5888    0.5931    0.6014     0.6477
+rl beta=0.1  0.4629  0.5596  0.5843  0.5862    0.588   0.5914   0.5982    0.6114    0.6362     0.7495
+rl beta=1.0  0.1661  0.2921  0.4624  0.6305   0.7502   0.8457   0.9199    0.9471    0.9495     0.9495
+rl beta=0.0: base overtakes it at k = 16
+rl beta=0.1: base overtakes it at k = 16
+rl beta=1.0: base overtakes it at k = 32
+
+The boundary narrows as training goes on (beta = 0):
+step  entropy  pi(common)  pass@1  pass@16  pass@256
+----  -------  ----------  ------  -------  --------
+   0    2.721      0.1534  0.1146   0.7443    0.9495
+  50   0.4207      0.9342  0.4402   0.6044    0.8005
+ 100   0.1292      0.9834  0.4607   0.5896    0.6582
+ 150  0.07491      0.9911  0.4639   0.5873    0.6261
+ 200  0.05641      0.9935  0.4649   0.5865    0.6153
+ 250  0.04361      0.9952  0.4656    0.586    0.6078
+ 300  0.03255      0.9965  0.4662   0.5856    0.6014
+
+Unbiased pass@k estimator from n=256 samples per problem vs exact (base policy):
+  k  estimate   exact
+---  --------  ------
+  1    0.1144  0.1146
+ 16    0.7461  0.7443
+ 64    0.9317  0.9305
+256    0.9495  0.9495

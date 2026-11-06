@@ -1,0 +1,47 @@
+Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4
+Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/09_sft_vs_rl.py
+
+12 modes. Demonstration mode 11 starts at pi = 2.73e-07.
+
+1. SFT gradient written as an on-policy policy gradient with reward D(y)/pi(y):
+on-policy samples  relative error
+-----------------  --------------
+             1000               1
+           100000               1
+         10000000          0.2669
+same check with the demonstration at pi = 0.043, 1e5 samples: relative error 0.0116
+
+2. Per-token weights of a demonstration token with probability p:
+    p  implicit reward SFT  implicit reward DFT  logit-grad norm SFT  logit-grad norm DFT
+-----  -------------------  -------------------  -------------------  -------------------
+    1                    1                    1                    0                    0
+  0.5                    2                    1               0.7071               0.3536
+  0.1                   10                    1                1.273               0.1273
+ 0.01                  100                    1                  1.4                0.014
+0.001                 1000                    1                1.413             0.001413
+
+3. One step of each operator: pi_new / pi_old for the non-demonstration modes.
+mode  correct?  SFT ratio  RL ratio
+----  --------  ---------  --------
+   0         0     0.8631    0.5859
+   1         0     0.9821    0.7234
+   2         1      1.062     1.859
+   3         1      1.062     1.859
+   4         0      1.114    0.8882
+   5         0      1.146     0.931
+   6         0      1.146     0.931
+   7         0      1.166    0.9579
+   8         0      1.179    0.9746
+   9         0      1.179    0.9746
+  10         0      1.186    0.9849
+SFT's change to each other mode depends only on that mode's probability, not on whether it is right.
+The modes it lowers are the most likely ones, through normalization. RL raises the correct modes
+and lowers every wrong one. Both steps have the same logit-space length.
+
+4. 300 steps of each, lr 1.0. RL: GRPO with 8 samples per step, reward 1 on modes 2, 3 and the target.
+   policy  pi(target)  P(correct)  entropy
+---------  ----------  ----------  -------
+    start   2.728e-07      0.2414    1.943
+after SFT      0.9968      0.9975  0.02916
+ after RL   2.209e-09      0.9985  0.04569
+RL sampled the target mode 0 times in 2400 samples.

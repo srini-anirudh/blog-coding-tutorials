@@ -1,0 +1,18 @@
+{
+ "hardware": "Hardware: AMD EPYC 7R13, 4 threads, CPU only. torch 2.15.0, numpy 2.5.4",
+ "command": "Command: python labs/how-reinforcement-learning-teaches-models-to-reason/scripts/04_ppo_memory.py",
+ "bytes_fp32": 16.0,
+ "bytes_mixed": 16.0,
+ "ppo_gb": {
+  "policy": 112.0,
+  "critic": 112.0,
+  "reference": 14.0,
+  "reward_model": 14.0,
+  "total": 252.0
+ },
+ "grpo_gb": {
+  "policy": 112.0,
+  "reference": 14.0,
+  "total": 126.0
+ }
+}
