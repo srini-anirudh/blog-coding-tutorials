@@ -1,0 +1,14 @@
+# AMD EPYC 7R13, CPU only, PyTorch 2.15.0, 8 threads
+$ python c04-llm/scripts/review_checks.py sdpa-cpu-backend
+
+torch 2.15.0+cu132
+FLASH_ATTENTION enable_gqa True fp32 OK ScaledDotProductFlashAttentionForCpuBackward0
+MATH enable_gqa True fp32 OK UnsafeViewBackward0
+EFFICIENT_ATTENTION enable_gqa True fp32 FAIL No viable backend for scaled_dot_product_attention was found. This is likely due to turning off both the math kernel and the fused kernels.
+FLASH_ATTENTION enable_gqa False fp32 OK ScaledDotProductFlashAttentionForCpuBackward0
+MATH enable_gqa False fp32 OK UnsafeViewBackward0
+EFFICIENT_ATTENTION enable_gqa False fp32 FAIL No viable backend for scaled_dot_product_attention was found. This is likely due to turning off both the math kernel and the fused kernels.
+default dispatch gqa grad_fn: ScaledDotProductFlashAttentionForCpuBackward0
+default dispatch no-gqa grad_fn: ScaledDotProductFlashAttentionForCpuBackward0
+ops with enable_gqa on CPU: ['aten::_scaled_dot_product_flash_attention_for_cpu', 'aten::as_strided', 'aten::empty', 'aten::empty_like', 'aten::empty_strided', 'aten::scaled_dot_product_attention', 'aten::transpose']
+decode q_len=1 ops: ['aten::_scaled_dot_product_flash_attention_for_cpu', 'aten::as_strided', 'aten::empty', 'aten::empty_like', 'aten::empty_strided', 'aten::scaled_dot_product_attention', 'aten::transpose']

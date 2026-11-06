@@ -1,0 +1,8 @@
+# AMD EPYC 7R13, CPU only, PyTorch 2.15.0, 8 threads
+$ python c04-llm/scripts/review_checks.py position-offset-random
+
+0 identical: True mismatches: 0
+1 identical: True mismatches: 0
+2 identical: True mismatches: 0
+3 identical: True mismatches: 0
+4 identical: True mismatches: 0

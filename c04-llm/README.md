@@ -85,7 +85,7 @@ Scripts use the thread count that PyTorch picks. Set `OMP_NUM_THREADS` to change
 ```bash
 python -m pytest c04-llm -m "not slow and not gpu and not network"   # offline, about 20 seconds
 python -m pytest c04-llm -m network                                  # downloads SmolLM2-135M
-python -m pytest c04-llm -m gpu                                      # needs a CUDA GPU, skipped otherwise
+python -m pytest c04-llm -m gpu                                      # needs a CUDA GPU, skipped otherwise; 5 passed on an H100
 ```
 
 The tests cover shapes, causality, gradients, cache equivalence, checkpoint round trips, training resume, parameter formulas, and agreement with PyTorch, C3 and Hugging Face. `tests/test_matches_c3.py` skips itself if `../c03-attention` is missing.
@@ -104,6 +104,10 @@ Run `train_sanity.py` first. It downloads Tiny Shakespeare to `c04-llm/data/` an
 | `python c04-llm/scripts/generate.py --compare` | One sample for each sampling setting | `results/generate_compare.txt` |
 | `python c04-llm/scripts/generate.py --prompt "ROMEO:" --temperature 0.8 --top-k 40` | One sample. `--no-cache` gives the same text, more slowly. | `results/generate_sample.txt` |
 | `python c04-llm/scripts/break_it.py --case all --pretrained HuggingFaceTB/SmolLM2-135M --device cpu` | Five intentional bugs and their symptoms | `results/break_it.txt` |
+| `python c04-llm/scripts/review_checks.py is-causal-single-query` | Why `is_causal=True` breaks a single-query decode step | `results/is_causal_single_query.txt` |
+| `python c04-llm/scripts/review_checks.py position-offset-random` | The position-offset bug changes nothing with random weights, 5 seeds | `results/position_offset_random.txt` |
+| `python c04-llm/scripts/review_checks.py pytest-position-offset-bug` | Which offline tests fail with the position-offset bug patched in | `results/pytest_position_offset_bug.txt` |
+| `python c04-llm/scripts/review_checks.py sdpa-cpu-backend` | Which kernel SDPA uses on a CPU | `results/sdpa_cpu_backend_probe.txt` |
 | `python c04-llm/scripts/moe_demo.py --steps 300` | Trains an MoE model with and without the load-balancing loss | `results/moe_demo.txt` |
 | `python c04-llm/scripts/compare_heads.py --steps 400 --device cpu` | Trains MHA, GQA and MQA on the same data | `results/compare_heads.txt` |
 
@@ -127,7 +131,7 @@ Every script and benchmark was run twice. Every seeded value matched exactly: lo
 |---|---|
 | Offline | 75 passed, in about 18 s |
 | Network, SmolLM2-135M parity | 1 passed |
-| GPU | 5 skipped, because no GPU was visible. They have never run. |
+| GPU | 5 skipped on this CPU host. On an NVIDIA H100 80GB HBM3 they passed (5 passed, `results/pytest_gpu.txt`). |
 | C5 tests that train this model | 3 passed |
 
 The full output is in `results/pytest.txt`.
@@ -232,6 +236,8 @@ The memory gap is the clear result. The naive path stores a score matrix per hea
 
 An earlier run of this benchmark, made while the host was heavily loaded, gave times that varied by 2x between neighbouring lengths. It was discarded.
 
+`bench_attention.py` leaves PyTorch's default backend choice alone. Only `bench_generation.py` turns cuDNN attention off. The attention runs did not record which backend PyTorch used, so these timings may include the slowdown described below, and the speed-ups should not be read as "flash against naive".
+
 ### Generation on the GPU
 
 Batch 1, 16-token prompt, 496 new tokens, random weights.
@@ -245,11 +251,13 @@ Batch 1, 16-token prompt, 496 new tokens, random weights.
 
 The cache gives almost no speed-up here, and that is a measured result, not a bug: `tests/test_cache.py` shows the two paths produce the same tokens. At batch 1 the step time is the same whether the forward pass covers 17 or 511 tokens, which is consistent with a step limited by launching kernels from Python rather than by arithmetic. I did not profile this case. If that is right, avoiding the recomputation saves nothing. The CPU numbers above show the cache helping because there the arithmetic is the cost. A larger batch, a longer context or a bigger model would shift this, and none of those were measured.
 
-### A slow default for decode
+### A slow default during generation
 
-With PyTorch's default backend choice, a decode step of the tiny model takes about 50 ms instead of 5 ms, and the SmolLM2-size model takes about 73 ms instead of 24 ms. A profile of one step showed the cause: `aten::_cudnn_attention_forward` spends about 9.7 ms of CPU per call and about 4 microseconds on the GPU. PyTorch chooses cuDNN attention for the decode shape here, which is one query against a growing cache with grouped heads. The prefill step (5.5 ms) and the training benchmark were not slowed. I did not profile which kernel they use, and I did not find out why the cuDNN call is slow on the host.
+With PyTorch's default backend choice, generation is much slower from the 48th token on, with and without the cache. Per step, tiny model: about 5 ms with cuDNN attention off, and about 50 to 62 ms with the default. The first step (17 tokens) is about 5.5 ms either way. Over the whole run this is 176 and 197 tok/s with it off and 17 and 20 tok/s with the default. This is about 10x for the tiny model. For the SmolLM2-size model it is about 3x: 24 to 25 ms per step against 72 to 81 ms, and 39 and 40 tok/s against 13 and 14.
 
-`tinyllm.utils.disable_cudnn_sdp()` turns that backend off, and `bench_generation.py` calls it on CUDA unless you pass `--allow-cudnn-sdp`. The library does not call it for you, because it sets a global PyTorch flag. If you generate on a GPU, call it once first. Both settings are saved: `results/bench_generation_gpu.txt` and `results/bench_generation_smollm2_gpu.txt` with it off, and the `_cudnn_default` files with PyTorch's default.
+A profile of one cached decode step of the tiny model showed `aten::_cudnn_attention_forward` spending about 9.7 ms of CPU per call and about 4 microseconds on the GPU. That is where the time goes in that step. I did not find out why the call is slow. The data does not show that the decode shape (one query, a growing cache, grouped heads) is the trigger: the uncached path also slows down from the 48th token on, and I did not profile it or the training benchmark.
+
+`tinyllm.utils.disable_cudnn_sdp()` turns the cuDNN backend off, and `bench_generation.py` calls it on CUDA unless you pass `--allow-cudnn-sdp`. With it off, the slowdown disappears in both models. The library does not call it for you, because it sets a global PyTorch flag. If you generate on a GPU, call it once first. Both settings are saved: `results/bench_generation_gpu.txt` and `results/bench_generation_smollm2_gpu.txt` with it off, and the `_cudnn_default` files with PyTorch's default.
 
 ### Not measured on the GPU
 

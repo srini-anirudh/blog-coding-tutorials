@@ -9,7 +9,7 @@ $ python -m pytest c04-llm -m "network or slow"
 .                                                                        [100%]
 1 passed, 80 deselected in 22.77s
 
-$ python -m pytest c04-llm -m gpu   # no GPU visible, so these skip. They have never run.
+$ python -m pytest c04-llm -m gpu   # no GPU visible on this CPU host, so these skip. On an H100 they passed: see pytest_gpu.txt
 sssss                                                                    [100%]
 5 skipped, 76 deselected in 0.57s
 

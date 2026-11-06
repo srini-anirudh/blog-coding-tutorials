@@ -1,0 +1,6 @@
+# AMD EPYC 7R13, CPU only, PyTorch 2.15.0, 8 threads
+$ python c04-llm/scripts/review_checks.py is-causal-single-query
+
+random q (1 query), k, v (9 keys): is_causal=True vs no mask: max diff 3.5665 | equals value of key 0 only: True
+real decode calls of the tiny model: 138, largest attention-output difference 0.9045, every one equals key 0 only: True
+token-by-token decode with literally always is_causal=True: max |diff| vs full = 1.1665

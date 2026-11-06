@@ -1,0 +1,14 @@
+# AMD EPYC 7R13, CPU only, PyTorch 2.15.0 (conftest.py sets 2 threads)
+$ python c04-llm/scripts/review_checks.py pytest-position-offset-bug
+
+FFFF.....................................FFF............................ [ 96%]
+...                                                                      [100%]
+=========================== short test summary info ============================
+FAILED c04-llm/tests/test_cache.py::test_token_by_token_with_cache_equals_full_forward[naive]
+FAILED c04-llm/tests/test_cache.py::test_token_by_token_with_cache_equals_full_forward[sdpa]
+FAILED c04-llm/tests/test_cache.py::test_chunked_prefill_equals_full_forward[naive]
+FAILED c04-llm/tests/test_cache.py::test_chunked_prefill_equals_full_forward[sdpa]
+FAILED c04-llm/tests/test_matches_c3.py::test_same_output_as_attnzoo[1] - ass...
+FAILED c04-llm/tests/test_matches_c3.py::test_same_output_as_attnzoo[2] - ass...
+FAILED c04-llm/tests/test_matches_c3.py::test_same_output_as_attnzoo[4] - ass...
+7 failed, 68 passed, 6 deselected in 13.27s
