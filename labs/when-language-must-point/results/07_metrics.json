@@ -1,0 +1,35 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/when-language-must-point/scripts/07_metrics.py",
+ "centroid_distance_px": 19.124977130516008,
+ "giou_ciou": {
+  "large_right": [
+   0.21056982214002903,
+   0.8832170400293794
+  ],
+  "small_right": [
+   0.8719999999999999,
+   0.37597503900156004
+  ]
+ },
+ "boundary ragged edge (radius 40 +- 3 px)": [
+  0.8611521418020679,
+  0.19602649006622516
+ ],
+ "boundary smooth, shifted by 3 px": [
+  0.9088145896656535,
+  0.17735849056603772
+ ],
+ "multi all three, in order": {
+  "set_f1": 1.0,
+  "sequence_f1": 1.0
+ },
+ "multi first one skipped": {
+  "set_f1": 0.8,
+  "sequence_f1": 0.0
+ },
+ "multi one box around all": {
+  "set_f1": 0.0,
+  "sequence_f1": 0.0
+ }
+}

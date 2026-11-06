@@ -1,0 +1,23 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/when-language-must-point/scripts/01_shapes.py",
+ "figure2": {
+  "fill_ratio": 0.33821853118384626,
+  "box_iou": 0.33821853118384626,
+  "polygon_iou": {
+   "6": 0.28033800853732904,
+   "16": 0.9158410071103859,
+   "48": 0.9918416316736652
+  },
+  "centroid_inside": false,
+  "mask_cells_iou": 0.9192410042809209
+ },
+ "fill_ratio": {
+  "rectangle": 1.0,
+  "ellipse": 0.785409090909091,
+  "Figure 9 blob": 0.7350909347243761,
+  "Figure 9 pie wedge": 0.556716995741386,
+  "Figure 9 curved text line": 0.33426034348165495,
+  "Figure 9 diagonal line (-27 deg, 440 x 24)": 0.11828246156604366
+ }
+}

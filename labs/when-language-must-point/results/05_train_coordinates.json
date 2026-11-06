@@ -1,0 +1,58 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/when-language-must-point/scripts/05_train_coordinates.py",
+ "args": {
+  "train": 6000,
+  "test": 1000,
+  "steps": 3000,
+  "rl_steps": 400,
+  "seed": 0,
+  "name": "05_train_coordinates"
+ },
+ "results": {
+  "digits": {
+   "box_iou": 0.8660111427307129,
+   "acc50": 0.9850000143051147,
+   "acc75": 0.9049999713897705,
+   "wrong_object": 0.020999999716877937,
+   "far_miss_coords": 0.006500000134110451,
+   "median_err_bins": 15.124977111816406,
+   "mask_iou_of_box_compact": 0.785542368888855,
+   "mask_iou_of_box_irregular": 0.3492094576358795,
+   "nll_per_coord": 2.0044759216308594
+  },
+  "digits+RL": {
+   "box_iou": 0.8651517629623413,
+   "acc50": 0.9860000014305115,
+   "acc75": 0.9070000052452087,
+   "wrong_object": 0.019999999552965164,
+   "far_miss_coords": 0.0062500000931322575,
+   "median_err_bins": 15.125006675720215,
+   "mask_iou_of_box_compact": 0.7846730351448059,
+   "mask_iou_of_box_irregular": 0.3484245836734772,
+   "nll_per_coord": 2.0529983215332033
+  },
+  "loc": {
+   "box_iou": 0.8330183625221252,
+   "acc50": 0.9359999895095825,
+   "acc75": 0.8640000224113464,
+   "wrong_object": 0.017000000923871994,
+   "far_miss_coords": 0.022749999538064003,
+   "median_err_bins": 15.24999713897705,
+   "mask_iou_of_box_compact": 0.7611281871795654,
+   "mask_iou_of_box_irregular": 0.344313383102417,
+   "nll_per_coord": 3.7913348999023437
+  },
+  "loc+RL": {
+   "box_iou": 0.8358728885650635,
+   "acc50": 0.9380000233650208,
+   "acc75": 0.878000020980835,
+   "wrong_object": 0.017999999225139618,
+   "far_miss_coords": 0.02250000089406967,
+   "median_err_bins": 15.24999713897705,
+   "mask_iou_of_box_compact": 0.7704314589500427,
+   "mask_iou_of_box_irregular": 0.3438836634159088,
+   "nll_per_coord": 3.8761015014648437
+  }
+ }
+}

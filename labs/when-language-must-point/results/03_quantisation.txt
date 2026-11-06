@@ -1,0 +1,38 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/when-language-must-point/scripts/03_quantisation.py
+
+Worst case: all four edges move inward by Delta / 2, so IoU_min = ((s - Delta) / s)^2 with Delta = W / N.
+Brute force: every combination of the four edge errors on a 9-step grid in [-Delta/2, +Delta/2] (6,561 boxes).
+object s (px)  Delta (px)  formula  brute force  worst edge errors (x1, y1, x2, y2)
+-------------  ----------  -------  -----------  ----------------------------------
+24             3.84        0.7056   0.7056       (1.92, 1.92, -1.92, -1.92)
+24             1.344       0.8911   0.8911       (0.672, 0.672, -0.672, -0.672)
+100            10          0.8100   0.8100       (5.0, 5.0, -5.0, -5.0)
+40             19.2        0.2704   0.2704       (9.6, 9.6, -9.6, -9.6)
+30             2.0         0.8711   0.8711       (1.0, 1.0, -1.0, -1.0)
+
+Cases from the post
+case                                                      bin width Delta (px)  max error per edge (px)  worst-case IoU  Acc@0.5, worst case
+--------------------------------------------------------  --------------------  -----------------------  --------------  -------------------
+Qwen-VL / Florence-2 grid on a 448 px image               0.45                  0.22                     0.96            passes
+Same grid on a 3840 px screenshot, 24 px icon             3.84                  1.92                     0.71            passes
+MiniGPT-v2 0-100 grid, 3840 px screenshot, 24 px icon     38.40                 19.20                    0.00            can fail
+Figure 4 default: 1000 bins, 1344 px image, 24 px object  1.34                  0.67                     0.89            passes
+Kosmos-2 32 cells, dog filling half a 224 px photo        7.00                  3.50                     0.88            passes
+Kosmos-2 32 cells, 2000 px page scan, 40 px word          62.50                 31.25                    0.00            can fail
+PaliGemma 1024 bins, 2000 px page scan, 40 px word        1.95                  0.98                     0.90            passes
+
+Average case: square objects at random positions, each edge rounded to its bin centre (20,000 boxes per row)
+bins N  image W  object s  mean IoU  Acc@0.5  min IoU seen  worst-case bound
+------  -------  --------  --------  -------  ------------  ----------------
+100     3840     24        0.136     0.000    0.000         0.000
+100     3840     96        0.678     1.000    0.640         0.360
+1000    3840     24        0.856     1.000    0.788         0.706
+1000    3840     96        0.961     1.000    0.924         0.922
+1000    1344     24        0.946     1.000    0.906         0.891
+1000    1344     96        0.986     1.000    0.984         0.972
+32      2000     24        0.021     0.000    0.000         0.000
+32      2000     96        0.528     0.774    0.424         0.122
+1024    2000     24        0.923     1.000    0.891         0.844
+1024    2000     96        0.980     1.000    0.966         0.960
+Bin count is a resolution budget spent in pixels of the original image. Small targets on large images pay most.

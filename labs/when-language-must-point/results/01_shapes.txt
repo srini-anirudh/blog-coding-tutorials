@@ -1,0 +1,45 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/when-language-must-point/scripts/01_shapes.py
+
+Figure 2: a curved band (annular sector r = 150..190 px, 20..160 degrees) on a 600 x 330 canvas
+  area 16616 px, tightest box (122.0, 82.0, 478.0, 220.0), fill ratio f = 0.338
+  IoU(tightest box, band) = 0.338   (equals f, as derived in the post)
+  centroid (formula) 300.0, 140.6; from pixels 300.0, 140.6
+  centroid inside the band? False.  A point on the band (300, 102.0) inside? True
+
+representation                     numbers  text tokens (3-digit coords, digits split)  IoU with the band
+---------------------------------  -------  ------------------------------------------  -----------------
+point (centroid)                   2        11                                          miss (outside)
+point (on band)                    2        11                                          hit
+box                                4        21                                          0.34
+polygon, 6 vertices                12       61                                          0.28
+polygon, 16 vertices               32       161                                         0.92
+polygon, 48 vertices               96       481                                         0.99
+mask (6 px cells, from a decoder)  -        1 (<SEG>)                                   0.92
+
+Fill ratio f(S) = |S| / |B*| = the IoU of the best possible box
+shape                                       fill ratio  IoU(tightest box, shape)
+------------------------------------------  ----------  ------------------------
+rectangle                                   1.000       1.000
+ellipse                                     0.785       0.785
+Figure 9 blob                               0.735       0.735
+Figure 9 pie wedge                          0.557       0.557
+Figure 9 curved text line                   0.334       0.334
+Figure 9 diagonal line (-27 deg, 440 x 24)  0.118       0.118
+ellipse, exact value pi / 4                 0.785       -
+
+Figure 9, 'Snap to tightest box': box IoU against the true box is 1.00 for every shape; mask IoU is the fill ratio.
+  Figure 9 blob                                box IoU 1.00 (pass)   mask IoU 0.74 (pass at 0.5)
+  Figure 9 pie wedge                           box IoU 1.00 (pass)   mask IoU 0.56 (pass at 0.5)
+  Figure 9 curved text line                    box IoU 1.00 (pass)   mask IoU 0.33 (fail at 0.5)
+  Figure 9 diagonal line (-27 deg, 440 x 24)   box IoU 1.00 (pass)   mask IoU 0.12 (fail at 0.5)
+
+A straight text line of length L and thickness t at 45 degrees: f = 2 L t / (L + t)^2
+  t / L = 0.2   formula 0.278   rasterised 0.278
+  t / L = 0.1   formula 0.165   rasterised 0.165
+  t / L = 0.05  formula 0.091   rasterised 0.090
+  t / L = 0.03  formula 0.057   rasterised 0.056
+
+Mask as text on a 16 x 16 grid (Text4Seg idea): one word per cell = 511 tokens, row-wise run-length = 153 tokens (70% shorter on this one band).
+  Text4Seg reports 74% over its datasets; this lab did not reproduce that figure.
+  the first rows that touch the band: others*6|text*4|others*6 / others*5|text*6|others*5 / others*5|text*1|others*4|text*1|others*5 / others*4|text*2|others* ...

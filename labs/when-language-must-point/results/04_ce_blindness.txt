@@ -1,0 +1,34 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/when-language-must-point/scripts/04_ce_blindness.py
+
+Figure 5: three predictions for the right edge x2 (true bin 584)
+prediction             p(bin)                cross-entropy  |dCE/dlogits|  IoU of argmax box  expected IoU reward
+---------------------  --------------------  -------------  -------------  -----------------  -------------------
+A: confident, correct  {584: 1.0}            0.00           0.000          1.000              1.000
+B: near miss           {583: 0.9, 584: 0.1}  2.30           1.273          0.997              0.997
+C: far miss            {884: 0.9, 584: 0.1}  2.30           1.273          0.513              0.562
+B and C have the same loss and the same gradient size. Only the IoU reward ranks them.
+
+Start from a uniform distribution over 1,000 bins and take 200 Adam steps (lr 0.05) on the logits
+  cross-entropy:
+    step 0: p(584) 0.00, mass within 20 bins 0.04, E[IoU] 0.423
+    step 25: p(584) 0.01, mass within 20 bins 0.05, E[IoU] 0.430
+    step 50: p(584) 0.13, mass within 20 bins 0.16, E[IoU] 0.495
+    step 100: p(584) 0.81, mass within 20 bins 0.82, E[IoU] 0.891
+    step 200: p(584) 0.96, mass within 20 bins 0.96, E[IoU] 0.974
+  expected IoU reward:
+    step 0: p(584) 0.00, mass within 20 bins 0.04, E[IoU] 0.423
+    step 25: p(584) 0.00, mass within 20 bins 0.10, E[IoU] 0.683
+    step 50: p(584) 0.01, mass within 20 bins 0.23, E[IoU] 0.827
+    step 100: p(584) 0.04, mass within 20 bins 0.80, E[IoU] 0.954
+    step 200: p(584) 0.86, mass within 20 bins 1.00, E[IoU] 0.999
+Cross-entropy pulls mass onto the one true bin; its gradient treats every other bin alike. The IoU reward
+pushes mass toward the true bin from both sides, and a near miss already earns almost the full reward.
+
+Figure 3: the box (268, 372, 584, 811) on a 0-1000 grid with one wrong digit in x2
+wrong digit  x2          edge moves (share of image)  box IoU  cost to cross-entropy
+-----------  ----------  ---------------------------  -------  ---------------------
+hundreds     584 -> 884  30.0%                        0.513    1 token
+units        584 -> 589  0.5%                         0.984    1 token
+tens         584 -> 594  1.0%                         0.969    1 token
+Each wrong digit is one wrong token to the loss, whatever its place value.

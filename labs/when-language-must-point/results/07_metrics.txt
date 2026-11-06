@@ -1,0 +1,39 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/when-language-must-point/scripts/07_metrics.py
+
+Points. The Figure 2 band, scored with an inside test and with the pointing game's 15 px tolerance
+  centroid           (300.0, 140.6)  inside: False   within 15 px: False
+  point on the band  (300.0, 102.0)  inside: True   within 15 px: True
+  the centroid is 19.1 px from the nearest band pixel, so even the tolerance does not save it
+
+Masks. gIoU averages per-example IoU; cIoU pools pixels, so large objects dominate it
+  2 large objects right, 8 small objects wrong:  gIoU 0.211   cIoU 0.883
+  2 large objects wrong, 8 small objects right:  gIoU 0.872   cIoU 0.376
+
+Boundary IoU (a 2 px band inside each contour) exposes edge errors that whole-mask IoU hides
+  ragged edge (radius 40 +- 3 px)  mask IoU 0.861   boundary IoU 0.196
+  smooth, shifted by 3 px          mask IoU 0.909   boundary IoU 0.177
+
+'gIoU' in segmentation is a mean of IoUs. 'GIoU' in detection is generalised IoU (Rezatofighi et al.)
+  boxes (0, 0, 10, 10) and (5, 0, 15, 10):  IoU 0.333   GIoU +0.333
+  boxes (0, 0, 10, 10) and (20, 0, 30, 10):  IoU 0.000   GIoU -0.333
+  boxes (0, 0, 10, 10) and (40, 0, 50, 10):  IoU 0.000   GIoU -0.600
+  GIoU goes negative for disjoint boxes and keeps falling with distance; IoU stays at 0.
+
+Many regions: 'which months were over budget?' points at three table cells
+  all three, in order  set-matched F1 1.00   position-by-position F1 1.00
+  first one skipped    set-matched F1 0.80   position-by-position F1 0.00
+  one box around all   set-matched F1 0.00   position-by-position F1 0.00
+No target: 'the giraffe' in a kitchen photo
+  answers 'no such region'   F1 1.00
+  draws a confident box      F1 0.00
+
+Granularity: the label is one word; the model returns the whole line that contains it
+  line vs word label: IoU 0.092 -> counted wrong, though the evidence is right
+  block vs word label: IoU 0.010
+  nested phrase in line in block (what a hierarchy loss enforces): True
+
+Temporal grounding: one dimension, the same idea
+  predicted (11.0, 18.5) s vs true (10.2, 18.0) s: tIoU 0.843   R@0.5 hit   R@0.7 hit
+  predicted (12.0, 19.5) s vs true (10.2, 18.0) s: tIoU 0.645   R@0.5 hit   R@0.7 miss
+  predicted (14.0, 22.0) s vs true (10.2, 18.0) s: tIoU 0.339   R@0.5 miss   R@0.7 miss

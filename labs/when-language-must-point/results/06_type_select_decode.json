@@ -1,0 +1,139 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/when-language-must-point/scripts/06_type_select_decode.py --steps 1200 --seeds 0",
+ "args": {
+  "train": 6000,
+  "test": 1000,
+  "steps": 1200,
+  "seeds": [
+   0
+  ],
+  "name": "06_type_select_decode"
+ },
+ "results": {
+  "type (box from 4 loc tokens)": {
+   "gIoU": 0.5266844630241394,
+   "cIoU": 0.42306774854660034,
+   "acc50": 0.5630000233650208,
+   "gIoU_compact": 0.7623265981674194,
+   "gIoU_irregular": 0.3532256782054901,
+   "gIoU_separated": 0.5633285641670227,
+   "gIoU_touching": 0.493129163980484
+  },
+  "select (pick a proposal)": {
+   "gIoU": 0.7937260270118713,
+   "cIoU": 0.6566895246505737,
+   "acc50": 0.7609999775886536,
+   "gIoU_compact": 0.8311922550201416,
+   "gIoU_irregular": 0.7661466002464294,
+   "gIoU_separated": 0.9998194575309753,
+   "gIoU_touching": 0.6050043702125549
+  },
+  "decode (<SEG> -> mask)": {
+   "gIoU": 0.982235848903656,
+   "cIoU": 0.9852537512779236,
+   "acc50": 1.0,
+   "gIoU_compact": 0.9902325868606567,
+   "gIoU_irregular": 0.9763495326042175,
+   "gIoU_separated": 0.9918615221977234,
+   "gIoU_touching": 0.9734216928482056
+  },
+  "type, perfect box (oracle)": {
+   "gIoU": 0.5724327564239502,
+   "cIoU": 0.44040367007255554,
+   "acc50": 0.5659999847412109,
+   "gIoU_compact": 0.8746316432952881,
+   "gIoU_irregular": 0.3499807119369507,
+   "gIoU_separated": 0.619293212890625,
+   "gIoU_touching": 0.5295220613479614
+  },
+  "select_ceiling_acc50": {
+   "separated": 1.0,
+   "touching": 0.5421456098556519
+  }
+ },
+ "std": {
+  "type (box from 4 loc tokens)": {
+   "gIoU": 0.0,
+   "cIoU": 0.0,
+   "acc50": 0.0,
+   "gIoU_compact": 0.0,
+   "gIoU_irregular": 0.0,
+   "gIoU_separated": 0.0,
+   "gIoU_touching": 0.0
+  },
+  "select (pick a proposal)": {
+   "gIoU": 0.0,
+   "cIoU": 0.0,
+   "acc50": 0.0,
+   "gIoU_compact": 0.0,
+   "gIoU_irregular": 0.0,
+   "gIoU_separated": 0.0,
+   "gIoU_touching": 0.0
+  },
+  "decode (<SEG> -> mask)": {
+   "gIoU": 0.0,
+   "cIoU": 0.0,
+   "acc50": 0.0,
+   "gIoU_compact": 0.0,
+   "gIoU_irregular": 0.0,
+   "gIoU_separated": 0.0,
+   "gIoU_touching": 0.0
+  },
+  "type, perfect box (oracle)": {
+   "gIoU": 0.0,
+   "cIoU": 0.0,
+   "acc50": 0.0,
+   "gIoU_compact": 0.0,
+   "gIoU_irregular": 0.0,
+   "gIoU_separated": 0.0,
+   "gIoU_touching": 0.0
+  }
+ },
+ "runs": {
+  "type (box from 4 loc tokens)": [
+   {
+    "gIoU": 0.5266844630241394,
+    "cIoU": 0.42306774854660034,
+    "acc50": 0.5630000233650208,
+    "gIoU_compact": 0.7623265981674194,
+    "gIoU_irregular": 0.3532256782054901,
+    "gIoU_separated": 0.5633285641670227,
+    "gIoU_touching": 0.493129163980484
+   }
+  ],
+  "select (pick a proposal)": [
+   {
+    "gIoU": 0.7937260270118713,
+    "cIoU": 0.6566895246505737,
+    "acc50": 0.7609999775886536,
+    "gIoU_compact": 0.8311922550201416,
+    "gIoU_irregular": 0.7661466002464294,
+    "gIoU_separated": 0.9998194575309753,
+    "gIoU_touching": 0.6050043702125549
+   }
+  ],
+  "decode (<SEG> -> mask)": [
+   {
+    "gIoU": 0.982235848903656,
+    "cIoU": 0.9852537512779236,
+    "acc50": 1.0,
+    "gIoU_compact": 0.9902325868606567,
+    "gIoU_irregular": 0.9763495326042175,
+    "gIoU_separated": 0.9918615221977234,
+    "gIoU_touching": 0.9734216928482056
+   }
+  ],
+  "type, perfect box (oracle)": [
+   {
+    "gIoU": 0.5724327564239502,
+    "cIoU": 0.44040367007255554,
+    "acc50": 0.5659999847412109,
+    "gIoU_compact": 0.8746316432952881,
+    "gIoU_irregular": 0.3499807119369507,
+    "gIoU_separated": 0.619293212890625,
+    "gIoU_touching": 0.5295220613479614
+   }
+  ]
+ }
+}

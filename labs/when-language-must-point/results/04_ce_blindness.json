@@ -1,0 +1,33 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/when-language-must-point/scripts/04_ce_blindness.py",
+ "A: confident, correct": {
+  "ce": 0.0,
+  "iou_argmax": 1.0,
+  "expected_iou": 1.0
+ },
+ "B: near miss": {
+  "ce": 2.3025850929940455,
+  "iou_argmax": 0.9968354430379747,
+  "expected_iou": 0.9971518987341772
+ },
+ "C: far miss": {
+  "ce": 2.3025850929940455,
+  "iou_argmax": 0.512987012987013,
+  "expected_iou": 0.5616883116883117
+ },
+ "train_cross-entropy": [
+  "step 0: p(584) 0.00, mass within 20 bins 0.04, E[IoU] 0.423",
+  "step 25: p(584) 0.01, mass within 20 bins 0.05, E[IoU] 0.430",
+  "step 50: p(584) 0.13, mass within 20 bins 0.16, E[IoU] 0.495",
+  "step 100: p(584) 0.81, mass within 20 bins 0.82, E[IoU] 0.891",
+  "step 200: p(584) 0.96, mass within 20 bins 0.96, E[IoU] 0.974"
+ ],
+ "train_expected IoU reward": [
+  "step 0: p(584) 0.00, mass within 20 bins 0.04, E[IoU] 0.423",
+  "step 25: p(584) 0.00, mass within 20 bins 0.10, E[IoU] 0.683",
+  "step 50: p(584) 0.01, mass within 20 bins 0.23, E[IoU] 0.827",
+  "step 100: p(584) 0.04, mass within 20 bins 0.80, E[IoU] 0.954",
+  "step 200: p(584) 0.86, mass within 20 bins 1.00, E[IoU] 0.999"
+ ]
+}

@@ -1,0 +1,36 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/when-language-must-point/scripts/06_type_select_decode.py --steps 1200 --seeds 0
+
+data: 6000 training scenes, 1000 test scenes; half the scenes let shapes touch or overlap
+each lane: 1200 steps of 64; seeds [0]; the test scenes are shared
+  [loc CE] step     0  nll/box 27.638  0s
+  [loc CE] step   250  nll/box 8.533  15s
+  [loc CE] step   500  nll/box 4.906  31s
+  [loc CE] step   750  nll/box 2.453  48s
+  [loc CE] step  1000  nll/box 1.659  66s
+  [loc CE] step  1199  nll/box 1.269  80s
+  [select] step     0  CE over proposals 0.720  0s
+  [select] step   250  CE over proposals 0.039  58s
+  [select] step   500  CE over proposals 0.001  115s
+  [select] step   750  CE over proposals 0.000  188s
+  [select] step  1000  CE over proposals 0.000  272s
+  [select] step  1199  CE over proposals 0.000  338s
+  [decode] step     0  bce+dice 1.588  1s
+  [decode] step   250  bce+dice 0.716  107s
+  [decode] step   500  bce+dice 0.037  195s
+  [decode] step   750  bce+dice 0.015  290s
+  [decode] step  1000  bce+dice 0.011  393s
+  [decode] step  1199  bce+dice 0.013  479s
+
+Test set (1000 scenes), mask IoU against the true region, mean over 1 seeds
+interface                     gIoU   cIoU   Acc@0.5  gIoU compact  gIoU irregular  gIoU separated  gIoU touching
+----------------------------  -----  -----  -------  ------------  --------------  --------------  -------------
+type (box from 4 loc tokens)  0.527  0.423  0.563    0.762         0.353           0.563           0.493
+select (pick a proposal)      0.794  0.657  0.761    0.831         0.766           1.000           0.605
+decode (<SEG> -> mask)        0.982  0.985  1.000    0.990         0.976           0.992           0.973
+type, perfect box (oracle)    0.572  0.440  0.566    0.875         0.350           0.619           0.530
+
+Mean fill ratio of the targets: compact 0.875, irregular 0.350
+Select ceiling (best proposal has mask IoU >= 0.5): separated scenes 1.000, touching scenes 0.542
+Seed spread (std) of gIoU: type (box from 4 loc tokens) 0.000, select (pick a proposal) 0.000, decode (<SEG> -> mask) 0.000, type, perfect box (oracle) 0.000
+total time 1006s

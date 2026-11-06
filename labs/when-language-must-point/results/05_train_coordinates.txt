@@ -1,0 +1,58 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/when-language-must-point/scripts/05_train_coordinates.py
+
+data: 6000 training scenes, 1000 test scenes, 64 x 64 px, 3 shapes each, query = one colour
+CE: 3000 steps of 64; RL: 400 steps of 16 images x 8 samples; seed 0
+  [digits CE] step     0  nll/box 27.752  8s
+  [digits CE] step   250  nll/box 8.353  1024s
+  [digits CE] step   500  nll/box 5.433  1303s
+  [digits CE] step   750  nll/box 4.080  1510s
+  [digits CE] step  1000  nll/box 3.019  1548s
+  [digits CE] step  1250  nll/box 2.141  1583s
+  [digits CE] step  1500  nll/box 1.541  1615s
+  [digits CE] step  1750  nll/box 1.106  1645s
+  [digits CE] step  2000  nll/box 0.582  1682s
+  [digits CE] step  2250  nll/box 0.420  1714s
+  [digits CE] step  2500  nll/box 0.214  1746s
+  [digits CE] step  2750  nll/box 0.197  1774s
+  [digits CE] step  2999  nll/box 0.193  1800s
+  [digits RL] step    0  mean sampled IoU 0.981  0s
+  [digits RL] step   50  mean sampled IoU 0.984  10s
+  [digits RL] step  100  mean sampled IoU 0.981  20s
+  [digits RL] step  150  mean sampled IoU 0.982  30s
+  [digits RL] step  200  mean sampled IoU 0.982  40s
+  [digits RL] step  250  mean sampled IoU 0.980  50s
+  [digits RL] step  300  mean sampled IoU 0.978  61s
+  [digits RL] step  350  mean sampled IoU 0.985  72s
+  [digits RL] step  399  mean sampled IoU 0.983  81s
+  [loc CE] step     0  nll/box 27.638  0s
+  [loc CE] step   250  nll/box 8.540  21s
+  [loc CE] step   500  nll/box 5.023  44s
+  [loc CE] step   750  nll/box 2.603  66s
+  [loc CE] step  1000  nll/box 1.760  89s
+  [loc CE] step  1250  nll/box 1.262  112s
+  [loc CE] step  1500  nll/box 0.550  132s
+  [loc CE] step  1750  nll/box 0.314  152s
+  [loc CE] step  2000  nll/box 0.124  173s
+  [loc CE] step  2250  nll/box 0.029  194s
+  [loc CE] step  2500  nll/box 0.007  214s
+  [loc CE] step  2750  nll/box 0.004  235s
+  [loc CE] step  2999  nll/box 0.005  256s
+  [loc RL] step    0  mean sampled IoU 0.996  0s
+  [loc RL] step   50  mean sampled IoU 0.996  9s
+  [loc RL] step  100  mean sampled IoU 0.995  18s
+  [loc RL] step  150  mean sampled IoU 0.996  27s
+  [loc RL] step  200  mean sampled IoU 0.996  35s
+  [loc RL] step  250  mean sampled IoU 0.995  45s
+  [loc RL] step  300  mean sampled IoU 0.995  54s
+  [loc RL] step  350  mean sampled IoU 0.996  64s
+  [loc RL] step  399  mean sampled IoU 0.996  72s
+
+Test set, greedy decoding (1000 scenes)
+model      mean box IoU  Acc@0.5  Acc@0.75  boxed a distractor  coords > 100 bins off  median error (bins)  NLL per coordinate (nats)  mask IoU of box: compact  mask IoU of box: irregular
+---------  ------------  -------  --------  ------------------  ---------------------  -------------------  -------------------------  ------------------------  --------------------------
+digits     0.866         0.985    0.905     0.021               0.007                  15.125               2.004                      0.786                     0.349
+digits+RL  0.865         0.986    0.907     0.020               0.006                  15.125               2.053                      0.785                     0.348
+loc        0.833         0.936    0.864     0.017               0.023                  15.250               3.791                      0.761                     0.344
+loc+RL     0.836         0.938    0.878     0.018               0.023                  15.250               3.876                      0.770                     0.344
+total time 2270s

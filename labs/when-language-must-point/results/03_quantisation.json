@@ -1,0 +1,103 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/when-language-must-point/scripts/03_quantisation.py",
+ "Qwen-VL / Florence-2 grid on a 448 px image": {
+  "bins": 1000,
+  "image_px": 448,
+  "object_px": 24,
+  "delta": 0.448,
+  "worst_iou": 0.963015111111111
+ },
+ "Same grid on a 3840 px screenshot, 24 px icon": {
+  "bins": 1000,
+  "image_px": 3840,
+  "object_px": 24,
+  "delta": 3.84,
+  "worst_iou": 0.7055999999999999
+ },
+ "MiniGPT-v2 0-100 grid, 3840 px screenshot, 24 px icon": {
+  "bins": 100,
+  "image_px": 3840,
+  "object_px": 24,
+  "delta": 38.4,
+  "worst_iou": 0.0
+ },
+ "Figure 4 default: 1000 bins, 1344 px image, 24 px object": {
+  "bins": 1000,
+  "image_px": 1344,
+  "object_px": 24,
+  "delta": 1.344,
+  "worst_iou": 0.8911359999999999
+ },
+ "Kosmos-2 32 cells, dog filling half a 224 px photo": {
+  "bins": 32,
+  "image_px": 224,
+  "object_px": 112,
+  "delta": 7.0,
+  "worst_iou": 0.87890625
+ },
+ "Kosmos-2 32 cells, 2000 px page scan, 40 px word": {
+  "bins": 32,
+  "image_px": 2000,
+  "object_px": 40,
+  "delta": 62.5,
+  "worst_iou": 0.0
+ },
+ "PaliGemma 1024 bins, 2000 px page scan, 40 px word": {
+  "bins": 1024,
+  "image_px": 2000,
+  "object_px": 40,
+  "delta": 1.953125,
+  "worst_iou": 0.9047279357910156
+ },
+ "sample N=100 W=3840 s=24": {
+  "mean_iou": 0.13637697483937636,
+  "acc50": 0.0,
+  "min_iou": 0.0
+ },
+ "sample N=100 W=3840 s=96": {
+  "mean_iou": 0.6783900881226055,
+  "acc50": 1.0,
+  "min_iou": 0.6399999999999939
+ },
+ "sample N=1000 W=3840 s=24": {
+  "mean_iou": 0.8559973399544418,
+  "acc50": 1.0,
+  "min_iou": 0.7881985599017789
+ },
+ "sample N=1000 W=3840 s=96": {
+  "mean_iou": 0.9609701721993632,
+  "acc50": 1.0,
+  "min_iou": 0.9240727783037415
+ },
+ "sample N=1000 W=1344 s=24": {
+  "mean_iou": 0.9457989981083865,
+  "acc50": 1.0,
+  "min_iou": 0.90630399999999
+ },
+ "sample N=1000 W=1344 s=96": {
+  "mean_iou": 0.9861236140367385,
+  "acc50": 1.0,
+  "min_iou": 0.9841898474013681
+ },
+ "sample N=32 W=2000 s=24": {
+  "mean_iou": 0.0213958656,
+  "acc50": 0.0,
+  "min_iou": 0.0
+ },
+ "sample N=32 W=2000 s=96": {
+  "mean_iou": 0.5281344492855266,
+  "acc50": 0.77445,
+  "min_iou": 0.4238552517361101
+ },
+ "sample N=1024 W=2000 s=24": {
+  "mean_iou": 0.9230667696589697,
+  "acc50": 1.0,
+  "min_iou": 0.8913975582763274
+ },
+ "sample N=1024 W=2000 s=96": {
+  "mean_iou": 0.9799239610781307,
+  "acc50": 1.0,
+  "min_iou": 0.9662305458536444
+ }
+}

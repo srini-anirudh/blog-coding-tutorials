@@ -1,0 +1,32 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0
+# command: python labs/when-language-must-point/scripts/02_encodings.py
+
+One box, eight encodings (the strings match the post's table)
+system         what the model writes                              tokens (digit split)  tokens (SmolLM2-135M)  tokens (Qwen2.5-0.5B-Instruct)  worst edge error after parsing, share of image
+-------------  -------------------------------------------------  --------------------  ---------------------  ------------------------------  ----------------------------------------------
+Shikra         [0.268,0.372,0.584,0.811]                          25                    25                     25                              0.00%
+Qwen-VL        <ref>the dog</ref><box>(268,372),(584,811)</box>   25                    23                     23                              0.00%
+CogVLM         [[268,372,584,811]]                                19                    17                     17                              0.00%
+MiniGPT-v2     {<27><37><58><81>}                                 18                    15                     14                              0.40%
+Florence-2     <loc_268><loc_372><loc_584><loc_811>               4                     4                      4                               0.00%
+PaliGemma      <loc0380><loc0274><loc0830><loc0598> dog           5                     5                      5                               0.09%
+Qwen2.5-VL     {"bbox_2d": [233, 240, 507, 522], "label": "dog"}  33                    32                     32                              0.07%
+Molmo (point)  <point x="42.6" y="59.2" alt="dog">dog</point>     29                    24                     24                              0.00%
+Molmo writes a point (the box centre), so it has no edges to compare.
+
+Parsing with the wrong convention: no exception, a valid-looking box, in the wrong place
+mistake                                         numbers                                 IoU with the true box
+----------------------------------------------  --------------------------------------  ---------------------
+PaliGemma string read x-first                   <loc0380><loc0274><loc0830><loc0598> d  0.194
+Qwen2.5-VL pixels read as a 0-1000 grid         [233, 240, 507, 522]                    0.199
+Qwen3-VL 0-1000 grid read as Qwen2.5-VL pixels  [268, 372, 584, 811]                    0.199
+(IoU is computed in normalised coordinates; a box that leaves the image is not clipped here.)
+
+Qwen2.5-VL coordinates are pixels of the resized input, not of the original file
+image                                                resized input  Qwen2.5-VL writes (resized px)  original-file px         Qwen3-VL writes (0-1000)
+---------------------------------------------------  -------------  ------------------------------  -----------------------  ------------------------
+868 x 644 photo (post example)                       868 x 644      [233, 240, 507, 522]            [233, 240, 507, 522]     [268, 372, 584, 811]
+3840 x 2160 screenshot, default max_pixels           3836 x 2156    [1028, 802, 2240, 1749]         [1029, 804, 2243, 1752]  [268, 372, 584, 811]
+3840 x 2160 screenshot, max_pixels = 1280 * 28 * 28  1316 x 728     [353, 271, 769, 590]            [1029, 804, 2243, 1752]  [268, 372, 584, 811]
+Reading the Qwen2.5-VL numbers as original-file pixels puts the box in the wrong place. With a 1316 x 728
+input and a 3840 x 2160 original, every coordinate comes out too small by a factor of 2.92.

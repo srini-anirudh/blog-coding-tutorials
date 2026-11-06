@@ -1,0 +1,65 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0",
+ "command": "python labs/when-language-must-point/scripts/02_encodings.py",
+ "Shikra": {
+  "text": "[0.268,0.372,0.584,0.811]",
+  "digit_split_tokens": 25,
+  "tokens_SmolLM2-135M": 25,
+  "tokens_Qwen2.5-0.5B-Instruct": 25,
+  "max_roundtrip_error": 0.0
+ },
+ "Qwen-VL": {
+  "text": "<ref>the dog</ref><box>(268,372),(584,811)</box>",
+  "digit_split_tokens": 25,
+  "tokens_SmolLM2-135M": 23,
+  "tokens_Qwen2.5-0.5B-Instruct": 23,
+  "max_roundtrip_error": 0.0
+ },
+ "CogVLM": {
+  "text": "[[268,372,584,811]]",
+  "digit_split_tokens": 19,
+  "tokens_SmolLM2-135M": 17,
+  "tokens_Qwen2.5-0.5B-Instruct": 17,
+  "max_roundtrip_error": 0.0
+ },
+ "MiniGPT-v2": {
+  "text": "{<27><37><58><81>}",
+  "digit_split_tokens": 18,
+  "tokens_SmolLM2-135M": 15,
+  "tokens_Qwen2.5-0.5B-Instruct": 14,
+  "max_roundtrip_error": 0.0040000000000000036
+ },
+ "Florence-2": {
+  "text": "<loc_268><loc_372><loc_584><loc_811>",
+  "digit_split_tokens": 4,
+  "tokens_SmolLM2-135M": 4,
+  "tokens_Qwen2.5-0.5B-Instruct": 4,
+  "max_roundtrip_error": 0.0
+ },
+ "PaliGemma": {
+  "text": "<loc0380><loc0274><loc0830><loc0598> dog",
+  "digit_split_tokens": 5,
+  "tokens_SmolLM2-135M": 5,
+  "tokens_Qwen2.5-0.5B-Instruct": 5,
+  "max_roundtrip_error": 0.0009062499999999973
+ },
+ "Qwen2.5-VL": {
+  "text": "{\"bbox_2d\": [233, 240, 507, 522], \"label\": \"dog\"}",
+  "digit_split_tokens": 33,
+  "tokens_SmolLM2-135M": 32,
+  "tokens_Qwen2.5-0.5B-Instruct": 32,
+  "max_roundtrip_error": 0.0006708074534161335
+ },
+ "Molmo (point)": {
+  "text": "<point x=\"42.6\" y=\"59.2\" alt=\"dog\">dog</point>",
+  "digit_split_tokens": 29,
+  "tokens_SmolLM2-135M": 24,
+  "tokens_Qwen2.5-0.5B-Instruct": 24,
+  "max_roundtrip_error": 0.0
+ },
+ "wrong_parser_iou": {
+  "PaliGemma string read x-first": 0.194,
+  "Qwen2.5-VL pixels read as a 0-1000 grid": 0.199,
+  "Qwen3-VL 0-1000 grid read as Qwen2.5-VL pixels": 0.199
+ }
+}

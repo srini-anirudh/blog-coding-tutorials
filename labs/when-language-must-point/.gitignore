@@ -1,0 +1,5 @@
+# checkpoints, datasets and scratch runs stay out of git
+runs/
+*.pt
+*.safetensors
+__pycache__/
