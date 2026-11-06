@@ -1,0 +1,22 @@
+--- running `true` (median of 20, ms) ---
+subprocess.run                         6.1
+run_process (group, capture)          58.8
+LocalSandbox, no network wrap         64.6
+LocalSandbox, sandbox-exec            58.7
+
+--- search over this repo's Python code: 491 files, 38434 lines (ms) ---
+git grep                              43.3   (62 matches)
+pure Python                          167.7   (62 matches)
+symbol index build                  1053.0   (2565 symbols)
+definition lookup                     0.47   (58 definitions)
+
+--- repo map size against budget ---
+all source code                     472364 tokens
+file names only                       5819 tokens
+map at budget 512                      518 tokens
+map at budget 2048                    2060 tokens
+map at budget 8192                    8200 tokens
+unbudgeted map                       59698 tokens
+
+--- harness overhead, scripted model and a no-op tool ---
+200 steps in 0.211s: 1.05 ms per step

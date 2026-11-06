@@ -1,0 +1,14 @@
+--- a good run ---
+user       'What is 2 + 3?' 
+assistant  '' ["add({'a': 2, 'b': 3})"]
+tool       '5' 
+assistant  '2 + 3 = 5.' 
+
+--- break 1: the model names a tool that does not exist ---
+the whole run dies: KeyError 'multiply'
+
+--- break 2: the arguments do not fit the function ---
+the whole run dies: TypeError <lambda>() missing 1 required positional argument: 'b'
+
+--- break 3: a malformed call (a real model would repeat this forever) ---
+no tool ran, no error reached the model, and the loop called it 5 times until the script ran out
