@@ -1,0 +1,11 @@
+device=mps  torch=2.15.0
+ size_MB  H2D_pageable  H2D_pinned      D2H   (GB/s)
+  0.0625          0.19        0.18     0.09
+       1          1.58        3.70     1.61
+       4          7.22       10.68     9.66
+      16          8.90       13.99     7.78
+      64          8.20       11.57     5.01
+     256         15.23       21.71    14.01
+
+what non_blocking=True returns (64 MB, pinned source):
+  call returned after 0.092 ms, copy finished after 5.433 ms

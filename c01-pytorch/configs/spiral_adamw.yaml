@@ -1,0 +1,14 @@
+# Default run for scripts/05_train.py --config. Every key is a TrainConfig field.
+optimizer: adamw
+lr: 0.01
+weight_decay: 0.0
+epochs: 60
+batch_size: 64
+hidden: 64
+depth: 2
+dropout: 0.0
+max_grad_norm: null
+points_per_class: 300
+num_workers: 0
+seed: 0
+device: cpu

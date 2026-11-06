@@ -1,0 +1,7 @@
+600 examples, 2 ms of CPU work each, batch 32
+config                              epoch 1 s  epoch 2 s  ex/s (ep 2)
+num_workers=0                            1.22       1.21          495
+num_workers=2                            2.40       2.19          274
+num_workers=2 persistent                 1.85       0.64          945
+num_workers=4 persistent                 1.67       0.34         1767
+num_workers=4 persistent prefetch=4       1.61       0.34         1740

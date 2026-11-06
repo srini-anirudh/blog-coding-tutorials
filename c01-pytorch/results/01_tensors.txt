@@ -1,0 +1,36 @@
+== metadata ==
+shape=(4, 8) rank=2 dtype=torch.float32 device=cpu
+numel=32 element_size=4 B -> 128 B
+  as torch.float32    128 B
+  as torch.bfloat16    64 B
+  as torch.int8        32 B
+
+== views of one storage ==
+base.view(3, 4)        shape=[3, 4]     stride=(4, 1)     offset=0  contiguous=True  shares=True
+m.t()                  shape=[4, 3]     stride=(1, 4)     offset=0  contiguous=False shares=True
+m.t().contiguous()     shape=[4, 3]     stride=(3, 1)     offset=0  contiguous=True  shares=False
+m[:, 1:3]              shape=[3, 2]     stride=(4, 1)     offset=1  contiguous=False shares=True
+m[1]                   shape=[4]        stride=(1,)       offset=4  contiguous=True  shares=True
+m[:, ::2]              shape=[3, 2]     stride=(4, 2)     offset=0  contiguous=False shares=True
+base.view(2, 3, 2)     shape=[2, 3, 2]  stride=(6, 2, 1)  offset=0  contiguous=True  shares=True
+...permute(2, 0, 1)    shape=[2, 2, 3]  stride=(1, 6, 2)  offset=0  contiguous=False shares=True
+
+== which storage slot each element reads ==
+m.t():
+tensor([[ 0,  4,  8],
+        [ 1,  5,  9],
+        [ 2,  6, 10],
+        [ 3,  7, 11]])
+m[:, 1:3]:
+tensor([[ 1,  2],
+        [ 5,  6],
+        [ 9, 10]])
+
+== view vs reshape ==
+t.view(12) -> view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces)
+t.reshape(12) shares storage with m: False
+t.contiguous().view(12): [0, 4, 8, 1, 5, 9, 2, 6, 10, 3, 7, 11]
+
+== a slice keeps the whole storage alive ==
+row.nbytes=4000 B  storage=4.0 MB
+row.clone(): storage=4000 B

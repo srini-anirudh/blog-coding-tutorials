@@ -1,0 +1,31 @@
+== 0. before anything ==
+head.weight.grad: None | optimizer state entries: 0
+
+== 1. forward ==
+logits [8, 3]  loss 1.1375  graph nodes 26  leaves 6
+  blocks.0.1 (ReLU) output: mean 0.164  std 0.233  zeros 56%
+  blocks.1.1 (ReLU) output: mean 0.070  std 0.094  zeros 50%
+still no gradients: True
+
+== 2. loss.backward() ==
+order in which .grad was written:
+  0: head.bias          grad [3]      norm 0.8355
+  1: head.weight        grad [16, 3]  norm 0.3892
+  2: blocks.1.0.bias    grad [16]     norm 0.4576
+  3: blocks.1.0.weight  grad [16, 16] norm 0.5178
+  4: blocks.0.0.bias    grad [16]     norm 0.1988
+  5: blocks.0.0.weight  grad [2, 16]  norm 0.0359
+a second loss.backward() fails: the graph's saved tensors were freed
+
+== 3. between backward and step ==
+global grad norm 1.1695  (clip, unscale or all-reduce would happen here)
+optimizer state entries: 0 (state is created lazily on the first step)
+
+== 4. optimizer.step() ==
+state keys for head.weight: {'step': 1.0, 'exp_avg': [16, 3], 'exp_avg_sq': [16, 3]}
+param bytes 1484  optimizer state bytes 2968  ratio 2.0
+head.weight[10, 0]: before -0.087641  grad -0.196497  after -0.077632  by hand -0.077632
+|update| where grad != 0: mean 0.01000 (first step ~ lr = 0.01)  | entries with grad == 0: 24 of 48, moved by 2.5e-05
+
+== 5. optimizer.zero_grad() ==
+head.weight.grad: None | state survives: 1 step(s) recorded

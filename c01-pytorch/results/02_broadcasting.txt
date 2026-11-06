@@ -1,0 +1,15 @@
+== [B, N, D] + [D]: a bias added to every token ==
+broadcast_shape: (2, 5, 8)
+bias expanded: (2, 5, 8) stride (0, 0, 1)
+
+== [B, H, N, D] + [1, H, 1, D]: one vector per head ==
+broadcast_shape: (2, 4, 5, 8)
+per_head expanded: (2, 4, 5, 8) stride (0, 8, 0, 1)
+batch 0 token 3 and batch 1 token 0 both get the head-2 vector: True
+
+== a mismatch is an error ==
+ValueError: dim -1: sizes 8 and 5 do not broadcast (shapes (2, 5, 8) and (5,))
+
+== the silent bug: [B, 1] - [B] ==
+pred (4, 1) - target (4,) -> (4, 4)
+loss on [B, B]: 1.0290   correct loss: 0.6618

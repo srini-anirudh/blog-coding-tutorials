@@ -1,0 +1,9 @@
+epoch   0  train_loss 1.0318  val_loss 0.9422  val_acc 0.479  max_grad_norm 0.622
+epoch  10  train_loss 0.1007  val_loss 0.1439  val_acc 0.976  max_grad_norm 1.287
+epoch  20  train_loss 0.0591  val_loss 0.0403  val_acc 0.997  max_grad_norm 0.995
+epoch  30  train_loss 0.0073  val_loss 0.0312  val_acc 0.997  max_grad_norm 0.150
+epoch  40  train_loss 0.0036  val_loss 0.0294  val_acc 0.998  max_grad_norm 0.087
+epoch  50  train_loss 0.0023  val_loss 0.0293  val_acc 0.998  max_grad_norm 0.067
+epoch  59  train_loss 0.0015  val_loss 0.0286  val_acc 0.998  max_grad_norm 0.043
+60 epochs in 2.86 s on cpu
+wrote c01-pytorch/results/run_adamw.json

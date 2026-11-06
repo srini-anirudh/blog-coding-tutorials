@@ -1,0 +1,4 @@
+epoch   0  train_loss 1.0318  val_loss 0.9422  val_acc 0.479  max_grad_norm 0.622
+epoch  10  train_loss 0.1007  val_loss 0.1439  val_acc 0.976  max_grad_norm 1.287
+epoch  19  train_loss 0.2243  val_loss 0.0894  val_acc 0.980  max_grad_norm 6.156
+20 epochs in 17.59 s on mps

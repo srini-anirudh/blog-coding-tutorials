@@ -1,0 +1,36 @@
+== a three-op graph ==
+x: is_leaf=True  requires_grad=True  grad_fn=NoneType
+w: is_leaf=True  requires_grad=True  grad_fn=NoneType
+y: is_leaf=False requires_grad=True  grad_fn=MulBackward0
+z: is_leaf=False requires_grad=True  grad_fn=SumBackward0
+z.grad_fn.next_functions: ['MulBackward0']
+y.grad_fn.next_functions: ['AccumulateGrad', 'AccumulateGrad']
+SumBackward0
+  MulBackward0
+    AccumulateGrad  -> .grad of leaf [3]
+    AccumulateGrad  -> .grad of leaf [3]
+x.grad = [0.5, -1.0, 2.0]  (dz/dx = w)
+w.grad = [1.0, 2.0, 3.0]  (dz/dw = x)
+y.grad = [1.0, 1.0, 1.0]
+
+== the graph of a Linear layer and a loss ==
+MeanBackward0
+  PowBackward0
+    AddBackward0
+      MmBackward0
+        AccumulateGrad  -> .grad of leaf [3, 2]
+      AccumulateGrad  -> .grad of leaf [2]
+
+== gradients accumulate ==
+after backward #1: w.grad = 3.0
+after backward #2: w.grad = 6.0
+after backward #3: w.grad = 9.0
+after w.grad = None: None
+
+== backward frees the graph ==
+second backward -> Trying to backward through the graph a second time (or directly access saved tensors after they have already been freed)
+with retain_graph=True: a.grad = 8.9634 = 2 * e^1.5
+
+== detach and no_grad ==
+x.detach().requires_grad: False
+under no_grad: y.requires_grad = False  y.grad_fn = None
