@@ -160,7 +160,7 @@ figures, anything GPU-only/unverified/skipped, and any contract you exposed or d
 - Paths moved. CODE=$CODE and
   SCRATCH=$SCRATCH (git-ignored, survives restarts). Tools are
   at $SCRATCH/code-series/check_listings.py, $SCRATCH/cdp.py, $SCRATCH/venv/bin/python and
-  $SCRATCH/uvdl/uv-aarch64-apple-darwin/uv. The old /private/tmp scratchpad gets wiped on restart: do not use it.
+  $SCRATCH/uvdl/uv-aarch64-apple-darwin/uv.
 - Sessions have stopped twice and no post exists yet. The post is the deliverable. Stop extending the code now. Close
   out only what the post needs: tests passing, README written, real outputs captured. Then write
   `$SITE/blogs/<slug>/index.html` straight away, saving a first complete version early and improving it in passes.

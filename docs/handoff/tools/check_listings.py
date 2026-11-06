@@ -4,7 +4,7 @@
 Usage:
     python3 check_listings.py POST.html [POST2.html ...] REPO_ROOT
     python3 check_listings.py blogs/build-attention-from-scratch/index.html \
-        /Users/anirudh-srini/Documents/Code/blog-coding-tutorials
+        $CODE
 
 For every <figure class="code-listing" data-src=... data-lines=...> without
 data-diff, the code text (HTML-unescaped) must equal the file's line range
