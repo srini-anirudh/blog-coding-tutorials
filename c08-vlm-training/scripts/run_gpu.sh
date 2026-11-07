@@ -37,7 +37,7 @@ job() {
     stage2_main) t stage2_main $S2 $FULL save=true ;;
     # Measures: the same run without replay, the language forgetting comparison at scale. Result: results/gpu/stage2_noreplay.json
     stage2_noreplay) t stage2_noreplay $S2 $FULL replay_ratio=0 ;;
-    # Measures: the Stage 2 checkpoint with real images, grey images and the majority baseline, n=256. Result: results/eval_gpu_stage2_main.json
+    # Measures: the Stage 2 checkpoint with real images, grey images and the majority baseline, n=128. Result: results/eval_gpu_stage2_main.json
     eval_stage2_main) "$PY" -u scripts/evaluate.py outputs/gpu/stage2_main/trainable.safetensors --name gpu_stage2_main --n 128 2>&1 \
                         | grep -avE "Loading weights" | tee results/gpu/logs/eval_stage2_main.log ;;
     # Measures (comparisons, all $STEPS_CMP steps x 16): freezing, mixtures, grounding formats, resolution, LoRA placement. Result: results/gpu/<name>.json

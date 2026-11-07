@@ -1,0 +1,13 @@
+# command: python c08-vlm-training/scripts/grounding_baseline.py c08-vlm-training
+AMD EPYC 7R13 Processor, 8 threads
+train samples 0..599: 370 boxes, 110 points; test samples 0..127: 70 boxes, 29 points
+
+constant box                                   mean IoU  hits at 0.5
+tuned on train, best mean IoU                     0.071        1 of 70   box (70, 119, 147, 182)
+tuned on train, most hits at IoU 0.5              0.057        1 of 70   box (84, 119, 140, 168)
+tuned on test, best mean IoU (upper bound)        0.079        4 of 70   box (56, 119, 119, 182)
+tuned on test, most hits at IoU 0.5 (upper bound)    0.078        5 of 70   box (63, 112, 119, 182)
+
+constant point                                         hits
+tuned on train, most hits                             0 of 29   point (172, 66)
+tuned on test, most hits (upper bound)                5 of 29   point (32, 102)
