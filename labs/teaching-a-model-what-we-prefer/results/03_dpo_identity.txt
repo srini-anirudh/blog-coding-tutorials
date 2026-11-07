@@ -1,0 +1,39 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+# command: python labs/teaching-a-model-what-we-prefer/scripts/03_dpo_identity.py
+1. Recovered reward beta log(pi*/ref) vs true r
+   r - recovered: min 0.318655160876, max 0.318655160876; beta log Z = 0.318655160876
+2. Over all 45 pairs, largest |BT(r) - BT(recovered)| = 1.11e-16
+
+3. DPO on soft Bradley-Terry labels over all pairs, tabular policy started at ref
+   total variation: ref to pi* = 0.5400; DPO policy to pi* = 1.06e-16
+item     ref  pi* (tilt of true r)  DPO policy
+----  ------  --------------------  ----------
+   0  0.3636                0.0583      0.0583
+   1  0.0581                0.0442      0.0442
+   2  0.0088              8.40e-04    8.40e-04
+   3  0.1375                0.6568      0.6568
+   4  0.0263                0.0016      0.0016
+   5  0.0192                0.0130      0.0130
+   6  0.1166                0.0199      0.0199
+   7  0.1800                0.2007      0.2007
+   8  0.0379                0.0034      0.0034
+   9  0.0520                0.0013      0.0013
+
+4. Gradient check on a 2-layer random Llama (22,688 parameters), one pair, beta = 0.1:
+   weight sigmoid(r_hat_l - r_hat_w) = 0.4881; ||autograd - formula|| / ||autograd|| = 2.80e-07
+
+5. The self-annealing weight during the hard-label fit below (winner = higher true reward, every pair)
+step    loss  mean weight  mean log pi(y_w)  mean log pi(y_l)
+----  ------  -----------  ----------------  ----------------
+   0  0.6931       0.5000           -2.5417           -3.1092
+  50  0.3303       0.2683           -2.7724           -5.5999
+ 100  0.2256       0.1899           -3.4670           -7.6186
+ 150  0.1749       0.1501           -4.0884           -9.2368
+ 200  0.1438       0.1251           -4.6552          -10.6406
+ 250  0.1224       0.1076           -5.1811          -11.9031
+ 300  0.1066       0.0945           -5.6722          -13.0600
+ 350  0.0944       0.0843           -6.1325          -14.1329
+ 400  0.0847       0.0760           -6.5658          -15.1365
+   With deterministic labels the loss keeps falling as the margins grow without bound. The mean
+   winner log-prob falls too, because most items win some pairs and lose others while mass drains
+   into the top item: pi(item 3) = 0.8784 at step 400, against 0.6568 under pi*.

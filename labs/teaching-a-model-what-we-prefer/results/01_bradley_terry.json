@@ -1,0 +1,16 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+ "command": "python labs/teaching-a-model-what-we-prefer/scripts/01_bradley_terry.py",
+ "max_err_gumbel": 0.001570523806356361,
+ "max_err_gaussian": 0.0009918049158815223,
+ "logistic_rescale": 1.2033157587925674,
+ "logistic_probit_gap": 0.00945727469221791,
+ "spread_ratio_s2_over_s1": 0.5063760876655579,
+ "loss": 0.48096898198127747,
+ "loss_shifted": 0.48096904158592224,
+ "cycle_predictions": [
+  0.5000026822090149,
+  0.49972108006477356,
+  0.5002762675285339
+ ]
+}

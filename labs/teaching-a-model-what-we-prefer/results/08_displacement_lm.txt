@@ -1,0 +1,49 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+# command: python labs/teaching-a-model-what-we-prefer/scripts/08_displacement_lm.py
+model HuggingFaceTB/SmolLM2-135M-Instruct, float32
+1. Length: each correct answer, and the same answer with one true but redundant sentence appended
+   mean tokens: short 11.0, long 28.0
+   summed log pi: short -8.67, long -52.92; long is lower in 16/16 prompts
+   mean log pi per token: short -0.770, long -1.894; long is lower in 16/16 prompts
+   correlation with token count over all 32: summed -0.963, per-token -0.856
+
+2. Displacement
+
+near: beta 0.1, AdamW lr 5e-06, full batch of 16 pairs, 40 steps
+step    loss  pair acc  change log pi(y_w)  change log pi(y_l)  frac y_w below ref
+----  ------  --------  ------------------  ------------------  ------------------
+   0  0.6931    0.0000              0.0000              0.0000              0.0000
+   5  0.5324    1.0000              0.7325             -2.9644              0.1250
+  10  0.4092    1.0000              0.7572             -6.6442              0.3125
+  15  0.3133    1.0000              0.2354            -10.9790              0.4375
+  20  0.2379    1.0000             -0.4677            -15.4961              0.5625
+  25  0.1779    1.0000             -0.9674            -19.7894              0.8125
+  30  0.1308    1.0000             -1.1133            -23.7543              0.6875
+  35  0.0935    1.0000             -1.0945            -27.6306              0.6875
+  40  0.0652    1.0000             -1.2564            -31.6933              0.6875
+
+far: beta 0.1, AdamW lr 5e-06, full batch of 16 pairs, 40 steps
+step      loss  pair acc  change log pi(y_w)  change log pi(y_l)  frac y_w below ref
+----  --------  --------  ------------------  ------------------  ------------------
+   0    0.6931    0.0000              0.0000              0.0000              0.0000
+   5    0.0355    1.0000              0.9245            -32.6063              0.0000
+  10  9.74e-04    1.0000              1.3963            -68.8073              0.0000
+  15  1.05e-04    1.0000              1.6644            -91.5570              0.0000
+  20  3.21e-05    1.0000              1.8266           -104.0638              0.0000
+  25  1.66e-05    1.0000              1.9271           -111.1660              0.0000
+  30  1.13e-05    1.0000              1.9900           -115.3471              0.0000
+  35  8.93e-06    1.0000              2.0294           -117.8843              0.0000
+  40  7.72e-06    1.0000              2.0542           -119.4603              0.0000
+
+near + RPO 1.0: beta 0.1, AdamW lr 5e-06, full batch of 16 pairs, 40 steps
+step    loss  pair acc  change log pi(y_w)  change log pi(y_l)  frac y_w below ref
+----  ------  --------  ------------------  ------------------  ------------------
+   0  1.4635    0.0000              0.0000              0.0000              0.0000
+   5  0.9764    1.0000              4.4711              2.6717              0.0000
+  10  0.7800    1.0000              5.9681              2.5689              0.0000
+  15  0.6355    1.0000              6.8872              1.7040              0.0000
+  20  0.5149    1.0000              7.5523              0.3909              0.0000
+  25  0.4154    1.0000              8.0005             -1.3315              0.0000
+  30  0.3399    1.0000              8.2433             -3.3687              0.0000
+  35  0.2844    1.0000              8.3672             -5.5633              0.0000
+  40  0.2442    1.0000              8.4340             -7.6497              0.0000

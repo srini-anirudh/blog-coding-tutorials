@@ -1,0 +1,36 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+# command: python labs/teaching-a-model-what-we-prefer/scripts/06_loss_family.py
+Defaults: beta = 1, IPO tau = 1 (target margin 0.5), SLiC delta = 1, SimPO gamma = 1, KTO z0 = 0
+
+Loss at margin m
+         method     m=-3    m=-1     m=0   m=0.5     m=1   m=1.6     m=3      m=6
+---------------  -------  ------  ------  ------  ------  ------  ------  -------
+            DPO   3.0486  1.3133  0.6931  0.4741  0.3133  0.1839  0.0486   0.0025
+            IPO  12.2500  2.2500  0.2500  0.0000  0.2500  1.2100  6.2500  30.2500
+        SLiC-HF   4.0000  2.0000  1.0000  0.5000  0.0000  0.0000  0.0000   0.0000
+           RRHF   3.0000  1.0000  0.0000  0.0000  0.0000  0.0000  0.0000   0.0000
+          SimPO   4.0181  2.1269  1.3133  0.9741  0.6931  0.4375  0.1269   0.0067
+           ORPO   3.0486  1.3133  0.6931  0.4741  0.3133  0.1839  0.0486   0.0025
+KTO (desirable)   0.9526  0.7311  0.5000  0.3775  0.2689  0.1680  0.0474   0.0025
+
+dLoss/dm (autograd) at margin m
+         method     m=-3     m=-1      m=0    m=0.5      m=1    m=1.6      m=3      m=6
+---------------  -------  -------  -------  -------  -------  -------  -------  -------
+            DPO  -0.9526  -0.7311  -0.5000  -0.3775  -0.2689  -0.1680  -0.0474  -0.0025
+            IPO  -7.0000  -3.0000  -1.0000   0.0000   1.0000   2.2000   5.0000  11.0000
+        SLiC-HF  -1.0000  -1.0000  -1.0000  -1.0000   0.0000   0.0000   0.0000   0.0000
+           RRHF  -1.0000  -1.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+          SimPO  -0.9820  -0.8808  -0.7311  -0.6225  -0.5000  -0.3543  -0.1192  -0.0067
+           ORPO  -0.9526  -0.7311  -0.5000  -0.3775  -0.2689  -0.1680  -0.0474  -0.0025
+KTO (desirable)  -0.0452  -0.1966  -0.2500  -0.2350  -0.1966  -0.1398  -0.0452  -0.0025
+
+Shape of the gradient over the grid
+         method                                              gradient
+---------------  ----------------------------------------------------
+            DPO                        never zero, decays toward zero
+            IPO  changes sign at its target: pulls large margins back
+        SLiC-HF                         exactly zero past a threshold
+           RRHF                         exactly zero past a threshold
+          SimPO                        never zero, decays toward zero
+           ORPO                        never zero, decays toward zero
+KTO (desirable)   vanishes at both ends: very wrong pairs barely move

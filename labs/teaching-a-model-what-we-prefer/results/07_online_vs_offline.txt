@@ -1,0 +1,16 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+# command: python labs/teaching-a-model-what-we-prefer/scripts/07_online_vs_offline.py
+beta = 0.1. Exact KL-optimum for the gold reward: gold gain 1.593, KL 4.816
+Offline uses 1 round. Online uses the same label budget split over 10 rounds. Means over seeds.
+
+labels     mode  gold gain  KL(pi||ref)  length gain  ref mass on unlabelled  policy mass on unlabelled
+------  -------  ---------  -----------  -----------  ----------------------  -------------------------
+   500  offline    -7.0837      20.9325       5.5044                  0.2385                     1.0000
+   500   online    -1.7487      16.1734       2.4823                  0.7336                     0.0898
+  2000  offline    -6.6064      18.9539       5.3728                  0.0788                     0.9993
+  2000   online     0.7452       8.7689       1.1449                  0.3092                     0.0841
+  8000  offline    -6.6256      19.4410       5.3890                  0.0208                     0.9957
+  8000   online     0.9097       2.9971       0.8493                  0.1112                     0.0197
+
+Both modes train 3000 full-batch Adam steps in total. 'Unlabelled' means the completion never
+appeared in any labelled pair. Gold's length term peaks at +1 over the ref mean.

@@ -1,0 +1,6 @@
+__pycache__/
+*.pt
+*.safetensors
+checkpoints/
+data/
+results/scratch_*

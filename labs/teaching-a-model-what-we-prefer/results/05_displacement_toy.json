@@ -1,0 +1,81 @@
+{
+ "hardware": "AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only",
+ "command": "python labs/teaching-a-model-what-we-prefer/scripts/05_displacement_toy.py",
+ "summary": {
+  "dpo_cos0.0": {
+   "frac_winner_down": 0.05,
+   "median_d_logp_w": 4.006251811981201,
+   "median_loss_end": 0.034639474004507065
+  },
+  "dpo_cos0.5": {
+   "frac_winner_down": 0.5,
+   "median_d_logp_w": -0.8038474321365356,
+   "median_loss_end": 0.05903429165482521
+  },
+  "dpo_cos0.8": {
+   "frac_winner_down": 0.85,
+   "median_d_logp_w": -8.529951095581055,
+   "median_loss_end": 0.1103697121143341
+  },
+  "dpo_cos0.95": {
+   "frac_winner_down": 0.95,
+   "median_d_logp_w": -16.10503387451172,
+   "median_loss_end": 0.23808975517749786
+  },
+  "dpo_cos0.99": {
+   "frac_winner_down": 0.95,
+   "median_d_logp_w": -21.56753921508789,
+   "median_loss_end": 0.41688257455825806
+  },
+  "dpop_cos0.0": {
+   "frac_winner_down": 0.0,
+   "median_d_logp_w": 4.006251811981201,
+   "median_loss_end": 0.034639474004507065
+  },
+  "dpop_cos0.5": {
+   "frac_winner_down": 0.0,
+   "median_d_logp_w": 2.117138385772705,
+   "median_loss_end": 0.06953967362642288
+  },
+  "dpop_cos0.8": {
+   "frac_winner_down": 0.0,
+   "median_d_logp_w": 0.9847034215927124,
+   "median_loss_end": 0.2835528254508972
+  },
+  "dpop_cos0.95": {
+   "frac_winner_down": 0.0,
+   "median_d_logp_w": 1.0922229290008545,
+   "median_loss_end": 0.5255111455917358
+  },
+  "dpop_cos0.99": {
+   "frac_winner_down": 0.0,
+   "median_d_logp_w": 0.9547386169433594,
+   "median_loss_end": 0.6380077600479126
+  },
+  "rpo_cos0.0": {
+   "frac_winner_down": 0.0,
+   "median_d_logp_w": 4.220355987548828,
+   "median_loss_end": 0.16531136631965637
+  },
+  "rpo_cos0.5": {
+   "frac_winner_down": 0.0,
+   "median_d_logp_w": 4.1915602684021,
+   "median_loss_end": 0.27239686250686646
+  },
+  "rpo_cos0.8": {
+   "frac_winner_down": 0.0,
+   "median_d_logp_w": 4.12654447555542,
+   "median_loss_end": 0.41211971640586853
+  },
+  "rpo_cos0.95": {
+   "frac_winner_down": 0.0,
+   "median_d_logp_w": 4.06331205368042,
+   "median_loss_end": 0.5762457847595215
+  },
+  "rpo_cos0.99": {
+   "frac_winner_down": 0.0,
+   "median_d_logp_w": 3.8987417221069336,
+   "median_loss_end": 0.8291602730751038
+  }
+ }
+}

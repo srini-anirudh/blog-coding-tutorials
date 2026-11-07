@@ -1,0 +1,28 @@
+# hardware: AMD EPYC 7R13, 8 threads, torch 2.15.0, CPU only
+# command: python labs/teaching-a-model-what-we-prefer/scripts/02_kl_tilt.py
+ref = 0.218 0.116 0.049 0.196 0.096 0.145 0.007 0.029 0.078 0.019 0.047 0.000
+r   = -0.86 +1.10 -1.07 +0.12 -0.57 +0.37 -0.89 -1.51 +0.37 +1.46 +0.94 +10.00
+
+1. Numerical maximisation (Adam on softmax logits, 4000 steps) against the closed form
+  beta  max |p_closed - p_numeric|  J(closed)  J(numeric)  beta log Z
+------  --------------------------  ---------  ----------  ----------
+2.0000                    5.55e-17     0.1061      0.1061      0.1061
+0.6000                    1.77e-13     0.3936      0.3936      0.3936
+0.2000                    1.73e-05     0.8299      0.8299      0.8299
+
+2. 20,000 random distributions on the support, beta = 0.6: smallest J(tilt) - J(p) = 8.40e-02
+
+3. Support: completion 11 has ref = 0 and reward 10. Its probability under the tilt at beta = 0.01 is 0.0.
+   With ref = 1e-9 instead, the tilt gives it 0.0089 at beta = 0.6 and 1.41e-07 at beta = 2.
+
+4. The beta sweep (exact)
+   beta  E_p[r]  KL(p||ref)   entropy  top mass  top item
+-------  ------  ----------  --------  --------  --------
+10.0000  0.0216      0.0029    2.1149    0.1999         0
+ 3.0000  0.1537      0.0314    2.1096    0.2002         3
+ 1.0000  0.4919      0.2527    1.9981    0.2742         1
+ 0.6000  0.7436      0.5834    1.8073    0.3764         1
+ 0.3000  1.0788      1.3779    1.3475    0.4942         1
+ 0.1000  1.3986      3.2028    0.4781    0.8432         9
+ 0.0300  1.4565      3.9516  4.72e-04    1.0000         9
+   best supported completion: item 9 (reward +1.46)
