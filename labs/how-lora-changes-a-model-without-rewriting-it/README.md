@@ -97,7 +97,7 @@ passes (1 passed). There are no `slow` or `gpu` tests.
 | Measured, SmolLM2-135M shapes, random weights, fp32: grads + Adam state, full / LoRA r=8 | 1614 MB / 29.3 MB, both 12 B per trainable parameter |
 | Measured, checkpoint size, full / LoRA r=8 | 538 MB / 9.8 MB (55x smaller) |
 
-The post's 10,000x checkpoint ratio for GPT-3 uses 35 MB; this lab's arithmetic gives 37.7 MB for Wq,Wv at r=4, hence 9272x.
+The post originally gave a 10,000x checkpoint ratio for GPT-3 from 35 MB; this lab's arithmetic gives 37.7 MB for Wq,Wv at r=4, hence 9272x. The post now says about 38 MB and roughly 9,300x.
 The training-memory ratio (about 3.4x for GPT-3) is not recomputed here.
 
 ### Rank, the layer and the scaling trap (CPU)

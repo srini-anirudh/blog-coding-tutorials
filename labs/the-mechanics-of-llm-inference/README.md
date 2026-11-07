@@ -113,7 +113,7 @@ Tests:
 ### Where the post and this lab disagree
 
 - `P / (L d) = 53,000` for the prefill crossover uses 6.98e9 parameters, which excludes the embedding table and the LM head. With the 8.03e9 total, the formula gives 61,000. The post does not say which it used.
-- The 2,400-token prefill in the VLM budget is printed as 36.6 TFLOP. A 6.74e9-parameter backbone gives 33.9 TFLOP. 36.6 corresponds to about 7.6e9 parameters.
+- The 2,400-token prefill in the VLM budget was printed as 36.6 TFLOP. A 6.74e9-parameter backbone gives 33.9 TFLOP. The post now uses 6.74e9 parameters, 34 TFLOP, 76 ms and a TTFT of about 112 ms.
 - The post says a full-MHA 7B sequence at 128k "needs more than an 80 GB H100 has left". That is true in decimal gigabytes. This card has 85.0 GB of memory, and weights (13.5 GB) plus cache (68.7 GB) fit, so the 128k run above completed.
 - The post's 45% of peak for prefill is conservative for this GPU: 59% was measured, with a plain PyTorch implementation.
 
