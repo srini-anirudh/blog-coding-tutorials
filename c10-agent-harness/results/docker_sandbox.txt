@@ -2,7 +2,7 @@
 read a mode-700 workspace              expected: hello
                                        got:      hello [exit 0, 0.34s]
 write as the host user                 expected: b.txt owned by this uid
-                                       got:      container uid 2008, b.txt uid 2008 [exit 0, 0.40s]
+                                       got:      container uid <host uid>, b.txt uid <host uid> [exit 0, 0.40s]
 network none                           expected: blocked
                                        got:      blocked: [Errno 101] Network is unreachable [exit 0, 0.49s]
 cgroup memory.max                      expected: 134217728
