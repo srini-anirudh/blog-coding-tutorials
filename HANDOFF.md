@@ -25,7 +25,7 @@ Branches in the blog repo:
 - `main`: live site. It has the shared components: `assets/css/code-tutorial.css`, `assets/js/code-tutorial.js` and
   `docs/code-tutorial-template.html`. No page uses them yet.
 - `code-tutorials-wip`: `main` at the time of the handoff, plus the unpublished drafts. These are the C4, C9 and C12
-  posts and the held Patram-Bench post. They are on a branch because anything pushed to `main` goes live.
+  posts and other unpublished drafts. They are on a branch because anything pushed to `main` goes live.
 
 ## State of each tutorial
 
@@ -142,13 +142,8 @@ Wait for the author to say start. Then:
    - about 25–30 shorter code labs under `labs/<theory-slug>/` for topics they do not cover.
 
    Do not start this without a go-ahead.
-2. **Patram-Bench post** (on the WIP branch). It belongs to the Sovereign Foundation Models interest. Its project site has
-   commentary that contradicts its own data, plus data oddities. The author must choose: keep the notes on these
-   oddities, drop them, or wait until the site is fixed. Do not publish it before that.
-3. **Research theses.** The author will write the theses for "sovereign foundation models" and "VLM infrastructure". Do
-   not draft them.
 
 ## Not in this handoff
 
 Agent transcripts, `.venv/`, training checkpoints, datasets and the `.series/` scratch folder stayed on the laptop. They
-are out of git on purpose. The laptop keeps its local copies at `~/Documents/Code/blog-coding-tutorials`.
+are out of git on purpose.
