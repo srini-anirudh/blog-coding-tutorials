@@ -204,11 +204,11 @@ is the peak allocation above the inputs. The last column is the largest differen
 
 | n | Math ms | Flash ms | Math peak extra MiB | Flash peak extra MiB | Max diff, math / flash |
 |---|---|---|---|---|---|
-| 1024 | 1.97 | 0.14 | 724 | 32 | 0.008 / 0.010 |
-| 2048 | 7.11 | 0.32 | 2,608 | 65 | 0.008 / 0.009 |
-| 4096 | 28.73 | 0.95 | 9,856 | 129 | 0.008 / 0.008 |
-| 8192 | 119.88 | 3.30 | 38,273 | 258 | 0.008 / 0.009 |
-| 16384 | out of memory | 12.85 | | 516 | not applicable / 0.009 |
+| 1024 | 1.96 | 0.14 | 724 | 32 | 0.008 / 0.010 |
+| 2048 | 7.08 | 0.31 | 2,608 | 65 | 0.008 / 0.009 |
+| 4096 | 28.62 | 0.94 | 9,856 | 129 | 0.008 / 0.008 |
+| 8192 | 119.84 | 3.27 | 38,273 | 258 | 0.008 / 0.009 |
+| 16384 | out of memory | 12.86 | | 516 | not applicable / 0.009 |
 
 Math memory grows 4 times per doubling of n and flash memory grows 2 times. Both outputs sit about 0.01 from the
 fp32 reference, which is bf16 rounding. The GPU job ran alone on its GPU. It ran once, so there is no spread to

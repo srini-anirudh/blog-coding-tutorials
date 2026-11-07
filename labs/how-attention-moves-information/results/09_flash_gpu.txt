@@ -4,14 +4,14 @@
 B = 4, H = 16, d = 128, causal, bf16. Median of 10 calls after 3 warm-up calls.
 n      backend    ms per call  peak extra MiB  max |out - fp32 ref|
 -----  -------  -------------  --------------  --------------------
-1024      math          1.966         724.063                 0.008
-1024     flash          0.137          32.251                 0.010
-2048      math          7.114        2608.125                 0.008
-2048     flash          0.315          64.501                 0.009
-4096      math         28.733        9856.250                 0.008
-4096     flash          0.947         129.001                 0.008
-8192      math        119.876       38272.500                 0.008
-8192     flash          3.302         258.001                 0.009
+1024      math          1.963         724.063                 0.008
+1024     flash          0.141          32.251                 0.010
+2048      math          7.075        2608.125                 0.008
+2048     flash          0.311          64.501                 0.009
+4096      math         28.619        9856.250                 0.008
+4096     flash          0.942         129.001                 0.008
+8192      math        119.841       38272.500                 0.008
+8192     flash          3.274         258.001                 0.009
 16384     math  out of memory
-16384    flash         12.848         516.001                 0.009
+16384    flash         12.860         516.001                 0.009
 Both backends compute the same function. Their bf16 outputs differ from the fp32 reference by rounding.
