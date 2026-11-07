@@ -1,0 +1,49 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/teaching-a-language-model-to-follow-instructions/scripts/07_data_taxonomy.py
+
+A. Dolly (human-written) by category, and Alpaca (teacher-written); token counts with the SmolLM2 tokenizer
+   set                             n  instr+context tokens (median)  response tokens (median)  ratio
+   dolly: open_qa               3742                             10                        35   0.29
+   dolly: general_qa            2191                             10                        92   0.11
+   dolly: classification        2136                             27                        27   1.00
+   dolly: closed_qa             1773                            197                        26   7.58
+   dolly: brainstorming         1766                             12                        57   0.21
+   dolly: information_extraction   1506                            223                        31   7.19
+   dolly: summarization         1188                            214                        75   2.85
+   dolly: creative_writing       709                             14                       146   0.10
+   alpaca (all)                51760                             14                       107   0.13
+
+B. Checkers
+   category             checker                                 accepts a correct reply  rejects a wrong reply
+   structured output    JSON parses, exact keys and types                          True                   True
+   classification       reply equals the gold label                                True                   True
+   mathematics          last number equals the gold answer                         True                   True
+   coding               run the candidate with asserts                             True                   True
+   Each checker is exact for its category. None of them needs a human or a teacher model.
+   Reference-based metric on 300 Dolly summaries: token F1 of the reference against a copy with the numbers changed and negations inserted
+   = 0.948 (a plainly wrong summary), against 0.126 for another example's summary. Overlap cannot see the error.
+
+C. Mixing weights from source sizes. Sizes are the public sets this lab loads, plus two sizes quoted for illustration
+   proportional:
+     alpaca-cleaned 0.053, dolly-15k 0.015, gsm8k-train 0.008, large-synthetic-set 0.923, small-human-set 0.001
+   capped at 20,000 per source:
+     alpaca-cleaned 0.315, dolly-15k 0.236, gsm8k-train 0.118, large-synthetic-set 0.315, small-human-set 0.016
+   Proportional mixing gives the illustrative 900k-example source 92% of the mix and the 1,000-example source 0.1%. A cap
+   restores a spread without a hand-tuned weight. Whether the capped weights are good is a mixture question (another post).
+
+D. Contamination: word n-gram overlap of GSM8K test questions with the instruction data (instructions plus responses)
+   1319 GSM8K test questions against 66771 Alpaca + Dolly examples
+   n = 13: 0.0000 of test questions share an n-gram (0 questions)
+   n =  8: 0.0023 of test questions share an n-gram (3 questions)
+   n =  5: 0.3177 of test questions share an n-gram (419 questions)
+   A planted copy and a light paraphrase of 100 test questions (every 5th word replaced by a different word):
+   exact copy        detected at n=13: 100/100, n=8: 100/100, n=5: 100/100;  mean ROUGE-L against the original 1.00
+   light paraphrase  detected at n=13: 0/100, n=8: 0/100, n=5: 36/100;  mean ROUGE-L against the original 0.81
+   The 13-gram check catches copies and misses the paraphrase that keeps most words. That is the gap the post says embedding-level
+   checks must cover; those are not built here.
+
+E. Near-duplicate instructions in Alpaca (a Self-Instruct-style set): 5000 random instructions, ROUGE-L against earlier ones
+   share with ROUGE-L >= 0.7 to some earlier instruction (the Self-Instruct filter threshold): 0.002
+   share >= 0.5: 0.432; share >= 0.3: 0.925; median best-match ROUGE-L 0.47
+   (Only the 30 candidates sharing the most bigrams are scored, so these are lower bounds.)
+

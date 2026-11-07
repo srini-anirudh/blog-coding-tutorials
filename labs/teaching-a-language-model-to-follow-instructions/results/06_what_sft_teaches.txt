@@ -1,0 +1,59 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, bf16 autocast for training
+# command: python labs/teaching-a-language-model-to-follow-instructions/scripts/06_what_sft_teaches.py
+
+A. Format adherence against the number of SFT examples (SmolLM2-135M base, Alpaca prompts, 5 trained format constraints)
+   Evaluation: 40 held-out prompts x (5 trained constraints, 1 unseen constraint, 1 with no constraint) = 280 prompts, greedy, 160 new tokens.
+   'adheres' = the reply ended with <|im_end|> within the budget AND passes the exact checker for its constraint.
+   'seen' averages the 5 trained constraints; 'unseen' is 'Begin your answer with the word Sure,' (never in training);
+   'stops' is the share of unconstrained prompts whose reply ended with <|im_end|>.
+   Training: lr 5e-05, batch 16, about 150 optimiser steps for every N (so small N gets many epochs), responses rewritten to satisfy the constraint.
+   The step count is held fixed so that N is the only thing that changes. A first attempt with lr 2e-5 and 48 steps gave no stopping at all for N <= 64.
+        N  epochs  steps     adheres: seen    unseen  stops (no constraint)  seeds
+        0       -      -             0.000     0.000                  0.000      1   (base model, chat template)
+       16     150    150     0.430+-0.040     0.375                  0.892      3
+       64      38    152     0.540+-0.027     0.375                  0.867      3
+      256      10    160     0.672+-0.022     0.358                  0.742      3
+     1024       3    192     0.742+-0.030     0.300                  0.675      3
+   Few-shot prompting of the same base model (no weight update). Demos use the plain '### Instruction / ### Response' text format and
+   the reply is cut at the next '###'; the demos are drawn from the same pool and cover each constraint equally.
+   few-shot       -      -     0.185+-0.058     0.000                  0.917      3   (5 demonstrations in the prompt)
+   few-shot       -      -     0.183+-0.039     0.000                  0.758      3   (10 demonstrations in the prompt)
+
+B. Known against unknown answers (HuggingFaceTB/SmolLM2-360M, TriviaQA validation questions, closed book)
+   5995 questions; the base model answers 1910 (31.9%) correctly with a 5-shot prompt (answer contains an accepted alias).
+   Dev set: 150 known + 150 unknown questions, never trained on. Training pool: 1760 known, 3935 unknown.
+   Each run trains on 400 questions with the given share of UNKNOWN answers, 8 epochs, lr 2e-5, batch 16, chat template.
+   Columns: accuracy (answer contains an accepted alias, greedy) on the training questions that were known / unknown, then on the two dev sets.
+   unknown share 0% (1 seed, mean):
+      epoch  train loss  fit: known  fit: unknown  dev: known  dev: unknown
+          1       3.420       0.713           nan       0.560         0.047
+          2       1.061       0.853           nan       0.600         0.047
+          3       0.519       0.907           nan       0.533         0.047
+          4       0.244       0.987           nan       0.540         0.047
+          5       0.088       0.993           nan       0.513         0.060
+          6       0.037       1.000           nan       0.480         0.047
+          7       0.021       1.000           nan       0.480         0.040
+          8       0.014       1.000           nan       0.480         0.053
+   unknown share 50% (1 seed, mean):
+      epoch  train loss  fit: known  fit: unknown  dev: known  dev: unknown
+          1       3.906       0.633         0.107       0.587         0.060
+          2       1.591       0.740         0.273       0.527         0.053
+          3       0.909       0.873         0.480       0.480         0.060
+          4       0.539       0.940         0.653       0.460         0.047
+          5       0.303       0.973         0.840       0.460         0.040
+          6       0.169       1.000         0.913       0.407         0.040
+          7       0.103       0.993         0.960       0.393         0.027
+          8       0.068       1.000         0.967       0.393         0.040
+   unknown share 100% (1 seed, mean):
+      epoch  train loss  fit: known  fit: unknown  dev: known  dev: unknown
+          1       4.436         nan         0.107       0.540         0.080
+          2       2.113         nan         0.213       0.533         0.053
+          3       1.381         nan         0.400       0.480         0.047
+          4       0.924         nan         0.533       0.473         0.040
+          5       0.616         nan         0.707       0.393         0.047
+          6       0.390         nan         0.807       0.413         0.047
+          7       0.265         nan         0.893       0.360         0.053
+          8       0.193         nan         0.927       0.373         0.053
+   Reference: before fine-tuning the dev-known set is answered correctly by construction (that is how it was chosen, with the 5-shot prompt),
+   so a drop in 'dev: known' is damage caused by fine-tuning (or by the change of prompt format; compare the 0% row).
+

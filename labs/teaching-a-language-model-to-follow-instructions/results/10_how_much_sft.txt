@@ -1,0 +1,55 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, bf16 autocast for training
+# command: python labs/teaching-a-language-model-to-follow-instructions/scripts/10_how_much_sft.py
+
+A. Learning rate. 1000 Alpaca examples, 3 epochs, batch 16, cosine decay. Validation: 200 held-out examples (assistant tokens).
+   'wiki' = NLL on 100 WikiText paragraphs, a probe of what moved elsewhere. 'stop' = share of replies that ended with <|im_end|> within 128 tokens.
+         lr    val NLL   wiki NLL       stop   mean len distinct-2   seeds
+       none      1.999     2.944     0.000   128.000     0.926   (base model, chat template)
+      1e-06      1.787     2.944     0.000   128.000     0.927   1
+      5e-06      1.659     2.955     0.000   128.000     0.872   1
+      2e-05      1.573     2.978     0.540    88.790     0.860   1
+      1e-04      1.613     3.125     0.670    74.040     0.825   1
+      5e-04      2.010     3.874     0.610    80.370     0.804   1
+
+B. Epochs on a small set. 200 Alpaca examples, constant lr 2e-5 (so the checkpoints are comparable), batch 16, checkpoints at the listed epochs.
+   'train NLL' and 'val NLL' are assistant-token NLL. 'regurgitate' = share of greedy replies on held-out prompts whose word set has Jaccard >= 0.8
+   with SOME training response. 'distinct-2' = distinct bigram share among 8 sampled replies to the same prompt (T=1), averaged over 20 prompts.
+    epochs    train_nll     val_nll    wiki_nll regurgitate   distinct2         len        stop   (mean of 2 seeds)
+         1        1.700       1.746       2.946       0.000       0.915     128.000       0.000
+         3        1.395       1.639       2.961       0.000       0.854     128.000       0.000
+         6        1.066       1.628       2.979       0.000       0.826      98.180       0.435
+        10        0.691       1.725       3.018       0.000       0.825      87.200       0.560
+        20        0.099       2.432       3.147       0.000       0.784      94.145       0.510
+        30        0.019       2.950       3.229       0.000       0.770      87.430       0.625
+   Validation NLL is lowest at epoch 6.
+
+C. Truncated training data. 500 Alpaca examples tokenised with max length L, 3 epochs, lr 2e-5. Evaluation: 100 held-out prompts, 128 new tokens.
+        L  examples cut   cut ones that keep <|im_end|>  stop rate  mean len   seeds
+       48          0.99                           0.007      0.000     128.0   2
+       96          0.66                           0.006      0.025     125.2   2
+      384          0.01                           0.000      0.180     113.1   2
+   Training on cut examples loses the stop token for most of the data, and the model learns to keep going. At L = 48 nearly every
+   example is cut; at L = 384 few are.
+
+D. Verbose data gives a verbose model. 500 examples from the shorter or the longer half of Alpaca responses (by tokens), lr 2e-5, 3 epochs.
+   median response = 99 tokens. Validation prompts are drawn from the whole pool; 'mean len' is the generated length in tokens (budget 160).
+   training responses        mean train len  mean len  stop rate   seeds
+   shorter half                        40.2      93.4      0.590   2
+   longer half                        176.5     156.2      0.065   2
+
+E. Is a post-SFT drop a format problem? 300 ARC-Easy questions (4 choices, chance 0.25). SFT: 1000 Alpaca examples, lr 2e-5, 3 epochs.
+   model                         log-likelihood acc  generated letter, strict   generated, lenient
+   base (plain prompt)                        0.583                     0.000                0.533
+   after SFT (chat template)                  0.580                     0.000                0.332   (2 seeds)
+   Strict = the whole reply is the right letter. Lenient = the right letter stands alone, or the right choice text appears in the reply.
+
+F. Train/serve template mismatch on our own model. SFT on 1000 Alpaca examples with the right template, then serve with small mistakes (100 held-out prompts, greedy, 96 new tokens).
+   mean of 2 seeds:
+   serving format                      ref. reply NLL/token  stopped   reply starts differently  mean new tokens
+   correct template                                   1.359     0.69                       0.00             49.7
+   no newline after 'assistant'                       1.595     0.74                       1.00             47.0
+   extra blank line after header                      1.623     0.45                       0.89             68.2
+   no system turn                                     1.650     0.01                       0.83             95.7
+   no newline after user turn                         1.379     0.60                       0.56             58.1
+   plain 'User:/Assistant:' text                      2.292     0.00                       1.00             96.0
+

@@ -1,4 +1,8 @@
-checkpoints/
-__pycache__/
-*.safetensors
+# checkpoints, caches and downloaded data stay out of git
 *.pt
+*.bin
+*.safetensors
+runs/
+data_cache/
+scratch/
+__pycache__/

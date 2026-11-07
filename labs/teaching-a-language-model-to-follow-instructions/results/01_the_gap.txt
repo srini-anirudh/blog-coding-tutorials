@@ -1,0 +1,47 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, bf16 autocast for training
+# command: python labs/teaching-a-language-model-to-follow-instructions/scripts/01_the_gap.py
+
+1. The next-token distribution right after a question (greedy top 5, probabilities, entropy in bits)
+  Q: What is the capital of France?
+    base, bare question      H= 2.74 bits  top5=[('\n', 0.695), ('\n\n', 0.084), (' What', 0.013), ('\n\n   ', 0.011), ('\xa0', 0.01)]
+    base, chat template      H= 6.14 bits  top5=[('What', 0.368), ('The', 0.038), ('You', 0.035), ('How', 0.03), ('Which', 0.026)]
+    instruct, chat template  H= 1.50 bits  top5=[('The', 0.831), ('Paris', 0.041), ('As', 0.018), ('Bon', 0.015), ('I', 0.014)]
+  Q: What is the capital of Japan?
+    base, bare question      H= 2.58 bits  top5=[('\n', 0.722), ('\n\n', 0.071), (' What', 0.013), ('\xa0', 0.011), ('\n  ', 0.011)]
+    base, chat template      H= 6.20 bits  top5=[('What', 0.363), ('The', 0.037), ('How', 0.035), ('You', 0.031), ('what', 0.027)]
+    instruct, chat template  H= 1.50 bits  top5=[('The', 0.808), ('Japan', 0.083), ('As', 0.018), ('I', 0.014), ('K', 0.009)]
+  Q: What is the capital of Italy?
+    base, bare question      H= 2.88 bits  top5=[('\n', 0.683), ('\n\n', 0.073), (' Italy', 0.016), ('\n  ', 0.015), (' What', 0.013)]
+    base, chat template      H= 6.08 bits  top5=[('What', 0.374), ('The', 0.037), ('How', 0.033), ('You', 0.031), ('what', 0.026)]
+    instruct, chat template  H= 2.04 bits  top5=[('The', 0.742), ('Italy', 0.079), ('I', 0.038), ('In', 0.023), ('My', 0.012)]
+
+2. Greedy continuations, 96 new tokens, first 3 questions
+  [base, bare] '\n\nThe capital of France is Paris.\n\nWhat is the capital of France?\n\nThe capital of France is Paris.\n\nWhat is the capital of France?\n\nThe capital of France is Paris.\n\nWhat is the capital of France?\n\nThe capital of France is Paris.\n\nWhat is the capital of France?\n\nThe capital of France is Paris.\n\nWhat is the capital of France?\n\nThe capital of France'  stopped=False
+  [base, chat] 'What is the capital of France?pite\npiteassistant\nWhat is the capital of France?pite\npiteassistant\nWhat is the capital of France?pite\npiteassistant\nWhat is the capital of France?pite\npiteassistant\nWhat is the capital of France?pite\npiteassistant\nWhat is the capital of France?pite\npiteassistant\nWhat is the capital of France?pite\npiteassistant\nWhat is the capital of'  stopped=False
+  [instruct, chat] 'The capital of France is Paris.<|im_end|>'  stopped=True
+
+  [base, bare] '\n\nThe capital of Japan is Tokyo.\n\nWhat is the capital of Japan?\n\nThe capital of Japan is Tokyo.\n\nWhat is the capital of Japan?\n\nThe capital of Japan is Tokyo.\n\nWhat is the capital of Japan?\n\nThe capital of Japan is Tokyo.\n\nWhat is the capital of Japan?\n\nThe capital of Japan is Tokyo.\n\nWhat is the capital of Japan?\n\nThe capital of Japan'  stopped=False
+  [base, chat] 'What is the capital of Japan?pite\npiteassistant\nWhat is the capital of Japan?pite\npiteassistant\nWhat is the capital of Japan?pite\npiteassistant\nWhat is the capital of Japan?pite\npiteassistant\nWhat is the capital of Japan?pite\npiteassistant\nWhat is the capital of Japan?pite\npiteassistant\nWhat is the capital of Japan?pite\npiteassistant\nWhat is the capital of'  stopped=False
+  [instruct, chat] 'The capital of Japan is Tokyo.<|im_end|>'  stopped=True
+
+  [base, bare] '\n\nThe capital of Italy is Rome.\n\nWhat is the capital of Italy?\n\nRome is the capital of Italy.\n\nWhat is the capital of Italy?\n\nRome is the capital of Italy.\n\nWhat is the capital of Italy?\n\nRome is the capital of Italy.\n\nWhat is the capital of Italy?\n\nRome is the capital of Italy.\n\nWhat is the capital of Italy?\n\nRome is the capital'  stopped=False
+  [base, chat] 'What is the capital of Italy?ostering\nosteringassistant\nWhat is the capital of Italy?\nostering\nosteringassistant\nWhat is the capital of Italy?\nostering\nosteringassistant\nWhat is the capital of Italy?\nostering\nosteringassistant\nWhat is the capital of Italy?\nostering\nosteringassistant\nWhat is the capital of Italy?\nostering\nosteringassistant\nWhat is the capital of Italy?\nostering\nosteringassistant'  stopped=False
+  [instruct, chat] 'The capital of Italy is Rome.<|im_end|>'  stopped=True
+
+3. Rates over 12 factual questions plus 100 held-out Alpaca questions, greedy, 96 new tokens
+   stopped: emitted <|im_end|> or <|endoftext|> within the budget.
+   repeats the question: the question text appears again in the continuation.
+   new question: the continuation contains a '?' that is not part of a repeated question.
+   stop (12): the same, on the 12 short factual questions only (the Alpaca answers are often longer than the budget).
+   gold in first 20 tokens: only for the 12 factual questions.
+   input                       stopped  stop (12)  repeats q   new q  gold<=20  mean new tokens
+   base, bare question            0.00       0.00       0.13    0.36      0.83             96.0
+   base, chat template            0.01       0.00       0.67    0.33      0.00             95.3
+   instruct, chat template        0.29       0.92       0.00    0.01      0.83             77.1
+
+Reading: on a bare question this base model usually does answer (see 'gold<=20'): its top next token is a
+newline, then the answer. What it does not do is stop; it goes on to repeat the question or write a new one.
+Inside a chat template it never saw, it echoes the question and emits junk. So the gap here is turn
+structure and stopping more than knowledge, which qualifies the post's 'followed by another question rather
+than Paris' picture for this model. These are string checks on greedy decodes of a 135M model, not a
+judged evaluation, and one model family.

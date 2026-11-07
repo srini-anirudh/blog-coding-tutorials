@@ -1,0 +1,66 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only",
+ "command": "python labs/teaching-a-language-model-to-follow-instructions/scripts/07_data_taxonomy.py",
+ "lengths": {
+  "open_qa": {
+   "n": 3742,
+   "prompt_med": 10.0,
+   "resp_med": 35.0
+  },
+  "general_qa": {
+   "n": 2191,
+   "prompt_med": 10.0,
+   "resp_med": 92.0
+  },
+  "classification": {
+   "n": 2136,
+   "prompt_med": 27.0,
+   "resp_med": 27.0
+  },
+  "closed_qa": {
+   "n": 1773,
+   "prompt_med": 197.0,
+   "resp_med": 26.0
+  },
+  "brainstorming": {
+   "n": 1766,
+   "prompt_med": 12.0,
+   "resp_med": 57.0
+  },
+  "information_extraction": {
+   "n": 1506,
+   "prompt_med": 223.0,
+   "resp_med": 31.0
+  },
+  "summarization": {
+   "n": 1188,
+   "prompt_med": 214.0,
+   "resp_med": 75.0
+  },
+  "creative_writing": {
+   "n": 709,
+   "prompt_med": 14.0,
+   "resp_med": 146.0
+  },
+  "alpaca (all)": {
+   "n": 51760,
+   "prompt_med": 14.0,
+   "resp_med": 107.0
+  }
+ },
+ "gsm8k_overlap": {
+  "13": [
+   0.0,
+   0
+  ],
+  "8": [
+   0.002274450341167551,
+   3
+  ],
+  "5": [
+   0.31766489764973466,
+   419
+  ]
+ },
+ "alpaca_dup_rougeL_0.7": 0.0016
+}

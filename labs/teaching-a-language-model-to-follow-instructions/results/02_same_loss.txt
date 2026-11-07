@@ -1,0 +1,45 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, bf16 autocast for training
+# command: python labs/teaching-a-language-model-to-follow-instructions/scripts/02_same_loss.py
+
+A. Cross-entropy = entropy + KL, 6 random distributions over 50 symbols
+       H(D)   KL(D||p)      sum  cross-entropy  Monte Carlo (1e6 draws)
+     3.2303     2.8693   6.0996         6.0996                   6.0995
+     2.8197     2.0550   4.8747         4.8747                   4.8731
+     3.2028     2.1944   5.3972         5.3972                   5.4003
+     3.1607     2.6078   5.7685         5.7685                   5.7688
+     3.1330     1.5665   4.6995         4.6995                   4.6995
+     3.1514     2.3267   5.4781         5.4781                   5.4769
+
+B. Fit one Gaussian q to a two-bump target D = 0.72 N(-3, 0.6) + 0.28 N(3, 0.6), by grid search
+   forward KL(D||q)  [what SFT minimises]: mu= -1.30 sd= 2.75  KL=  0.933  q mass near left bump (-5,-1)=0.45, near right bump (1,5)=0.19, between (-1,1)=0.26
+   reverse KL(q||D)  [what RLHF adds]: mu= -3.00 sd= 0.60  KL=  0.329  q mass near left bump (-5,-1)=1.00, near right bump (1,5)=0.00, between (-1,1)=0.00
+   Target mass: left bump 0.72, right bump 0.28, between 0.00.
+
+C. Which mistakes does each direction charge for? D has 3 behaviours (0.6, 0.3, 0.1), p varies
+   p                                              KL(D||p)   KL(p||D)
+   p = D (reference)                                 0.000      0.000
+   p puts 0.20 on a behaviour D never shows          0.223        inf
+   p puts 0.01 on a behaviour D shows 10%            0.230        inf
+   p drops the 10% behaviour entirely                  inf      0.105
+   (inf = the reverse direction is unbounded when p puts mass where D has none.)
+
+D. The same loss on two kinds of text, 200 documents each; mean NLL per token in nats (bf16 autocast)
+   model                    web text  chat, every token   chat, assistant tokens
+   SmolLM2-135M (base)         3.139              4.151                    2.349
+   SmolLM2-135M-Instruct       3.279              2.722                    1.630
+   Same function, same tokenizer, different text. The base model is better on web text; the instruct model is
+   far better on assistant tokens. The instruct model also gives up some web-text loss. One model, one loss,
+   and what it is good at is set by the distribution it was last trained on.
+
+E. SFT on a mixture: 800 Alpaca examples, 80% of replies end with 'Hope this helps.' (never asked for), 20% do not.
+   Evaluate on 200 held-out prompts: share of replies ending with the sign-off. 3 epochs, lr 2e-5.
+   seed 0: share in training data 0.806; share of replies with the sign-off, greedy 0.994, sampled 0.609
+   seed 1: share in training data 0.785; share of replies with the sign-off, greedy 0.989, sampled 0.657
+   seed 2: share in training data 0.802; share of replies with the sign-off, greedy 1.000, sampled 0.756
+   mean over 3 seeds: data 0.798, greedy 0.994, sampled 0.674
+   (Replies that hit the 160-token budget without ending are left out of the shares.)
+   Greedy decoding picks the dominant mode (about 99% sign-off). Sampling keeps the minority style alive, and more
+   of it than the data has: a quarter to two-fifths of sampled replies lack the sign-off, against 20% in the data.
+   So the match with the mixture is rough, not calibrated: a 135M model sampled at T=1 also drifts for other reasons,
+   and 3 epochs may not have fitted the 80/20 split. What the numbers support is the post's point in miniature:
+   the loss keeps both modes, and nothing in it says which one is the unwanted one.

@@ -1,0 +1,24 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, bf16 autocast for training",
+ "command": "python labs/teaching-a-language-model-to-follow-instructions/scripts/02_same_loss.py",
+ "mixture_runs": [
+  [
+   0,
+   0.80625,
+   0.9940476190476191,
+   0.6091954022988506
+  ],
+  [
+   1,
+   0.785,
+   0.9885714285714285,
+   0.6565656565656566
+  ],
+  [
+   2,
+   0.8025,
+   1.0,
+   0.7560975609756098
+  ]
+ ]
+}

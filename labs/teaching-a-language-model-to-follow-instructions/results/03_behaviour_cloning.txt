@@ -1,0 +1,46 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/teaching-a-language-model-to-follow-instructions/scripts/03_behaviour_cloning.py
+
+A. Worst-case chain. Cost of the cloned policy for per-step error eps, 20,000 simulated rollouts each
+       eps     T  simulated  eps*T^2/2  exact sum  eps*T (recovery)  simulated recovery
+     0.001    10      0.055      0.050      0.055             0.010               0.010
+     0.001    20      0.217      0.200      0.209             0.020               0.021
+     0.001    50      1.304      1.250      1.254             0.050               0.051
+     0.001   100      4.946      5.000      4.887             0.100               0.100
+     0.001   200     19.027     20.000     18.830             0.200               0.200
+     0.005    10      0.279      0.250      0.271             0.050               0.051
+     0.005    20      1.017      1.000      1.017             0.100               0.101
+     0.005    50      5.915      6.250      5.884             0.250               0.250
+     0.005   100     21.432     25.000     21.548             0.500               0.498
+     0.005   200     73.127    100.000     74.025             1.000               0.993
+   log-log slope of cost against T at eps = 0.001: no recovery 1.95, with recovery 0.99
+   The T^2 is built into the construction (an error is never undone). The point of the table is the shape the
+   post's bound describes, and that `eps*T^2/2` is the small-eps*T limit of the exact sum.
+
+B. Learned policy on the ring task. Process noise 0.002, expert data 50 trajectories of 100 steps,
+   MLP 2-64-64-2 fitted by least squares. Cost = steps spent more than 0.1 from the ring, mean of 200 rollouts.
+   Expert states stay within 0.037 of the ring (the band the data covers).
+   5 seeds (each seed re-draws the expert data and re-fits). Mean cost, with min to max over seeds in brackets.
+   policy                                      T=25                  T=50                 T=100                 T=200                 T=400
+   expert                         0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]
+   behaviour cloning              2.66 [  0.0,  12.8]     6.96 [  0.0,  32.0]    13.98 [  0.0,  58.1]    43.16 [  0.0, 126.5]   156.47 [  0.6, 289.7]
+   cloning, noisy execution       0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]
+   DAgger, 1 iteration            0.84 [  0.0,   3.2]     5.68 [  0.0,  26.5]    15.78 [  0.0,  76.5]    36.02 [  0.0, 176.5]    76.50 [  0.0, 376.5]
+   DAgger, 2 iterations           0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]     0.01 [  0.0,   0.1]     0.02 [  0.0,   0.1]     0.04 [  0.0,   0.2]
+   DAgger, 3 iterations           0.06 [  0.0,   0.3]     0.12 [  0.0,   0.6]     0.27 [  0.0,   1.3]     0.65 [  0.0,   3.3]     1.35 [  0.0,   6.8]
+   DAgger, 4 iterations           0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]     0.00 [  0.0,   0.0]
+
+   Local log-log slope of behaviour-cloning cost between consecutive horizons (2 would be the T^2 shape; 1 linear):
+     T = 25 to 50: 1.39   (mean cost 2.66 to 6.96)
+     T = 50 to 100: 1.01   (mean cost 6.96 to 13.98)
+     T = 100 to 200: 1.63   (mean cost 13.98 to 43.16)
+     T = 200 to 400: 1.86   (mean cost 43.16 to 156.47)
+   Reading. Behaviour cloning is a coin flip per seed: one seed's policy never leaves the ring, another leaves
+   within 25 steps. Averaged over seeds the cost grows faster than linearly in T for most of the range (local
+   slopes 1.0 to 1.9, noisy with 5 seeds), and it cannot keep the slope of 2 because cost is capped at T. The
+   data never showed the way back to the ring, so a rollout that leaves stays out. Recovery data fixes it here:
+   executing noisy actions while labelling with the clean expert action (the DART idea) gave zero cost at every
+   horizon, and DAgger (label the states the learner visits, refit on the aggregate) took the mean cost to at most
+   1.4 steps of 400 by iteration 2 to 4. It is not monotone in the iteration (1 iteration was still bad, 3 was
+   worse than 2) because every iteration re-fits from scratch. The slope of the cost is not a clean test of the
+   bound: the O(eps T^2) result is worst case, and this is one small task.

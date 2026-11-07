@@ -1,0 +1,206 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, bf16 autocast for training",
+ "command": "python labs/teaching-a-language-model-to-follow-instructions/scripts/05_loss_mask.py",
+ "proof_max_abs_diff": [
+  3.552436828613281e-05,
+  0.00017547607421875
+ ],
+ "arms": {
+  "R1 Alpaca, N=1000, 3 epochs | assistant only": [
+   {
+    "token_nll": 1.5943394541136966,
+    "example_nll": 1.7049719309806823
+   },
+   {
+    "token_nll": 1.6228007028845606,
+    "example_nll": 1.7192921708896756
+   },
+   {
+    "token_nll": 1.5589085152768087,
+    "example_nll": 1.6197338305413722
+   }
+  ],
+  "R1 Alpaca, N=1000, 3 epochs | full sequence": [
+   {
+    "token_nll": 1.6078645764985942,
+    "example_nll": 1.7086825416982174
+   },
+   {
+    "token_nll": 1.6358997949808718,
+    "example_nll": 1.7229302428290247
+   },
+   {
+    "token_nll": 1.5717272980404102,
+    "example_nll": 1.634320013076067
+   }
+  ],
+  "R1 Alpaca, N=1000, 3 epochs | instruction modelling w=0.3": [
+   {
+    "token_nll": 1.5957391899519673,
+    "example_nll": 1.7019443581998348
+   },
+   {
+    "token_nll": 1.6233164231698107,
+    "example_nll": 1.7176268932595848
+   },
+   {
+    "token_nll": 1.559604751975036,
+    "example_nll": 1.620632793456316
+   }
+  ],
+  "R1 Alpaca, N=1000, 3 epochs | assistant only, per-example norm": [
+   {
+    "token_nll": 1.618973613937385,
+    "example_nll": 1.6915054938942193
+   },
+   {
+    "token_nll": 1.6449497231162018,
+    "example_nll": 1.6996618127077818
+   },
+   {
+    "token_nll": 1.579596660461053,
+    "example_nll": 1.6023422008007764
+   }
+  ],
+  "R2a Dolly long-instruction/short-response, N=100, 10 epochs | assistant only": [
+   {
+    "token_nll": 1.2965655412041832,
+    "example_nll": 1.6275635055423556,
+    "f1": 0.2960782068659921,
+    "stopped": 0.17
+   },
+   {
+    "token_nll": 1.3964075928809252,
+    "example_nll": 1.5778218787950529,
+    "f1": 0.24689590913224316,
+    "stopped": 0.06
+   },
+   {
+    "token_nll": 1.3089330925555809,
+    "example_nll": 1.623602841595176,
+    "f1": 0.24115682861593193,
+    "stopped": 0.125
+   }
+  ],
+  "R2a Dolly long-instruction/short-response, N=100, 10 epochs | full sequence": [
+   {
+    "token_nll": 1.5189783541544715,
+    "example_nll": 1.950639172130591,
+    "f1": 0.20093793743979277,
+    "stopped": 0.0
+   },
+   {
+    "token_nll": 1.5550864141009089,
+    "example_nll": 1.804719500138726,
+    "f1": 0.20029740239297134,
+    "stopped": 0.0
+   },
+   {
+    "token_nll": 1.5243196901179408,
+    "example_nll": 1.9788467418995632,
+    "f1": 0.21613322584823988,
+    "stopped": 0.0
+   }
+  ],
+  "R2a Dolly long-instruction/short-response, N=100, 10 epochs | instruction modelling w=0.3": [
+   {
+    "token_nll": 1.3505228004125764,
+    "example_nll": 1.7080505886054658,
+    "f1": 0.23970934733527996,
+    "stopped": 0.01
+   },
+   {
+    "token_nll": 1.4292469881201617,
+    "example_nll": 1.6078885193441954,
+    "f1": 0.2388267838908225,
+    "stopped": 0.005
+   },
+   {
+    "token_nll": 1.366404422541385,
+    "example_nll": 1.7357980612736599,
+    "f1": 0.2322396509582652,
+    "stopped": 0.005
+   }
+  ],
+  "R2b the same, N=800, 3 epochs | assistant only": [
+   {
+    "token_nll": 1.1400272028590486,
+    "example_nll": 1.327448961361275,
+    "f1": 0.36251802342363315,
+    "stopped": 0.76
+   },
+   {
+    "token_nll": 1.2362601479232784,
+    "example_nll": 1.3552107765850887,
+    "f1": 0.3808260454742103,
+    "stopped": 0.835
+   },
+   {
+    "token_nll": 1.1460965794551545,
+    "example_nll": 1.3381046780924888,
+    "f1": 0.3715596326025329,
+    "stopped": 0.735
+   }
+  ],
+  "R2b the same, N=800, 3 epochs | full sequence": [
+   {
+    "token_nll": 1.2758199070647402,
+    "example_nll": 1.5748257499623608,
+    "f1": 0.22208733581885404,
+    "stopped": 0.17
+   },
+   {
+    "token_nll": 1.34725530706685,
+    "example_nll": 1.4896768552946373,
+    "f1": 0.2339477472041347,
+    "stopped": 0.195
+   },
+   {
+    "token_nll": 1.2725615294527484,
+    "example_nll": 1.5599527232776023,
+    "f1": 0.24019078977384845,
+    "stopped": 0.175
+   }
+  ],
+  "R2b the same, N=800, 3 epochs | instruction modelling w=0.3": [
+   {
+    "token_nll": 1.1868938435051557,
+    "example_nll": 1.3930498020989555,
+    "f1": 0.3260557980110196,
+    "stopped": 0.665
+   },
+   {
+    "token_nll": 1.2772464466682794,
+    "example_nll": 1.3992321552105353,
+    "f1": 0.3771654229276017,
+    "stopped": 0.705
+   },
+   {
+    "token_nll": 1.183075302606224,
+    "example_nll": 1.4121660998292789,
+    "f1": 0.37524207263363446,
+    "stopped": 0.8
+   }
+  ],
+  "R2b the same, N=800, 3 epochs | assistant only, per-example norm": [
+   {
+    "token_nll": 1.158399721524901,
+    "example_nll": 1.3088768138126894,
+    "f1": 0.32795039329467324,
+    "stopped": 0.79
+   },
+   {
+    "token_nll": 1.2574271517552902,
+    "example_nll": 1.3338500653773966,
+    "f1": 0.3831902123576322,
+    "stopped": 0.805
+   },
+   {
+    "token_nll": 1.1592607789328218,
+    "example_nll": 1.3088165096416595,
+    "f1": 0.37640062338328323,
+    "stopped": 0.79
+   }
+  ]
+ }
+}

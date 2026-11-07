@@ -1,0 +1,37 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, bf16 autocast for training",
+ "command": "python labs/teaching-a-language-model-to-follow-instructions/scripts/08_data_construction.py",
+ "by_k": {
+  "1": {
+   "pass_at_k": 0.29,
+   "kept_per_q": 0.29,
+   "distinct_per_q": 0.29,
+   "fp": 0.017241379310344827
+  },
+  "2": {
+   "pass_at_k": 0.425,
+   "kept_per_q": 0.6,
+   "distinct_per_q": 0.515,
+   "fp": 0.008333333333333333
+  },
+  "4": {
+   "pass_at_k": 0.55,
+   "kept_per_q": 1.175,
+   "distinct_per_q": 0.795,
+   "fp": 0.00851063829787234
+  },
+  "8": {
+   "pass_at_k": 0.635,
+   "kept_per_q": 2.345,
+   "distinct_per_q": 1.35,
+   "fp": 0.010660980810234541
+  },
+  "16": {
+   "pass_at_k": 0.73,
+   "kept_per_q": 4.69,
+   "distinct_per_q": 2.06,
+   "fp": 0.007462686567164179
+  }
+ },
+ "n_questions": 200
+}

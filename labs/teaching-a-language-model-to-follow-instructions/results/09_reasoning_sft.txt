@@ -1,0 +1,45 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, bf16 autocast for training
+# command: python labs/teaching-a-language-model-to-follow-instructions/scripts/09_reasoning_sft.py
+
+Task: running sum of n digits mod 10. Train: 12000 examples with n uniform in 2..12, 2 epochs, lr 0.0001, batch 32, SmolLM2-135M base, assistant-only loss.
+Evaluation: 300 fresh questions per n, greedy. n = 16 and 20 are longer than any training example. Chance for the final answer is 0.10.
+  [direct, seed 0] final train loss 0.3683
+  [trace, seed 0] final train loss 0.0001
+
+A/B. Final-answer accuracy by sequence length n, and the trace model's per-step accuracy
+      n  direct answer  with trace  trace: per-step acc  (per-step)^n
+      2          1.000       1.000               1.0000         1.000
+      4          0.617       1.000               1.0000         1.000
+      6          0.187       1.000               1.0000         1.000
+      8          0.133       1.000               1.0000         1.000
+     10          0.103       1.000               1.0000         1.000
+     12          0.100       1.000               1.0000         1.000
+     16          0.107       0.000               0.0088         0.000
+     20          0.120       0.000               0.0000         0.000
+   ('per-step acc' counts a step as right if it is the correct sum given the previous value the model WROTE, so one slip is
+   not charged again at every later step. '(per-step)^n' is the chain accuracy if steps failed independently.)
+   Seeds: 1 (a single seed unless several were passed). 
+
+C. Outcome filter on sampled traces. The model above never slips at n <= 12, so there is nothing to filter. To get a model that slips
+   sometimes, train the same trace model on fewer examples (1 epoch, lr 1e-4) and pick the size whose chain accuracy at n = 12 is closest to 0.6.
+    train examples   chain acc, n=12 (greedy)  per-step acc  (per-step)^12
+               600                      0.080        0.1825          0.000
+              1200                      0.115        0.2621          0.000
+              2400                      0.975        0.9979          0.975
+              4800                      0.990        0.9992          0.990
+   chosen: 2400 examples. Now 16 samples per question at temperature 1.0, 200 questions with n = 12.
+   'kept' = final answer right. 'bad' = kept, but at least one written step is wrong (found by an exact step checker).
+     k  kept per question  bad among kept  predicted bad share   questions with a kept sample
+     1               0.94           0.000                0.007                          0.945
+     2               1.88           0.000                0.007                          0.985
+     4               3.75           0.000                0.007                          1.000
+     8               7.51           0.001                0.007                          1.000
+    16              14.99           0.002                0.007                          1.000
+   Share of all samples with an invalid trace: 0.065.
+   'predicted bad share' is what you would see if a wrong trace landed on the right final digit by chance (probability 0.1); it uses
+   only the one-sample rate and does not depend on k. In this task the measured share is far below it, because a slip is carried
+   forward: every later running total is consistently off by the same amount, so the final digit is wrong unless a second slip
+   cancels the first. An outcome filter lets bad reasoning through only where errors can cancel or the answer can be guessed. That
+   depends on the task. Here it is about 0.1% of kept samples. Sampling more raises the number kept, and does not change this share
+   in any visible way (single model, 200 questions, 3,200 samples).
+

@@ -1,0 +1,125 @@
+# hardware: AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only
+# command: python labs/teaching-a-language-model-to-follow-instructions/scripts/04_anatomy.py
+
+A. One conversation through three real chat templates
+  SmolLM2-135M-Instruct: 53 tokens, turn-end token '<|im_end|>' (id 2), bos '<|im_start|>'
+    rendered text: '<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\nExplain SGD in two sentences.<|im_end|>\n<|im_start|>assistant\nSGD estimates the gradient from a small batch and steps against it. Noise from the batch acts as a regulariser.<|im_end|>\n'
+    special tokens in the text: ['<|im_start|>', '<|im_end|>']
+    scored tokens: 25 of 53; the last scored token is '<|im_end|>'
+    tokenising the rendered text with add_special_tokens=True gives 53 tokens vs 53; leading ids [1, 9690, 198]  -> no doubled BOS
+    token-by-token view (index, id, token, loss weight):
+         0       1 '<|im_start|>'         w=0
+         1    9690 'system'               w=0
+         2     198 'Ċ'                    w=0
+         3    2683 'You'                  w=0
+         4     359 'Ġare'                 w=0
+         5     253 'Ġa'                   w=0
+         6    5356 'Ġhelpful'             w=0
+         7   11173 'Ġassistant'           w=0
+         8      30 '.'                    w=0
+         9       2 '<|im_end|>'           w=0
+        10     198 'Ċ'                    w=0
+        11       1 '<|im_start|>'         w=0
+        12    4093 'user'                 w=0
+        13     198 'Ċ'                    w=0
+        14   36971 'Explain'              w=0
+        15     334 'ĠS'                   w=0
+        16   24607 'GD'                   w=0
+        17     281 'Ġin'                  w=0
+        18     827 'Ġtwo'                 w=0
+        19    8545 'Ġsentences'           w=0
+        20      30 '.'                    w=0
+        21       2 '<|im_end|>'           w=0
+        22     198 'Ċ'                    w=0
+        23       1 '<|im_start|>'         w=0
+        24     520 'ass'                  w=0
+        25    9531 'istant'               w=0
+        26     198 'Ċ'                    w=0
+        27      67 'S'                    w=1
+        28   24607 'GD'                   w=1
+        29    7614 'Ġestimates'           w=1
+        30     260 'Ġthe'                 w=1
+        31   14684 'Ġgradient'            w=1
+        32     429 'Ġfrom'                w=1
+        33     253 'Ġa'                   w=1
+        34    1165 'Ġsmall'               w=1
+        35    7717 'Ġbatch'               w=1
+        36     284 'Ġand'                 w=1
+        37    3301 'Ġsteps'               w=1
+        38    1523 'Ġagainst'             w=1
+        39     357 'Ġit'                  w=1
+        40      30 '.'                    w=1
+        41   33713 'ĠNoise'               w=1
+        42     429 'Ġfrom'                w=1
+        43     260 'Ġthe'                 w=1
+        44    7717 'Ġbatch'               w=1
+        45    6104 'Ġacts'                w=1
+        46     347 'Ġas'                  w=1
+        47     253 'Ġa'                   w=1
+        48    2649 'Ġregular'             w=1
+        49   14793 'iser'                 w=1
+        50      30 '.'                    w=1
+        51       2 '<|im_end|>'           w=1
+        52     198 'Ċ'                    w=0
+
+  Qwen2.5-0.5B-Instruct: 52 tokens, turn-end token '<|im_end|>' (id 151645), bos None
+    rendered text: '<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\nExplain SGD in two sentences.<|im_end|>\n<|im_start|>assistant\nSGD estimates the gradient from a small batch and steps against it. Noise from the batch acts as a regulariser.<|im_end|>\n'
+    special tokens in the text: ['<|im_end|>', '<|im_start|>']
+    scored tokens: 25 of 52; the last scored token is '<|im_end|>'
+    tokenising the rendered text with add_special_tokens=True gives 52 tokens vs 52; leading ids [151644, 8948, 198]  -> no doubled BOS
+
+  Llama-3 tokenizer (ungated copy): 53 tokens, turn-end token '<|eot_id|>' (id 128009), bos '<|begin_of_text|>'
+    rendered text: '<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful assistant.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nExplain SGD in two sentences.<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\nSGD estimates the gradient from a small batch and steps against it. Noise from the batch acts as a regulariser.<|eot_id|>'
+    special tokens in the text: ['<|begin_of_text|>', '<|eot_id|>']
+    scored tokens: 25 of 53; the last scored token is '<|eot_id|>'
+    tokenising the rendered text with add_special_tokens=True gives 54 tokens vs 53; leading ids [128000, 128000, 128006]  -> DOUBLE BOS
+
+B. Role markers typed by the user
+  honest message: <|im_start|> x2, <|im_end|> x2
+  message containing the marker strings, default tokenisation of the rendered text: <|im_start|> x3, <|im_end|> x3
+  the same content tokenised alone with split_special_tokens=True: special ids present = 0, 23 ordinary tokens
+  So by default the typed string IS the special token. The post's 'the tokenizer never produces them from user text'
+  holds only if the serving code tokenises user content with special-token parsing off, or strips the strings.
+
+C. Serving the released SmolLM2-135M-Instruct with a slightly wrong template (100 held-out Alpaca prompts, greedy, 96 new tokens)
+   serving format                      ref. reply NLL/token  stopped   reply starts differently  mean new tokens
+   correct template                                   1.646     0.52                       0.00             64.4
+   no newline after 'assistant'                       2.155     0.52                       1.00             64.9
+   extra blank line after header                      1.881     0.44                       0.95             70.0
+   no system turn                                     1.671     0.43                       0.54             69.2
+   no newline after user turn                         1.671     0.69                       0.69             44.5
+   plain 'User:/Assistant:' text                      1.924     0.67                       1.00             56.3
+   'stopped' is the share of replies that emitted <|im_end|> within the budget. 'reply starts differently' compares the first 30
+   characters with the correct template's greedy reply. The reference NLL is the loss on the Alpaca reply, which this model was
+   not trained on, so its absolute value is high; the comparison is between rows. Script 10 (part F) does the same to a model
+   this lab fine-tunes itself.
+
+D. A three-turn conversation: score every assistant turn in one pass, or explode it into one example per turn
+   assistant turns: 3; tokens in the full example: 89; scored: 23
+   exploded examples: 3 with lengths [41, 59, 89], scored tokens [3, 4, 16] (sum 23)
+   tokens through the model: full pass 89, exploded 189 (2.12x)
+   gradient of the summed loss, relative difference |g_full - g_exploded| / |g_full| = 1.47e-06 (fp32)
+   'score only the final turn': 16 of 23 assistant tokens supervised (70%)
+
+E1. Packing without a document mask changes the loss on the assistant tokens of the second example
+   40 pairs (A then B), SmolLM2-135M base, fp32. Mean assistant-token NLL of B in nats; difference from B alone:
+   packing                             mean diff  mean |diff|  max |diff|
+   causal mask only                      -0.3610       0.4238      1.2810
+   causal mask, positions reset           1.2729       1.2898      3.6754
+   document mask                          0.0000       0.0000      0.0000
+   document mask, positions reset         0.0000       0.0000      0.0000
+   (The first token of B is predicted from A's last token in a packed row, so it is excluded from the comparison.)
+
+E2. Truncation and the end-of-turn token. Share of examples cut by a maximum length, and of those cut, the share
+    whose end-of-turn token is lost (so the model is never taught to stop on them).
+    dataset   max_len  examples  truncated  cut examples that lose <|im_end|>  assistant tokens lost
+    Alpaca         64      3000      0.877                              0.990                  0.890
+    Alpaca        128      3000      0.581                              0.998                  0.601
+    Alpaca        256      3000      0.307                              0.995                  0.227
+    Alpaca        512      3000      0.018                              0.981                  0.009
+    Dolly          64      3000      0.836                              0.996                  0.852
+    Dolly         128      3000      0.538                              0.994                  0.560
+    Dolly         256      3000      0.242                              0.992                  0.306
+    Dolly         512      3000      0.068                              0.985                  0.122
+    A truncated example does not fail loudly: it just has no <|im_end|> in the loss. Script 10 trains on such data.
+

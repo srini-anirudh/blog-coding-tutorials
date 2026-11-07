@@ -1,0 +1,31 @@
+{
+ "hardware": "NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, bf16 autocast for training",
+ "command": "python labs/teaching-a-language-model-to-follow-instructions/scripts/01_the_gap.py",
+ "rates": {
+  "base, bare question": {
+   "stopped": 0.0,
+   "stopped_factual12": 0.0,
+   "repeats_question": 0.13392857142857142,
+   "new_question": 0.35714285714285715,
+   "gold_in_20": 0.8333333333333334,
+   "mean_new_tokens": 96.0
+  },
+  "base, chat template": {
+   "stopped": 0.008928571428571428,
+   "stopped_factual12": 0.0,
+   "repeats_question": 0.6696428571428571,
+   "new_question": 0.33035714285714285,
+   "gold_in_20": 0.0,
+   "mean_new_tokens": 95.30357142857143
+  },
+  "instruct, chat template": {
+   "stopped": 0.2857142857142857,
+   "stopped_factual12": 0.9166666666666666,
+   "repeats_question": 0.0,
+   "new_question": 0.008928571428571428,
+   "gold_in_20": 0.8333333333333334,
+   "mean_new_tokens": 77.13392857142857
+  }
+ },
+ "n_prompts": 112
+}

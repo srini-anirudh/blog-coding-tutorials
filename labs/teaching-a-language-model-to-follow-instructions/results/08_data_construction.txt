@@ -1,0 +1,29 @@
+# hardware: NVIDIA H100 80GB HBM3, torch 2.15.0, CUDA 13.2, bf16 autocast for training
+# command: python labs/teaching-a-language-model-to-follow-instructions/scripts/08_data_construction.py
+
+Rejection sampling on 200 GSM8K training questions, Qwen2.5-0.5B-Instruct, T = 0.8, up to 320 new tokens, k = 16 per question.
+Share of solutions containing at least one parseable 'a op b = c' statement: 0.787. Mean such statements per solution: 1.83.
+
+  k   pass@k  kept per question  distinct paths kept  duplicate share   kept with a false equation  questions with >=1 kept
+  1    0.290               0.29                 0.29            0.000                        0.017                    0.290
+  2    0.425               0.60                 0.52            0.142                        0.008                    0.425
+  4    0.550               1.18                 0.80            0.323                        0.009                    0.550
+  8    0.635               2.35                 1.35            0.424                        0.011                    0.635
+ 16    0.730               4.69                 2.06            0.561                        0.007                    0.730
+
+Single-sample accuracy 0.293. Share with a false equation: all samples 0.050; answer-correct samples 0.007; answer-wrong samples 0.068.
+Adding a step check (drop solutions with a false equation) keeps 931 of 938 answer-correct solutions (99.3%).
+
+Example of an answer-correct solution with a false equation: [('8 * 40', 320.0, 0.2)]
+  To determine the total capacity of 40 such containers filled with water when one has already been calculated based on its capacity being 8 liters and representing 20% of the container's volume, we will follow these steps:  ### Step 1: Calculate 8 liters as 20% of the container's capacity. Given that: \[ \text{Capacity} = 8 \text{ liters} \] \[ \text{Percentage} = 20\% \]  Let \( C \) be the total 
+Example of an answer-correct solution with a false equation: [('44 + 20 + 4', 68.0, 64.0)]
+  To solve this problem, let's break it down into steps:  Step 1: Determine how many pencils Anika has. According to the problem, Anika has 4 more than twice the number of pencils that Reeta has.  Reeta has 20 pencils.  Twice the number of pencils that Reeta has: \[ 2 \times 20 = 40 \]  Now, add 4 to find out how many pencils Anika has: \[ 40 + 4 = 44 \]  Step 2: Find out how many pencils they both 
+
+Reading: the kept set grows with k, and so does the number of distinct paths, but more slowly (the rest repeat a path already
+kept). The share of kept solutions with a false equation is small, 1% or less to a few percent, and it rests on a handful of
+solutions per row (under 10 at k = 1 to 4). Sampling is not bit-reproducible on a GPU: across runs of this script (and its
+parser while it was being written) the k = 1 value ranged from 0% to 5% and the k = 16 value from 0.5% to 1.6%. Do not read
+a trend into it. The number is rough. The parser only sees plain 'a op b = c' statements; some hits are its own errors (a
+sub-expression or algebra it cannot read) and some are real (an arithmetic slip that still ended at the right answer), while
+wrong steps that are not arithmetic are invisible to it. It supports 'answer-correct solutions with a wrong step exist', not
+a measured rate. One 0.5B model, 200 questions, one seed.

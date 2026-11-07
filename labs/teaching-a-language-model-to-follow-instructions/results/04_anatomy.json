@@ -1,0 +1,85 @@
+{
+ "hardware": "AMD EPYC 7R13 Processor, 8 threads, torch 2.15.0, CPU only",
+ "command": "python labs/teaching-a-language-model-to-follow-instructions/scripts/04_anatomy.py",
+ "serving_variants": {
+  "correct template": {
+   "nll": 1.6455760291090866,
+   "stopped": 0.52,
+   "differs": 0.0,
+   "mean_new": 64.4
+  },
+  "no newline after 'assistant'": {
+   "nll": 2.1545063445409967,
+   "stopped": 0.52,
+   "differs": 1.0,
+   "mean_new": 64.92
+  },
+  "extra blank line after header": {
+   "nll": 1.8814295841906563,
+   "stopped": 0.44,
+   "differs": 0.95,
+   "mean_new": 69.95
+  },
+  "no system turn": {
+   "nll": 1.6705339762882387,
+   "stopped": 0.43,
+   "differs": 0.54,
+   "mean_new": 69.19
+  },
+  "no newline after user turn": {
+   "nll": 1.6705309881500523,
+   "stopped": 0.69,
+   "differs": 0.69,
+   "mean_new": 44.55
+  },
+  "plain 'User:/Assistant:' text": {
+   "nll": 1.9242385770006514,
+   "stopped": 0.67,
+   "differs": 1.0,
+   "mean_new": 56.27
+  }
+ },
+ "explode_rel_grad_diff": 1.4733448097103974e-06,
+ "truncation": {
+  "Alpaca_64": {
+   "truncated": 0.8766666666666667,
+   "lose_eot": 0.9901140684410646,
+   "tokens_lost": 0.8903046290110405
+  },
+  "Alpaca_128": {
+   "truncated": 0.581,
+   "lose_eot": 0.9977051061388411,
+   "tokens_lost": 0.6010092313908614
+  },
+  "Alpaca_256": {
+   "truncated": 0.30666666666666664,
+   "lose_eot": 0.9945652173913043,
+   "tokens_lost": 0.22712527463445206
+  },
+  "Alpaca_512": {
+   "truncated": 0.017666666666666667,
+   "lose_eot": 0.9811320754716981,
+   "tokens_lost": 0.008898500616420902
+  },
+  "Dolly_64": {
+   "truncated": 0.8363333333333334,
+   "lose_eot": 0.99561578318055,
+   "tokens_lost": 0.8515561040831019
+  },
+  "Dolly_128": {
+   "truncated": 0.538,
+   "lose_eot": 0.9944237918215614,
+   "tokens_lost": 0.5599053789982515
+  },
+  "Dolly_256": {
+   "truncated": 0.24233333333333335,
+   "lose_eot": 0.9917469050894085,
+   "tokens_lost": 0.3059384963488635
+  },
+  "Dolly_512": {
+   "truncated": 0.068,
+   "lose_eot": 0.9852941176470589,
+   "tokens_lost": 0.12226267612876685
+  }
+ }
+}
