@@ -4,8 +4,8 @@ version = "0.1.0"
 description = "Code for The Backward Pass coding tutorials: from tensors to foundation models and agents."
 requires-python = ">=3.10"
 dependencies = [
-  "torch>=2.4", "numpy", "matplotlib", "pillow", "einops", "tqdm", "pyyaml", "rich",
-  "transformers>=4.45", "datasets>=3.0", "accelerate", "peft", "trl", "safetensors", "tokenizers", "sentencepiece",
+  "torch>=2.5", "numpy", "matplotlib", "pillow", "einops", "tqdm", "pyyaml", "rich",
+  "transformers>=5", "datasets>=3.0", "accelerate", "peft", "trl", "safetensors", "tokenizers", "sentencepiece",
 ]
 
 [project.optional-dependencies]
