@@ -2,8 +2,6 @@
 
 Code for the coding tutorials on [The Backward Pass](https://srini-anirudh.github.io/blogs/?series=code).
 
-> **Status: work in progress.** The code is being finished and the blog posts are not published yet, so the post links below do not work yet. See [HANDOFF.md](HANDOFF.md).
-
 > Build the thing. Inspect every tensor. Train it. Break it. Profile it. Scale it.
 
 Each folder is one tutorial: a complete, tested build that the matching blog post walks through step by step.
@@ -23,6 +21,10 @@ The theory posts explain why things work. These tutorials implement them, look a
 | C10 | Build an Agent Harness From Scratch | [c10-agent-harness](c10-agent-harness) | [post](https://srini-anirudh.github.io/blogs/build-an-agent-harness-from-scratch/) |
 | C11 | Add Memory and Context Engineering to the Agent | [c11-agent-memory](c11-agent-memory) | [post](https://srini-anirudh.github.io/blogs/add-memory-to-the-agent/) |
 | C12 | Train an Agent With Reinforcement Learning | [c12-agent-rl](c12-agent-rl) | [post](https://srini-anirudh.github.io/blogs/train-an-agent-with-rl/) |
+
+## Labs
+
+Besides the tutorials, [labs/](labs) holds one small, runnable lab per theory post on the blog: 58 in all. Each recomputes the post's numbers and saves real outputs. Every post links to its lab, and every lab README links back to its post. The [lab index](labs/README.md) lists them all.
 
 The full plan for the series is in [docs/series-plan.md](docs/series-plan.md).
 
